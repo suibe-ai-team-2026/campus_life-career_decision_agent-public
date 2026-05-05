@@ -1,0 +1,475 @@
+app:
+  description: Genote AI Knowledge Assistant - Intelligent Note Taking
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: Genote
+  use_icon_as_answer_icon: false
+kind: app
+version: 0.1.5
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .PDF
+      - .DOC
+      - .DOCX
+      - .PNG
+      - .JPG
+      - .JPEG
+      - .MP3
+      - .M4A
+      - .WAV
+      allowed_file_types:
+      - document
+      - image
+      - audio
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: true
+      fileUploadConfig:
+        audio_file_size_limit: 20
+        batch_count_limit: 5
+        file_size_limit: 20
+        image_file_batch_limit: 5
+        image_file_size_limit: 20
+        video_file_size_limit: 20
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 1
+    opening_statement: ''
+    retriever_resource:
+      enabled: false
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        sourceType: start
+        targetType: code
+      id: start-env
+      source: 'start'
+      sourceHandle: source
+      target: 'environment-sensing'
+      targetHandle: target
+      type: custom
+    - data:
+        sourceType: code
+        targetType: if-else
+      id: env-route
+      source: 'environment-sensing'
+      sourceHandle: source
+      target: 'route-check'
+      targetHandle: target
+      type: custom
+    - data:
+        sourceType: if-else
+        targetType: code
+      id: route-pdf
+      source: 'route-check'
+      sourceHandle: pdf
+      target: 'pdf-parser'
+      targetHandle: target
+      type: custom
+    - data:
+        sourceType: if-else
+        targetType: code
+      id: route-audio
+      source: 'route-check'
+      sourceHandle: audio
+      target: 'audio-transcriber'
+      targetHandle: target
+      type: custom
+    - data:
+        sourceType: if-else
+        targetType: code
+      id: route-image
+      source: 'route-check'
+      sourceHandle: image
+      target: 'image-ocr'
+      targetHandle: target
+      type: custom
+    - data:
+        sourceType: code
+        targetType: code
+      id: pdf-agg
+      source: 'pdf-parser'
+      sourceHandle: source
+      target: 'variable-aggregator'
+      targetHandle: target
+      type: custom
+    - data:
+        sourceType: code
+        targetType: code
+      id: audio-agg
+      source: 'audio-transcriber'
+      sourceHandle: source
+      target: 'variable-aggregator'
+      targetHandle: target
+      type: custom
+    - data:
+        sourceType: code
+        targetType: code
+      id: image-agg
+      source: 'image-ocr'
+      sourceHandle: source
+      target: 'variable-aggregator'
+      targetHandle: target
+      type: custom
+    - data:
+        sourceType: code
+        targetType: llm
+      id: agg-reduce
+      source: 'variable-aggregator'
+      sourceHandle: source
+      target: 'reduce-aggregate'
+      targetHandle: target
+      type: custom
+    - data:
+        sourceType: llm
+        targetType: answer
+      id: reduce-end
+      source: 'reduce-aggregate'
+      sourceHandle: source
+      target: 'answer'
+      targetHandle: target
+      type: custom
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: Start
+        type: start
+        variables:
+        - label: File
+          max_length: 256
+          options: []
+          required: true
+          type: file
+          variable: file
+      height: 90
+      id: 'start'
+      position:
+        x: 80
+        y: 282
+      positionAbsolute:
+        x: 80
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: |
+          def main(files: list) -> dict:
+              if not files:
+                  return {"type": "unknown", "route": "unknown"}
+              
+              file = files[0]
+              # Extension extraction logic
+              filename = getattr(file, 'filename', '') or ''
+              ext = filename.split('.')[-1].lower() if '.' in filename else ''
+              
+              if ext in ['pdf', 'doc', 'docx', 'txt']:
+                  return {"type": "document", "route": "pdf"}
+              elif ext in ['jpg', 'jpeg', 'png', 'webp']:
+                  return {"type": "image", "route": "image"}
+              elif ext in ['mp3', 'wav', 'm4a']:
+                  return {"type": "audio", "route": "audio"}
+              
+              return {"type": "unknown", "route": "pdf"} # Default fallthrough
+        code_language: python3
+        desc: ''
+        outputs:
+        - type: string
+          variable: route
+        - type: string
+          variable: type
+        selected: false
+        title: Environment Sensing
+        type: code
+        variables:
+        - value_selector:
+          - 'start'
+          - file
+          variable: files
+      height: 54
+      id: 'environment-sensing'
+      position:
+        x: 380
+        y: 282
+      positionAbsolute:
+        x: 380
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        cases:
+        - case_id: pdf
+          conditions:
+          - comparison_operator: is
+            id: c1
+            value: pdf
+            varType: string
+            variable_selector:
+            - 'environment-sensing'
+            - route
+          logical_operator: and
+        - case_id: audio
+          conditions:
+          - comparison_operator: is
+            id: c2
+            value: audio
+            varType: string
+            variable_selector:
+            - 'environment-sensing'
+            - route
+          logical_operator: and
+        - case_id: image
+          conditions:
+          - comparison_operator: is
+            id: c3
+            value: image
+            varType: string
+            variable_selector:
+            - 'environment-sensing'
+            - route
+          logical_operator: and
+        desc: ''
+        selected: false
+        title: Route Check
+        type: if-else
+      height: 126
+      id: 'route-check'
+      position:
+        x: 680
+        y: 282
+      positionAbsolute:
+        x: 680
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: |
+          def main(files: list) -> dict:
+              # Placeholder for PDF/Doc text extraction
+              # Dify currently handles this via tools or built-in, 
+              # but here we simulate the node for the architecture.
+              return {
+                  "text": "Extracted text from PDF/Document..."
+              }
+        code_language: python3
+        desc: ''
+        outputs:
+        - type: string
+          variable: text
+        selected: false
+        title: PDF Parser
+        type: code
+        variables:
+        - value_selector:
+          - 'start'
+          - file
+          variable: files
+      height: 54
+      id: 'pdf-parser'
+      position:
+        x: 980
+        y: 100
+      positionAbsolute:
+        x: 980
+        y: 100
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: |
+          def main(files: list) -> dict:
+              # Placeholder for Audio Transcription (Async)
+              return {
+                  "text": "Transcribed text from Audio..."
+              }
+        code_language: python3
+        desc: ''
+        outputs:
+        - type: string
+          variable: text
+        selected: false
+        title: Audio Async Transcriber
+        type: code
+        variables:
+        - value_selector:
+          - 'start'
+          - file
+          variable: files
+      height: 54
+      id: 'audio-transcriber'
+      position:
+        x: 980
+        y: 282
+      positionAbsolute:
+        x: 980
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: |
+          def main(files: list) -> dict:
+              # Placeholder for Image OCR
+              return {
+                  "text": "OCR Text from Image..."
+              }
+        code_language: python3
+        desc: ''
+        outputs:
+        - type: string
+          variable: text
+        selected: false
+        title: Image OCR
+        type: code
+        variables:
+        - value_selector:
+          - 'start'
+          - file
+          variable: files
+      height: 54
+      id: 'image-ocr'
+      position:
+        x: 980
+        y: 464
+      positionAbsolute:
+        x: 980
+        y: 464
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: |
+          def main(pdf_text: str, audio_text: str, image_text: str) -> dict:
+              # Merge logic: select the non-empty one
+              merged = pdf_text or audio_text or image_text or ""
+              return {
+                  "merged_text": merged
+              }
+        code_language: python3
+        desc: ''
+        outputs:
+        - type: string
+          variable: merged_text
+        selected: false
+        title: Variable Aggregator
+        type: code
+        variables:
+        - value_selector:
+          - 'pdf-parser'
+          - text
+          variable: pdf_text
+        - value_selector:
+          - 'audio-transcriber'
+          - text
+          variable: audio_text
+        - value_selector:
+          - 'image-ocr'
+          - text
+          variable: image_text
+      height: 54
+      id: 'variable-aggregator'
+      position:
+        x: 1280
+        y: 282
+      positionAbsolute:
+        x: 1280
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - 'variable-aggregator'
+          - merged_text
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.3
+          mode: chat
+          name: deepseek-v3
+          provider: openai_compatible
+        prompt_template:
+        - role: system
+          text: You are an expert knowledge organizer. Use Map-Reduce logic to restructure the following content into high-quality exam notes.
+        - role: user
+          text: "{{#variable-aggregator.merged_text#}}"
+        selected: false
+        title: Reduce Aggregate
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: 'reduce-aggregate'
+      position:
+        x: 1580
+        y: 282
+      positionAbsolute:
+        x: 1580
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: "{{#reduce-aggregate.text#}}"
+        desc: ''
+        selected: false
+        title: Answer
+        type: answer
+        variables: []
+      height: 103
+      id: 'answer'
+      position:
+        x: 1880
+        y: 282
+      positionAbsolute:
+        x: 1880
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244

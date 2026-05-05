@@ -1,0 +1,2307 @@
+app:
+  description: 工作流开发测试
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: advanced-chat
+  name: Genote_beta_0.1
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/deepseek:0.0.8@db0962090d930c2e6c4c6ced76d2801ca4b3c5cee350460c4b03088c29b61346
+    version: null
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/tongyi:0.1.13@10cbfe851fdf27f3c50ca2ca86293eb0c27da51ee74e58acebafd92b71c8d518
+    version: null
+kind: app
+version: 0.5.0
+workflow:
+  conversation_variables: []
+  environment_variables:
+  - description: ''
+    id: 03877bbb-15da-46d6-89f5-3db4048bc0f1
+    name: DASHSCOPE_API_KEY
+    selector:
+    - env
+    - DASHSCOPE_API_KEY
+    value: ${DASHSCOPE_API_KEY}
+    value_type: string
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      - audio
+      - document
+      - video
+      allowed_file_upload_methods:
+      - remote_url
+      - local_file
+      enabled: true
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_batch_limit: 10
+        image_file_size_limit: 10
+        single_chunk_attachment_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 10
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInLoop: false
+        sourceType: start
+        targetType: code
+      id: 1766489878629-source-1766496837552-target
+      selected: false
+      source: '1766489878629'
+      sourceHandle: source
+      target: '1766496837552'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: if-else
+      id: 1766496837552-source-1766497157747-target
+      selected: false
+      source: '1766496837552'
+      sourceHandle: source
+      target: '1766497157747'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: llm
+      id: 1766497157747-181cc55a-0d8b-4d03-b280-f5a056015546-1766498060630-target
+      selected: false
+      source: '1766497157747'
+      sourceHandle: 181cc55a-0d8b-4d03-b280-f5a056015546
+      target: '1766498060630'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: code
+      id: 1766497157747-09193b02-c395-40cb-b075-c28d5f792763-1766498361939-target
+      selected: false
+      source: '1766497157747'
+      sourceHandle: 09193b02-c395-40cb-b075-c28d5f792763
+      target: '1766498361939'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: code
+      id: 1766497157747-6af60bb4-215c-46f5-8aa3-14cfac940b2a-1766498474719-target
+      selected: false
+      source: '1766497157747'
+      sourceHandle: 6af60bb4-215c-46f5-8aa3-14cfac940b2a
+      target: '1766498474719'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: code
+      id: 1766497157747-61f6db78-8b6e-44c6-b521-25f5a295293b-17664986482590-target
+      selected: false
+      source: '1766497157747'
+      sourceHandle: 61f6db78-8b6e-44c6-b521-25f5a295293b
+      target: '17664986482590'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: answer
+      id: 1766497157747-ebfdc93f-bb4b-4253-90d2-76c6ed405008-1766498839120-target
+      selected: false
+      source: '1766497157747'
+      sourceHandle: ebfdc93f-bb4b-4253-90d2-76c6ed405008
+      target: '1766498839120'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: answer
+      id: 1766497157747-b2149ab9-82b5-45d1-8097-0edc0aa69dc8-1766498839120-target
+      selected: false
+      source: '1766497157747'
+      sourceHandle: b2149ab9-82b5-45d1-8097-0edc0aa69dc8
+      target: '1766498839120'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: if-else
+      id: 1766498361939-source-1766501729281-target
+      selected: false
+      source: '1766498361939'
+      sourceHandle: source
+      target: '1766501729281'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: llm
+      id: 1766501729281-true-1766498489954-target
+      selected: false
+      source: '1766501729281'
+      sourceHandle: 'true'
+      target: '1766498489954'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: variable-aggregator
+      id: 1766498489954-source-1766503845294-target
+      selected: false
+      source: '1766498489954'
+      sourceHandle: source
+      target: '1766503845294'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: variable-aggregator
+      id: 1766498060630-source-1766503845294-target
+      selected: false
+      source: '1766498060630'
+      sourceHandle: source
+      target: '1766503845294'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: variable-aggregator
+      id: 1766501729281-false-1766503845294-target
+      selected: false
+      source: '1766501729281'
+      sourceHandle: 'false'
+      target: '1766503845294'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: variable-aggregator
+      id: 1766498474719-source-1766503845294-target
+      selected: false
+      source: '1766498474719'
+      sourceHandle: source
+      target: '1766503845294'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: variable-aggregator
+      id: 17664986482590-source-1766503845294-target
+      selected: false
+      source: '17664986482590'
+      sourceHandle: source
+      target: '1766503845294'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: variable-aggregator
+        targetType: code
+      id: 1766503845294-source-17664986908000-target
+      selected: false
+      source: '1766503845294'
+      sourceHandle: source
+      target: '17664986908000'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: variable-aggregator
+      id: 1766497157747-428280eb-917e-4fd7-92e7-463bcd26cee3-1766503845294-target
+      selected: false
+      source: '1766497157747'
+      sourceHandle: 428280eb-917e-4fd7-92e7-463bcd26cee3
+      target: '1766503845294'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1766505439067'
+        sourceType: iteration-start
+        targetType: llm
+      id: 1766505439067start-source-1766505444885-target
+      selected: false
+      source: 1766505439067start
+      sourceHandle: source
+      target: '1766505444885'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: iteration
+      id: 17664986908000-source-1766505439067-target
+      selected: false
+      source: '17664986908000'
+      sourceHandle: source
+      target: '1766505439067'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1766505439067'
+        sourceType: llm
+        targetType: code
+      id: 1766505444885-source-1766506421327-target
+      selected: false
+      source: '1766505444885'
+      sourceHandle: source
+      target: '1766506421327'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1766505439067'
+        sourceType: code
+        targetType: if-else
+      id: 1766506421327-source-1766506888177-target
+      selected: false
+      source: '1766506421327'
+      sourceHandle: source
+      target: '1766506888177'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1766505439067'
+        sourceType: if-else
+        targetType: code
+      id: 1766506888177-false-1766507159183-target
+      selected: false
+      source: '1766506888177'
+      sourceHandle: 'false'
+      target: '1766507159183'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1766505439067'
+        sourceType: if-else
+        targetType: variable-aggregator
+      id: 1766506888177-true-1766507771567-target
+      selected: false
+      source: '1766506888177'
+      sourceHandle: 'true'
+      target: '1766507771567'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1766505439067'
+        sourceType: code
+        targetType: variable-aggregator
+      id: 1766507159183-source-1766507771567-target
+      selected: false
+      source: '1766507159183'
+      sourceHandle: source
+      target: '1766507771567'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: iteration
+        targetType: code
+      id: 1766505439067-source-1766508492060-target
+      selected: false
+      source: '1766505439067'
+      sourceHandle: source
+      target: '1766508492060'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: if-else
+      id: 1766496837552-source-1766509760645-target
+      selected: false
+      source: '1766496837552'
+      sourceHandle: source
+      target: '1766509760645'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: variable-aggregator
+      id: 1766509648380-source-1766510485005-target
+      selected: false
+      source: '1766509648380'
+      sourceHandle: source
+      target: '1766510485005'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: variable-aggregator
+      id: 1766509760645-true-1766510485005-target
+      selected: false
+      source: '1766509760645'
+      sourceHandle: 'true'
+      target: '1766510485005'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: llm
+      id: 1766511012807-source-1766509648380-target
+      selected: false
+      source: '1766511012807'
+      sourceHandle: source
+      target: '1766509648380'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: variable-aggregator
+        targetType: code
+      id: 1766510485005-source-1766508492060-target
+      selected: false
+      source: '1766510485005'
+      sourceHandle: source
+      target: '1766508492060'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: answer
+      id: 1766508492060-source-1766511873608-target
+      selected: false
+      source: '1766508492060'
+      sourceHandle: source
+      target: '1766511873608'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: code
+      id: 1766509760645-false-1766511012807-target
+      selected: false
+      source: '1766509760645'
+      sourceHandle: 'false'
+      target: '1766511012807'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: variable-aggregator
+        targetType: if-else
+      id: 1766503845294-source-1766509760645-target
+      source: '1766503845294'
+      sourceHandle: source
+      target: '1766509760645'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        selected: false
+        title: 用户输入
+        type: start
+        variables: []
+      height: 73
+      id: '1766489878629'
+      position:
+        x: 1.1130889623084954
+        y: 13
+      positionAbsolute:
+        x: 1.1130889623084954
+        y: 13
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        code: "\"\"\"\nDify 代码节点: 环境感知与媒体预处理\n节点名称: environment_sensing\n功能: 检测上传文件类型、音频时长、文件大小，并决定处理路由\n\
+          \n输入变量:\n- files: 上传的文件列表 (Dify File 对象)\n\n输出变量:\n- file_type: 文件类型 (image/document/audio/unknown)\n\
+          - file_subtype: 文件子类型 (pdf/ppt/docx/txt/mp3/wav/jpg/png)\n- duration_seconds:\
+          \ 音频时长(秒)，非音频文件为0\n- file_size_mb: 文件大小(MB)\n- processing_route: 处理路由 (image/document/audio/blocked/error)\n\
+          - error_message: 错误信息，无错误时为空字符串\n- file_url: 文件URL\n\"\"\"\n\nimport struct\n\
+          import io\nfrom urllib import request\nfrom urllib.error import URLError\n\
+          \n\ndef main(files: list) -> dict:\n    try:\n        # 1. 基础文件检测 (保持原代码逻辑)\n\
+          \        if not files or len(files) == 0:\n            return {\n      \
+          \          \"file_type\": \"unknown\",\n                \"file_subtype\"\
+          : \"none\",\n                \"duration_seconds\": 0,\n                \"\
+          file_size_mb\": 0,\n                \"processing_route\": \"text_only\"\
+          ,\n                \"error_message\": \"\",\n                \"file_url\"\
+          : \"\",\n                \"subject_hint\": \"通用学术\" # 默认值\n            }\n\
+          \n        file_obj = files[0]\n        file_url = file_obj.url if hasattr(file_obj,\
+          \ 'url') else str(file_obj)\n        file_name = file_obj.filename if hasattr(file_obj,\
+          \ 'filename') else \"\"\n        \n        file_ext = get_file_extension(file_name,\
+          \ file_url)\n        file_type, file_subtype = classify_file_type(file_ext)\n\
+          \        file_size_mb = get_file_size(file_url)\n        \n        duration_seconds\
+          \ = 0\n        if file_type == \"audio\":\n            duration_seconds\
+          \ = get_audio_duration(file_url, file_ext)\n\n        # 2. 新增：学科提示检测逻辑 (subject_hint)\n\
+          \        # 我们利用文件名作为最直接的判断依据\n        subject_hint = detect_subject_hint(file_name)\n\
+          \n        processing_route, error_message = determine_route(\n         \
+          \   file_type, duration_seconds, file_size_mb\n        )\n        \n   \
+          \     return {\n            \"file_type\": file_type,\n            \"file_subtype\"\
+          : file_subtype,\n            \"duration_seconds\": duration_seconds,\n \
+          \           \"file_size_mb\": round(file_size_mb, 2),\n            \"processing_route\"\
+          : processing_route,\n            \"error_message\": error_message,\n   \
+          \         \"file_url\": file_url,\n            \"subject_hint\": subject_hint\
+          \  # 输出新增变量\n        }\n        \n    except Exception as e:\n        return {\
+          \            \"file_type\": \"unknown\",\n            \"file_subtype\": \"none\",\n            \"duration_seconds\": 0,\n            \"file_size_mb\": 0,\n            \"processing_route\": \"error\",\n            \"error_message\": f\"环境感知失败: {str(e)}\",\n            \"file_url\": \"\",\n            \"subject_hint\": \"通用学术\"\n        }\n\ndef detect_subject_hint(file_name: str) ->\
+          \ str:\n    \"\"\"\n    通过文件名关键词快速预判定学科类别。\n    若无法判定，则标记为 'auto'，交由下游极简\
+          \ LLM 节点识别。\n    \"\"\"\n    # 定义高频学科关键词字典 (Token 消耗为 0)\n    keyword_map\
+          \ = {\n        \"考研政治\": [\"政治\", \"马原\", \"毛概\", \"思修\", \"史纲\", \"肖秀荣\"\
+          ],\n        \"法律/法考\": [\"法律\", \"刑法\", \"民法\", \"宪法\", \"诉讼\", \"法理\"],\n\
+          \        \"公务员考试\": [\"行测\", \"申论\", \"公考\", \"常识判断\", \"资料分析\"],\n    \
+          \    \"考研数学/理工\": [\"高数\", \"线性代数\", \"微积分\", \"物理\", \"力学\", \"电路\"],\n\
+          \        \"临床医学\": [\"解剖\", \"病理\", \"生理\", \"内科\", \"外科\", \"药理\"],\n \
+          \       \"计算机/IT\": [\"数据结构\", \"操作系统\", \"算法\", \"编程\", \"代码\", \"后端\"\
+          ]\n    }\n    \n    file_name_lower = file_name.lower()\n    for subject,\
+          \ keywords in keyword_map.items():\n        if any(kw in file_name_lower\
+          \ for kw in keywords):\n            return subject\n            \n    #\
+          \ 如果文件名没有明显关键词，返回 auto 触发后续 LLM 识别\n    return \"auto\"\n\ndef get_file_extension(filename:\
+          \ str, url: str) -> str:\n    \"\"\"\n    从文件名或URL中提取文件扩展名\n    \"\"\"\n\
+          \    try:\n        # 优先从文件名获取\n        if filename and '.' in filename:\n\
+          \            return filename.rsplit('.', 1)[-1].lower()\n        \n    \
+          \    # 从URL获取\n        if url and '.' in url:\n            # 去除查询参数\n  \
+          \          clean_url = url.split('?')[0]\n            return clean_url.rsplit('.',\
+          \ 1)[-1].lower()\n        \n        return \"unknown\"\n    except Exception:\n\
+          \        return \"unknown\"\n\n\ndef classify_file_type(ext: str) -> tuple:\n\
+          \    \"\"\"\n    根据扩展名分类文件类型\n    返回: (主类型, 子类型)\n    \"\"\"\n    # 图片类型\n\
+          \    image_exts = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'tiff', 'svg', 'ico', 'heic', 'heif']\n\
+          \    if ext in image_exts:\n        return (\"image\", ext)\n    \n    #\
+          \ 音频类型\n    audio_exts = ['mp3', 'wav', 'flac', 'aac', 'm4a', 'ogg', 'wma', 'amr', 'opus']\n\
+          \    if ext in audio_exts:\n        return (\"audio\", ext)\n    \n    #\
+          \ 视频类型 (作为音频处理,提取音轨)\n    video_exts = ['mp4', 'avi', 'mkv', 'mov', 'wmv', 'flv', 'webm', 'm4v']\n\
+          \    if ext in video_exts:\n        return (\"audio\", ext)\n    \n    #\
+          \ 文档类型\n    document_map = {\n        'pdf': 'pdf',\n        'ppt': 'ppt',\n\
+          \        'pptx': 'ppt',\n        'doc': 'docx',\n        'docx': 'docx',\n\
+          \        'txt': 'txt',\n        'md': 'txt',\n        'rtf': 'txt',\n        'html': 'txt',\n        'htm': 'txt',\n        'csv': 'txt',\n        'json': 'txt',\n        'xml': 'txt',\n        'xlsx': 'docx',\n        'xls': 'docx'\n   \
+          \ }\n    if ext in document_map:\n        return (\"document\", document_map[ext])\n\
+          \    \n    return (\"unknown\", ext)\n\n\ndef get_file_size(url: str) ->\
+          \ float:\n    \"\"\"\n    获取文件大小 (MB)\n    \"\"\"\n    try:\n        req\
+          \ = request.Request(url, method='HEAD')\n        with request.urlopen(req,\
+          \ timeout=10) as response:\n            content_length = response.headers.get('Content-Length')\n\
+          \            if content_length:\n                return int(content_length)\
+          \ / (1024 * 1024)\n        return 0\n    except Exception:\n        return\
+          \ 0\n\n\ndef get_audio_duration(url: str, ext: str) -> int:\n    \"\"\"\n\
+          \    获取音频文件时长 (秒)\n    通过读取文件头信息获取\n    \"\"\"\n    try:\n        # 下载文件头部\
+          \ (前 1MB 用于分析)\n        req = request.Request(url)\n        req.add_header('Range',\
+          \ 'bytes=0-1048576')\n        \n        with request.urlopen(req, timeout=30)\
+          \ as response:\n            header_data = response.read()\n        \n  \
+          \      if ext == 'mp3':\n            return estimate_mp3_duration(header_data,\
+          \ url)\n        elif ext == 'wav':\n            return parse_wav_duration(header_data)\n\
+          \        elif ext in ['m4a', 'aac', 'mp4']:\n            return estimate_m4a_duration(header_data,\
+          \ url)\n        else:\n            # 其他格式使用估算方法\n            return estimate_duration_by_size(url)\n\
+          \            \n    except Exception:\n        # 如果无法获取时长，使用文件大小估算\n    \
+          \    return estimate_duration_by_size(url)\n\n\ndef parse_wav_duration(data:\
+          \ bytes) -> int:\n    \"\"\"\n    解析 WAV 文件时长\n    \"\"\"\n    try:\n  \
+          \      if len(data) < 44:\n            return 0\n        \n        # WAV\
+          \ 文件头结构\n        # 字节 22-23: 声道数\n        # 字节 24-27: 采样率\n        # 字节\
+          \ 28-31: 字节率\n        # 字节 40-43: 数据大小\n        \n        if data[0:4] !=\
+          \ b'RIFF' or data[8:12] != b'WAVE':\n            return 0\n        \n  \
+          \      # 查找 'data' chunk\n        pos = 12\n        while pos < len(data)\
+          \ - 8:\n            chunk_id = data[pos:pos+4]\n            chunk_size =\
+          \ struct.unpack('<I', data[pos+4:pos+8])[0]\n            \n            if\
+          \ chunk_id == b'fmt ':\n                channels = struct.unpack('<H', data[pos+10:pos+12])[0]\n\
+          \                sample_rate = struct.unpack('<I', data[pos+12:pos+16])[0]\n\
+          \                byte_rate = struct.unpack('<I', data[pos+16:pos+20])[0]\n\
+          \            elif chunk_id == b'data':\n                if byte_rate > 0:\n\
+          \                    return chunk_size // byte_rate\n                break\n\
+          \            \n            pos += 8 + chunk_size\n        \n        return\
+          \ 0\n    except Exception:\n        return 0\n\n\ndef estimate_mp3_duration(data:\
+          \ bytes, url: str) -> int:\n    \"\"\"\n    估算 MP3 文件时长\n    通过比特率和文件大小计算\n\
+          \    \"\"\"\n    try:\n        # 尝试找到 MP3 帧头\n        bitrate_table = {\n\
+          \            0x0: 0, 0x1: 32, 0x2: 40, 0x3: 48,\n            0x4: 56, 0x5:\
+          \ 64, 0x6: 80, 0x7: 96,\n            0x8: 112, 0x9: 128, 0xa: 160, 0xb:\
+          \ 192,\n            0xc: 224, 0xd: 256, 0xe: 320, 0xf: 0\n        }\n  \
+          \      \n        # 查找帧同步字节 0xFF 0xFB/0xFA/0xF3/0xF2\n        for i in range(min(len(data)\
+          \ - 4, 10000)):\n            if data[i] == 0xFF and (data[i+1] & 0xE0) ==\
+          \ 0xE0:\n                bitrate_index = (data[i+2] >> 4) & 0x0F\n     \
+          \           bitrate = bitrate_table.get(bitrate_index, 128)\n          \
+          \      \n                if bitrate > 0:\n                    # 获取文件总大小\n\
+          \                    file_size = get_file_size(url)\n                  \
+          \  if file_size > 0:\n                        # 时长 = 文件大小(字节) * 8 / 比特率(kbps)\
+          \ / 1000\n                        duration = int((file_size * 1024 * 1024\
+          \ * 8) / (bitrate * 1000))\n                        return duration\n  \
+          \              break\n        \n        # 回退到基于文件大小的估算 (假设 128kbps)\n  \
+          \      return estimate_duration_by_size(url)\n        \n    except Exception:\n\
+          \        return estimate_duration_by_size(url)\n\n\ndef estimate_m4a_duration(data:\
+          \ bytes, url: str) -> int:\n    \"\"\"\n    估算 M4A/AAC 文件时长\n    \"\"\"\n\
+          \    try:\n        # M4A 使用 MP4 容器，查找 mvhd atom\n        pos = 0\n     \
+          \   while pos < len(data) - 8:\n            size = struct.unpack('>I', data[pos:pos+4])[0]\n\
+          \            atom_type = data[pos+4:pos+8]\n            \n            if\
+          \ atom_type == b'mvhd':\n                # mvhd atom 包含时长信息\n          \
+          \      version = data[pos+8]\n                if version == 0:\n       \
+          \             timescale = struct.unpack('>I', data[pos+20:pos+24])[0]\n\
+          \                    duration = struct.unpack('>I', data[pos+24:pos+28])[0]\n\
+          \                else:\n                    timescale = struct.unpack('>I',\
+          \ data[pos+28:pos+32])[0]\n                    duration = struct.unpack('>Q',\
+          \ data[pos+32:pos+40])[0]\n                \n                if timescale\
+          \ > 0:\n                    return duration // timescale\n            \n\
+          \            if size == 0:\n                break\n            pos += size\n\
+          \        \n        return estimate_duration_by_size(url)\n        \n   \
+          \ except Exception:\n        return estimate_duration_by_size(url)\n\n\n\
+          def estimate_duration_by_size(url: str) -> int:\n    \"\"\"\n    基于文件大小估算音频时长\n\
+          \    假设平均比特率为 128kbps\n    \"\"\"\n    try:\n        file_size_mb = get_file_size(url)\n\
+          \        if file_size_mb > 0:\n            # 128kbps = 16KB/s = 0.9375MB/min\n\
+          \            estimated_minutes = file_size_mb / 0.9375\n            return\
+          \ int(estimated_minutes * 60)\n        return 0\n    except Exception:\n\
+          \        return 0\n\n\ndef determine_route(file_type: str, duration_seconds:\
+          \ int, file_size_mb: float) -> tuple:\n    \"\"\"\n    根据文件类型和属性决定处理路由\n\
+          \    返回: (路由名称, 错误信息)\n    \"\"\"\n    # 文件大小限制 (2GB)\n    if file_size_mb\
+          \ > 2048:\n        return (\"blocked\", \"文件大小超过2GB限制，请压缩后重新上传。\")\n   \
+          \ \n    # 图片路由\n    if file_type == \"image\":\n        return (\"image\"\
+          , \"\")\n    \n    # 文档路由\n    if file_type == \"document\":\n        return\
+          \ (\"document\", \"\")\n    \n    # 音频路由 - 弹性策略\n    if file_type == \"\
+          audio\":\n        # 超长录音拦截 (>5小时 = 18000秒)\n        if duration_seconds\
+          \ > 18000:\n            hours = duration_seconds / 3600\n            return\
+          \ (\"blocked\", f\"该录音时长约{hours:.1f}小时，已超过单次处理上限（5小时），请分段上传以保证笔记精度。\")\n\
+          \        \n        # 长录音 (>=2分钟 = 120秒)\n        if duration_seconds >=\
+          \ 120:\n            return (\"audio_async\", \"\")\n        \n        #\
+          \ 短录音 (<2分钟)\n        return (\"audio_sync\", \"\")\n    \n    # 未知类型\n\
+          \    if file_type == \"unknown\":\n        return (\"error\", \"不支持的文件格式，请上传\
+          \ PDF、PPT、Word、图片或音频文件。\")\n    \n    return (\"error\", \"文件类型识别失败\")\n"
+        code_language: python3
+        outputs:
+          duration_seconds:
+            children: null
+            type: number
+          error_message:
+            children: null
+            type: string
+          file_size_mb:
+            children: null
+            type: number
+          file_subtype:
+            children: null
+            type: string
+          file_type:
+            children: null
+            type: string
+          file_url:
+            children: null
+            type: string
+          processing_route:
+            children: null
+            type: string
+          subject_hint:
+            children: null
+            type: string
+        selected: false
+        title: 环境感知
+        type: code
+        variables:
+        - value_selector:
+          - sys
+          - files
+          value_type: array[file]
+          variable: files
+      height: 52
+      id: '1766496837552'
+      position:
+        x: 274.33039811511753
+        y: 34
+      positionAbsolute:
+        x: 274.33039811511753
+        y: 34
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        cases:
+        - case_id: 181cc55a-0d8b-4d03-b280-f5a056015546
+          conditions:
+          - comparison_operator: is
+            id: 59f059db-f024-40fc-adf2-95c65ee6de66
+            value: image
+            varType: string
+            variable_selector:
+            - '1766496837552'
+            - processing_route
+          id: 181cc55a-0d8b-4d03-b280-f5a056015546
+          logical_operator: and
+        - case_id: 09193b02-c395-40cb-b075-c28d5f792763
+          conditions:
+          - comparison_operator: is
+            id: 09b3187a-5d71-4d37-8e7d-48265e0e79c4
+            value: document
+            varType: string
+            variable_selector:
+            - '1766496837552'
+            - processing_route
+          id: 09193b02-c395-40cb-b075-c28d5f792763
+          logical_operator: and
+        - case_id: 6af60bb4-215c-46f5-8aa3-14cfac940b2a
+          conditions:
+          - comparison_operator: is
+            id: 84cf274e-8bb1-48a0-8ce8-db555a7a3313
+            value: audio_sync
+            varType: string
+            variable_selector:
+            - '1766496837552'
+            - processing_route
+          id: 6af60bb4-215c-46f5-8aa3-14cfac940b2a
+          logical_operator: and
+        - case_id: 61f6db78-8b6e-44c6-b521-25f5a295293b
+          conditions:
+          - comparison_operator: is
+            id: dd28cadd-3b11-43d5-9618-b903b378fdda
+            value: audio_async
+            varType: string
+            variable_selector:
+            - '1766496837552'
+            - processing_route
+          id: 61f6db78-8b6e-44c6-b521-25f5a295293b
+          logical_operator: and
+        - case_id: ebfdc93f-bb4b-4253-90d2-76c6ed405008
+          conditions:
+          - comparison_operator: is
+            id: 96f919d7-b7f1-4c05-9114-775983895ae8
+            value: blocked
+            varType: string
+            variable_selector:
+            - '1766496837552'
+            - processing_route
+          id: ebfdc93f-bb4b-4253-90d2-76c6ed405008
+          logical_operator: and
+        - case_id: 428280eb-917e-4fd7-92e7-463bcd26cee3
+          conditions:
+          - comparison_operator: is
+            id: 71702664-1ed2-4cec-930f-adfeeaeb0431
+            value: text_only
+            varType: string
+            variable_selector:
+            - '1766496837552'
+            - processing_route
+          id: 428280eb-917e-4fd7-92e7-463bcd26cee3
+          logical_operator: and
+        - case_id: b2149ab9-82b5-45d1-8097-0edc0aa69dc8
+          conditions:
+          - comparison_operator: is
+            id: d0f74a84-b8ca-48cf-b48b-afdec859bad4
+            value: error
+            varType: string
+            variable_selector:
+            - '1766496837552'
+            - processing_route
+          id: b2149ab9-82b5-45d1-8097-0edc0aa69dc8
+          logical_operator: and
+        selected: false
+        title: IF/ELSE 路由
+        type: if-else
+      height: 412
+      id: '1766497157747'
+      position:
+        x: 561.2975536648605
+        y: 34
+      positionAbsolute:
+        x: 561.2975536648605
+        y: 34
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        model:
+          completion_params:
+            temperature: 0.1
+          mode: chat
+          name: qwen-vl-plus
+          provider: langgenius/tongyi/tongyi
+        prompt_template:
+        - id: 40364eab-87ed-4244-ac7c-17a19d61eaa2
+          role: system
+          text: '你是一个专业的OCR助手。请仔细识别图片中的所有文字内容，保持原有的格式和结构。
+
+            如果图片包含表格，请用Markdown表格格式输出。
+
+            如果图片包含公式，请用LaTeX格式输出。'
+        - id: 017ed9c0-070c-4c5d-a3e5-f589d49dad15
+          role: user
+          text: '请识别以下图片中的所有文字内容：
+
+            {{#1766496837552.file_url#}}'
+        selected: false
+        title: qwen_vl_ocr
+        type: llm
+        vision:
+          configs:
+            detail: high
+            variable_selector:
+            - sys
+            - files
+          enabled: true
+      height: 88
+      id: '1766498060630'
+      position:
+        x: 892.0778736864588
+        y: -213.67019054255042
+      positionAbsolute:
+        x: 892.0778736864588
+        y: -213.67019054255042
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        code: "\"\"\"\nDify 代码节点: 文档多路解析模块\n节点名称: document_parser\n功能: 根据文档子类型选择合适的解析策略\n\
+          \n输入变量:\n- file_url: 文件URL\n- file_subtype: 文件子类型 (pdf/ppt/docx/txt)\n\n\
+          输出变量:\n- extracted_text: 提取的文本内容\n- doc_type: 文档类型描述\n- page_count: 页数/幻灯片数\n\
+          - needs_visual_analysis: 是否需要视觉分析 (PPT)\n- visual_slides: 需要视觉分析的幻灯片索引列表\n\
+          - error_message: 错误信息\n\"\"\"\n\nimport io\nimport re\nfrom urllib import\
+          \ request\nfrom urllib.error import URLError\n\n\ndef main(file_url: str,\
+          \ file_subtype: str) -> dict:\n    \"\"\"\n    主函数: 文档多路解析\n    \"\"\"\n\
+          \    try:\n        if not file_url:\n            return {\n            \
+          \    \"extracted_text\": \"\",\n                \"doc_type\": \"unknown\"\
+          ,\n                \"page_count\": 0,\n                \"needs_visual_analysis\"\
+          : False,\n                \"visual_slides\": [],\n                \"error_message\"\
+          : \"未提供文件URL\"\n            }\n        \n        # 根据子类型选择解析策略\n       \
+          \ if file_subtype == \"pdf\":\n            return parse_pdf(file_url)\n\
+          \        elif file_subtype == \"ppt\":\n            return parse_ppt(file_url)\n\
+          \        elif file_subtype == \"docx\":\n            return parse_docx(file_url)\n\
+          \        elif file_subtype == \"txt\":\n            return parse_txt(file_url)\n\
+          \        else:\n            return {\n                \"extracted_text\"\
+          : \"\",\n                \"doc_type\": \"unknown\",\n                \"\
+          page_count\": 0,\n                \"needs_visual_analysis\": False,\n  \
+          \              \"visual_slides\": [],\n                \"error_message\"\
+          : f\"不支持的文档类型: {file_subtype}\"\n            }\n            \n    except\
+          \ Exception as e:\n        return {\n            \"extracted_text\": \"\"\
+          ,\n            \"doc_type\": \"error\",\n            \"page_count\": 0,\n\
+          \            \"needs_visual_analysis\": False,\n            \"visual_slides\"\
+          : [],\n            \"error_message\": f\"文档解析失败: {str(e)}\"\n        }\n\
+          \n\ndef download_file(url: str) -> bytes:\n    \"\"\"\n    下载文件内容\n    \"\
+          \"\"\n    try:\n        req = request.Request(url)\n        req.add_header('User-Agent',\
+          \ 'Mozilla/5.0')\n        with request.urlopen(req, timeout=60) as response:\n\
+          \            return response.read()\n    except URLError as e:\n       \
+          \ raise Exception(f\"文件下载失败: {str(e)}\")\n\n\ndef parse_pdf(file_url: str)\
+          \ -> dict:\n    \"\"\"\n    解析 PDF 文件\n    使用 PyMuPDF (fitz) 进行布局分析，支持双栏排版\n\
+          \    \n    注意: 此代码需要在 Dify 中配置 PyMuPDF 依赖\n    如果不可用，将回退到基础解析\n    \"\"\"\
+          \n    try:\n        # 下载文件\n        file_data = download_file(file_url)\n\
+          \        \n        # 尝试使用 PyMuPDF\n        try:\n            import fitz\
+          \  # PyMuPDF\n            \n            # 从内存加载 PDF\n            doc = fitz.open(stream=file_data,\
+          \ filetype=\"pdf\")\n            \n            extracted_text = []\n   \
+          \         page_count = len(doc)\n            \n            for page_num\
+          \ in range(page_count):\n                page = doc[page_num]\n        \
+          \        \n                # 使用布局保持模式提取文本\n                # 这对双栏排版特别有效\n\
+          \                text = page.get_text(\"text\", sort=True)\n           \
+          \     \n                # 清理文本\n                text = clean_text(text)\n\
+          \                \n                if text.strip():\n                  \
+          \  extracted_text.append(f\"【第{page_num + 1}页】\\n{text}\")\n           \
+          \ \n            doc.close()\n            \n            return {\n      \
+          \          \"extracted_text\": \"\\n\\n\".join(extracted_text),\n      \
+          \          \"doc_type\": \"PDF文档\",\n                \"page_count\": page_count,\n\
+          \                \"needs_visual_analysis\": False,\n                \"visual_slides\"\
+          : [],\n                \"error_message\": \"\"\n            }\n        \
+          \    \n        except ImportError:\n            # PyMuPDF 不可用，使用 Dify 内置解析器\n\
+          \            return {\n                \"extracted_text\": \"[请使用Dify内置文档解析器处理此PDF]\"\
+          ,\n                \"doc_type\": \"PDF文档\",\n                \"page_count\"\
+          : 0,\n                \"needs_visual_analysis\": False,\n              \
+          \  \"visual_slides\": [],\n                \"error_message\": \"PyMuPDF未安装，请使用Dify内置解析器\"\
+          \n            }\n            \n    except Exception as e:\n        return\
+          \ {\n            \"extracted_text\": \"\",\n            \"doc_type\": \"\
+          PDF文档\",\n            \"page_count\": 0,\n            \"needs_visual_analysis\"\
+          : False,\n            \"visual_slides\": [],\n            \"error_message\"\
+          : f\"PDF解析失败: {str(e)}\"\n        }\n\n\ndef parse_ppt(file_url: str) ->\
+          \ dict:\n    \"\"\"\n    解析 PPT/PPTX 文件\n    识别为\"视觉课件\"，标记需要 Qwen-VL 视觉分析的幻灯片\n\
+          \    \"\"\"\n    try:\n        # 下载文件\n        file_data = download_file(file_url)\n\
+          \        \n        try:\n            from pptx import Presentation\n   \
+          \         from pptx.enum.shapes import MSO_SHAPE_TYPE\n            \n  \
+          \          # 从内存加载 PPTX\n            prs = Presentation(io.BytesIO(file_data))\n\
+          \            \n            extracted_text = []\n            visual_slides\
+          \ = []  # 需要视觉分析的幻灯片索引\n            slide_count = len(prs.slides)\n    \
+          \        \n            for idx, slide in enumerate(prs.slides):\n      \
+          \          slide_num = idx + 1\n                slide_text = []\n      \
+          \          has_complex_visual = False\n                \n              \
+          \  for shape in slide.shapes:\n                    # 检测复杂视觉元素\n        \
+          \            if shape.shape_type in [\n                        MSO_SHAPE_TYPE.PICTURE,\n\
+          \                        MSO_SHAPE_TYPE.CHART,\n                       \
+          \ MSO_SHAPE_TYPE.DIAGRAM,\n                        MSO_SHAPE_TYPE.CANVAS,\n\
+          \                        MSO_SHAPE_TYPE.FREEFORM,\n                    \
+          \    MSO_SHAPE_TYPE.GROUP\n                    ]:\n                    \
+          \    has_complex_visual = True\n                    \n                 \
+          \   # 提取文本\n                    if hasattr(shape, \"text\") and shape.text.strip():\n\
+          \                        slide_text.append(shape.text.strip())\n       \
+          \             \n                    # 处理表格\n                    if shape.has_table:\n\
+          \                        table_text = extract_table_text(shape.table)\n\
+          \                        slide_text.append(table_text)\n               \
+          \ \n                # 如果有复杂视觉元素，标记需要视觉分析\n                if has_complex_visual:\n\
+          \                    visual_slides.append(slide_num)\n                \n\
+          \                if slide_text:\n                    extracted_text.append(f\"\
+          【幻灯片{slide_num}】\\n\" + \"\\n\".join(slide_text))\n            \n      \
+          \      # 判断是否需要视觉分析\n            needs_visual = len(visual_slides) > 0\n\
+          \            \n            return {\n                \"extracted_text\"\
+          : \"\\n\\n\".join(extracted_text),\n                \"doc_type\": \"视觉课件(PPT)\"\
+          ,\n                \"page_count\": slide_count,\n                \"needs_visual_analysis\"\
+          : needs_visual,\n                \"visual_slides\": visual_slides,\n   \
+          \             \"error_message\": \"\"\n            }\n            \n   \
+          \     except ImportError:\n            return {\n                \"extracted_text\"\
+          : \"[请使用Dify内置解析器处理此PPT]\",\n                \"doc_type\": \"视觉课件(PPT)\"\
+          ,\n                \"page_count\": 0,\n                \"needs_visual_analysis\"\
+          : True,\n                \"visual_slides\": [],\n                \"error_message\"\
+          : \"python-pptx未安装，请使用Dify内置解析器\"\n            }\n            \n    except\
+          \ Exception as e:\n        return {\n            \"extracted_text\": \"\"\
+          ,\n            \"doc_type\": \"视觉课件(PPT)\",\n            \"page_count\"\
+          : 0,\n            \"needs_visual_analysis\": False,\n            \"visual_slides\"\
+          : [],\n            \"error_message\": f\"PPT解析失败: {str(e)}\"\n        }\n\
+          \n\ndef extract_table_text(table) -> str:\n    \"\"\"\n    从 PPT 表格中提取文本\n\
+          \    \"\"\"\n    try:\n        rows = []\n        for row in table.rows:\n\
+          \            cells = []\n            for cell in row.cells:\n          \
+          \      cells.append(cell.text.strip())\n            rows.append(\" | \"\
+          .join(cells))\n        return \"\\n\".join(rows)\n    except Exception:\n\
+          \        return \"[表格内容]\"\n\n\ndef parse_docx(file_url: str) -> dict:\n\
+          \    \"\"\"\n    解析 Word 文档 (DOCX)\n    \"\"\"\n    try:\n        # 下载文件\n\
+          \        file_data = download_file(file_url)\n        \n        try:\n \
+          \           from docx import Document\n            \n            # 从内存加载\
+          \ DOCX\n            doc = Document(io.BytesIO(file_data))\n            \n\
+          \            extracted_text = []\n            \n            for para in\
+          \ doc.paragraphs:\n                text = para.text.strip()\n          \
+          \      if text:\n                    extracted_text.append(text)\n     \
+          \       \n            # 提取表格\n            for table in doc.tables:\n   \
+          \             table_text = []\n                for row in table.rows:\n\
+          \                    cells = [cell.text.strip() for cell in row.cells]\n\
+          \                    table_text.append(\" | \".join(cells))\n          \
+          \      if table_text:\n                    extracted_text.append(\"\\n\"\
+          .join(table_text))\n            \n            return {\n               \
+          \ \"extracted_text\": \"\\n\\n\".join(extracted_text),\n               \
+          \ \"doc_type\": \"Word文档\",\n                \"page_count\": 0,  # DOCX\
+          \ 不易获取页数\n                \"needs_visual_analysis\": False,\n          \
+          \      \"visual_slides\": [],\n                \"error_message\": \"\"\n\
+          \            }\n            \n        except ImportError:\n            return\
+          \ {\n                \"extracted_text\": \"[请使用Dify内置解析器处理此Word文档]\",\n\
+          \                \"doc_type\": \"Word文档\",\n                \"page_count\"\
+          : 0,\n                \"needs_visual_analysis\": False,\n              \
+          \  \"visual_slides\": [],\n                \"error_message\": \"python-docx未安装，请使用Dify内置解析器\"\
+          \n            }\n            \n    except Exception as e:\n        return\
+          \ {\n            \"extracted_text\": \"\",\n            \"doc_type\": \"\
+          Word文档\",\n            \"page_count\": 0,\n            \"needs_visual_analysis\"\
+          : False,\n            \"visual_slides\": [],\n            \"error_message\"\
+          : f\"Word解析失败: {str(e)}\"\n        }\n\n\ndef parse_txt(file_url: str) ->\
+          \ dict:\n    \"\"\"\n    解析纯文本文件\n    \"\"\"\n    try:\n        # 下载文件\n\
+          \        file_data = download_file(file_url)\n        \n        # 尝试多种编码\n\
+          \        encodings = ['utf-8', 'gbk', 'gb2312', 'utf-16', 'latin-1']\n \
+          \       text = None\n        \n        for encoding in encodings:\n    \
+          \        try:\n                text = file_data.decode(encoding)\n     \
+          \           break\n            except (UnicodeDecodeError, LookupError):\n\
+          \                continue\n        \n        if text is None:\n        \
+          \    text = file_data.decode('utf-8', errors='ignore')\n        \n     \
+          \   # 清理文本\n        text = clean_text(text)\n        \n        return {\n\
+          \            \"extracted_text\": text,\n            \"doc_type\": \"纯文本\"\
+          ,\n            \"page_count\": 0,\n            \"needs_visual_analysis\"\
+          : False,\n            \"visual_slides\": [],\n            \"error_message\"\
+          : \"\"\n        }\n        \n    except Exception as e:\n        return\
+          \ {\n            \"extracted_text\": \"\",\n            \"doc_type\": \"\
+          纯文本\",\n            \"page_count\": 0,\n            \"needs_visual_analysis\"\
+          : False,\n            \"visual_slides\": [],\n            \"error_message\"\
+          : f\"文本解析失败: {str(e)}\"\n        }\n\n\ndef clean_text(text: str) -> str:\n\
+          \    \"\"\"\n    清理文本内容\n    \"\"\"\n    if not text:\n        return \"\
+          \"\n    \n    # 移除多余空白\n    text = re.sub(r'\\n{3,}', '\\n\\n', text)\n\
+          \    text = re.sub(r' {2,}', ' ', text)\n    text = re.sub(r'\\t+', ' ',\
+          \ text)\n    \n    # 移除控制字符\n    text = re.sub(r'[\\x00-\\x08\\x0b\\x0c\\\
+          x0e-\\x1f\\x7f]', '', text)\n    \n    return text.strip()\n"
+        code_language: python3
+        outputs:
+          doc_type:
+            children: null
+            type: string
+          error_message:
+            children: null
+            type: string
+          extracted_text:
+            children: null
+            type: string
+          needs_visual_analysis:
+            children: null
+            type: boolean
+          page_count:
+            children: null
+            type: number
+          visual_slides:
+            children: null
+            type: array[number]
+        selected: false
+        title: document_parser
+        type: code
+        variables:
+        - value_selector:
+          - '1766496837552'
+          - file_url
+          value_type: string
+          variable: file_url
+        - value_selector:
+          - '1766496837552'
+          - file_subtype
+          value_type: string
+          variable: file_subtype
+      height: 52
+      id: '1766498361939'
+      position:
+        x: 892.0778736864588
+        y: -99.43556585769636
+      positionAbsolute:
+        x: 892.0778736864588
+        y: -99.43556585769636
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        code: "\"\"\"\nDify 代码节点: 短录音同步转写\n节点名称: speech_sync\n功能: 处理时长 < 2分钟的短录音，使用同步接口实现秒级响应\n\
+          \n输入变量:\n- file_url: 音频文件URL\n- duration_seconds: 音频时长(秒)\n\n输出变量:\n- transcription_text:\
+          \ 转写文本\n- transcription_status: 转写状态 (success/failed)\n- error_message:\
+          \ 错误信息\n- processing_time_seconds: 处理耗时(秒)\n\n依赖:\n- dashscope SDK\n- 环境变量:\
+          \ DASHSCOPE_API_KEY\n\"\"\"\n\nimport os\nimport time\nimport json\nfrom\
+          \ urllib import request\nfrom urllib.error import URLError\n\n\ndef main(file_url:\
+          \ str, duration_seconds: int) -> dict:\n    \"\"\"\n    主函数: 短录音同步转写\n \
+          \   \"\"\"\n    start_time = time.time()\n    \n    try:\n        # 验证输入\n\
+          \        if not file_url:\n            return {\n                \"transcription_text\"\
+          : \"\",\n                \"transcription_status\": \"failed\",\n       \
+          \         \"error_message\": \"未提供音频文件URL\",\n                \"processing_time_seconds\"\
+          : 0\n            }\n        \n        # 验证时长限制 (安全检查)\n        if duration_seconds\
+          \ >= 120:\n            return {\n                \"transcription_text\"\
+          : \"\",\n                \"transcription_status\": \"failed\",\n       \
+          \         \"error_message\": \"音频时长超过2分钟，请使用异步接口\",\n                \"\
+          processing_time_seconds\": 0\n            }\n        \n        # 调用同步转写接口\n\
+          \        transcription_text = call_sync_transcription(file_url)\n      \
+          \  \n        processing_time = time.time() - start_time\n        \n    \
+          \    return {\n            \"transcription_text\": transcription_text,\n\
+          \            \"transcription_status\": \"success\",\n            \"error_message\"\
+          : \"\",\n            \"processing_time_seconds\": round(processing_time,\
+          \ 2)\n        }\n        \n    except Exception as e:\n        processing_time\
+          \ = time.time() - start_time\n        return {\n            \"transcription_text\"\
+          : \"\",\n            \"transcription_status\": \"failed\",\n           \
+          \ \"error_message\": f\"同步转写失败: {str(e)}\",\n            \"processing_time_seconds\"\
+          : round(processing_time, 2)\n        }\n\n\ndef call_sync_transcription(file_url:\
+          \ str) -> str:\n    \"\"\"\n    调用阿里云百炼 Paraformer 同步转写接口\n    \n    对于短音频，使用\
+          \ async_call + wait 组合实现同步效果\n    \"\"\"\n    try:\n        import dashscope\n\
+          \        from dashscope.audio.asr import Transcription\n        \n     \
+          \   # 获取 API Key (从环境变量或 Dify 配置)\n        api_key = os.environ.get('DASHSCOPE_API_KEY')\n\
+          \        if api_key:\n            dashscope.api_key = api_key\n        \n\
+          \        # 提交转写任务\n        task_response = Transcription.async_call(\n \
+          \           model='paraformer-v1',\n            file_urls=[file_url],\n\
+          \            language_hints=['zh', 'en']  # 支持中英文混合\n        )\n       \
+          \ \n        # 检查任务提交是否成功\n        if not hasattr(task_response, 'output')\
+          \ or not task_response.output:\n            raise Exception(\"任务提交失败，未获取到任务ID\"\
+          )\n        \n        task_id = task_response.output.task_id\n        \n\
+          \        # 等待任务完成 (同步等待)\n        transcription_response = Transcription.wait(task=task_id)\n\
+          \        \n        # 检查任务状态\n        if transcription_response.output.task_status\
+          \ != 'SUCCEEDED':\n            raise Exception(f\"转写任务失败: {transcription_response.output.task_status}\"\
+          )\n        \n        # 获取转写结果\n        results = transcription_response.output.get('results',\
+          \ [])\n        if not results:\n            raise Exception(\"未获取到转写结果\"\
+          )\n        \n        # 下载并解析转写结果\n        transcription_url = results[0].get('transcription_url')\n\
+          \        if not transcription_url:\n            raise Exception(\"未获取到转写结果URL\"\
+          )\n        \n        # 获取转写文本\n        transcription_text = fetch_transcription_text(transcription_url)\n\
+          \        \n        return transcription_text\n        \n    except ImportError:\n\
+          \        # dashscope 未安装，使用 HTTP API\n        return call_sync_transcription_http(file_url)\n\
+          \n\ndef call_sync_transcription_http(file_url: str) -> str:\n    \"\"\"\n\
+          \    使用 HTTP API 调用转写接口 (备用方案)\n    \"\"\"\n    api_key = os.environ.get('DASHSCOPE_API_KEY',\
+          \ '')\n    \n    # 提交任务\n    submit_url = \"https://dashscope.aliyuncs.com/api/v1/services/audio/asr/transcription\"\
+          \n    \n    headers = {\n        \"Authorization\": f\"Bearer {api_key}\"\
+          ,\n        \"Content-Type\": \"application/json\"\n    }\n    \n    payload\
+          \ = {\n        \"model\": \"paraformer-v1\",\n        \"input\": {\n   \
+          \         \"file_urls\": [file_url]\n        },\n        \"parameters\"\
+          : {\n            \"language_hints\": [\"zh\", \"en\"]\n        }\n    }\n\
+          \    \n    # 提交任务\n    req = request.Request(\n        submit_url,\n   \
+          \     data=json.dumps(payload).encode('utf-8'),\n        headers=headers,\n\
+          \        method='POST'\n    )\n    \n    with request.urlopen(req, timeout=30)\
+          \ as response:\n        result = json.loads(response.read().decode('utf-8'))\n\
+          \    \n    task_id = result.get('output', {}).get('task_id')\n    if not\
+          \ task_id:\n        raise Exception(\"任务提交失败\")\n    \n    # 轮询等待结果 (短音频通常很快完成)\n\
+          \    status_url = f\"https://dashscope.aliyuncs.com/api/v1/tasks/{task_id}\"\
+          \n    \n    max_wait = 60  # 最多等待60秒\n    interval = 2   # 每2秒检查一次\n   \
+          \ elapsed = 0\n    \n    while elapsed < max_wait:\n        time.sleep(interval)\n\
+          \        elapsed += interval\n        \n        req = request.Request(status_url,\
+          \ headers=headers)\n        with request.urlopen(req, timeout=10) as response:\n\
+          \            status_result = json.loads(response.read().decode('utf-8'))\n\
+          \        \n        task_status = status_result.get('output', {}).get('task_status')\n\
+          \        \n        if task_status == 'SUCCEEDED':\n            results =\
+          \ status_result.get('output', {}).get('results', [])\n            if results:\n\
+          \                transcription_url = results[0].get('transcription_url')\n\
+          \                return fetch_transcription_text(transcription_url)\n  \
+          \          raise Exception(\"转写成功但未获取到结果\")\n        \n        elif task_status\
+          \ in ['FAILED', 'CANCELED']:\n            raise Exception(f\"转写任务{task_status}\"\
+          )\n    \n    raise Exception(\"转写超时\")\n\n\ndef fetch_transcription_text(transcription_url:\
+          \ str) -> str:\n    \"\"\"\n    从转写结果URL获取文本\n    \"\"\"\n    try:\n   \
+          \     req = request.Request(transcription_url)\n        with request.urlopen(req,\
+          \ timeout=30) as response:\n            result = json.loads(response.read().decode('utf-8'))\n\
+          \        \n        # 提取文本\n        transcripts = result.get('transcripts',\
+          \ [])\n        if not transcripts:\n            return \"\"\n        \n\
+          \        # 合并所有转写文本\n        text_parts = []\n        for transcript in\
+          \ transcripts:\n            text = transcript.get('text', '')\n        \
+          \    if text:\n                text_parts.append(text)\n        \n     \
+          \   return '\\n'.join(text_parts)\n        \n    except Exception as e:\n\
+          \        raise Exception(f\"获取转写结果失败: {str(e)}\")\n"
+        code_language: python3
+        outputs:
+          error_message:
+            children: null
+            type: string
+          processing_time_seconds:
+            children: null
+            type: number
+          transcription_status:
+            children: null
+            type: string
+          transcription_text:
+            children: null
+            type: string
+        selected: false
+        title: speech_sync
+        type: code
+        variables:
+        - value_selector:
+          - '1766496837552'
+          - file_url
+          value_type: string
+          variable: file_url
+        - value_selector:
+          - '1766496837552'
+          - duration_seconds
+          value_type: number
+          variable: duration_seconds
+      height: 52
+      id: '1766498474719'
+      position:
+        x: 892.0778736864588
+        y: 34
+      positionAbsolute:
+        x: 892.0778736864588
+        y: 34
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        model:
+          completion_params:
+            temperature: 0.3
+          mode: chat
+          name: qwen-vl-plus
+          provider: langgenius/tongyi/tongyi
+        prompt_template:
+        - id: 20f24d6f-96d0-4216-abc6-a3f347b16753
+          role: system
+          text: '你是一个专业的课件分析助手。请分析PPT幻灯片中的视觉元素，包括：
+
+            1. 流程图的逻辑关系
+
+            2. 图表的数据含义
+
+            3. 图片与文字的关联
+
+            请用结构化的文字描述这些视觉信息。'
+        selected: false
+        title: ppt_visual_analysis
+        type: llm
+        vision:
+          enabled: false
+      height: 88
+      id: '1766498489954'
+      position:
+        x: 1455.9445601053046
+        y: -99.43556585769636
+      positionAbsolute:
+        x: 1455.9445601053046
+        y: -99.43556585769636
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        code: "\"\"\"\nDify 代码节点: 长录音异步转写 + 轮询机制\n节点名称: speech_async\n功能: 处理时长 2分钟-5小时的长录音，使用异步接口\
+          \ + 轮询机制\n      彻底规避 Dify 504 超时报错\n\n输入变量:\n- file_url: 音频文件URL\n- duration_seconds:\
+          \ 音频时长(秒)\n\n输出变量:\n- transcription_text: 转写文本\n- transcription_status:\
+          \ 转写状态 (success/failed/pending)\n- task_id: 任务ID (用于后续查询)\n- error_message:\
+          \ 错误信息\n- processing_time_seconds: 处理耗时(秒)\n- poll_count: 轮询次数\n\n依赖:\n\
+          - dashscope SDK 或 HTTP API\n- 环境变量: DASHSCOPE_API_KEY\n\n轮询策略:\n- 轮询间隔:\
+          \ 30秒\n- 最大轮询次数: 基于音频时长动态计算\n- 超时保护: 最长等待时间 = 音频时长 * 1.5 + 300秒\n\"\"\"\n\
+          \nimport os\nimport time\nimport json\nfrom urllib import request\nfrom\
+          \ urllib.error import URLError\n\n\n# 轮询配置\nPOLL_INTERVAL = 30  # 轮询间隔(秒)\n\
+          MIN_TIMEOUT = 300   # 最小超时时间(秒)\nTIMEOUT_MULTIPLIER = 1.5  # 超时时间倍数\n\n\n\
+          def main(file_url: str, duration_seconds: int) -> dict:\n    \"\"\"\n  \
+          \  主函数: 长录音异步转写\n    \"\"\"\n    start_time = time.time()\n    poll_count\
+          \ = 0\n    \n    try:\n        # 验证输入\n        if not file_url:\n      \
+          \      return create_response(\n                \"\", \"failed\", \"\",\
+          \ \"未提供音频文件URL\", 0, 0\n            )\n        \n        # 验证时长限制 (安全检查)\n\
+          \        if duration_seconds > 18000:  # 5小时\n            return create_response(\n\
+          \                \"\", \"blocked\", \"\",\n                f\"音频时长约{duration_seconds/3600:.1f}小时，已超过单次处理上限（5小时），请分段上传以保证笔记精度。\"\
+          ,\n                0, 0\n            )\n        \n        # 计算最大等待时间\n \
+          \       max_wait_time = max(\n            duration_seconds * TIMEOUT_MULTIPLIER\
+          \ + MIN_TIMEOUT,\n            MIN_TIMEOUT\n        )\n        max_polls\
+          \ = int(max_wait_time / POLL_INTERVAL) + 1\n        \n        # 获取 API Key\n\
+          \        api_key = os.environ.get('DASHSCOPE_API_KEY', '')\n        if not\
+          \ api_key:\n            return create_response(\n                \"\", \"\
+          failed\", \"\", \"未配置 DASHSCOPE_API_KEY\", 0, 0\n            )\n       \
+          \ \n        # 步骤1: 提交异步任务\n        task_id = submit_transcription_task(file_url,\
+          \ api_key)\n        \n        if not task_id:\n            return create_response(\n\
+          \                \"\", \"failed\", \"\", \"任务提交失败，未获取到任务ID\", \n       \
+          \         time.time() - start_time, 0\n            )\n        \n       \
+          \ # 步骤2: 轮询等待结果\n        transcription_text = \"\"\n        task_status\
+          \ = \"pending\"\n        error_message = \"\"\n        \n        while poll_count\
+          \ < max_polls:\n            # 等待轮询间隔\n            time.sleep(POLL_INTERVAL)\n\
+          \            poll_count += 1\n            \n            # 查询任务状态\n     \
+          \       status_result = query_task_status(task_id, api_key)\n          \
+          \  task_status = status_result.get('status', 'unknown')\n            \n\
+          \            if task_status == 'SUCCEEDED':\n                # 任务成功，获取转写结果\n\
+          \                transcription_url = status_result.get('transcription_url')\n\
+          \                if transcription_url:\n                    transcription_text\
+          \ = fetch_transcription_text(transcription_url)\n                break\n\
+          \                \n            elif task_status in ['FAILED', 'CANCELED']:\n\
+          \                # 任务失败\n                error_message = status_result.get('message',\
+          \ f'任务{task_status}')\n                break\n                \n       \
+          \     elif task_status == 'RUNNING':\n                # 任务进行中，继续轮询\n   \
+          \             continue\n                \n            else:\n          \
+          \      # 未知状态，继续轮询\n                continue\n        \n        # 检查是否超时\n\
+          \        if poll_count >= max_polls and task_status not in ['SUCCEEDED',\
+          \ 'FAILED', 'CANCELED']:\n            return create_response(\n        \
+          \        \"\", \"timeout\", task_id,\n                f\"转写任务超时，已轮询{poll_count}次。任务ID:\
+          \ {task_id}，可稍后手动查询。\",\n                time.time() - start_time, poll_count\n\
+          \            )\n        \n        # 返回结果\n        processing_time = time.time()\
+          \ - start_time\n        \n        if task_status == 'SUCCEEDED' and transcription_text:\n\
+          \            return create_response(\n                transcription_text,\
+          \ \"success\", task_id, \"\",\n                processing_time, poll_count\n\
+          \            )\n        else:\n            return create_response(\n   \
+          \             \"\", \"failed\", task_id, error_message or \"转写失败\",\n  \
+          \              processing_time, poll_count\n            )\n        \n  \
+          \  except Exception as e:\n        processing_time = time.time() - start_time\n\
+          \        return create_response(\n            \"\", \"failed\", \"\", f\"\
+          异步转写失败: {str(e)}\",\n            processing_time, poll_count\n        )\n\
+          \n\ndef create_response(text: str, status: str, task_id: str, \n       \
+          \            error: str, proc_time: float, polls: int) -> dict:\n    \"\"\
+          \"\n    创建标准响应格式\n    \"\"\"\n    return {\n        \"transcription_text\"\
+          : text,\n        \"transcription_status\": status,\n        \"task_id\"\
+          : task_id,\n        \"error_message\": error,\n        \"processing_time_seconds\"\
+          : round(proc_time, 2),\n        \"poll_count\": polls\n    }\n\n\ndef submit_transcription_task(file_url:\
+          \ str, api_key: str) -> str:\n    \"\"\"\n    提交异步转写任务\n    返回任务ID\n   \
+          \ \"\"\"\n    try:\n        # 尝试使用 dashscope SDK\n        try:\n       \
+          \     import dashscope\n            from dashscope.audio.asr import Transcription\n\
+          \            \n            dashscope.api_key = api_key\n            \n \
+          \           task_response = Transcription.async_call(\n                model='paraformer-v1',\n\
+          \                file_urls=[file_url],\n                language_hints=['zh',\
+          \ 'en']\n            )\n            \n            if hasattr(task_response,\
+          \ 'output') and task_response.output:\n                return task_response.output.task_id\n\
+          \            \n            return None\n            \n        except ImportError:\n\
+          \            # SDK 不可用，使用 HTTP API\n            return submit_task_http(file_url,\
+          \ api_key)\n            \n    except Exception as e:\n        raise Exception(f\"\
+          任务提交失败: {str(e)}\")\n\n\ndef submit_task_http(file_url: str, api_key: str)\
+          \ -> str:\n    \"\"\"\n    使用 HTTP API 提交任务\n    \"\"\"\n    submit_url\
+          \ = \"https://dashscope.aliyuncs.com/api/v1/services/audio/asr/transcription\"\
+          \n    \n    headers = {\n        \"Authorization\": f\"Bearer {api_key}\"\
+          ,\n        \"Content-Type\": \"application/json\",\n        \"X-DashScope-Async\"\
+          : \"enable\"  # 启用异步模式\n    }\n    \n    payload = {\n        \"model\"\
+          : \"paraformer-v1\",\n        \"input\": {\n            \"file_urls\": [file_url]\n\
+          \        },\n        \"parameters\": {\n            \"language_hints\":\
+          \ [\"zh\", \"en\"],\n            \"diarization_enabled\": True,  # 启用说话人分离\n\
+          \            \"speaker_count\": 2  # 预估说话人数\n        }\n    }\n    \n  \
+          \  req = request.Request(\n        submit_url,\n        data=json.dumps(payload).encode('utf-8'),\n\
+          \        headers=headers,\n        method='POST'\n    )\n    \n    with\
+          \ request.urlopen(req, timeout=60) as response:\n        result = json.loads(response.read().decode('utf-8'))\n\
+          \    \n    return result.get('output', {}).get('task_id')\n\n\ndef query_task_status(task_id:\
+          \ str, api_key: str) -> dict:\n    \"\"\"\n    查询任务状态\n    返回: {'status':\
+          \ str, 'transcription_url': str, 'message': str}\n    \"\"\"\n    try:\n\
+          \        # 尝试使用 dashscope SDK\n        try:\n            import dashscope\n\
+          \            from dashscope.audio.asr import Transcription\n           \
+          \ \n            dashscope.api_key = api_key\n            \n            response\
+          \ = Transcription.fetch(task=task_id)\n            \n            status\
+          \ = 'unknown'\n            transcription_url = None\n            message\
+          \ = ''\n            \n            if hasattr(response, 'output') and response.output:\n\
+          \                status = response.output.task_status\n                \n\
+          \                if status == 'SUCCEEDED':\n                    results\
+          \ = response.output.get('results', [])\n                    if results:\n\
+          \                        transcription_url = results[0].get('transcription_url')\n\
+          \                \n                elif status in ['FAILED', 'CANCELED']:\n\
+          \                    message = response.output.get('message', '')\n    \
+          \        \n            return {\n                'status': status,\n   \
+          \             'transcription_url': transcription_url,\n                'message':\
+          \ message\n            }\n            \n        except ImportError:\n  \
+          \          # SDK 不可用，使用 HTTP API\n            return query_task_http(task_id,\
+          \ api_key)\n            \n    except Exception as e:\n        return {\n\
+          \            'status': 'error',\n            'transcription_url': None,\n\
+          \            'message': str(e)\n        }\n\n\ndef query_task_http(task_id:\
+          \ str, api_key: str) -> dict:\n    \"\"\"\n    使用 HTTP API 查询任务状态\n    \"\
+          \"\"\n    status_url = f\"https://dashscope.aliyuncs.com/api/v1/tasks/{task_id}\"\
+          \n    \n    headers = {\n        \"Authorization\": f\"Bearer {api_key}\"\
+          \n    }\n    \n    req = request.Request(status_url, headers=headers)\n\
+          \    \n    with request.urlopen(req, timeout=30) as response:\n        result\
+          \ = json.loads(response.read().decode('utf-8'))\n    \n    output = result.get('output',\
+          \ {})\n    status = output.get('task_status', 'unknown')\n    transcription_url\
+          \ = None\n    message = output.get('message', '')\n    \n    if status ==\
+          \ 'SUCCEEDED':\n        results = output.get('results', [])\n        if\
+          \ results:\n            transcription_url = results[0].get('transcription_url')\n\
+          \    \n    return {\n        'status': status,\n        'transcription_url':\
+          \ transcription_url,\n        'message': message\n    }\n\n\ndef fetch_transcription_text(transcription_url:\
+          \ str) -> str:\n    \"\"\"\n    从转写结果URL获取完整文本\n    \"\"\"\n    try:\n \
+          \       req = request.Request(transcription_url)\n        with request.urlopen(req,\
+          \ timeout=60) as response:\n            result = json.loads(response.read().decode('utf-8'))\n\
+          \        \n        # 提取文本\n        transcripts = result.get('transcripts',\
+          \ [])\n        if not transcripts:\n            return \"\"\n        \n\
+          \        # 合并所有转写文本，保留时间戳信息\n        text_parts = []\n        \n       \
+          \ for transcript in transcripts:\n            channel_id = transcript.get('channel_id',\
+          \ 0)\n            sentences = transcript.get('sentences', [])\n        \
+          \    \n            for sentence in sentences:\n                text = sentence.get('text',\
+          \ '')\n                begin_time = sentence.get('begin_time', 0)\n    \
+          \            \n                if text:\n                    # 转换时间戳为可读格式\n\
+          \                    time_str = format_timestamp(begin_time)\n         \
+          \           text_parts.append(f\"[{time_str}] {text}\")\n        \n    \
+          \    return '\\n'.join(text_parts)\n        \n    except Exception as e:\n\
+          \        raise Exception(f\"获取转写结果失败: {str(e)}\")\n\n\ndef format_timestamp(ms:\
+          \ int) -> str:\n    \"\"\"\n    将毫秒时间戳转换为 HH:MM:SS 格式\n    \"\"\"\n    total_seconds\
+          \ = ms // 1000\n    hours = total_seconds // 3600\n    minutes = (total_seconds\
+          \ % 3600) // 60\n    seconds = total_seconds % 60\n    \n    if hours >\
+          \ 0:\n        return f\"{hours:02d}:{minutes:02d}:{seconds:02d}\"\n    else:\n\
+          \        return f\"{minutes:02d}:{seconds:02d}\"\n"
+        code_language: python3
+        outputs:
+          error_message:
+            children: null
+            type: string
+          poll_count:
+            children: null
+            type: number
+          processing_time_seconds:
+            children: null
+            type: number
+          task_id:
+            children: null
+            type: string
+          transcription_status:
+            children: null
+            type: string
+          transcription_text:
+            children: null
+            type: string
+        retry_config:
+          max_retries: 3
+          retry_enabled: false
+          retry_interval: 1000
+        selected: false
+        title: speech_async
+        type: code
+        variables:
+        - value_selector:
+          - '1766496837552'
+          - file_url
+          value_type: string
+          variable: file_url
+        - value_selector:
+          - '1766496837552'
+          - duration_seconds
+          value_type: number
+          variable: duration_seconds
+      height: 52
+      id: '17664986482590'
+      position:
+        x: 892.0778736864588
+        y: 97.89361912399269
+      positionAbsolute:
+        x: 892.0778736864588
+        y: 97.89361912399269
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        code: "\"\"\"\nDify 代码节点: 文本分片器\n节点名称: text_chunker\n功能: 将长文本切分为逻辑块，为 Map-Reduce\
+          \ 总结做准备\n      解决长文本\"注意力丢失\"问题\n\n输入变量:\n- text: 待分片的文本内容\n- chunk_size:\
+          \ 目标分片大小(字符数)，默认10000\n- overlap: 分片重叠字符数，默认200\n\n输出变量:\n- chunks: 分片列表\n\
+          - chunk_count: 分片数量\n- total_chars: 总字符数\n- needs_chunking: 是否需要分片 (文本量>15000字)\n\
+          - error_message: 错误信息\n\n分片策略:\n1. 若文本量 <= 15000 字，不分片，直接返回\n2. 若文本量 > 15000\
+          \ 字，按段落边界切分为 ~10000 字/块\n3. 分片之间有 200 字重叠，确保上下文连贯\n\"\"\"\n\nimport re\n\
+          \n\n# 分片配置\nchunk_size = 10000\noverlap = 200\nDEFAULT_CHUNK_SIZE = 10000\
+          \      # 默认分片大小\nCHUNK_THRESHOLD = 15000         # 分片阈值\nDEFAULT_OVERLAP\
+          \ = 200           # 默认重叠字符数\nMIN_CHUNK_SIZE = 2000           # 最小分片大小\n\n\
+          \ndef main(text: str) -> dict:\n    \"\"\"\n    主函数: 文本分片\n    \"\"\"\n\
+          \    try:\n        # 验证输入\n        if not text or not text.strip():\n  \
+          \          return {\n                \"chunks\": [],\n                \"\
+          chunk_count\": 0,\n                \"total_chars\": 0,\n               \
+          \ \"needs_chunking\": False,\n                \"error_message\": \"\"\n\
+          \            }\n        \n        # 清理文本\n        text = clean_text(text)\n\
+          \        total_chars = len(text)\n        \n        # 判断是否需要分片\n       \
+          \ if total_chars <= CHUNK_THRESHOLD:\n            return {\n           \
+          \     \"chunks\": [text],\n                \"chunk_count\": 1,\n       \
+          \         \"total_chars\": total_chars,\n                \"needs_chunking\"\
+          : False,\n                \"error_message\": \"\"\n            }\n     \
+          \   \n        # 执行分片\n        chunks = smart_chunk(text, chunk_size, overlap)\n\
+          \        \n        return {\n            \"chunks\": chunks,\n         \
+          \   \"chunk_count\": len(chunks),\n            \"total_chars\": total_chars,\n\
+          \            \"needs_chunking\": True,\n            \"error_message\": \"\
+          \"\n        }\n        \n    except Exception as e:\n        return {\n\
+          \            \"chunks\": [],\n            \"chunk_count\": 0,\n        \
+          \    \"total_chars\": 0,\n            \"needs_chunking\": False,\n     \
+          \       \"error_message\": f\"文本分片失败: {str(e)}\"\n        }\n\n\ndef clean_text(text:\
+          \ str) -> str:\n    \"\"\"\n    清理文本\n    \"\"\"\n    # 移除多余空白\n    text\
+          \ = re.sub(r'\\n{3,}', '\\n\\n', text)\n    text = re.sub(r' {3,}', '  ',\
+          \ text)\n    \n    # 移除控制字符\n    text = re.sub(r'[\\x00-\\x08\\x0b\\x0c\\\
+          x0e-\\x1f\\x7f]', '', text)\n    \n    return text.strip()\n\n\ndef smart_chunk(text:\
+          \ str, chunk_size: int, overlap: int) -> list:\n    \"\"\"\n    智能分片: 按段落边界切分，保持语义完整性\n\
+          \    \"\"\"\n    chunks = []\n    \n    # 首先按段落分割\n    paragraphs = split_into_paragraphs(text)\n\
+          \    \n    current_chunk = []\n    current_size = 0\n    \n    for para\
+          \ in paragraphs:\n        para_size = len(para)\n        \n        # 如果单个段落超过分片大小，需要进一步切分\n\
+          \        if para_size > chunk_size:\n            # 先保存当前累积的内容\n        \
+          \    if current_chunk:\n                chunks.append('\\n\\n'.join(current_chunk))\n\
+          \                current_chunk = []\n                current_size = 0\n\
+          \            \n            # 切分大段落\n            sub_chunks = split_large_paragraph(para,\
+          \ chunk_size, overlap)\n            chunks.extend(sub_chunks)\n        \
+          \    continue\n        \n        # 检查是否需要开始新分片\n        if current_size\
+          \ + para_size > chunk_size and current_chunk:\n            # 保存当前分片\n  \
+          \          chunk_text = '\\n\\n'.join(current_chunk)\n            chunks.append(chunk_text)\n\
+          \            \n            # 开始新分片，保留重叠部分\n            overlap_paras = get_overlap_paragraphs(current_chunk,\
+          \ overlap)\n            current_chunk = overlap_paras\n            current_size\
+          \ = sum(len(p) for p in current_chunk)\n        \n        # 添加段落到当前分片\n\
+          \        current_chunk.append(para)\n        current_size += para_size\n\
+          \    \n    # 保存最后一个分片\n    if current_chunk:\n        chunks.append('\\\
+          n\\n'.join(current_chunk))\n    \n    # 后处理: 合并过小的分片\n    chunks = merge_small_chunks(chunks,\
+          \ MIN_CHUNK_SIZE)\n    \n    return chunks\n\n\ndef split_into_paragraphs(text:\
+          \ str) -> list:\n    \"\"\"\n    将文本分割为段落\n    \"\"\"\n    # 按双换行或时间戳标记分割\n\
+          \    paragraphs = re.split(r'\\n\\n+|\\n(?=\\[\\d{1,2}:\\d{2})', text)\n\
+          \    \n    # 过滤空段落\n    paragraphs = [p.strip() for p in paragraphs if p.strip()]\n\
+          \    \n    return paragraphs\n\n\ndef split_large_paragraph(para: str, chunk_size:\
+          \ int, overlap: int) -> list:\n    \"\"\"\n    切分超大段落\n    按句子边界切分\n   \
+          \ \"\"\"\n    chunks = []\n    \n    # 按句子分割\n    sentences = split_into_sentences(para)\n\
+          \    \n    current_chunk = []\n    current_size = 0\n    \n    for sentence\
+          \ in sentences:\n        sent_size = len(sentence)\n        \n        #\
+          \ 如果单个句子超过分片大小，强制切分\n        if sent_size > chunk_size:\n            if\
+          \ current_chunk:\n                chunks.append(''.join(current_chunk))\n\
+          \                current_chunk = []\n                current_size = 0\n\
+          \            \n            # 强制按字符切分\n            for i in range(0, sent_size,\
+          \ chunk_size - overlap):\n                end = min(i + chunk_size, sent_size)\n\
+          \                chunks.append(sentence[i:end])\n            continue\n\
+          \        \n        # 检查是否需要开始新分片\n        if current_size + sent_size >\
+          \ chunk_size and current_chunk:\n            chunks.append(''.join(current_chunk))\n\
+          \            \n            # 保留重叠\n            overlap_text = ''.join(current_chunk)[-overlap:]\
+          \ if overlap > 0 else ''\n            current_chunk = [overlap_text] if\
+          \ overlap_text else []\n            current_size = len(overlap_text)\n \
+          \       \n        current_chunk.append(sentence)\n        current_size +=\
+          \ sent_size\n    \n    if current_chunk:\n        chunks.append(''.join(current_chunk))\n\
+          \    \n    return chunks\n\n\ndef split_into_sentences(text: str) -> list:\n\
+          \    \"\"\"\n    将文本分割为句子\n    \"\"\"\n    # 中英文句子分割\n    pattern = r'(?<=[。！？.!?])\\\
+          s*'\n    sentences = re.split(pattern, text)\n    \n    # 过滤空句子\n    sentences\
+          \ = [s.strip() for s in sentences if s.strip()]\n    \n    return sentences\n\
+          \n\ndef get_overlap_paragraphs(paragraphs: list, overlap: int) -> list:\n\
+          \    \"\"\"\n    获取重叠部分的段落\n    \"\"\"\n    if not paragraphs or overlap\
+          \ <= 0:\n        return []\n    \n    # 从后往前累积，直到达到重叠字符数\n    overlap_paras\
+          \ = []\n    total_size = 0\n    \n    for para in reversed(paragraphs):\n\
+          \        if total_size >= overlap:\n            break\n        overlap_paras.insert(0,\
+          \ para)\n        total_size += len(para)\n    \n    return overlap_paras\n\
+          \n\ndef merge_small_chunks(chunks: list, min_size: int) -> list:\n    \"\
+          \"\"\n    合并过小的分片\n    \"\"\"\n    if len(chunks) <= 1:\n        return\
+          \ chunks\n    \n    merged = []\n    current = chunks[0]\n    \n    for\
+          \ i in range(1, len(chunks)):\n        if len(current) < min_size:\n   \
+          \         # 当前分片太小，与下一个合并\n            current = current + '\\n\\n' + chunks[i]\n\
+          \        else:\n            merged.append(current)\n            current\
+          \ = chunks[i]\n    \n    # 添加最后一个分片\n    if current:\n        # 如果最后一个分片太小，与前一个合并\n\
+          \        if len(current) < min_size and merged:\n            merged[-1]\
+          \ = merged[-1] + '\\n\\n' + current\n        else:\n            merged.append(current)\n\
+          \    \n    return merged\n"
+        code_language: python3
+        outputs:
+          chunk_count:
+            children: null
+            type: number
+          chunks:
+            children: null
+            type: array[string]
+          error_message:
+            children: null
+            type: string
+          needs_chunking:
+            children: null
+            type: boolean
+          total_chars:
+            children: null
+            type: number
+        selected: false
+        title: text_chunker
+        type: code
+        variables:
+        - value_selector:
+          - '1766503845294'
+          - output
+          value_type: string
+          variable: text
+      height: 52
+      id: '17664986908000'
+      position:
+        x: 2158.404429660972
+        y: 86.12905554840128
+      positionAbsolute:
+        x: 2158.404429660972
+        y: 86.12905554840128
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        answer: '## ⚠️ 处理遇到问题
+
+          **错误信息**: {{#1766496837552.error_message#}}
+
+          如需帮助，请参考以下建议：
+
+          1. 检查文件格式是否为支持的类型（PDF、PPT、Word、音频、图片）
+
+          2. 确认文件大小在限制范围内（最大 200MB）
+
+          3. 对于超长录音，请分段上传'
+        selected: false
+        title: blocked/error_response
+        type: answer
+        variables: []
+      height: 199
+      id: '1766498839120'
+      position:
+        x: 892.0778736864588
+        y: 158.2145316258098
+      positionAbsolute:
+        x: 892.0778736864588
+        y: 158.2145316258098
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: is
+            id: 204b103a-f6dc-4da6-bd95-8407a9ca77a9
+            value: true
+            varType: boolean
+            variable_selector:
+            - '1766498361939'
+            - needs_visual_analysis
+          id: 'true'
+          logical_operator: and
+        selected: false
+        title: visual_analysis_router
+        type: if-else
+      height: 124
+      id: '1766501729281'
+      position:
+        x: 1173.5987088674515
+        y: -99.43556585769636
+      positionAbsolute:
+        x: 1173.5987088674515
+        y: -99.43556585769636
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        advanced_settings:
+          group_enabled: false
+          groups:
+          - groupId: c5b57610-e696-4fad-b10d-0588ac445df0
+            group_name: Group1
+            output_type: string
+            variables:
+            - - '1766498489954'
+              - text
+            - - '17664986482590'
+              - transcription_text
+            - - '1766498361939'
+              - extracted_text
+            - - '1766498474719'
+              - transcription_text
+            - - '1766498060630'
+              - text
+            - []
+        desc: 合并所有上游分支的文本输出
+        output_type: string
+        selected: false
+        title: merge_text
+        type: variable-aggregator
+        variables:
+        - - '1766498489954'
+          - text
+        - - '17664986482590'
+          - transcription_text
+        - - '1766498361939'
+          - extracted_text
+        - - '1766498474719'
+          - transcription_text
+        - - '1766498060630'
+          - text
+        - - sys
+          - query
+      height: 267
+      id: '1766503845294'
+      position:
+        x: 1824.692826135605
+        y: 86.12905554840128
+      positionAbsolute:
+        x: 1824.692826135605
+        y: 86.12905554840128
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        desc: 局部提取节点 - 迭代节点
+        error_handle_mode: terminated
+        flatten_output: true
+        height: 355
+        is_parallel: false
+        iterator_input_type: array[string]
+        iterator_selector:
+        - '17664986908000'
+        - chunks
+        output_selector:
+        - '1766507771567'
+        - output
+        output_type: array[string]
+        parallel_nums: 10
+        selected: false
+        start_node_id: 1766505439067start
+        title: map_extract
+        type: iteration
+        width: 1272.998461398808
+      height: 355
+      id: '1766505439067'
+      position:
+        x: 2475.710865465504
+        y: 86.12905554840128
+      positionAbsolute:
+        x: 2475.710865465504
+        y: 86.12905554840128
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 1273
+      zIndex: 1
+    - data:
+        desc: ''
+        isInIteration: true
+        selected: false
+        title: ''
+        type: iteration-start
+      draggable: false
+      height: 48
+      id: 1766505439067start
+      parentId: '1766505439067'
+      position:
+        x: 24
+        y: 68
+      positionAbsolute:
+        x: 2499.710865465504
+        y: 154.12905554840128
+      selectable: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-iteration-start
+      width: 44
+      zIndex: 1002
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1766505439067'
+        model:
+          completion_params: {}
+          mode: chat
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - id: 674bd781-fe84-4874-83ea-e3b0c6ac1e99
+          role: system
+          text: "你是一位资深的学术导师，擅长从课程内容中提炼核心考点。\n\n【任务】\n分析给定的文本片段，提取关键考点。\n\n【输出要求】\n\
+            1. 考点要具体、可考核，避免空泛描述\n2. 保留原文中的数字、公式、专业术语\n3. 用简洁的语言表达\n\n【输出格式】\n请严格按以下\
+            \ JSON 格式输出：\n```json\n{\n    \"extracted_points\": [\"考点1: 具体内容\", \"\
+            考点2: 具体内容\"],\n    \"summary\": \"本段内容摘要（2-3句话）\",\n    \"key_concepts\"\
+            : [\"概念1\", \"概念2\"]\n}"
+        - id: f3810ec6-1175-46a1-8436-61bfd0e6ea3a
+          role: user
+          text: '请分析以下文本片段，提取核心考点：
+
+            【文本内容】
+
+            {{#1766505439067.item#}}
+
+            【要求】
+
+            1.提取所有重要知识点和概念定义
+
+            2.生成简短摘要
+
+            3.列出关键术语'
+        selected: false
+        title: 考点提取LLM
+        type: llm
+        vision:
+          enabled: false
+      height: 88
+      id: '1766505444885'
+      parentId: '1766505439067'
+      position:
+        x: 109.60100524781637
+        y: 65
+      positionAbsolute:
+        x: 2585.3118707133203
+        y: 151.12905554840128
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        code: "\"\"\"\n结果验证与解析节点\n验证 LLM 输出的 JSON 格式，解析失败时标记需要降级\n\"\"\"\n\nimport\
+          \ json\nimport re\n\n\ndef main(llm_output: str, original_chunk: str) ->\
+          \ dict:\n    \"\"\"\n    验证并解析 LLM 输出\n    \"\"\"\n    result = {\n    \
+          \    \"is_valid\": False,\n        \"extracted_points\": [],\n        \"\
+          summary\": \"\",\n        \"key_concepts\": [],\n        \"needs_fallback\"\
+          : False,\n        \"raw_output\": llm_output,\n        \"original_chunk\"\
+          : original_chunk\n    }\n    \n    try:\n        # 尝试清理并解析 JSON\n      \
+          \  clean_output = clean_json_string(llm_output)\n        data = json.loads(clean_output)\n\
+          \        \n        # 验证必要字段\n        points = data.get(\"extracted_points\"\
+          , [])\n        summary = data.get(\"summary\", \"\")\n        concepts =\
+          \ data.get(\"key_concepts\", [])\n        \n        # 检查数据质量\n        if\
+          \ not points or len(points) == 0:\n            result[\"needs_fallback\"\
+          ] = True\n            return result\n        \n        if not summary or\
+          \ len(summary) < 10:\n            result[\"needs_fallback\"] = True\n  \
+          \          return result\n        \n        # 验证通过\n        result[\"is_valid\"\
+          ] = True\n        result[\"extracted_points\"] = points\n        result[\"\
+          summary\"] = summary\n        result[\"key_concepts\"] = concepts\n    \
+          \    result[\"needs_fallback\"] = False\n        \n        return result\n\
+          \        \n    except json.JSONDecodeError:\n        # JSON 解析失败，需要降级处理\n\
+          \        result[\"needs_fallback\"] = True\n        return result\n    except\
+          \ Exception as e:\n        result[\"needs_fallback\"] = True\n        result[\"\
+          error\"] = str(e)\n        return result\n\n\ndef clean_json_string(text:\
+          \ str) -> str:\n    \"\"\"\n    清理 JSON 字符串，移除 Markdown 代码块标记\n    \"\"\"\
+          \n    text = text.strip()\n    \n    # 移除 ```json ... ``` 包裹\n    if text.startswith('```'):\n\
+          \        lines = text.split('\\n')\n        # 移除首行 ```json\n        if lines[0].startswith('```'):\n\
+          \            lines = lines[1:]\n        # 移除末行 ```\n        if lines and\
+          \ lines[-1].strip() == '```':\n            lines = lines[:-1]\n        text\
+          \ = '\\n'.join(lines)\n    \n    return text.strip()\n"
+        code_language: python3
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1766505439067'
+        outputs:
+          extracted_points:
+            children: null
+            type: array[string]
+          is_valid:
+            children: null
+            type: boolean
+          key_concepts:
+            children: null
+            type: array[string]
+          needs_fallback:
+            children: null
+            type: boolean
+          original_chunk:
+            children: null
+            type: string
+          raw_output:
+            children: null
+            type: string
+          summary:
+            children: null
+            type: string
+        selected: false
+        title: validate_result
+        type: code
+        variables:
+        - value_selector:
+          - '1766505444885'
+          - text
+          value_type: string
+          variable: llm_output
+        - value_selector:
+          - '1766505439067'
+          - item
+          value_type: string
+          variable: original_chunk
+      height: 52
+      id: '1766506421327'
+      parentId: '1766505439067'
+      position:
+        x: 410.9984613988081
+        y: 65
+      positionAbsolute:
+        x: 2886.709326864312
+        y: 151.12905554840128
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: is
+            id: f8d14a12-239a-417a-b003-05140cdc06c6
+            value: false
+            varType: boolean
+            variable_selector:
+            - '1766506421327'
+            - needs_fallback
+          id: 'true'
+          logical_operator: and
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1766505439067'
+        selected: false
+        title: 降级判断
+        type: if-else
+      height: 124
+      id: '1766506888177'
+      parentId: '1766505439067'
+      position:
+        x: 712.9984613988081
+        y: 65
+      positionAbsolute:
+        x: 3188.709326864312
+        y: 151.12905554840128
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        code: "\"\"\"\n降级处理节点\n当 LLM 输出格式不正确时，使用正则表达式提取内容\n\"\"\"\n\nimport re\n\n\
+          \ndef main(raw_output: str, original_chunk: str) -> dict:\n    \"\"\"\n\
+          \    降级提取：从非结构化文本中提取信息\n    \"\"\"\n    result = {\n        \"extracted_points\"\
+          : [],\n        \"summary\": \"\",\n        \"key_concepts\": [],\n     \
+          \   \"extraction_method\": \"fallback_regex\"\n    }\n    \n    try:\n \
+          \       # 尝试从 raw_output 提取\n        if raw_output:\n            result\
+          \ = extract_from_text(raw_output)\n        \n        # 如果仍然为空，从原文提取关键句\n\
+          \        if not result[\"extracted_points\"]:\n            result = extract_from_original(original_chunk)\n\
+          \        \n        result[\"extraction_method\"] = \"fallback_regex\"\n\
+          \        return result\n        \n    except Exception as e:\n        #\
+          \ 最后兜底：返回原文摘要\n        return {\n            \"extracted_points\": [f\"\
+          内容摘要: {original_chunk[:200]}...\"],\n            \"summary\": original_chunk[:300]\
+          \ + \"...\",\n            \"key_concepts\": [],\n            \"extraction_method\"\
+          : \"fallback_truncate\",\n            \"error\": str(e)\n        }\n\n\n\
+          def extract_from_text(text: str) -> dict:\n    \"\"\"\n    从文本中提取结构化信息\n\
+          \    \"\"\"\n    result = {\n        \"extracted_points\": [],\n       \
+          \ \"summary\": \"\",\n        \"key_concepts\": []\n    }\n    \n    # 提取编号列表项作为考点\n\
+          \    # 匹配: 1. xxx / 1、xxx / - xxx / * xxx\n    point_patterns = [\n    \
+          \    r'(?:考点|要点|知识点)?[：:]\\s*(.+?)(?=\\n|$)',\n        r'^\\s*\\d+[.、)）]\\\
+          s*(.+?)(?=\\n|$)',\n        r'^\\s*[-*]\\s*(.+?)(?=\\n|$)',\n    ]\n   \
+          \ \n    for pattern in point_patterns:\n        matches = re.findall(pattern,\
+          \ text, re.MULTILINE)\n        if matches:\n            result[\"extracted_points\"\
+          ].extend([m.strip() for m in matches[:10]])\n            break\n    \n \
+          \   # 提取摘要\n    summary_patterns = [\n        r'(?:摘要|总结|概括|概述)[：:]\\s*(.+?)(?=\\\
+          n\\n|$)',\n        r'(?:本段|这部分|该部分).{0,20}(?:主要|核心|重点).+?[。！]',\n    ]\n\
+          \    \n    for pattern in summary_patterns:\n        match = re.search(pattern,\
+          \ text, re.DOTALL)\n        if match:\n            result[\"summary\"] =\
+          \ match.group(1).strip() if match.lastindex else match.group(0).strip()\n\
+          \            break\n    \n    # 提取关键概念（引号或书名号内的内容）\n    concepts = re.findall(r'[「『\"\
+          \"](.+?)[」』\"\"]|《(.+?)》', text)\n    result[\"key_concepts\"] = [c[0] or\
+          \ c[1] for c in concepts[:10]]\n    \n    return result\n\n\ndef extract_from_original(chunk:\
+          \ str) -> dict:\n    \"\"\"\n    从原文中提取关键句子\n    \"\"\"\n    sentences =\
+          \ re.split(r'[。！？\\n]', chunk)\n    sentences = [s.strip() for s in sentences\
+          \ if len(s.strip()) > 15]\n    \n    # 取前5个有意义的句子作为考点\n    points = sentences[:5]\n\
+          \    \n    return {\n        \"extracted_points\": [f\"要点: {p}\" for p in\
+          \ points],\n        \"summary\": chunk[:200] + \"...\" if len(chunk) > 200\
+          \ else chunk,\n        \"key_concepts\": []\n    }\n"
+        code_language: python3
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1766505439067'
+        outputs:
+          extracted_points:
+            children: null
+            type: array[string]
+          key_concepts:
+            children: null
+            type: array[string]
+          summary:
+            children: null
+            type: string
+        selected: false
+        title: fallback_extract
+        type: code
+        variables:
+        - value_selector:
+          - '1766506421327'
+          - raw_output
+          value_type: string
+          variable: raw_output
+        - value_selector:
+          - '1766506421327'
+          - original_chunk
+          value_type: string
+          variable: original_chunk
+      height: 52
+      id: '1766507159183'
+      parentId: '1766505439067'
+      position:
+        x: 931.0234347783103
+        y: 250.91221080327867
+      positionAbsolute:
+        x: 3406.7343002438142
+        y: 337.04126635167995
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1766505439067'
+        output_type: array[string]
+        selected: false
+        title: merge_branch_output
+        type: variable-aggregator
+        variables:
+        - - '1766507159183'
+          - extracted_points
+        - - '1766506421327'
+          - extracted_points
+      height: 135
+      id: '1766507771567'
+      parentId: '1766505439067'
+      position:
+        x: 1015
+        y: 65
+      positionAbsolute:
+        x: 3490.710865465504
+        y: 151.12905554840128
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        code: "\"\"\"\nDify 代码节点: Reduce阶段 - 全局聚合与润色\n节点名称: reduce_aggregate\n功能:\
+          \ 汇总所有局部考点，去重、润色，生成最终的\"上岸笔记\"\n      使用 DeepSeek-V3 模型\n\n输入变量:\n- map_results:\
+          \ Map阶段的所有结果列表\n- original_query: 用户原始问题 (可选)\n- subject_hint: 学科提示 (可选)\n\
+          \n输出变量:\n- final_notes: 最终笔记 (Markdown格式)\n- total_points: 总考点数\n- key_concepts:\
+          \ 去重后的关键概念列表\n- error_message: 错误信息\n\nToken 限制:\n- max_tokens: 8000 (全局总结阶段，分配更多算力)\n\
+          \"\"\"\n\nimport os\nimport json\nfrom urllib import request\nfrom urllib.error\
+          \ import URLError\n\n\n# Token 配置 - 全局总结阶段分配更多算力\nMAX_TOKENS = 8000\n\n\n\
+          def main(map_results: list, original_query: str = \"\", \n         subject_hint:\
+          \ str = \"\") -> dict:\n    \"\"\"\n    主函数: 全局聚合与润色\n    \"\"\"\n    try:\n\
+          \        # 验证输入\n        if not map_results or all(not r for r in map_results):\n            return {\n   \
+          \             \"final_notes\": generate_fallback_notes(subject_hint, original_query),\n                \"total_points\":\
+          \ 1,\n                \"key_concepts\": [\"待补充\"],\n                \"error_message\"\
+          : \"\"\n            }\n        \n        # 合并所有局部结果\n        merged_data\
+          \ = merge_map_results(map_results)\n        \n        # 如果内容较少，直接格式化输出\n\
+          \        if merged_data[\"total_points\"] <= 10:\n            final_notes\
+          \ = format_simple_notes(merged_data, subject_hint)\n            return {\n\
+          \                \"final_notes\": final_notes,\n                \"total_points\"\
+          : merged_data[\"total_points\"],\n                \"key_concepts\": merged_data[\"\
+          key_concepts\"],\n                \"error_message\": \"\"\n            }\n\
+          \        \n        # 构建聚合提示词\n        prompt = build_aggregation_prompt(merged_data,\
+          \ original_query, subject_hint)\n        \n        # 调用 DeepSeek-V3 模型\n\
+          \        response = call_deepseek(prompt)\n        \n        # 后处理\n   \
+          \     final_notes = post_process_notes(response)\n        \n        return\
+          \ {\n            \"final_notes\": final_notes,\n            \"total_points\"\
+          : merged_data[\"total_points\"],\n            \"key_concepts\": merged_data[\"\
+          key_concepts\"],\n            \"error_message\": \"\"\n        }\n     \
+          \   \n    except Exception as e:\n        return {\n            \"final_notes\"\
+          : \"\",\n            \"total_points\": 0,\n            \"key_concepts\"\
+          : [],\n            \"error_message\": f\"全局聚合失败: {str(e)}\"\n        }\n\
+          \n\ndef generate_fallback_notes(subject_hint: str, query: str) -> str:\n\
+          \    \"\"\"\n    当无法解析内容时,生成兜底笔记框架\n    \"\"\"\n    subject = subject_hint if subject_hint and subject_hint != \"auto\" else \"通用学术\"\n    query_line = f\"您的关注点是：{query}\" if query else \"\"\n    return f\"\"\"\"# 📚 {subject}学习笔记\n\n> ⚠️ 提示: 当前内容解析结果较少，建议检查上传文件的格式和内容。\n\n## 内容概要\n本次上传的学习材料正在处理中。{query_line}\n\n## 学习建议\n1. 请确认上传的文件格式正确（支持 PDF、Word、PPT、图片、音频、视频）\n2. 对于扫描版 PDF，建议使用更高清晰度的源文件\n3. 长录音请确保音频质量，避免过多噪音\n\n## 后续步骤\n- 如需重新生成笔记，请优化源文件后再次上传\"\"\"\n\ndef merge_map_results(map_results: list) -> dict:\n    \"\"\"\n    合并所有Map阶段的结果（增强兼容性版）\n\
+          \    \"\"\"\n    all_points = []\n    all_summaries = []\n    all_concepts\
+          \ = set()\n    \n    for result in map_results:\n        # 跳过空值\n        if result is None or result == \"\":\n            continue\n        data = result\n\
+          \        # 如果传入的是字符串（Dify 常见情况），尝试解析为 JSON\n        if isinstance(result,\
+          \ str):\n            try:\n                data = json.loads(result)\n \
+          \           except:\n                # 如果不是 JSON 格式，将其视作纯文本考点\n        \
+          \        if result.strip():\n                    all_points.append(result.strip())\n                continue\n\n       \
+          \ if isinstance(data, list):\n            # 处理嵌套数组情况\n            for item in data:\n                if isinstance(item, str) and item.strip():\n                    all_points.append(item.strip())\n            continue\n        if isinstance(data, dict):\n            # 1. 收集考点 (兼容 extracted_points)\n\
+          \            points = data.get(\"extracted_points\", [])\n            if\
+          \ isinstance(points, list):\n                all_points.extend(points)\n\
+          \            elif isinstance(points, str) and points:\n                all_points.append(points)\n\
+          \            \n            # 2. 收集摘要 (兼容 summary)\n            summary =\
+          \ data.get(\"summary\", \"\")\n            if summary:\n               \
+          \ all_summaries.append(summary)\n            \n            # 3. 收集概念 (兼容\
+          \ key_concepts)\n            concepts = data.get(\"key_concepts\", [])\n\
+          \            if isinstance(concepts, list):\n                all_concepts.update(concepts)\n\
+          \    \n    return {\n        \"all_points\": all_points,\n        \"all_summaries\"\
+          : all_summaries,\n        \"key_concepts\": list(all_concepts),\n      \
+          \  \"total_points\": len(all_points)\n    }\ndef format_simple_notes(merged_data:\
+          \ dict, subject_hint: str) -> str:\n    \"\"\"\n    简单格式化笔记 (考点较少时使用)\n\
+          \    \"\"\"\n    notes = []\n    \n    # 标题\n    title = f\"# {subject_hint}学习笔记\"\
+          \ if subject_hint else \"# 学习笔记\"\n    notes.append(title)\n    notes.append(\"\
+          \")\n    \n    # 内容概要\n    if merged_data[\"all_summaries\"]:\n        notes.append(\"\
+          ## 内容概要\")\n        notes.append(\"\")\n        for summary in merged_data[\"\
+          all_summaries\"]:\n            notes.append(f\"> {summary}\")\n        notes.append(\"\
+          \")\n    \n    # 核心考点\n    if merged_data[\"all_points\"]:\n        notes.append(\"\
+          ## 核心考点\")\n        notes.append(\"\")\n        for i, point in enumerate(merged_data[\"\
+          all_points\"], 1):\n            notes.append(f\"**{i}.** {point}\")\n  \
+          \          notes.append(\"\")\n    \n    # 关键概念\n    if merged_data[\"key_concepts\"\
+          ]:\n        notes.append(\"## 关键概念\")\n        notes.append(\"\")\n    \
+          \    notes.append(\"、\".join(merged_data[\"key_concepts\"]))\n        notes.append(\"\
+          \")\n    \n    return \"\\n\".join(notes)\n\n\ndef build_aggregation_prompt(merged_data:\
+          \ dict, original_query: str, \n                            subject_hint:\
+          \ str) -> str:\n    \"\"\"\n    构建全局聚合提示词\n    \"\"\"\n    subject_context\
+          \ = f\"学科领域: {subject_hint}\\n\" if subject_hint else \"\"\n    query_context\
+          \ = f\"用户关注点: {original_query}\\n\" if original_query else \"\"\n    \n\
+          \    # 格式化考点列表\n    points_text = \"\\n\".join([f\"- {p}\" for p in merged_data[\"\
+          all_points\"]])\n    \n    # 格式化摘要列表\n    summaries_text = \"\\n\".join([f\"\
+          - {s}\" for s in merged_data[\"all_summaries\"]])\n    \n    # 格式化概念列表\n\
+          \    concepts_text = \"、\".join(merged_data[\"key_concepts\"])\n    \n \
+          \   prompt = f\"\"\"你是一位资深的学术导师，风格沉稳、简雅、逻辑性极强。\n现在需要你将分散的学习笔记整合为一份完整的\"\
+          上岸笔记\"。\n\n{subject_context}{query_context}\n\n【原始考点汇总】\n{points_text}\n\
+          \n【各部分摘要】\n{summaries_text}\n\n【关键概念】\n{concepts_text}\n\n【整合要求】\n1. **去重合并**:\
+          \ 识别重复或相似的考点，合并为一条\n2. **逻辑重组**: 按知识体系重新组织，建立清晰的层级结构\n3. **润色提升**: 使表述更加精准、专业，便于记忆\n\
+          4. **补充关联**: 标注考点之间的关联关系\n\n【输出格式要求】\n请使用 Markdown 格式输出，包含以下结构:\n\n```markdown\n\
+          # [主题名称]学习笔记\n\n## 内容概要\n> 用2-3句话概括全部内容的核心要义\n\n## 知识框架\n[用简洁的层级结构展示知识体系]\n\
+          \n## 核心考点\n\n### 一、[第一大类]\n**1.1 [考点名称]**\n- 要点描述\n- 关键公式/定义\n\n### 二、[第二大类]\n\
+          ...\n\n## 重点概念速查\n| 概念 | 定义 | 关联考点 |\n|-----|------|---------|\n| ... |\
+          \ ...  | ...     |\n\n## 复习建议\n[针对性的学习建议]\n```\n\n注意:\n- 保持学术导师的专业风格\n-\
+          \ 使用多级标题组织内容\n- 重要内容使用**粗体**标注\n- 适当使用表格整理对比性内容\n- 确保笔记完整，不遗漏任何重要考点\"\"\"\
+          \n\n    return prompt\n\n\ndef call_deepseek(prompt: str) -> str:\n    \"\
+          \"\"\n    调用 DeepSeek-V3 模型\n    \"\"\"\n    api_key = os.environ.get('DASHSCOPE_API_KEY',\
+          \ '')\n    \n    if not api_key:\n        raise Exception(\"未配置 DASHSCOPE_API_KEY\"\
+          )\n    \n    url = \"https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions\"\
+          \n    \n    headers = {\n        \"Authorization\": f\"Bearer {api_key}\"\
+          ,\n        \"Content-Type\": \"application/json\"\n    }\n    \n    payload\
+          \ = {\n        \"model\": \"deepseek-v3\",\n        \"messages\": [\n  \
+          \          {\n                \"role\": \"system\",\n                \"\
+          content\": \"你是一位资深的学术导师，风格沉稳、简雅、逻辑性极强。请用中文回复，使用Markdown格式。\"\n        \
+          \    },\n            {\n                \"role\": \"user\",\n          \
+          \      \"content\": prompt\n            }\n        ],\n        \"max_tokens\"\
+          : MAX_TOKENS,\n        \"temperature\": 0.5,  # 适中温度，平衡创造性和稳定性\n    }\n\
+          \    \n    req = request.Request(\n        url,\n        data=json.dumps(payload).encode('utf-8'),\n\
+          \        headers=headers,\n        method='POST'\n    )\n    \n    try:\n\
+          \        with request.urlopen(req, timeout=180) as response:\n         \
+          \   result = json.loads(response.read().decode('utf-8'))\n        \n   \
+          \     choices = result.get('choices', [])\n        if choices:\n       \
+          \     return choices[0].get('message', {}).get('content', '')\n        \n\
+          \        raise Exception(\"未获取到模型回复\")\n        \n    except URLError as\
+          \ e:\n        raise Exception(f\"API调用失败: {str(e)}\")\n\n\ndef post_process_notes(notes:\
+          \ str) -> str:\n    \"\"\"\n    后处理笔记内容\n    \"\"\"\n    if not notes:\n\
+          \        return \"\"\n    \n    # 移除可能的代码块标记\n    notes = notes.strip()\n\
+          \    if notes.startswith('```markdown'):\n        notes = notes[11:]\n \
+          \   if notes.startswith('```'):\n        notes = notes[3:]\n    if notes.endswith('```'):\n\
+          \        notes = notes[:-3]\n    \n    # 确保标题格式正确\n    lines = notes.split('\\\
+          n')\n    processed_lines = []\n    \n    for line in lines:\n        # 修复可能的标题格式问题\n\
+          \        if line.strip().startswith('#') and not line.startswith('#'):\n\
+          \            line = line.lstrip()\n        processed_lines.append(line)\n\
+          \    \n    return '\\n'.join(processed_lines).strip()\n"
+        code_language: python3
+        desc: 全局聚合节点
+        outputs:
+          error_message:
+            children: null
+            type: string
+          final_notes:
+            children: null
+            type: string
+          key_concepts:
+            children: null
+            type: array[string]
+          total_points:
+            children: null
+            type: number
+        selected: false
+        title: reduce_aggregate
+        type: code
+        variables:
+        - value_selector:
+          - '1766505439067'
+          - output
+          value_type: array[string]
+          variable: map_results
+        - value_selector:
+          - sys
+          - query
+          value_type: string
+          variable: original_query
+        - value_selector:
+          - '1766510485005'
+          - output
+          value_type: string
+          variable: subject_hint
+      height: 80
+      id: '1766508492060'
+      position:
+        x: 3808.710865465504
+        y: 86.12905554840128
+      positionAbsolute:
+        x: 3808.710865465504
+        y: 86.12905554840128
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: 智能识别学科
+        model:
+          completion_params:
+            temperature: 0
+          mode: chat
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - id: 65abc993-58cd-4822-9719-2a845ec97648
+          role: system
+          text: '你是学科分类专家。请根据片段内容及用户指令，输出最匹配的学科名称（例如：行政管理学、生物化学、中国文学）。 要求：只输出学科名，不要任何废话。
+
+            '
+        - id: 2908c116-1af0-4d39-9d53-c5e7dfd9c44f
+          role: user
+          text: '片段内容：{{#1766511012807.preview_content#}}
+
+            用户指令：{{#sys.query#}}'
+        selected: false
+        title: subject_classifier
+        type: llm
+        vision:
+          enabled: false
+      height: 116
+      id: '1766509648380'
+      position:
+        x: 2475.710865465504
+        y: 863.8479147209242
+      positionAbsolute:
+        x: 2475.710865465504
+        y: 863.8479147209242
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: is not
+            id: 5093aa51-2f08-4ed6-b8e5-30bc8769286f
+            value: auto
+            varType: string
+            variable_selector:
+            - '1766496837552'
+            - subject_hint
+          id: 'true'
+          logical_operator: and
+        selected: false
+        title: 是否需要AI识别
+        type: if-else
+      height: 124
+      id: '1766509760645'
+      position:
+        x: 561.2975536648605
+        y: 561.4782343189719
+      positionAbsolute:
+        x: 561.2975536648605
+        y: 561.4782343189719
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        output_type: string
+        selected: false
+        title: subject_hint
+        type: variable-aggregator
+        variables:
+        - - '1766496837552'
+          - subject_hint
+        - - '1766509648380'
+          - text
+      height: 135
+      id: '1766510485005'
+      position:
+        x: 2647.7215143085978
+        y: 590.4277078104379
+      positionAbsolute:
+        x: 2647.7215143085978
+        y: 590.4277078104379
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        code: "def main(merged_text: str) -> dict:\n    # 彻底解决 null 值干扰，确保 text 永远是字符串\n\
+          \    text = merged_text if merged_text is not None else \"\"\n    \n   \
+          \ # 提取并清洗文本\n    preview = text.strip()[:500]\n    \n    return {\n    \
+          \    \"preview_content\": str(preview), # 强制转码确保输出类型\n        \"content_length\"\
+          : int(len(text)) # 显式声明数字类型\n    }"
+        code_language: python3
+        outputs:
+          content_length:
+            children: null
+            type: number
+          preview_content:
+            children: null
+            type: string
+        retry_config:
+          max_retries: 3
+          retry_enabled: false
+          retry_interval: 1000
+        selected: false
+        title: text_previewer
+        type: code
+        variables:
+        - value_selector:
+          - '1766503845294'
+          - output
+          value_type: string
+          variable: merged_text
+      height: 52
+      id: '1766511012807'
+      position:
+        x: 2158.404429660972
+        y: 501.3409739705909
+      positionAbsolute:
+        x: 2158.404429660972
+        y: 501.3409739705909
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        answer: '# 📚 Genote 学术笔记生成报告
+
+          ### 🔍 知识概览 - **所属学科**：{{#1766510485005.output#}} -**核心考点**：共计 **{{#1766508492060.total_points#}}**
+          处精华 - **学术关键词**：{{#1766508492060.key_concepts#}}
+
+          ---
+
+          ### 📝 笔记正文 {{#1766508492060.final_notes#}}'
+        selected: false
+        title: 复习笔记
+        type: answer
+        variables: []
+      height: 238
+      id: '1766511873608'
+      position:
+        x: 4110.710865465504
+        y: 86.12905554840128
+      positionAbsolute:
+        x: 4110.710865465504
+        y: 86.12905554840128
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    viewport:
+      x: -48.0638848151184
+      y: 280.2593722270282
+      zoom: 0.25
+  rag_pipeline_variables: []
