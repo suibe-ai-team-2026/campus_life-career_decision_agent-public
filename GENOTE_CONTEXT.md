@@ -2,68 +2,144 @@
 
 ## 1. 项目概览 (Project Overview)
 
-- **项目名称**: Genote (Beta 0.1)
-- **核心愿景**: 打造一个"学术导师"级的笔记助手，具备处理长录音（2.5h+）、复杂 PDF 及 OCR 图片的能力，并输出具备上岸品质的结构化笔记。
-- **当前状态**: UI/UX 已搭建，核心逻辑已跑通，但 PDF 兼容性待优化。
+- **项目名称**: Genote (生思笔记) v0.2
+- **核心愿景**: 打造一个"学术导师"级的笔记助手，为考研/考公学生提供 AI 驱动的学习辅助
+- **当前状态**: 基于 Open Notebook (`lfnovo/open-notebook`) 架构重建；Genote 扩展维护在独立 `open-notebook/` Git 工作树
 
 ---
 
 ## 2. 技术栈与架构 (Tech Stack & Architecture)
 
-根据《技术与商业全景指南》及开发回顾，本项目采用以下技术栈：
+本项目基于 **Open Notebook** (23k+ stars, MIT license) 的成熟架构扩展而来：
 
-- **后端**: FastAPI (Python) - 支持异步处理
-- **前端**: Next.js / React - 仿 NotebookLM 三栏布局
-- **工作流引擎**: Dify (核心逻辑编排) 或 LangChain
-- **核心模型**: DeepSeek-V3 (用于逻辑重组与润色)
-- **PDF 解析**: PyMuPDF 或 Unstructured (用于增强文本提取)
-- **向量数据库**: SQLite 或 Milvus (用于 RAG)
+### 2.1 技术栈
+
+| 层级 | 技术 |
+|------|------|
+| **前端** | Next.js 16+ App Router / React 19 / TypeScript |
+| **UI** | TailwindCSS / shadcn/ui / oklch 暖琥珀暗色主题 |
+| **状态管理** | Zustand (持久化) / TanStack Query |
+| **后端** | Python FastAPI (port 5055) + LangGraph |
+| **数据库** | SurrealDB (文档图混合数据库) |
+| **AI 引擎** | LangChain + Esperanto (18+ 提供商，含 DeepSeek) |
+| **搜索** | Hybrid Search (BM25 + 向量) |
+| **部署** | Docker Compose (SurrealDB + FastAPI + Next.js) |
+
+### 2.2 架构图
+
+```
+┌─────────────────────────────────────────────────────────┐
+│          Genote Frontend (Next.js + React)              │
+│  ┌─────────┐ ┌──────────┐ ┌──────────┐ ┌───────────┐  │
+│  │ 学习库   │ │ 闪卡复习  │ │ PDF 阅读  │ │ 视频播放   │  │
+│  │ 签到打卡  │ │ 专注模式  │ │ AI 聊天   │ │ 时间戳同步 │  │
+│  └─────────┘ └──────────┘ └──────────┘ └───────────┘  │
+│         Open Notebook Frontend (shadcn/ui)              │
+└────────────────────────┬────────────────────────────────┘
+                         │ REST API + SSE
+┌────────────────────────▼────────────────────────────────┐
+│          FastAPI Backend (port 5055)                    │
+│  ┌────────────────────┐ ┌───────────────────────────┐  │
+│  │ Open Notebook 路由器 │ │ Genote 扩展路由器          │  │
+│  │ - notebooks        │ │ - flashcards (SM-2)       │  │
+│  │ - sources          │ │ - streaks (每日签到)       │  │
+│  │ - notes            │ │ - study_metrics (学习指标)  │  │
+│  │ - chat             │ │ - transcripts (时间戳转录)  │  │
+│  │ - podcasts         │ │                           │  │
+│  │ - search           │ │                           │  │
+│  └────────────────────┘ └───────────────────────────┘  │
+│              LangGraph Workflows + Esperanto AI          │
+└────────────────────────┬────────────────────────────────┘
+                         │ SurrealQL
+┌────────────────────────▼────────────────────────────────┐
+│          SurrealDB (port 8000)                          │
+│  ┌──────────┐ ┌──────────┐ ┌──────────────┐           │
+│  │ Open NB   │ │ Genote    │ │ 向量嵌入      │           │
+│  │ 数据模型   │ │ 扩展表    │ │ 语义搜索      │           │
+│  └──────────┘ └──────────┘ └──────────────┘           │
+└─────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## 3. 核心工作流逻辑 (Core Workflow)
+## 3. 核心功能模块
 
-系统采用 **Map-Reduce 架构**处理多模态输入，流程如下：
+### 3.1 学习库 (Dashboard)
+- 考研/考公倒计时
+- 文档上传（PDF/视频/音频）
+- 最近文档列表 + 索引进度
+- 每日签到 + 连胜天数
+- 闪卡复习入口
+- 本周学习指标
 
-### 3.1 环境感知 (Environment Sensing)
-- **功能**: 识别用户输入文件类型（Audio/PDF/Image）并进行初步分发
-- **已知问题**: PDF 处理有时触发错误分支，需增强 MIME type 校验
+### 3.2 闪卡复习 (SM-2 间隔重复)
+- 翻转卡片
+- 4 级评分 (Again/Hard/Good/Easy)
+- 自适应下次复习日期
+- 来源引用追踪
 
-### 3.2 多路解析 (Multi-route Parsing)
-- 并行处理音频（异步转写）、PDF/Word（文本提取）和图片（OCR）
+### 3.3 专注模式
+- 3 档：关闭 / 隐藏侧栏 / 仅文档
+- 快捷键 ⌘. 切换
 
-### 3.3 变量聚合 (Variable Aggregator)
-- **功能**: 将不同来源的文字统一汇聚为变量 `merged_text`
+### 3.4 视频时间戳同步
+- HTML5 播放器 + 转录分段
+- 时间戳标记 AI 问答引用
+- 点击引用跳转对应时间点
 
-### 3.4 内容识别 (Text Previewer)
-- **逻辑**: 截取前 500 字生成 `preview_content`
-- **用途**: 辅助 `subject_classifier` 节点自动判定学科，替代不可靠的文件名判断
+### 3.5 Cmd+K 命令面板
+- 分组搜索（动作 / 文档 / AI 提问）
+- ↑↓ 导航 / ↵ 选择 / esc 关闭
 
-### 3.5 全局聚合 (Reduce Aggregate)
-- **核心**: 调用 DeepSeek-V3 对零散考点进行逻辑重组与学术润色
-
----
-
-## 4. 开发约束与已知挑战 (Constraints & Known Issues)
-
-在编写代码时，必须严格遵守以下修复逻辑，避免历史 Bug 回归：
-
-### A. 数据流格式校验 (Data Flow Gap)
-- **风险**: `text_previewer` 节点容易出现 "Not all output parameters are validated" 错误
-- **规范**: 必须确保代码返回的 Key（如 `preview_content`）在 Dify/工作流的输出变量列表中已明确注册
-
-### B. Map-Reduce 解析瓶颈
-- **风险**: `reduce_aggregate` 节点容易输出 `total_points: 0`
-- **原因**: 上游 map_results 格式为 `Array[String]`（纯文本数组），而默认逻辑常误读为字典
-- **解决方案**: 解析逻辑必须包含"增强兼容版"代码，支持直接抓取纯文本数组内容，而非仅读取 Key-Value
-
-### C. 鉴权与安全
-- **规范**: 严禁将 API Key 硬编码。必须通过 `.env` 环境变量注入 DeepSeek 或阿里云 API Key
-- **配置**: 采用 OpenAI 兼容格式 (`base_url`, `api_key`) 接入模型
+### 3.6 Open Notebook 原有功能（保留）
+- 多模型 AI 支持 (DeepSeek, OpenAI, Anthropic, Ollama 等)
+- RAG 聊天 + 上下文控制
+- 播客生成 (多说话人)
+- 内容转换 (Transformations)
+- 全文 + 向量混合搜索
+- MCP 集成
 
 ---
 
-## 5. 待优化任务 (Pending Tasks)
+## 4. 目录结构
 
-- **PDF 兼容性修复**: 修复 `environment_sensing` 中的错误分支逻辑，集成更强的解析库（PyMuPDF）
-- **防御逻辑**: 需增加单文件大小限制（如 20MB）及频率限制
+```
+Genote/
+├── README.md                    # 项目说明
+├── GENOTE_CONTEXT.md            # 本文件
+├── Genote_PRD_v0.1.md           # 需求文档
+├── prototype/                   # 原始 UI 原型 (参考)
+│
+├── open-notebook/               # 基于 Open Notebook 的主项目（独立 Git 工作树）
+│   ├── frontend/                # Next.js 前端
+│   │   ├── src/
+│   │   │   ├── app/(dashboard)/ # 仪表盘页面
+│   │   │   │   ├── page.tsx     # 学习库首页
+│   │   │   │   └── flashcards/  # 闪卡复习页
+│   │   │   ├── components/
+│   │   │   │   ├── layout/      # AppShell, AppSidebar
+│   │   │   │   ├── study/       # Genote 学习组件
+│   │   │   │   └── ui/          # shadcn/ui 基础组件
+│   │   │   └── lib/             # Hooks, Stores, API
+│   │   └── ...
+│   ├── api/                     # FastAPI 后端
+│   │   ├── routers/
+│   │   │   ├── flashcards.py    # 闪卡 API
+│   │   │   ├── streaks.py       # 签到打卡 API
+│   │   │   └── study_metrics.py # 学习指标 API
+│   │   └── main.py              # 应用入口
+│   ├── open_notebook/
+│   │   └── database/migrations/
+│   │       ├── 15.surrealql     # 闪卡表
+│   │       └── 16.surrealql     # 签到打卡表
+│   └── docker-compose.yml       # 一键部署
+```
+
+---
+
+## 5. 开发约束
+
+- **API Key**: 通过 `.env` 注入，严禁硬编码
+- **默认 AI**: DeepSeek（成本优先）
+- **主题**: 默认深色模式，暖琥珀 oklch 色系
+- **字体**: Inter (UI) + Noto Sans SC (中文) + JetBrains Mono (代码) + Source Serif 4 (阅读)

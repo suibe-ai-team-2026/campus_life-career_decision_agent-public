@@ -27,5 +27,8 @@ build/
 *.swp
 *~
 
+# Open Notebook (独立 git 仓库)
+open-notebook/
+
 # OS
 Thumbs.db
