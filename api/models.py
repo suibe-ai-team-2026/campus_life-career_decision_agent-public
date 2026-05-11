@@ -684,3 +684,74 @@ class NotebookDeleteResponse(BaseModel):
     unlinked_sources: int = Field(
         ..., description="Number of sources unlinked from notebook"
     )
+
+
+# Genote: Flashcard models
+class FlashcardDeckCreate(BaseModel):
+    name: str = Field(..., description="Name of the flashcard deck")
+    description: str = Field(default="", description="Description")
+    notebook_id: Optional[str] = Field(None, description="Associated notebook ID")
+
+
+class FlashcardDeckResponse(BaseModel):
+    id: str
+    name: str
+    description: str
+    notebook_id: Optional[str] = None
+    card_count: int = 0
+    due_count: int = 0
+    created: str
+    updated: str
+
+
+class FlashcardCreate(BaseModel):
+    question: str = Field(..., description="Question text")
+    answer: str = Field(..., description="Answer text")
+    source_ref: Optional[str] = Field(None, description="Source reference")
+    deck_id: Optional[str] = Field(
+        None, description="Optional deck ID; defaults to the deck in the route"
+    )
+
+
+class FlashcardGrade(BaseModel):
+    grade: Literal["again", "hard", "good", "easy"] = Field(
+        ..., description="SM-2 grade: again(0), hard(1), good(2), easy(3)"
+    )
+
+
+class FlashcardResponse(BaseModel):
+    id: str
+    question: str
+    answer: str
+    source_ref: Optional[str] = None
+    deck_id: str
+    ease_factor: float
+    interval_days: int
+    repetitions: int
+    next_review: str
+    last_review: Optional[str] = None
+    created: str
+    updated: str
+
+
+# Genote: Study streak models
+class CheckinResponse(BaseModel):
+    checked_in: bool = Field(..., description="Whether today's check-in succeeded")
+    streak_days: int = Field(..., description="Current streak in days")
+    xp_earned: int = Field(..., description="XP earned today")
+    message: str = Field(..., description="Human-readable message")
+
+
+class StreakStatusResponse(BaseModel):
+    streak_days: int = Field(..., description="Current streak in days")
+    checked_in_today: bool = Field(..., description="Whether checked in today")
+    days_until_reward: int = Field(..., description="Days until 7-day reward")
+    total_xp: int = Field(..., description="Total XP earned")
+
+
+class StudyMetricsResponse(BaseModel):
+    total_hours: float = Field(..., description="Total study hours this week")
+    new_notes: int = Field(..., description="New notes this week")
+    ai_questions: int = Field(..., description="AI questions asked this week")
+    avg_response_time: float = Field(..., description="Average AI response time in seconds")
+    hours_change_pct: float = Field(..., description="% change from last week")

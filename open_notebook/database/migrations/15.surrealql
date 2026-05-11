@@ -1,0 +1,20 @@
+-- Genote: Flashcard system tables
+DEFINE TABLE flashcard_deck SCHEMAFULL;
+DEFINE FIELD name ON TABLE flashcard_deck TYPE string;
+DEFINE FIELD description ON TABLE flashcard_deck TYPE option<string>;
+DEFINE FIELD notebook_id ON TABLE flashcard_deck TYPE option<record<notebook>>;
+DEFINE FIELD created ON TABLE flashcard_deck TYPE datetime DEFAULT time::now();
+DEFINE FIELD updated ON TABLE flashcard_deck TYPE datetime DEFAULT time::now();
+
+DEFINE TABLE flashcard SCHEMAFULL;
+DEFINE FIELD question ON TABLE flashcard TYPE string;
+DEFINE FIELD answer ON TABLE flashcard TYPE string;
+DEFINE FIELD source_ref ON TABLE flashcard TYPE option<string>;
+DEFINE FIELD deck ON TABLE flashcard TYPE record<flashcard_deck>;
+DEFINE FIELD ease_factor ON TABLE flashcard TYPE float DEFAULT 2.5;
+DEFINE FIELD interval_days ON TABLE flashcard TYPE int DEFAULT 0;
+DEFINE FIELD repetitions ON TABLE flashcard TYPE int DEFAULT 0;
+DEFINE FIELD next_review ON TABLE flashcard TYPE datetime DEFAULT time::now();
+DEFINE FIELD last_review ON TABLE flashcard TYPE option<datetime>;
+DEFINE FIELD created ON TABLE flashcard TYPE datetime DEFAULT time::now();
+DEFINE FIELD updated ON TABLE flashcard TYPE datetime DEFAULT time::now();

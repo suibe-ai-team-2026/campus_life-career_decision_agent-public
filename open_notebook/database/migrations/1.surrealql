@@ -4,7 +4,7 @@ DEFINE TABLE IF NOT EXISTS source SCHEMAFULL;
 DEFINE FIELD IF NOT EXISTS
     asset
     ON TABLE source
-    FLEXIBLE TYPE option<object>;
+    TYPE option<object> FLEXIBLE;
 
 DEFINE FIELD IF NOT EXISTS title ON TABLE source TYPE option<string>;
 DEFINE FIELD IF NOT EXISTS topics ON TABLE source TYPE option<array<string>>;
@@ -64,12 +64,12 @@ DEFINE TABLE IF NOT EXISTS podcast_config SCHEMALESS;
 -- entender o analyzer
 DEFINE ANALYZER IF NOT EXISTS my_analyzer TOKENIZERS blank,class,camel,punct FILTERS snowball(english), lowercase;
 
-DEFINE INDEX IF NOT EXISTS idx_source_title ON TABLE source COLUMNS title SEARCH ANALYZER my_analyzer BM25 HIGHLIGHTS;
-DEFINE INDEX IF NOT EXISTS idx_source_full_text ON TABLE source COLUMNS full_text SEARCH ANALYZER my_analyzer BM25 HIGHLIGHTS;
-DEFINE INDEX IF NOT EXISTS idx_source_embed_chunk ON TABLE source_embedding COLUMNS content SEARCH ANALYZER my_analyzer BM25 HIGHLIGHTS;
-DEFINE INDEX IF NOT EXISTS idx_source_insight ON TABLE source_insight COLUMNS content SEARCH ANALYZER my_analyzer BM25 HIGHLIGHTS;
-DEFINE INDEX IF NOT EXISTS idx_note ON TABLE note COLUMNS content SEARCH ANALYZER my_analyzer BM25 HIGHLIGHTS;
-DEFINE INDEX IF NOT EXISTS idx_note_title ON TABLE note COLUMNS title SEARCH ANALYZER my_analyzer BM25 HIGHLIGHTS;
+DEFINE INDEX IF NOT EXISTS idx_source_title ON TABLE source FIELDS title SEARCH ANALYZER my_analyzer BM25 HIGHLIGHTS;
+DEFINE INDEX IF NOT EXISTS idx_source_full_text ON TABLE source FIELDS full_text SEARCH ANALYZER my_analyzer BM25 HIGHLIGHTS;
+DEFINE INDEX IF NOT EXISTS idx_source_embed_chunk ON TABLE source_embedding FIELDS content SEARCH ANALYZER my_analyzer BM25 HIGHLIGHTS;
+DEFINE INDEX IF NOT EXISTS idx_source_insight ON TABLE source_insight FIELDS content SEARCH ANALYZER my_analyzer BM25 HIGHLIGHTS;
+DEFINE INDEX IF NOT EXISTS idx_note ON TABLE note FIELDS content SEARCH ANALYZER my_analyzer BM25 HIGHLIGHTS;
+DEFINE INDEX IF NOT EXISTS idx_note_title ON TABLE note FIELDS title SEARCH ANALYZER my_analyzer BM25 HIGHLIGHTS;
 
 DEFINE FUNCTION IF NOT EXISTS fn::text_search($query_text: string, $match_count: int, $sources:bool, $show_notes:bool) {
   
@@ -171,6 +171,8 @@ DEFINE FUNCTION IF NOT EXISTS fn::vector_search($query: array<float>, $match_cou
     
     
 };
+
+DEFINE TABLE IF NOT EXISTS open_notebook SCHEMALESS;
 
 IF array::len(select * from open_notebook:default_models) == 0 THEN
     CREATE open_notebook:default_models SET

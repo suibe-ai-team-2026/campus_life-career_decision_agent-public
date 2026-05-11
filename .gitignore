@@ -7,6 +7,7 @@ sqlite-db/
 surreal-data/
 docker.env
 notebook_data/
+history.txt
 # Python-specific
 *.py[cod]
 __pycache__/

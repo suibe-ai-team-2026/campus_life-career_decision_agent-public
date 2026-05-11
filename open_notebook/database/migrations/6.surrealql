@@ -1,1 +1,2 @@
+DEFINE TABLE IF NOT EXISTS model SCHEMALESS;
 update model set provider='vertex' where provider='vertexai';

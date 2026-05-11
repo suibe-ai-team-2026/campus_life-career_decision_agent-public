@@ -1,0 +1,13 @@
+-- Genote: Study streaks & sessions
+DEFINE TABLE study_checkin SCHEMAFULL;
+DEFINE FIELD date ON TABLE study_checkin TYPE datetime DEFAULT time::now();
+DEFINE FIELD streak_days ON TABLE study_checkin TYPE int DEFAULT 0;
+DEFINE FIELD xp_earned ON TABLE study_checkin TYPE int DEFAULT 2;
+DEFINE FIELD created ON TABLE study_checkin TYPE datetime DEFAULT time::now();
+
+DEFINE TABLE study_session SCHEMAFULL;
+DEFINE FIELD notebook_id ON TABLE study_session TYPE option<record<notebook>>;
+DEFINE FIELD source_id ON TABLE study_session TYPE option<record<source>>;
+DEFINE FIELD duration_minutes ON TABLE study_session TYPE int DEFAULT 0;
+DEFINE FIELD activity_type ON TABLE study_session TYPE string;
+DEFINE FIELD created ON TABLE study_session TYPE datetime DEFAULT time::now();
