@@ -128,6 +128,69 @@ export interface APIError {
   detail: string
 }
 
+export interface FlashcardDeckResponse {
+  id: string
+  name: string
+  description: string
+  notebook_id: string | null
+  card_count: number
+  due_count: number
+  created: string
+  updated: string
+}
+
+export interface CreateFlashcardDeckRequest {
+  name: string
+  description?: string
+  notebook_id?: string
+}
+
+export interface FlashcardResponse {
+  id: string
+  question: string
+  answer: string
+  source_ref: string | null
+  deck_id: string
+  ease_factor: number
+  interval_days: number
+  repetitions: number
+  next_review: string
+  last_review: string | null
+  created: string
+  updated: string
+}
+
+export interface CreateFlashcardRequest {
+  question: string
+  answer: string
+  source_ref?: string
+  deck_id?: string
+}
+
+export type FlashcardGradeValue = 'again' | 'hard' | 'good' | 'easy'
+
+export interface CheckinResponse {
+  checked_in: boolean
+  streak_days: number
+  xp_earned: number
+  message: string
+}
+
+export interface StreakStatusResponse {
+  streak_days: number
+  checked_in_today: boolean
+  days_until_reward: number
+  total_xp: number
+}
+
+export interface StudyMetricsResponse {
+  total_hours: number
+  new_notes: number
+  ai_questions: number
+  avg_response_time: number
+  hours_change_pct: number
+}
+
 // Source Chat Types
 // Base session interface with common fields
 export interface BaseChatSession {

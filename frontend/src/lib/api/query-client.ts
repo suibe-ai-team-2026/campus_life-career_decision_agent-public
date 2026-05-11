@@ -32,4 +32,8 @@ export const QUERY_KEYS = {
   episodeProfiles: ['podcasts', 'episode-profiles'] as const,
   speakerProfiles: ['podcasts', 'speaker-profiles'] as const,
   languages: ['languages'] as const,
+  flashcardDecks: ['genote', 'flashcards', 'decks'] as const,
+  dueFlashcards: ['genote', 'flashcards', 'due'] as const,
+  studyStreak: ['genote', 'study', 'streak'] as const,
+  studyMetrics: ['genote', 'study', 'metrics'] as const,
 }

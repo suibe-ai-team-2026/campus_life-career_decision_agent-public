@@ -1,66 +1,70 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
-import { AppShell } from '@/components/layout/AppShell'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import {
-  Flame,
-  Upload,
-  FileText,
-  Video,
-  Music,
   ChevronRight,
-  TrendingUp,
+  FileText,
+  Flame,
   Layers,
+  Music,
+  TrendingUp,
+  Upload,
+  Video,
   Zap,
 } from 'lucide-react'
 
-// Mock data — will be replaced by API hooks
-const recentDocs = [
-  { id: 'doc-kaoyan-math', type: 'pdf', title: '考研数学一·真题精讲（2018-2024）', subject: '数学一', pages: 412, progress: 0.34, indexed: true },
-  { id: 'doc-mzdsz', type: 'pdf', title: '毛中特·重点章节梳理', subject: '政治', pages: 168, progress: 0.62, indexed: true },
-  { id: 'vid-zhuanglie', type: 'video', title: '张老师·线性代数串讲', subject: '数学一', duration: '2:37:00', progress: 0.41, indexed: true },
-  { id: 'doc-gongka-shenlun', type: 'pdf', title: '国考申论·5年范文 + 阅卷标准', subject: '申论', pages: 96, progress: 0.18, indexed: true },
-  { id: 'vid-shizheng', type: 'video', title: '2025 时政热点 · 二十届三中全会', subject: '政治', duration: '1:36:00', progress: 0.08, indexed: false },
-]
+import { sourcesApi } from '@/lib/api/sources'
+import { useCheckin, useFlashcardDecks, useStudyMetrics, useStudyStreak } from '@/lib/hooks/use-genote'
+import { SourceListResponse } from '@/lib/types/api'
+import { AppShell } from '@/components/layout/AppShell'
+import { LoadingSpinner } from '@/components/common/LoadingSpinner'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 
 const EXAM_DATE = new Date('2026-12-19T00:00:00+08:00')
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 
 export default function DashboardPage() {
   const router = useRouter()
-  const [checkedIn, setCheckedIn] = useState(false)
+  const { data: recentSources = [], isLoading: sourcesLoading } = useQuery({
+    queryKey: ['dashboard', 'recent-sources'],
+    queryFn: () => sourcesApi.list({ limit: 5, offset: 0, sort_by: 'updated', sort_order: 'desc' }),
+  })
+  const { data: streak } = useStudyStreak()
+  const { data: metrics } = useStudyMetrics()
+  const { data: decks = [] } = useFlashcardDecks()
+  const checkin = useCheckin()
+
   const daysUntilExam = useMemo(
     () => Math.max(0, Math.ceil((EXAM_DATE.getTime() - Date.now()) / MS_PER_DAY)),
     []
   )
-  const weekDays = useMemo(() => buildWeekDays(checkedIn), [checkedIn])
-
-  const handleCheckin = () => setCheckedIn(true)
+  const weekDays = useMemo(
+    () => buildWeekDays(streak?.streak_days ?? 0, streak?.checked_in_today ?? false),
+    [streak?.checked_in_today, streak?.streak_days]
+  )
+  const dueCards = decks.reduce((sum, deck) => sum + deck.due_count, 0)
+  const totalCards = decks.reduce((sum, deck) => sum + deck.card_count, 0)
 
   return (
     <AppShell>
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-5xl mx-auto p-6 space-y-6">
-          {/* Greeting + Exam Countdown */}
           <div>
             <h1 className="text-2xl font-bold">
               下午好，<span className="text-primary">子衿</span>。
             </h1>
             <p className="text-muted-foreground mt-1">
               距离 <em className="not-italic text-primary/80">2027 考研初试预计日期</em> 还剩{' '}
-              <em className="not-italic text-foreground font-semibold">{daysUntilExam}</em> 天 · 今天计划{' '}
-              <em className="not-italic text-foreground font-semibold">3.5h</em>
+              <em className="not-italic text-foreground font-semibold">{daysUntilExam}</em> 天
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-            {/* Left column: Upload + Recent */}
             <div className="lg:col-span-2 space-y-5">
-              {/* Upload card */}
               <Card className="border-dashed border-2 hover:border-primary/50 transition-colors cursor-pointer"
                     onClick={() => router.push('/sources')}>
                 <CardContent className="p-6 text-center space-y-3">
@@ -68,7 +72,7 @@ export default function DashboardPage() {
                   <div>
                     <div className="text-lg font-semibold">上传 PDF / 长视频 / 录音</div>
                     <div className="text-sm text-muted-foreground">
-                      拖拽到此处，或点击选择文件 · 单文件 ≤ 200MB
+                      拖拽到此处，或点击选择文件
                     </div>
                   </div>
                   <div className="flex gap-2 justify-center flex-wrap">
@@ -79,57 +83,47 @@ export default function DashboardPage() {
                 </CardContent>
               </Card>
 
-              {/* Recent documents */}
               <Card>
                 <CardContent className="p-4">
                   <h3 className="font-semibold mb-3 flex items-center gap-2">
                     <Layers className="h-4 w-4 text-primary" />
                     最近打开
-                    <Badge variant="secondary" className="ml-1">{recentDocs.length}</Badge>
+                    <Badge variant="secondary" className="ml-1">{recentSources.length}</Badge>
                   </h3>
-                  <div className="space-y-1">
-                    {recentDocs.map(doc => (
-                      <div key={doc.id}
-                           className="flex items-center gap-3 p-3 rounded-lg hover:bg-secondary transition-colors cursor-pointer group"
-                           onClick={() => router.push(doc.type === 'pdf' ? `/notebooks/${doc.id}` : `/notebooks/${doc.id}`)}>
-                        <div className="w-10 h-10 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0">
-                          {doc.type === 'pdf' ? <FileText className="h-5 w-5 text-primary" /> :
-                           doc.type === 'video' ? <Video className="h-5 w-5 text-primary" /> :
-                           <Music className="h-5 w-5 text-primary" />}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="font-medium truncate">{doc.title}</div>
-                          <div className="text-xs text-muted-foreground">
-                            {doc.subject} · {doc.type === 'pdf' ? `${doc.pages} 页` : doc.duration}
-                            {!doc.indexed && <span className="text-amber-400 ml-2">● 索引中…</span>}
-                          </div>
-                        </div>
-                        <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden flex-shrink-0">
-                          <div className="h-full bg-primary rounded-full transition-all"
-                               style={{ width: `${Math.round(doc.progress * 100)}%` }} />
-                        </div>
-                        <span className="text-xs text-muted-foreground w-8 text-right">
-                          {Math.round(doc.progress * 100)}%
-                        </span>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                      </div>
-                    ))}
-                  </div>
+                  {sourcesLoading ? (
+                    <div className="flex justify-center py-8">
+                      <LoadingSpinner />
+                    </div>
+                  ) : recentSources.length === 0 ? (
+                    <div className="text-sm text-muted-foreground py-8 text-center">
+                      上传第一份资料后，这里会显示最近学习内容。
+                    </div>
+                  ) : (
+                    <div className="space-y-1">
+                      {recentSources.map(source => (
+                        <SourceRow
+                          key={source.id}
+                          source={source}
+                          onOpen={() => router.push(`/sources/${encodeURIComponent(source.id)}`)}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </div>
 
-            {/* Right column: Check-in + Flashcards + Metrics */}
             <div className="space-y-5">
-              {/* Check-in streak */}
               <Card>
                 <CardContent className="p-4 space-y-3">
                   <div className="flex items-center gap-2">
                     <Flame className="h-5 w-5 text-primary" />
                     <h4 className="font-semibold">
-                      已连续学习 <span className="text-primary">4</span> 天
+                      已连续学习 <span className="text-primary">{streak?.streak_days ?? 0}</span> 天
                     </h4>
-                    <span className="text-xs text-muted-foreground ml-auto">+2 经验/日</span>
+                    <span className="text-xs text-muted-foreground ml-auto">
+                      {streak?.total_xp ?? 0} XP
+                    </span>
                   </div>
                   <div className="grid grid-cols-7 gap-1">
                     {weekDays.map((d, i) => (
@@ -146,44 +140,33 @@ export default function DashboardPage() {
                   </div>
                   <Button
                     className="w-full"
-                    variant={checkedIn ? 'secondary' : 'default'}
-                    disabled={checkedIn}
-                    onClick={handleCheckin}
+                    variant={streak?.checked_in_today ? 'secondary' : 'default'}
+                    disabled={Boolean(streak?.checked_in_today) || checkin.isPending}
+                    onClick={() => checkin.mutate()}
                   >
-                    {checkedIn ? '✓ 今日已签到' : '今日签到 +2 经验'}
+                    {streak?.checked_in_today ? '今日已签到' : '今日签到 +2 经验'}
                   </Button>
                 </CardContent>
               </Card>
 
-              {/* Flashcard preview */}
               <Card>
                 <CardContent className="p-4 space-y-3">
                   <h4 className="font-semibold flex items-center gap-2">
                     <Zap className="h-4 w-4 text-primary" />
                     闪卡复习
-                    <Badge variant="secondary" className="ml-1">12 待复习</Badge>
+                    <Badge variant="secondary" className="ml-1">{dueCards} 待复习</Badge>
                   </h4>
                   <div className="flex justify-between text-center">
-                    <div>
-                      <div className="text-lg font-bold text-amber-400">12</div>
-                      <div className="text-xs text-muted-foreground">待复习</div>
-                    </div>
-                    <div>
-                      <div className="text-lg font-bold">48</div>
-                      <div className="text-xs text-muted-foreground">学习中</div>
-                    </div>
-                    <div>
-                      <div className="text-lg font-bold">134</div>
-                      <div className="text-xs text-muted-foreground">已掌握</div>
-                    </div>
+                    <Stat value={dueCards} label="待复习" highlight />
+                    <Stat value={totalCards} label="总卡片" />
+                    <Stat value={decks.length} label="卡组" />
                   </div>
                   <Button variant="outline" className="w-full" onClick={() => router.push('/flashcards')}>
-                    开始今日复习 →
+                    开始今日复习
                   </Button>
                 </CardContent>
               </Card>
 
-              {/* Weekly metrics */}
               <Card>
                 <CardContent className="p-4 space-y-3">
                   <h4 className="font-semibold flex items-center gap-2">
@@ -191,9 +174,17 @@ export default function DashboardPage() {
                     本周指标
                   </h4>
                   <div className="space-y-2.5">
-                    <Metric label="学习时长" value="14h 22m" hint="+18% 较上周" />
-                    <Metric label="新增笔记" value="38 段" hint="3 篇文档" />
-                    <Metric label="AI 提问" value="124 次" hint="平均 3.7s 响应" />
+                    <Metric
+                      label="学习时长"
+                      value={formatHours(metrics?.total_hours ?? 0)}
+                      hint={`${formatPct(metrics?.hours_change_pct ?? 0)} 较上周`}
+                    />
+                    <Metric label="新增笔记" value={`${metrics?.new_notes ?? 0} 段`} hint="本周创建" />
+                    <Metric
+                      label="AI 提问"
+                      value={`${metrics?.ai_questions ?? 0} 次`}
+                      hint={`平均 ${formatSeconds(metrics?.avg_response_time ?? 0)} 响应`}
+                    />
                   </div>
                 </CardContent>
               </Card>
@@ -205,7 +196,44 @@ export default function DashboardPage() {
   )
 }
 
-function buildWeekDays(checkedIn: boolean) {
+function SourceRow({ source, onOpen }: { source: SourceListResponse; onOpen: () => void }) {
+  const kind = getSourceKind(source)
+  const progress = getIndexProgress(source)
+  const Icon = kind === 'video' ? Video : kind === 'audio' ? Music : FileText
+
+  return (
+    <div
+      className="flex items-center gap-3 p-3 rounded-lg hover:bg-secondary transition-colors cursor-pointer group"
+      onClick={onOpen}
+    >
+      <div className="w-10 h-10 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0">
+        <Icon className="h-5 w-5 text-primary" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="font-medium truncate">{source.title || '未命名资料'}</div>
+        <div className="text-xs text-muted-foreground">
+          {kindLabel(kind)} · {source.embedded ? '已索引' : source.status || '待索引'}
+        </div>
+      </div>
+      <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden flex-shrink-0">
+        <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${progress}%` }} />
+      </div>
+      <span className="text-xs text-muted-foreground w-8 text-right">{progress}%</span>
+      <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+    </div>
+  )
+}
+
+function Stat({ value, label, highlight = false }: { value: number; label: string; highlight?: boolean }) {
+  return (
+    <div>
+      <div className={`text-lg font-bold ${highlight ? 'text-amber-400' : ''}`}>{value}</div>
+      <div className="text-xs text-muted-foreground">{label}</div>
+    </div>
+  )
+}
+
+function buildWeekDays(streakDays: number, checkedInToday: boolean) {
   const labels = ['一', '二', '三', '四', '五', '六', '日']
   const now = new Date()
   const todayIndex = (now.getDay() + 6) % 7
@@ -216,14 +244,64 @@ function buildWeekDays(checkedIn: boolean) {
   return labels.map((day, index) => {
     const current = new Date(monday)
     current.setDate(monday.getDate() + index)
+    const daysFromToday = Math.floor((startOfDay(now).getTime() - current.getTime()) / MS_PER_DAY)
+    const done = daysFromToday >= 0 && daysFromToday < streakDays && (daysFromToday > 0 || checkedInToday)
 
     return {
       day,
       date: String(current.getDate()),
       today: index === todayIndex,
-      done: index < todayIndex || (index === todayIndex && checkedIn),
+      done,
     }
   })
+}
+
+function startOfDay(value: Date) {
+  const date = new Date(value)
+  date.setHours(0, 0, 0, 0)
+  return date
+}
+
+function getSourceKind(source: SourceListResponse): 'pdf' | 'video' | 'audio' | 'link' | 'text' {
+  const filePath = source.asset?.file_path?.toLowerCase() ?? ''
+  const url = source.asset?.url
+  if (/\.(mp4|mov|m4v|webm)$/.test(filePath)) return 'video'
+  if (/\.(mp3|wav|m4a|aac|flac)$/.test(filePath)) return 'audio'
+  if (filePath) return 'pdf'
+  if (url) return 'link'
+  return 'text'
+}
+
+function kindLabel(kind: ReturnType<typeof getSourceKind>) {
+  return {
+    pdf: '文档',
+    video: '视频',
+    audio: '音频',
+    link: '网页',
+    text: '文本',
+  }[kind]
+}
+
+function getIndexProgress(source: SourceListResponse) {
+  if (source.embedded) return 100
+  if (source.status === 'failed') return 0
+  if (source.embedded_chunks > 0) return 80
+  if (source.command_id || source.status) return 45
+  return 0
+}
+
+function formatHours(hours: number) {
+  const wholeHours = Math.floor(hours)
+  const minutes = Math.round((hours - wholeHours) * 60)
+  return minutes > 0 ? `${wholeHours}h ${minutes}m` : `${wholeHours}h`
+}
+
+function formatPct(value: number) {
+  return `${value >= 0 ? '+' : ''}${value}%`
+}
+
+function formatSeconds(value: number) {
+  return `${value.toFixed(1)}s`
 }
 
 function Metric({ label, value, hint }: { label: string; value: string; hint: string }) {

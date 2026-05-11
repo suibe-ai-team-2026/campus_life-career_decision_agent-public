@@ -84,6 +84,23 @@ async def create_deck(body: FlashcardDeckCreate):
 
 # ─── Cards ────────────────────────────────────────────────────────────
 
+@router.get("/flashcards/cards/due", response_model=List[FlashcardResponse])
+async def list_due_cards(
+    limit: int = Query(50, ge=1, le=200, description="Maximum cards to return"),
+):
+    result = await repo_query(
+        """
+        SELECT *
+        FROM flashcard
+        WHERE next_review <= time::now()
+        ORDER BY next_review ASC
+        LIMIT $limit
+        """,
+        {"limit": limit},
+    )
+    return [_card_response(r) for r in result]
+
+
 @router.get("/flashcards/decks/{deck_id}/cards", response_model=List[FlashcardResponse])
 async def list_cards(
     deck_id: str,

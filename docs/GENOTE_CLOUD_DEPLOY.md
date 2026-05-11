@@ -88,7 +88,7 @@ The frontend proxies browser API calls through `/api/*`, so users do not need di
 
 ## Known Preview Limits
 
-- The Genote dashboard and flashcard review UI still use some mock data.
+- Study metrics are basic database aggregates; detailed session tracking still needs more instrumentation.
 - Large file processing runs in the same deployment and can consume CPU/RAM.
 - Uploaded files are stored on the VM filesystem; use external object storage before public launch.
 - Add monitoring and automated backups before inviting real users.
