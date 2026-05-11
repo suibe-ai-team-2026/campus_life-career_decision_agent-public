@@ -61,6 +61,16 @@ npm install
 npm run dev
 ```
 
+### 5. 云端预览部署
+
+云端部署配置维护在独立工作树：
+
+- Compose: `open-notebook/docker-compose.yml`
+- 环境模板: `open-notebook/.env.example`
+- 部署手册: `open-notebook/docs/GENOTE_CLOUD_DEPLOY.md`
+
+推荐先用 4 vCPU / 8GB RAM / 100GB SSD 的 Ubuntu 机器做预览部署。
+
 ---
 
 ## 仓库导览
