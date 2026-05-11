@@ -1,36 +1,64 @@
+name: genote
+
 services:
   surrealdb:
     image: surrealdb/surrealdb:v2
-    command: start --log info --user root --pass root rocksdb:/mydata/mydatabase.db
-    user: root  # Required for bind mounts on Linux
-    ports:
-      - "8000:8000"
+    command:
+      - start
+      - --bind
+      - 0.0.0.0:8000
+      - --log
+      - info
+      - --user
+      - ${SURREAL_USER:-root}
+      - --pass
+      - ${SURREAL_PASSWORD:?Set SURREAL_PASSWORD in .env}
+      - rocksdb:/mydata/mydatabase.db
+    user: root
+    expose:
+      - "8000"
     volumes:
       - ./surreal_data:/mydata
     environment:
       - SURREAL_EXPERIMENTAL_GRAPHQL=true
-    restart: always
-    pull_policy: always
+    healthcheck:
+      test: ["CMD", "surreal", "isready", "--conn", "http://127.0.0.1:8000"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+    restart: unless-stopped
 
   open_notebook:
-    image: lfnovo/open_notebook:v1-latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NPM_REGISTRY: ${NPM_REGISTRY:-https://registry.npmjs.org/}
+    image: ${GENOTE_IMAGE:-genote/open-notebook:local}
+    env_file:
+      - .env
     ports:
-      - "8502:8502"  # Web UI
-      - "5055:5055"  # REST API
+      - "${WEB_PORT:-8502}:8502"
+      - "127.0.0.1:${API_PORT:-5055}:5055"
     environment:
-      # REQUIRED: Change this to your own secret string
-      # This encrypts your API keys in the database
-      - OPEN_NOTEBOOK_ENCRYPTION_KEY=change-me-to-a-secret-string
-
-      # Database connection (default values - no need to change)
+      # Browser requests use same-origin /api/*; Next.js proxies internally.
+      - API_URL=${API_URL:-}
+      - INTERNAL_API_URL=http://localhost:5055
       - SURREAL_URL=ws://surrealdb:8000/rpc
-      - SURREAL_USER=root
-      - SURREAL_PASSWORD=root
-      - SURREAL_NAMESPACE=open_notebook
-      - SURREAL_DATABASE=open_notebook
+      - SURREAL_USER=${SURREAL_USER:-root}
+      - SURREAL_PASSWORD=${SURREAL_PASSWORD:?Set SURREAL_PASSWORD in .env}
+      - SURREAL_NAMESPACE=${SURREAL_NAMESPACE:-open_notebook}
+      - SURREAL_DATABASE=${SURREAL_DATABASE:-open_notebook}
     volumes:
       - ./notebook_data:/app/data
     depends_on:
-      - surrealdb
-    restart: always
-    pull_policy: always
+      surrealdb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8502 >/dev/null && curl -fsS http://localhost:5055/health >/dev/null"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+    restart: unless-stopped

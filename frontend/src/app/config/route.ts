@@ -7,20 +7,17 @@ import { NextRequest, NextResponse } from 'next/server'
  * This solves the NEXT_PUBLIC_* limitation where variables are baked into the build.
  *
  * Environment Variables:
- * - API_URL: Where the browser/client should make API requests (public/external URL)
+ * - API_URL: Optional public API base URL for split frontend/API deployments
  * - INTERNAL_API_URL: Where Next.js server-side should proxy API requests (internal URL)
  *   Default: http://localhost:5055 (used by Next.js rewrites in next.config.ts)
  *
  * Why two different variables?
- * - API_URL: Used by browser clients, can be https://your-domain.com or http://server-ip:5055
+ * - API_URL: Used by browser clients only when API is intentionally exposed separately
  * - INTERNAL_API_URL: Used by Next.js rewrites for server-side proxying, typically http://localhost:5055
  *
- * Auto-detection logic for API_URL:
- * 1. If API_URL env var is set, use it (explicit override)
- * 2. Otherwise, detect from incoming HTTP request headers (zero-config)
- * 3. Fallback to localhost:5055 if detection fails
- *
- * This allows the same Docker image to work in different deployment scenarios.
+ * Default behavior returns an empty string so the browser calls /api/* on the
+ * same origin and Next.js proxies to INTERNAL_API_URL. That is safer for cloud
+ * deployments because only the web port needs to be exposed publicly.
  */
 export async function GET(request: NextRequest) {
   // Priority 1: Check if API_URL is explicitly set
@@ -32,37 +29,22 @@ export async function GET(request: NextRequest) {
     })
   }
 
-  // Priority 2: Auto-detect from request headers
+  // Priority 2: Default to same-origin API calls through Next.js rewrites.
+  // Keep a small log with the observed host to help deployment debugging.
   try {
-    // Get the protocol (http or https)
-    // Check X-Forwarded-Proto first (for reverse proxies), then fallback to request scheme
     const proto = request.headers.get('x-forwarded-proto') ||
                   request.nextUrl.protocol.replace(':', '') ||
                   'http'
-
-    // Get the host header (includes port if non-standard)
     const hostHeader = request.headers.get('host')
 
     if (hostHeader) {
-      // Extract just the hostname (remove port if present)
-      const hostname = hostHeader.split(':')[0]
-
-      // Construct the API URL with port 5055
-      const apiUrl = `${proto}://${hostname}:5055`
-
-      console.log(`[runtime-config] Auto-detected API URL: ${apiUrl} (proto=${proto}, host=${hostHeader})`)
-
-      return NextResponse.json({
-        apiUrl,
-      })
+      console.log(`[runtime-config] Using same-origin API proxy (proto=${proto}, host=${hostHeader})`)
     }
   } catch (error) {
-    console.error('[runtime-config] Auto-detection failed:', error)
+    console.error('[runtime-config] Request inspection failed:', error)
   }
 
-  // Priority 3: Fallback to localhost
-  console.log('[runtime-config] Using fallback: http://localhost:5055')
   return NextResponse.json({
-    apiUrl: 'http://localhost:5055',
+    apiUrl: '',
   })
 }
