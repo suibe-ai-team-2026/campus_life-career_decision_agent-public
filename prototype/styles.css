@@ -1,4 +1,4 @@
-/* Genote — 生思笔记 */
+/* 知途 — Campus Pathway */
 :root {
   --bg-0: oklch(0.18 0.012 60);   /* deepest */
   --bg-1: oklch(0.22 0.014 60);   /* panels */
@@ -137,9 +137,9 @@ input::placeholder, textarea::placeholder { color: var(--fg-3); }
   background: linear-gradient(140deg, var(--accent), oklch(0.72 0.16 calc(var(--accent-h) - 25)));
   display: grid; place-items: center;
   color: var(--accent-ink);
-  font-weight: 700; font-size: 13px;
-  font-family: var(--font-read);
-  font-style: italic;
+  font-weight: 700; font-size: 14px;
+  font-family: var(--font-cn), var(--font-read);
+  font-style: normal;
 }
 .brand .name { font-weight: 600; font-size: 14px; letter-spacing: -0.01em; }
 .brand .name small { display: block; color: var(--fg-2); font-weight: 400; font-size: 11px; letter-spacing: 0.04em; }

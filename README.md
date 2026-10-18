@@ -1,12 +1,14 @@
-# Genote（生思笔记）· 校园 AI 知识库助手
+# 知途（Campus Pathway）· 校园 AI 知识库助手
 
 > **比赛主项目仓库**。赛事：首届「数字赋能经贸，智创未来校园」AI 创新应用大赛。
 > 团队：Organization `suibe-ai-team-2026`（秦翰 @turtojian520、吴迪仪 @Jade-soleil、彭烨 @cactusye79）。
 > 选题与决策以工作空间仓库 [`ai-agent-competition-2026`](https://github.com/suibe-ai-team-2026/ai-agent-competition-2026) 为准。
+>
+> 产品名 **知途（Campus Pathway）** 由团队 2026-10-18 确定，取代此前文档中的「Genote / 生思笔记」作为**比赛版对外名称**；仓库 slug 为 `campus_life-career_decision_agent`。
 
 ## 仓库定位
 
-本仓库由个人项目 **Genote（面向考研 / 考公学生的 AI 学习助手）** fork 而来，现作为团队的比赛主项目使用。两者**产品方向并不相同**：
+本仓库由个人项目 **Genote（面向考研 / 考公学生的 AI 学习助手）** fork 而来，现作为团队的比赛主项目使用。**Genote 是 fork 上游的原产品名称，仅在描述来源与历史时保留**；本仓库代表的产品是知途。两者**产品方向并不相同**：
 
 | 维度 | Genote 原产品 | 比赛版 |
 |---|---|---|
@@ -22,7 +24,7 @@
 | 项 | 状态 | 说明 |
 |---|---|---|
 | UI 原型 | 可用 | `prototype/`，React 18 + Babel CDN 单页，需联网 |
-| PRD | v0.1 + 比赛版裁剪 | 见 `Genote_PRD_v0.1.md` 的「0.1 比赛版范围裁剪」 |
+| PRD | v0.1 + 比赛版裁剪 | 见 `PRD_v0.1.md` 的「0.1 比赛版范围裁剪」 |
 | 产品实现 | 未开始 | 待按共识技术底座搭建 |
 | 部署 | 未部署 | 尚无正式演示地址 |
 | 许可证 | 未授予 | 私有仓库，待团队与学校要求确认 |
@@ -36,7 +38,7 @@
 ```bash
 cd prototype
 python3 -m http.server 5500 --bind 127.0.0.1
-# 浏览器打开 http://127.0.0.1:5500/Genote%20Prototype.html
+# 浏览器打开 http://127.0.0.1:5500/
 ```
 
 ### 2. 运行 Open Notebook 参考实现（非比赛主线）
@@ -44,7 +46,7 @@ python3 -m http.server 5500 --bind 127.0.0.1
 `open-notebook-genote` 分支是 Genote 原产品基于 Open Notebook 的实现，作为**可复用参考**保留；比赛版技术底座以团队决策为准。
 
 ```bash
-git clone --single-branch --branch open-notebook-genote https://github.com/suibe-ai-team-2026/genote.git open-notebook
+git clone --single-branch --branch open-notebook-genote https://github.com/suibe-ai-team-2026/campus_life-career_decision_agent.git open-notebook
 cd open-notebook
 docker compose up -d          # 访问 http://localhost:8502
 ```
@@ -65,8 +67,8 @@ npm run dev
 |---|---|
 | `prototype/` | UI 原型（React 18 + CDN Babel），可直接静态托管 |
 | `docs/product-alignment.md` | 比赛版对齐说明：可复用 / 需改造 / 不采用 |
-| `Genote_PRD_v0.1.md` | 需求文档；含比赛版范围裁剪章节 |
-| `GENOTE_CONTEXT.md` | 技术上下文与架构说明（原始实现） |
+| `PRD_v0.1.md` | 需求文档；含比赛版范围裁剪章节 |
+| `PRODUCT_CONTEXT.md` | 技术上下文与架构说明（fork 上游的原始实现） |
 | `AGENTS.md` | 协作与 Agent 操作约束 |
 
 ## Genote 原功能与比赛版去向
@@ -84,7 +86,7 @@ npm run dev
 
 ## Genote 原架构（参考）
 
-基于 **Open Notebook**（23k+ stars，MIT）扩展：学习库、闪卡复习、专注模式、视频时间戳、暖琥珀暗色主题；Open Notebook 原有的 RAG 聊天、播客生成、内容转换、多模型切换保留。完整说明见 [`GENOTE_CONTEXT.md`](GENOTE_CONTEXT.md)。比赛版不沿用其 Docker 自托管形态与 SurrealDB 数据层。
+基于 **Open Notebook**（23k+ stars，MIT）扩展：学习库、闪卡复习、专注模式、视频时间戳、暖琥珀暗色主题；Open Notebook 原有的 RAG 聊天、播客生成、内容转换、多模型切换保留。完整说明见 [`PRODUCT_CONTEXT.md`](PRODUCT_CONTEXT.md)。比赛版不沿用其 Docker 自托管形态与 SurrealDB 数据层。
 
 ## 团队与协作
 
@@ -108,4 +110,4 @@ npm run dev
 
 ## License
 
-当前**未授予开源许可证**。仓库为私有；是否开源、采用何种许可，待团队确认学校与第三方资源要求后决定。Genote 参考的 Open Notebook 项目本身采用 MIT 许可，但本仓库不是它的发行版。
+当前**未授予开源许可证**。仓库为私有；是否开源、采用何种许可，待团队确认学校与第三方资源要求后决定。知途参考的 Open Notebook 项目本身采用 MIT 许可，但本仓库不是它的发行版。

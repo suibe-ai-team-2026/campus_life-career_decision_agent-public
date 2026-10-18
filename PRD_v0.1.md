@@ -1,8 +1,10 @@
-# Genote（生思笔记 / Singsi Note AI）产品需求文档（PRD）v0.1
+# 知途（Campus Pathway）产品需求文档（PRD）v0.1
 
 > 编制日期：2026-05-05
 > 信息源：通过 NotebookLM MCP 获取的 3 个项目 notebook 的全部 14 个 source（其中 6 份为内部设计文档，8 份为外部技术参考资料）。
 > 严格约束：本文档**仅基于** NotebookLM 来源整理，未引入任何来源外信息；来源中未涵盖的事实统一以 `[FILL: …]` 占位符标注。
+>
+> **产品名说明（2026-10-18）**：本文件正文的全部条目编写于 fork 之前，当时的产品名为 Genote（生思笔记 / Singsi Note AI）。比赛版对外产品名已定为**知途（Campus Pathway）**，文件随之更名为 `PRD_v0.1.md`。下文的 0.1 节及术语表保留原始名称以便追溯，**不改写 v0.1 原始条目**；产品名的权威表述以本节和 [`docs/product-alignment.md`](docs/product-alignment.md) 为准。
 >
 > **冲突解决说明**：用户 prompt 的 *Output requirements* 要求"一份结构完整的需求文档"，*Constraints / Do-nots* 末尾出现"仅返回最终 rewritten prompt"字样（疑似 prompt 模板残留）。按 prompt 自带的优先级（Constraints > Required outputs），本响应正文保持精简、不复述文档；完整需求文档作为 deliverable 写入本文件。
 
@@ -12,7 +14,7 @@
 
 | 字段 | 值 |
 |---|---|
-| 项目名 | Genote（中文：生思笔记；英文别名：Singsi Note AI） |
+| 项目名 | 原始条目：Genote（中文：生思笔记；英文别名：Singsi Note AI）。**比赛版产品名：知途（Campus Pathway）** |
 | 文档版本 | v0.1（基于 NotebookLM 来源初版） |
 | 编制人 | [FILL: 编制人] |
 | 审批人 | [FILL: 审批人] |
@@ -24,7 +26,7 @@
 
 > 本 PRD 描述的是 Genote 原产品（面向考研 / 考公学生的 AI 学习助手 SaaS）。比赛版按团队 2026-10-15 决策及会后修订裁剪，权威结论见工作空间仓库 [`ai-agent-competition-2026`](https://github.com/suibe-ai-team-2026/ai-agent-competition-2026) 的 `docs/discovery/decision.md`。本节只标注处理方式，**不改写 v0.1 原始条目**，以便追溯。
 
-**背景**：比赛选题为「校园 AI 知识库助手」——通用校园 Agent（办公辅助 + 来源整理成知识库 + RAG 提取 + 按内容生成），生涯规划作为其中一个模块。Genote 的考研 / 考公定位、订阅模式与 Open Notebook 技术底座不直接进入比赛版。详细映射见 [`docs/product-alignment.md`](docs/product-alignment.md)。
+**背景**：比赛选题为「校园 AI 知识库助手」——通用校园 Agent（办公辅助 + 来源整理成知识库 + RAG 提取 + 按内容生成），生涯规划作为其中一个模块，比赛版产品名**知途（Campus Pathway）**。fork 上游 Genote 的考研 / 考公定位、订阅模式与 Open Notebook 技术底座不直接进入比赛版。详细映射见 [`docs/product-alignment.md`](docs/product-alignment.md)。
 
 **裁剪表**
 
@@ -111,7 +113,8 @@
 
 | 术语 | 解释 | 来源 |
 |---|---|---|
-| Genote / Singsi Note / 生思笔记 | 同一产品的不同命名 | 项目通用 |
+| 知途 / Campus Pathway | 本仓库比赛版产品名（2026-10-18 定名） | 本文件顶部产品名说明 |
+| Genote / Singsi Note / 生思笔记 | fork 上游原产品的不同命名，仅在追溯历史时使用 | 项目通用 |
 | RAG | Retrieval-Augmented Generation，检索增强生成 | SRC-4 |
 | Hybrid Search | BM25（稀疏检索） + Dense Vectors（稠密向量）联合检索 | SRC-4 |
 | Re-ranking | 检索后重排序，用于提升精度 | SRC-4 |

@@ -182,7 +182,7 @@ function ChatPanel({ initialChat, contextLabel, variant, onJumpVideo }) {
       <div className="chat-history" ref={histRef}>
         {chat.map((m, i) => (
           <div key={i} className={`bubble ${m.role}`}>
-            <div className="who">{m.role === "user" ? "你" : "Genote · DeepSeek-V3"}</div>
+            <div className="who">{m.role === "user" ? "你" : "知途 · DeepSeek-V3"}</div>
             <div className="body" dangerouslySetInnerHTML={{__html: renderMd(m.text)}} />
             {m.citations && (
               <div className="citations">
@@ -199,7 +199,7 @@ function ChatPanel({ initialChat, contextLabel, variant, onJumpVideo }) {
         ))}
         {thinking && (
           <div className="bubble assistant">
-            <div className="who">Genote · DeepSeek-V3</div>
+            <div className="who">知途 · DeepSeek-V3</div>
             <div className="thinking"><i/><i/><i/></div>
           </div>
         )}
