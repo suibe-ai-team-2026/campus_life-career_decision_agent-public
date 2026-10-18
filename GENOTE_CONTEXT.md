@@ -1,10 +1,13 @@
 # GENOTE 项目上下文文档
 
+> **比赛版提示（2026-10-18）**：本文件描述 Genote 原产品（考研 / 考公 AI 学习助手）的技术上下文，作为**可复用参考**保留。比赛版（校园 AI 知识库助手）的技术底座按团队决策执行，见工作空间仓库 `docs/discovery/decision.md` 与 [`docs/product-alignment.md`](docs/product-alignment.md)。两份文档冲突时，以团队决策为准。
+
 ## 1. 项目概览 (Project Overview)
 
 - **项目名称**: Genote (生思笔记) v0.2
 - **核心愿景**: 打造一个"学术导师"级的笔记助手，为考研/考公学生提供 AI 驱动的学习辅助
 - **当前状态**: 基于 Open Notebook (`lfnovo/open-notebook`) 架构重建；Genote 扩展维护在独立 `open-notebook/` Git 工作树
+- **比赛版定位**: 本仓库为 `suibe-ai-team-2026` 的比赛主项目；比赛选题为校园 AI 知识库助手，复用本文件所述原型与交互设计，技术底座另按决策执行
 
 ---
 
@@ -24,6 +27,8 @@
 | **AI 引擎** | LangChain + Esperanto (18+ 提供商，含 DeepSeek) |
 | **搜索** | Hybrid Search (BM25 + 向量) |
 | **部署** | Docker Compose (SurrealDB + FastAPI + Next.js) |
+
+> **比赛版差异（2026-10-15 决策）**：上表是 Genote 原实现（Open Notebook 自托管，原型 / 参考阶段）。比赛版技术底座为 **Next.js（Vercel）+ Supabase（Postgres、pgvector、Auth、私有 Storage、Queues）+ Python Deep Agents / LangGraph + Freestyle VM**；下文的 FastAPI + SurrealDB + Docker Compose 结构仅作为参考实现保留，不作为比赛版最终架构。
 
 ### 2.2 架构图
 
@@ -143,3 +148,5 @@ Genote/
 - **默认 AI**: DeepSeek（成本优先）
 - **主题**: 默认深色模式，暖琥珀 oklch 色系
 - **字体**: Inter (UI) + Noto Sans SC (中文) + JetBrains Mono (代码) + Source Serif 4 (阅读)
+- **比赛版补充**: Supabase / Freestyle 凭据只放服务端环境变量，不下发前端；真实学生数据、授权课程材料不得进入 Git、Issue 或演示包
+
