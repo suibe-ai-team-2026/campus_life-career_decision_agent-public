@@ -133,7 +133,7 @@ function App() {
         ))}
       </div>
 
-      <TweaksPanel title="Tweaks · Genote">
+      <TweaksPanel title="Tweaks · 知途">
         <TweakSection title="主题与色彩">
           <TweakSlider label="强调色色相 (oklch hue)" value={tweaks.accentHue} min={20} max={320} step={2}
             onChange={v => setTweak("accentHue", v)} />
@@ -201,10 +201,10 @@ function Sidebar({ activeDocId, view, onSelectDoc, onLibrary, onPalette, onUploa
   return (
     <div className="sidebar">
       <div className="brand">
-        <div className="logo">G</div>
+        <div className="logo">知</div>
         <div className="name">
-          Genote
-          <small>生思笔记 · v0.1</small>
+          知途
+          <small>Campus Pathway · v0.1</small>
         </div>
       </div>
       <button className="sb-search" onClick={onPalette}>

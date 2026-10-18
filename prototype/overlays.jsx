@@ -80,7 +80,7 @@ function Palette({ open, onClose, onAction }) {
           <span><kbd>↑↓</kbd> 移动</span>
           <span><kbd>↵</kbd> 选择</span>
           <span><kbd>esc</kbd> 关闭</span>
-          <span style={{marginLeft: "auto"}}>Genote · v0.1 beta</span>
+          <span style={{marginLeft: "auto"}}>知途 · v0.1 beta</span>
         </div>
       </div>
     </div>

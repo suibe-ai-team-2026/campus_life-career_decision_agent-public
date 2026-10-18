@@ -1,13 +1,13 @@
-# GENOTE 项目上下文文档
+# 知途（Campus Pathway）· 技术上下文文档
 
-> **比赛版提示（2026-10-18）**：本文件描述 Genote 原产品（考研 / 考公 AI 学习助手）的技术上下文，作为**可复用参考**保留。比赛版（校园 AI 知识库助手）的技术底座按团队决策执行，见工作空间仓库 `docs/discovery/decision.md` 与 [`docs/product-alignment.md`](docs/product-alignment.md)。两份文档冲突时，以团队决策为准。
+> **文件性质（2026-10-18）**：本文件原名 `GENOTE_CONTEXT.md`，描述 fork 上游原产品 Genote（考研 / 考公 AI 学习助手）的技术上下文，现作为**可复用参考**保留——文中「Genote」均指该上游产品。比赛版产品名为**知途（Campus Pathway）**，技术底座按团队决策执行，见工作空间仓库 `docs/discovery/decision.md` 与 [`docs/product-alignment.md`](docs/product-alignment.md)。两份文档冲突时，以团队决策为准。
 
 ## 1. 项目概览 (Project Overview)
 
-- **项目名称**: Genote (生思笔记) v0.2
+- **上游项目名称**: Genote (生思笔记) v0.2 —— fork 来源，非本仓库产品名
 - **核心愿景**: 打造一个"学术导师"级的笔记助手，为考研/考公学生提供 AI 驱动的学习辅助
 - **当前状态**: 基于 Open Notebook (`lfnovo/open-notebook`) 架构重建；Genote 扩展维护在独立 `open-notebook/` Git 工作树
-- **比赛版定位**: 本仓库为 `suibe-ai-team-2026` 的比赛主项目；比赛选题为校园 AI 知识库助手，复用本文件所述原型与交互设计，技术底座另按决策执行
+- **比赛版定位**: 本仓库为 `suibe-ai-team-2026/campus_life-career_decision_agent`，比赛主项目，产品名**知途（Campus Pathway）**；比赛选题为校园 AI 知识库助手，复用本文件所述原型与交互设计，技术底座另按决策执行
 
 ---
 
@@ -109,10 +109,10 @@
 ## 4. 目录结构
 
 ```
-Genote/
+campus_life-career_decision_agent/
 ├── README.md                    # 项目说明
-├── GENOTE_CONTEXT.md            # 本文件
-├── Genote_PRD_v0.1.md           # 需求文档
+├── PRODUCT_CONTEXT.md           # 本文件（原名 GENOTE_CONTEXT.md）
+├── PRD_v0.1.md                  # 需求文档（原名 Genote_PRD_v0.1.md）
 ├── prototype/                   # 原始 UI 原型 (参考)
 │
 ├── open-notebook/               # 基于 Open Notebook 的主项目（独立 Git 工作树）
