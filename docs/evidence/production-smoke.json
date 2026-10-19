@@ -1,0 +1,19 @@
+{
+  "executed_at": "2026-10-19T23:13+08:00",
+  "url": "https://campuslife-careerdecisionagent.vercel.app",
+  "environment": "production",
+  "public_access": true,
+  "health_http": 200,
+  "home_http": 200,
+  "catalog_http": 200,
+  "health": {
+    "ok": true,
+    "status": "ok",
+    "configured": true,
+    "sources": 351,
+    "chunks": 764,
+    "directions": 6
+  },
+  "deployment_protection": "Vercel Standard Protection: production is public; preview remains protected by Vercel Authentication",
+  "note": "首次 production 部署通过 CLI 完成；Git push 自动部署尚未连接（需要 GitHub org 安装 Vercel App）。"
+}
