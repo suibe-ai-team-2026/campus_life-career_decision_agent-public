@@ -13,13 +13,27 @@ __pycache__/
 .venv/
 venv/
 .pytest_cache/
+worker/.uv/
+worker/.venv/
+worker/.pytest_cache/
+worker/**/__pycache__/
 
 # Node
 node_modules/
 .next/
+out/
 dist/
 build/
-.DS_Store
+.vercel/
+*.tsbuildinfo
+next-env.d.ts
+
+# Generated data / local runtime
+data/import/out/
+data/rag/
+worker/tmp/
+worker/artifacts/
+*.log
 
 # Editor / IDE
 .vscode/
@@ -31,4 +45,5 @@ build/
 open-notebook/
 
 # OS
+.DS_Store
 Thumbs.db
