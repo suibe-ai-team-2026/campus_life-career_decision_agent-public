@@ -8,13 +8,13 @@
 |---|---|---|---|---|---|---|---|
 | GitHub | Organization | `suibe-ai-team-2026` | 三个私有仓库 | @turtojian520 | 成员 @Jade-soleil、@cactusye79（Write） | 免费 | 团队 |
 | GitHub | 产品仓库 | `suibe-ai-team-2026/campus_life-career_decision_agent` | 比赛主项目 | @turtojian520 | PR 分支 `feat/career-cloud-wizard` | 免费 | 团队 |
-| Supabase | Organization | **待创建/确认**（建议 `SUIBE AI Team 2026`） | 比赛专用；不与个人项目混用 | 待定 | 成员邀请待办 | Free 起步；付费需用户明确授权 | 待定 |
-| Supabase | 项目 | **待创建** `campus-pathway-career-dev`（ref 待填） | dev；正式环境另建或按预算 | 待定 | — | 待确认 | 待定 |
-| Vercel | Team | **待确认** scope | 比赛专用 Pro Team（私有 org 仓库部署要求） | 待定 | 贡献者需加入并绑定 GitHub | Pro；席位/付款人待授权 | 待定 |
-| Vercel | 项目 | `campus-pathway-career` | preview/prod | 待定 | — | 同上 | 待定 |
-| Freestyle | Team | **待确认** | worker 执行面 | 待定 | — | 按实际用量 | 待定 |
-| Freestyle | VM | `campus-pathway-worker-dev`（待创建） | 单 worker 演示部署，不称高可用 | 待定 | — | 按实际用量 | 待定 |
-| OpenRouter | API Key | 用户受保护文件 | embedding + chat | 用户 | 不入库/不入聊天 | 按用量；用户预算 | 用户 |
+| Supabase | Organization | `suibeAIproductcompe`（ID `lvzbgmhzlqcklcqsfwna`） | 比赛专用 | @turtojian520 | 当前单人账号资产 | Free | 待团队约定 |
+| Supabase | 项目 | `campus_life-career_decision_agent`（ref `cvohcdzfscoxytmpbwsk`） | dev/demo；Free，us-east-2 | @turtojian520 | Owner；成员未邀请 | Free | 待团队约定 |
+| Vercel | Team | 个人 Hobby `turtojian520s-projects` | 公开副本可免费部署；非比赛专用 Team | @turtojian520 | 单人 | Hobby（免费） | 待团队约定 |
+| Vercel | 项目 | `campus_life-career_decision_agent` | Preview 已部署；production 未主动推广 | @turtojian520 | 单人 | Hobby | 待团队约定 |
+| Freestyle | Team | 个人账号（API key 绑定个人团队） | worker 执行面（demo） | @turtojian520 | 单人 | 按实际用量 | 待团队约定 |
+| Freestyle | VM | `campus-pathway-worker-dev`（`vm-7f674dd9ed5d422b880f5bec7fe9f734`） | 单 worker 演示部署，4 vCPU/8 GiB，不称高可用 | @turtojian520 | 单人 | 按实际用量 | 待团队约定 |
+| OpenRouter | API Key | 用户受保护文件 | embedding + chat | 用户 | 仅本地/worker secret | 按用量；用户预算 | 用户 |
 
 ## 2. 角色分工（建议，待用户确认）
 

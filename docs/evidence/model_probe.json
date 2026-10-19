@@ -1,0 +1,43 @@
+{
+  "executed_at": "2026-10-19T19:05+08:00",
+  "provider": "openrouter",
+  "base": "https://openrouter.ai/api/v1",
+  "embedding_model": "qwen/qwen3-embedding-8b",
+  "dimensions": 4096,
+  "normalization": "l2",
+  "single_request": {
+    "count": 1,
+    "dims": 4096,
+    "finite": true,
+    "nonzero": true,
+    "raw_norm": 1.0,
+    "normalized_norm": 1.0,
+    "latency_ms": 1355
+  },
+  "batch_request": {
+    "requested": 3,
+    "count": 3,
+    "dims": [
+      4096,
+      4096,
+      4096
+    ],
+    "indexes": [
+      0,
+      1,
+      2
+    ],
+    "latency_ms": 505
+  },
+  "usage": {
+    "prompt_tokens": 51,
+    "total_tokens": 51,
+    "cost_usd": 5.1e-07
+  },
+  "chat_model": "deepseek/deepseek-chat",
+  "chat_endpoints_status": 200,
+  "notes": [
+    "embedding 已由提供方返回单位范数；代码仍会执行 L2 归一化并校验 4096 维",
+    "探针不打印 key"
+  ]
+}

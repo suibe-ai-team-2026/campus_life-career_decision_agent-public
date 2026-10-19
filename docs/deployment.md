@@ -1,21 +1,22 @@
 # 部署与运维 Runbook
 
-状态：**代码与迁移已准备；云端资源尚未创建/登录，以下步骤中标注「未执行」的条目必须在真实凭据到位后执行并记录证据。**
-用户无需安装 Docker；本地开发用 `npm`/`uv` 即可，Supabase 迁移走云端 CLI。
+状态：**2026-10-19 已执行迁移、数据导入、匿名 Auth、Freestyle worker 与 Vercel Preview；生产域名未主动部署。** 用户无需安装 Docker；本机无 Docker/Postgres，Supabase 迁移通过 Management API 的事务执行（详见 `docs/evidence/migration-apply.json`）。
 
 ## 0. 资源与前置确认
 
 | 资源 | 建议 | 当前状态 |
 |---|---|---|
 | GitHub | `suibe-ai-team-2026/campus_life-career_decision_agent`，分支 `feat/career-cloud-wizard` | 已创建分支/提交 |
-| Supabase | 比赛专用 Organization 下的新项目 `campus-pathway-career-dev`（不是同学项目 `ltxgjjcxuvqwnjtpegye`） | 等待用户登录/授权 |
-| Vercel | 比赛专用 Pro Team（Hobby 不能部署 private org 仓库）；项目名 `campus-pathway-career` | 等待用户确认套餐/team |
-| Freestyle | 比赛专用 Team/VM `campus-pathway-worker-dev` | 等待用户登录/团队 |
-| OpenRouter | API Key，模型 `qwen/qwen3-embedding-8b` + `deepseek/deepseek-chat` | 等待用户填入受保护文件 |
+| Supabase | org `suibeAIproductcompe` / 项目 `cvohcdzfscoxytmpbwsk`（campus_life-career_decision_agent，Free，us-east-2） | 已应用 7 个迁移、导入数据、启用匿名 Auth |
+| Vercel | 个人 Hobby 项目 `turtojian520s-projects/campus_life-career_decision_agent`，源码为本地同 commit；Preview 已部署 | 已部署 Preview；production 域名未主动推广 |
+| Freestyle | 个人账号 VM `campus-pathway-worker-dev`（`vm-7f674dd9ed5d422b880f5bec7fe9f734`） | 已创建并运行 worker 容器（healthy） |
+| OpenRouter | 模型 `qwen/qwen3-embedding-8b` + `deepseek/deepseek-chat` | 真实探针通过；成本记录见 `docs/evidence/model-probe.json` |
 
 **不自动做的事**：升级套餐、增加收费席位、公开私有仓库、修改/导出同学数据库、用个人空间冒充团队资源。
 
-## 1. 本地受保护配置
+## 1. 本地受保护配置（已建立）
+
+实际路径：`~/.config/campus-pathway/credentials.env`（chmod 600）与 `~/.config/campus-pathway/worker.env`；`.env.local` 已 gitignore。以下为变量清单，不含值。
 
 用户在自己的终端创建（不要发到聊天）：
 
@@ -162,10 +163,10 @@ npx tsx scripts/smoke.ts
 - 数据：按 `app_import_batches.batch_id` 仅删本批次新增且未被用户引用的行；有依赖先标废弃。
 - 密钥：平台撤销/轮换后更新受保护文件与平台 secret，记录时间与影响范围。
 
-## 8. 当前阻塞
+## 8. 当前状态与剩余阻塞
 
-1. Supabase 账号登录/组织与项目授权未确认 → 不能执行迁移与导入。
-2. OpenRouter Key 未提供 → 不能做真实 embedding 探针/建向量索引。
-3. Vercel Team/付费套餐未确认 → 不能部署 private org 仓库。
-4. Freestyle 账号/团队未确认 → 不能创建 worker VM。
-5. 课程/竞赛/学分结构化资料缺失 → Step 4 规则闭环只能 `data_unavailable` + 核对任务。
+1. Supabase 迁移/导入/匿名 Auth 已完成并验证；项目为 Free 计划、单项目，未建 dev/prod 分离。
+2. OpenRouter 探针通过；索引 profile `career-qwen3-embedding-8b-4096-career-qwen-v1` 已 active。
+3. Vercel Preview 已部署且有 Vercel Authentication 保护；正式生产部署、域名、Git 自动部署未完成（GitHub App 对 org 安装需要 GitHub sudo 模式，当前未完成）。
+4. Freestyle worker 单 VM 已跑通；VM 重启恢复/断点续跑/多 worker HA 未验证。
+5. 课程/竞赛/学分结构化资料缺失 → Step 4 规则闭环返回 `data_unavailable` + 核对任务；RAG 仅做小样本回归，未做完整题集与 10 条人工引用抽检。

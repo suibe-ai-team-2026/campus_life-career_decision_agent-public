@@ -1,0 +1,18 @@
+{
+  "executed_at": "2026-10-19T20:24+08:00",
+  "deployment": "https://campuslife-careerdecisionagent-cohh1bb6t-turtojian520s-projects.vercel.app",
+  "environment": "preview",
+  "project": "turtojian520s-projects/campus_life-career_decision_agent",
+  "health_http": 200,
+  "health_ok": true,
+  "database_reachable": true,
+  "sources": 351,
+  "chunks": 764,
+  "embedding_profile": "career-qwen3-embedding-8b-4096-career-qwen-v1",
+  "home_http": 200,
+  "home_title": "知途 Campus Pathway · 五步生涯向导",
+  "catalog_mode": "database",
+  "catalog_http": 200,
+  "deployment_protection": "Vercel Authentication enabled; owner can open, public viewers need bypass/login",
+  "note": "首次 Vercel 部署被平台自动分配为 production；之后显式 --target preview 生成预览部署，未主动推广生产域名"
+}

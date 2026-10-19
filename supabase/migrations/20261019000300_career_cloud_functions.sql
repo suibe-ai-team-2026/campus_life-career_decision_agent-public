@@ -196,7 +196,7 @@ begin
 
     exit when not found;
 
-    select * into v_run from public.app_runs where run_id = v_job.run_id;
+    select * into v_run from public.app_runs r where r.run_id = v_job.run_id;
     if v_run.status in ('cancelled', 'failed', 'succeeded') or v_run.cancel_requested then
       update app_private.jobs
          set status = case when v_run.status = 'cancelled' or v_run.cancel_requested then 'cancelled' else 'failed' end,
@@ -215,13 +215,13 @@ begin
      where j.job_id = v_job.job_id
      returning * into v_job;
 
-    update public.app_runs
-       set status = 'running', started_at = coalesce(started_at, now()), progress = greatest(progress, 5)
-     where run_id = v_job.run_id;
+    update public.app_runs r
+       set status = 'running', started_at = coalesce(r.started_at, now()), progress = greatest(r.progress, 5)
+     where r.run_id = v_job.run_id;
 
     insert into public.app_run_events (run_id, seq, event_type, safe_payload)
     values (v_job.run_id,
-            coalesce((select max(seq) from public.app_run_events where run_id = v_job.run_id), 0) + 1,
+            coalesce((select max(e.seq) from public.app_run_events e where e.run_id = v_job.run_id), 0) + 1,
             'running',
             jsonb_build_object('attempt', v_job.attempts));
 
@@ -424,7 +424,7 @@ begin
     raise exception using errcode = 'P0001', message = 'stale_lease';
   end if;
 
-  select * into v_run from public.app_runs where run_id = v_job.run_id;
+  select * into v_run from public.app_runs r where r.run_id = v_job.run_id;
   if v_run.kind <> 'plan' then
     raise exception using errcode = 'P0001', message = 'bad_request';
   end if;
@@ -438,8 +438,8 @@ begin
     values (v_run.owner_id, p_profile_id, p_direction_id)
     returning * into v_plan;
   else
-    select * into v_plan from public.app_plans
-     where plan_id = p_plan_id and owner_id = v_run.owner_id and profile_id = p_profile_id
+    select * into v_plan from public.app_plans p
+     where p.plan_id = p_plan_id and p.owner_id = v_run.owner_id and p.profile_id = p_profile_id
      for update;
     if not found then
       raise exception using errcode = 'P0001', message = 'resource_not_found';
@@ -449,19 +449,20 @@ begin
     end if;
   end if;
 
-  select coalesce(max(version), 0) + 1 into v_next from public.app_plan_versions where plan_id = v_plan.plan_id;
+  select coalesce(max(pv.version), 0) + 1 into v_next from public.app_plan_versions pv where pv.plan_id = v_plan.plan_id;
 
-  update public.app_plan_versions set status = 'stale' where plan_id = v_plan.plan_id and status = 'active';
+  update public.app_plan_versions pv set status = 'stale' where pv.plan_id = v_plan.plan_id and pv.status = 'active';
 
+  v_version_id := gen_random_uuid();
   insert into public.app_plan_versions (
-    plan_id, version, profile_version, rules_version, corpus_version, embedding_profile_id,
+    version_id, plan_id, version, profile_version, rules_version, corpus_version, embedding_profile_id,
     actions, user_overrides, warnings, status, result
   ) values (
-    v_plan.plan_id, v_next, v_run.profile_version, p_rules_version, p_corpus_version, p_embedding_profile_id,
+    v_version_id, v_plan.plan_id, v_next, v_run.profile_version, p_rules_version, p_corpus_version, p_embedding_profile_id,
     coalesce(p_actions, '[]'::jsonb), '{}'::jsonb, coalesce(p_warnings, '[]'::jsonb), 'active', p_result
-  ) returning version_id into v_version_id;
+  );
 
-  update public.app_plans set current_version_id = v_version_id where plan_id = v_plan.plan_id;
+  update public.app_plans p set current_version_id = v_version_id where p.plan_id = v_plan.plan_id;
 
   return query select v_plan.plan_id, v_version_id, v_next;
 end;
@@ -492,7 +493,7 @@ begin
   if not found then
     raise exception using errcode = 'P0001', message = 'stale_lease';
   end if;
-  select * into v_run from public.app_runs where run_id = v_job.run_id;
+  select * into v_run from public.app_runs r where r.run_id = v_job.run_id;
 
   if p_plan_version_id is not null and not exists (
     select 1 from public.app_plan_versions pv

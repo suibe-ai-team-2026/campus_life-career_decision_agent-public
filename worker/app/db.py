@@ -237,6 +237,66 @@ class SupabaseDb:
             return [payload]
         return payload  # type: ignore[return-value]
 
+    def upsert(
+        self,
+        table: str,
+        rows: Sequence[dict[str, Any]],
+        *,
+        on_conflict: str,
+        returning: bool = False,
+    ) -> list[dict[str, Any]]:
+        """PostgREST upsert（resolution=merge-duplicates）。用于 corpus seed 的幂等写入。"""
+
+        if not rows:
+            return []
+        prefer = "resolution=merge-duplicates"
+        prefer += ",return=representation" if returning else ",return=minimal"
+        payload = self._request(
+            "POST",
+            f"/rest/v1/{table}",
+            params=[("on_conflict", on_conflict)],
+            json_body=list(rows),
+            prefer=prefer,
+            expect_json=returning,
+        )
+        if not returning:
+            return []
+        if payload is None:
+            return []
+        if isinstance(payload, dict):
+            return [payload]
+        if not isinstance(payload, list):
+            raise DatabaseError("数据库 upsert 返回结构异常")
+        return payload
+
+    def select_all(
+        self,
+        table: str,
+        *,
+        filters: Sequence[tuple[str, str]] | None = None,
+        columns: str = "*",
+        order: str | None = None,
+        page_size: int = DEFAULT_PAGE_SIZE,
+    ) -> list[dict[str, Any]]:
+        """分页读取全部行；Supabase 默认单次最多 1000 行。"""
+
+        rows: list[dict[str, Any]] = []
+        offset = 0
+        while True:
+            page = self.select(
+                table,
+                filters=filters,
+                columns=columns,
+                order=order,
+                limit=page_size,
+                offset=offset,
+            )
+            rows.extend(page)
+            if len(page) < page_size:
+                break
+            offset += page_size
+        return rows
+
     def delete(self, table: str, *, filters: Sequence[tuple[str, str]]) -> int:
         if not filters:
             raise DatabaseError("delete 必须带过滤条件，拒绝全表删除")
@@ -714,6 +774,68 @@ class SupabaseDb:
         if created is None:
             raise DatabaseError("embedding profile 创建失败")
         return created
+
+    def create_embedding_profile(self, profile: EmbeddingProfile) -> EmbeddingProfile:
+        """按给定 status/metadata 新建 profile（corpus seed 用 building，完成后才 active）。"""
+
+        row = {
+            "profile_id": profile.profile_id,
+            "provider": profile.provider,
+            "model": profile.model,
+            "dimensions": profile.dimensions,
+            "normalization": profile.normalization,
+            "query_template_version": profile.query_template_version,
+            "splitter_version": profile.splitter_version,
+            "status": profile.status,
+            "metadata": dict(profile.metadata),
+        }
+        self.insert_no_return("app_embedding_profiles", [row])
+        created = self.get_embedding_profile(profile.profile_id)
+        if created is None:
+            raise DatabaseError("embedding profile 创建失败")
+        return created
+
+    def update_embedding_profile(self, profile_id: str, values: dict[str, Any]) -> None:
+        self.update(
+            "app_embedding_profiles",
+            values,
+            filters=[("profile_id", f"eq.{profile_id}")],
+        )
+
+    def list_all_source_versions(self) -> list[dict[str, Any]]:
+        """corpus seed 用：一次读取所有来源版本，避免 300+ 次逐条查询。"""
+
+        return self.select_all(
+            "app_source_versions",
+            columns="source_id,source_version_id,content_sha256,extraction_status,parser_version,metadata",
+            order="source_id.asc,source_version_id.asc",
+        )
+
+    def list_chunks_by_splitter(
+        self,
+        splitter_version: str,
+        *,
+        columns: str = "chunk_id,source_version_id,ordinal,text_sha256",
+    ) -> list[dict[str, Any]]:
+        return self.select_all(
+            "app_chunks",
+            filters=[("splitter_version", f"eq.{splitter_version}")],
+            columns=columns,
+            order="source_version_id.asc,ordinal.asc",
+        )
+
+    def list_chunk_embeddings_for_profile(
+        self,
+        profile_id: str,
+        *,
+        columns: str = "chunk_id",
+    ) -> list[dict[str, Any]]:
+        return self.select_all(
+            "app_chunk_embeddings",
+            filters=[("profile_id", f"eq.{profile_id}")],
+            columns=columns,
+            order="chunk_id.asc",
+        )
 
     @staticmethod
     def _assert_profile_compatible(existing: EmbeddingProfile, wanted: EmbeddingProfile) -> None:

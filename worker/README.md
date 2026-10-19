@@ -37,6 +37,7 @@ worker/
   worker.env.example              # 环境变量模板（不含真实值）
   systemd/campus-pathway-worker.service
   scripts/probe_openrouter.py     # 部署探针（embedding 维度/instruction/JSON/token）
+  scripts/seed_corpus.py          # 语料 seed CLI（默认 dry-run；--apply 写库）
   scripts/prewarm_docling.py      # Docling/OCR 模型预热（可选）
   app/
     config.py                     # 环境变量与冻结版本常量（不打印密钥）
@@ -44,6 +45,7 @@ worker/
     budget.py                     # 月度预算闸门（未配置 = fail closed）
     db.py                         # PostgREST/Storage 客户端 + worker_* RPC 封装
     providers/openrouter.py       # embedding/chat（校验/重试/映射/用量）
+    corpus/seed.py                # corpus.jsonl → Supabase + embedding profile（幂等/可续跑）
     ingest/parsers.py             # Docling 优先 + pypdf/python-docx 降级 + locator
     ingest/chunking.py            # 600 tokens / overlap 80 / 表格保表头 / search_terms
     ingest/pipeline.py            # load → parse → embed → persist
@@ -198,6 +200,62 @@ UV_CACHE_DIR=/tmp/uv-cache uv run --python 3.12 python scripts/probe_openrouter.
   embeddings）再插入，天然幂等；embedding 以 `"[...]"` 文本写 `vector(4096)` 列；
   单批 16 条调用 `/embeddings`。
 
+### 8.1 语料 seed（`scripts/seed_corpus.py`）
+
+data-dev 生成的 `data/import/out/corpus.jsonl` + `corpus-meta.json` 用本脚本写入 Supabase，
+并建立 Qwen3 embedding profile。**默认 dry-run**，只有 `--apply` 才写库/调模型。
+
+```bash
+cd worker
+# dry-run（不联网、不写库；校验 sha256/计数/source_registry_extra 并打印计划）
+uv run --python 3.12 python scripts/seed_corpus.py
+# 真正写库（需要 SUPABASE_URL / SUPABASE_SECRET_KEY / OPENROUTER_API_KEY /
+# MODEL_MONTHLY_BUDGET_USD；密钥只从环境变量读取，不写文件、不打印）
+uv run --python 3.12 python scripts/seed_corpus.py --apply \
+  --corpus data/import/out/corpus.jsonl \
+  --meta data/import/out/corpus-meta.json \
+  --profile-id career-qwen-4096-v1 --batch-size 16
+```
+
+参数与默认值：`--corpus data/import/out/corpus.jsonl`、`--meta data/import/out/corpus-meta.json`、
+`--profile-id career-qwen-4096-v1`、`--batch-size 16`、`--progress-every 10`。
+相对路径会先按当前目录、再按仓库根目录解析，所以从 `worker/` 或仓库根目录运行均可。
+
+行为：
+
+1. **校验**：corpus 文件 sha256/bytes 与 meta 一致、每条 chunk `sha256==sha256(chunk_text)`、
+   `chars==len(text)`、visibility 为 `approved_reference`、meta counts 一致、32 个
+   `source_registry_extra` 的 source/version/内容哈希与 corpus 行一致。
+2. **source_version 解析**：已在库来源（corpus 中 238 个）按 `source_id` 匹配唯一
+   `app_source_versions`，并校验其 `source_version_id` 与 corpus 行一致；不一致直接 abort
+   （说明 corpus 与 DB 快照不同步，禁止混语料）。32 个 corpus-only 来源用
+   `source_registry_extra.source_version` 的确定性 UUID 新增 `app_sources`
+   （`visibility=approved_reference`、`owner_id=NULL`、`verification_status` 取 corpus 值）与
+   `app_source_versions`（`extraction_status='parsed'`、`parser_version=worker-corpus-seed-…`、
+   metadata 标记 `corpus_seed`）。
+3. **ordinal**：corpus 行里的 `ordinal` 不可靠（data-dev 生成时多为 0），seed 按
+   **source_version 内文件顺序**重排 `0..n-1`；依赖 `unique(source_version_id, splitter_version,
+   ordinal)` 做幂等。`app_chunks.splitter_version` 使用 worker 常量
+   `career-splitter-2026-10-19.1`，corpus 实际 splitter 版本写入 metadata（`corpus_splitter_version`）。
+4. **chunks/embeddings**：`chunk_id` 由 DB 生成；`text_sha256/search_terms/locator/heading_path`
+   取自 corpus；embedding 每批 16 条（`/embeddings`），4096 维 + finite/nonzero + L2 校验，
+   以 `"[...]"` 文本写 `vector(4096)` 列；写完后重新查库校验 chunk 数量/ordinal/sha 与
+   embedding 数量完全匹配。
+5. **embedding profile**：固定 provider/model/dims/normalization/query_template_version/
+   splitter_version；状态先 `building`，全部校验通过才置 `active`。已存在同 profile 且配置一致则
+   复用（corpus sha256 不同会 abort）；配置不一致、或已存在别的 active profile → abort 并提示人工切换，
+   **绝不自动覆盖/混用向量**。
+6. **预算**：`MODEL_MONTHLY_BUDGET_USD` 未设置直接拒绝（fail closed）；每次模型调用走
+   `BudgetGuard` 并写 `app_usage`（token 未知写 NULL）；每 10 批打印一次安全进度日志。
+7. **幂等/续跑**：重复 `--apply` 不会重复 chunk/embedding、不重复调模型；中途失败时 profile
+   保持 `building`，重新执行会从缺失的 chunk/embedding 续写。不会删除已有数据。
+8. **退出码**：`0` 成功；`1` 本地 corpus/meta 校验失败；`2` apply 的配置/预算/写库失败
+   （apply 失败输出里 `wrote_database` 为 `null`，表示可能已部分写入、可重跑续写）。
+
+安全：CLI 只打印 JSON 结果与统计，不打印 key/请求体；DB 凭据只从环境变量读取。
+本仓库开发环境没有执行 `--apply`（避免未授权写库），由 lead/运维在凭据环境执行并核对
+`chunks=764 / embeddings=764 / profile status=active`。
+
 ## 9. 检索与拒答闸门
 
 `worker_search_chunks` 在 SQL 内做授权过滤（`approved_reference` 或 owner 本人），
@@ -308,7 +366,7 @@ UV_CACHE_DIR=/tmp/uv-cache uv run --python 3.12 pytest -q
 
 覆盖：切块/定位、embedding 校验与归一化、重试与错误映射、RRF/配额/预算、闸门、
 规则确定性与缺数据 `credits=null`、引用/数字校验、队列 fencing 纯逻辑、PDF 生成、
-六类图（用 fake DB/provider）。
+六类图（用 fake DB/provider）、corpus seed（dry-run 计划/ordinal/幂等/profile 冲突/维度校验）。
 
 ## 15. 已知限制
 

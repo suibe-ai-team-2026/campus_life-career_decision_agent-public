@@ -11,6 +11,9 @@
 FROM python:3.12-slim AS runtime
 
 ARG PREWARM_DOCLING=0
+# Demo images can skip the multi-GB Docling/CUDA stack and use the pypdf fallback.
+# Production should build with --build-arg INSTALL_DOCLING=1.
+ARG INSTALL_DOCLING=1
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -48,7 +51,11 @@ COPY --from=ghcr.io/astral-sh/uv:0.11.23 /uv /uvx /usr/local/bin/
 WORKDIR /app
 COPY pyproject.toml uv.lock README.md ./
 # 基础依赖 + Docling extra；dev 依赖（pytest）不装进运行镜像。
-RUN uv sync --frozen --no-dev --extra docling
+RUN if [ "$INSTALL_DOCLING" = "1" ]; then \
+        uv sync --frozen --no-dev --extra docling; \
+    else \
+        uv sync --frozen --no-dev; \
+    fi
 
 COPY app ./app
 COPY scripts ./scripts

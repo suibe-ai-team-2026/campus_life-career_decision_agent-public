@@ -18,6 +18,8 @@ services:
       dockerfile: Dockerfile
       args:
         PREWARM_DOCLING: "0"
+        # Demo: pypdf fallback keeps the image small. Set to "1" for Docling.
+        INSTALL_DOCLING: "0"
     image: campus-pathway-worker:local
     container_name: campus-pathway-worker
     restart: unless-stopped

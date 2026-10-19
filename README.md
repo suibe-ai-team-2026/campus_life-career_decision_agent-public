@@ -12,11 +12,11 @@
 |---|---|---|
 | 五步向导前端 | 已实现 | Next.js 16 App Router + React 19 + TypeScript；本地进度、跳过、方向切换、方案调整、导出空态 |
 | BFF | 已实现 | 同源 API：画像、run 提交/轮询/取消、方案、来源、PDF 签名下载、健康检查 |
-| 数据库/RLS | 已准备，待用户批准执行 | 5 个迁移：表、RLS、函数/队列、私有 Storage、私有上传策略；目标项目当前为空库 |
-| Freestyle worker | 已实现，待部署 | 队列 claim/heartbeat/fencing、Docling/pypdf 解析、Qwen3 Embedding、混合检索、规则、PDF |
-| 数据导入 | dry-run 通过，待 apply | 319 来源 / 243 记录 / 115 要求 / 250 aliases / pilot 2+7 |
+| 数据库/RLS | 已应用并验证 | Supabase 项目 `cvohcdzfscoxytmpbwsk`（org `suibeAIproductcompe`，us-east-2）：7 个迁移、24 表全部 RLS、33 policy、2 私有 bucket；数据已导入 |
+| Freestyle worker | 已部署并跑通 | VM `vm-7f674dd9ed5d422b880f5bec7fe9f734` / `campus-pathway-worker-dev`；plan/ask/export 均 succeeded；单 worker，无公网端口 |
+| 数据导入 | 已 apply | 319 来源 / 243 记录 / 115 要求 / 250 aliases / pilot 2+7；另有 32 个 corpus-only 来源，764 chunks/embeddings |
 | 模型探针 | 已通过 | `qwen/qwen3-embedding-8b` 返回 4096 维、有限、L2 norm=1；chat `deepseek/deepseek-chat` 可用 |
-| 云端部署 | 未完成 | 等待 Supabase 迁移确认、Vercel Hobby 导入/部署、Freestyle VM 创建 |
+| 云端部署 | Preview 已上线 | Vercel Hobby 项目 `campus_life-career_decision_agent`；Preview 链接见 `docs/evidence/preview-smoke.json`；未主动部署生产域名 |
 | 旧 `prototype/` | 归档参考 | 不再是产品入口；保留只读历史，避免破坏团队资产 |
 
 ## 快速开始（本地）

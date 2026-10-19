@@ -19,8 +19,7 @@ export async function GET() {
       admin.from("app_directions").select("direction_id, title, description, active").eq("active", true),
       admin
         .from("app_evidence_records")
-        .select("record_id, record_type, major, included, verification_status")
-        .eq("included", true),
+        .select("record_id, record_type, major, cohort, degree, included, verification_status"),
       admin.from("app_direction_requirements").select("direction_id, requirement_level")
     ]);
 
@@ -30,8 +29,15 @@ export async function GET() {
 
     const activeIds = new Set((directions.data ?? []).map((row) => row.direction_id as string));
     const officialTypes = new Set(["official_observation", "municipal_metric"]);
-    const officialRecords = (records.data ?? []).filter((row) => officialTypes.has(String(row.record_type))).length;
-    const exactRecords = (records.data ?? []).filter((row) => Boolean(row.major)).length;
+    const officialRows = (records.data ?? []).filter((row) => officialTypes.has(String(row.record_type)));
+    const officialRecords = officialRows.length;
+    // "Exact" here means a distinct major x cohort x degree combination with an
+    // official observation, not the 17-cell Shanghai matrix and not a success rate.
+    const exactCombos = new Set(
+      officialRows
+        .filter((row) => row.major)
+        .map((row) => `${String(row.major)}|${String(row.cohort ?? "")}|${String(row.degree ?? "")}`)
+    ).size;
     const requirementCounts = new Map<string, number>();
     for (const row of requirements.data ?? []) {
       const id = String(row.direction_id);
@@ -43,11 +49,11 @@ export async function GET() {
       .map((card) => ({
         ...card,
         coverage: {
-          exact_major_records: exactRecords,
+          exact_major_records: exactCombos,
           official_records: officialRecords,
           job_requirements: requirementCounts.get(card.direction_id) ?? 0,
           label:
-            "官方/市级记录为全库计数，不表示某一方向成功率；精确同专业证据按届别/学历/专业分别核验"
+            "官方/市级记录与专业×届别×学历组合为全库计数，不表示某一方向成功率；17 个精确同专业证据格仅覆盖部分组合，其余缺口不代表为零"
         }
       }));
 

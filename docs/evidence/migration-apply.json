@@ -1,0 +1,109 @@
+{
+  "generated_at": "2026-10-19T12:14:12.110551+00:00",
+  "project_ref": "cvohcdzfscoxytmpbwsk",
+  "mode": "apply",
+  "migrations": [
+    {
+      "version": "20261019000100",
+      "name": "20261019000100_career_cloud_tables",
+      "sha256": "93363fe063fdbb8e84ae7c8b5c98b0a6c74f5bae43fc64f240cf235e6ba7e3ee",
+      "bytes": 17704,
+      "statements": 56,
+      "path": "supabase/migrations/20261019000100_career_cloud_tables.sql"
+    },
+    {
+      "version": "20261019000200",
+      "name": "20261019000200_career_cloud_rls",
+      "sha256": "9efb7e936d7dd40cb9559a074e01e2eccad5fef0e3dd09ccae4275ac4e3ff8ee",
+      "bytes": 7246,
+      "statements": 57,
+      "path": "supabase/migrations/20261019000200_career_cloud_rls.sql"
+    },
+    {
+      "version": "20261019000300",
+      "name": "20261019000300_career_cloud_functions",
+      "sha256": "534013b46f810cb4541d332fd74c73d27ab9fed7ee4c7fb3bc1647dda1a9912f",
+      "bytes": 24380,
+      "statements": 183,
+      "path": "supabase/migrations/20261019000300_career_cloud_functions.sql"
+    },
+    {
+      "version": "20261019000400",
+      "name": "20261019000400_career_cloud_storage",
+      "sha256": "fdb42aad0d2a8606000d8989150c64e1f23d1925f3a5161bac5fddfdb84fb61a",
+      "bytes": 2396,
+      "statements": 12,
+      "path": "supabase/migrations/20261019000400_career_cloud_storage.sql"
+    },
+    {
+      "version": "20261019000500",
+      "name": "20261019000500_career_cloud_private_sources",
+      "sha256": "baed23f20ce0fab85fb65d7eff754ebe01149ba8fd6a56d29411473852759175",
+      "bytes": 923,
+      "statements": 5,
+      "path": "supabase/migrations/20261019000500_career_cloud_private_sources.sql"
+    },
+    {
+      "version": "20261019000600",
+      "name": "20261019000600_fix_worker_function_ambiguity",
+      "sha256": "54bd536720a1e933f758f89066c584f4cc81db61b183619dc896bb758f36b0d6",
+      "bytes": 7299,
+      "statements": 56,
+      "path": "supabase/migrations/20261019000600_fix_worker_function_ambiguity.sql"
+    },
+    {
+      "version": "20261019000700",
+      "name": "20261019000700_fix_save_plan_version_id",
+      "sha256": "392a6ffd7d5fcc7d00046eb06c2cb30898886b0fe77b512a2dc1b588836dbc5a",
+      "bytes": 3350,
+      "statements": 31,
+      "path": "supabase/migrations/20261019000700_fix_save_plan_version_id.sql"
+    }
+  ],
+  "remote_before": {
+    "app_tables": 24,
+    "private_tables": 1,
+    "history_exists": true,
+    "buckets": 2
+  },
+  "commands": [
+    {
+      "version": "20261019000100",
+      "status": "already_applied"
+    },
+    {
+      "version": "20261019000200",
+      "status": "already_applied"
+    },
+    {
+      "version": "20261019000300",
+      "status": "already_applied"
+    },
+    {
+      "version": "20261019000400",
+      "status": "already_applied"
+    },
+    {
+      "version": "20261019000500",
+      "status": "already_applied"
+    },
+    {
+      "version": "20261019000600",
+      "status": "already_applied"
+    },
+    {
+      "version": "20261019000700",
+      "status": "applied",
+      "name": "20261019000700_fix_save_plan_version_id"
+    }
+  ],
+  "remote_after": {
+    "app_tables": 24,
+    "private_tables": 1,
+    "policies": 33,
+    "worker_functions": 9,
+    "buckets": 2,
+    "history_rows": 7
+  },
+  "result": "applied"
+}

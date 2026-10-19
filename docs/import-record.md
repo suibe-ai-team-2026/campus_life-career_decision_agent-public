@@ -238,3 +238,24 @@ SUPABASE_URL=... SUPABASE_SECRET_KEY=... npx tsx scripts/import-research.ts --ap
 | dry-run 报告实际输出，不声称 --apply 执行 | ✅ 本文与 `out/import-report.json` |
 | 不 git commit/push、不碰他人文件 | ✅ 仅新增本任务范围内文件 |
 | 阻塞点 | `--apply` 等待 Supabase 凭据；SUIBE 2023/2024 无可靠机器提取正文（只有 OCR 稿）；2025 届报告缺失；34 份原件未上传 Storage；32 个 corpus-only 来源待 worker 登记 |
+
+
+## 7. `--apply` 实际执行（2026-10-19 20:00 左右，用户批准后）
+
+命令：
+
+```bash
+export SUPABASE_URL=https://<project-ref>.supabase.co
+npx tsx scripts/import-research.ts --apply
+```
+
+实际结果：`succeeded`，batch `career-cloud-import-20261019-c11625d6fa97`；写入 6 方向、1 测评、319 来源/版本、243 记录、115 要求、250 aliases、pilot 2+7 别名，`app_import_batches.status=succeeded`。执行后数据库计数：
+
+- `app_sources` 319（另有 32 个 corpus-only 来源由 worker seed 补充，共 351）
+- `app_source_versions` 319（+32 = 351）
+- `app_evidence_records` 243
+- `app_direction_requirements` 115
+- `app_source_aliases` 250
+- `app_chunks` / `app_chunk_embeddings` 各 764（worker seed，profile `career-qwen3-embedding-8b-4096-career-qwen-v1` active）
+
+失败时脚本会按导入前主键快照删除本次新增行；本次成功，无回滚。再次运行 `--apply` 不应增加行数（幂等由 upsert 保证）。

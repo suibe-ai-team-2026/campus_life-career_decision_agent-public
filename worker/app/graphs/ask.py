@@ -9,6 +9,7 @@
 
 from __future__ import annotations
 
+import re
 from typing import Any, TypedDict
 
 from langgraph.graph import END, START, StateGraph
@@ -130,6 +131,33 @@ def build_ask_graph(ctx: JobContext):
             question, gate_version=retrieval.gate.version
         )
         if parsed.no_evidence:
+            # The model may set no_evidence=true while still giving a useful partial
+            # answer that cites evidence ("only 2022 data is available"). If every
+            # cited number is valid and no validation reason fired, keep it as a
+            # normal answer with sources instead of discarding the citations.
+            cited_numbers = {int(match) for match in re.findall(r"\[(\d+)\]", parsed.answer or "")}
+            valid_numbers = {item["citation_no"] for item in retrieval.evidence}
+
+            def citation_no(citation: Any) -> int | None:
+                if isinstance(citation, dict):
+                    value = citation.get("citation_no")
+                else:
+                    value = getattr(citation, "citation_no", None)
+                return int(value) if value is not None else None
+
+            if cited_numbers and cited_numbers <= valid_numbers and not reasons:
+                result = AskRunResult(
+                    answer=parsed.answer,
+                    citations=[
+                        citation
+                        for citation in retrieval.citations
+                        if citation_no(citation) in cited_numbers
+                    ],
+                    refusal=False,
+                    boundary_note=boundary or None,
+                ).model_dump(mode="json", exclude_none=True)
+                ctx.emit("validating", 86)
+                return {"result": result}
             answer = parsed.answer or prompt_validate.build_refusal_text(
                 question, evidence=retrieval.evidence, reason="model_no_evidence"
             )
