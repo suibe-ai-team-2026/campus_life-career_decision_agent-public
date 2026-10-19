@@ -13,8 +13,8 @@
   "home_title": "知途 Campus Pathway · 五步生涯向导",
   "catalog_mode": "database",
   "catalog_http": 200,
-  "deployment_protection": "Vercel Authentication enabled; owner can open, public viewers need bypass/login",
-  "note": "首次 Vercel 部署被平台自动分配为 production；之后显式 --target preview 生成预览部署，未主动推广生产域名",
+  "deployment_protection": "Vercel Authentication 开启；项目 owner 可直接打开，公开查看需 Vercel 登录或 bypass token。",
+  "note": "首次 CLI 部署被 Vercel 自动分配为 production；随后已用 vercel rm 删除该 production deployment 与旧 preview，当前项目只保留一个显式 --target preview 部署，未主动推广生产域名。",
   "home_cloud_mode": true,
   "home_note": "Preview 首页标题与云端模式正常；未出现本地演示模式横幅（早期 404 页面缓存除外）"
 }
