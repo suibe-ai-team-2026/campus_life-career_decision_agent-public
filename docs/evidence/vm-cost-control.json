@@ -23,5 +23,24 @@
     "freestyle_pause_connection_closed/failed after freeze (expected; pause still took effect)",
     "state paused"
   ],
-  "caveat": "pause 请求可能因 VM 立即冻结而超时；worker 将超时/连接中断视为已请求暂停。若未生效会继续轮询，不丢任务。"
+  "caveat": "pause 请求可能因 VM 立即冻结而超时；worker 将超时/连接中断视为已请求暂停。若未生效会继续轮询，不丢任务。",
+  "production_wake_test": {
+    "executed_at": "2026-10-19T23:57+08:00",
+    "site": "https://campuslife-careerdecisionagent.vercel.app",
+    "vm_state_before": "paused",
+    "bff_response": "worker_wake=started",
+    "run_id": "0ce810df-9f4c-4a83-ace9-1831ddd0bf40",
+    "run_status": "succeeded",
+    "citations": 1,
+    "note": "生产 BFF 先 GET VM 状态，paused 时 /start 并 exec-await 重启 worker 容器，避免 stale idle clock。"
+  },
+  "deepseek_usage_confirmed": {
+    "provider": "deepseek",
+    "model": "deepseek-flash",
+    "operation": "chat_ask",
+    "calls": 4,
+    "input_tokens": 12408,
+    "output_tokens": 823,
+    "source": "app_usage after reroute"
+  }
 }

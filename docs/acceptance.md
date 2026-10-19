@@ -55,5 +55,5 @@
 
 - [x] Chat 从 OpenRouter 中转 V3 换为 DeepSeek 官方 `deepseek-flash`（V4.1-Flash），`reasoning_effort=low`；embedding 仍为 OpenRouter Qwen3 8B（`deepseek-probe.json`）。
 - [x] Freestyle VM 空闲 60s 自动 pause；用户点生成/上传时 BFF 调用 `/start` 唤醒；pause 只计存储（`vm-cost-control.json`）。
-- [x] 公开生产站仍可访问，模型调用在 VM 唤醒后完成。
+- [x] 公开生产站仍可访问；生产环境从 paused VM 成功唤醒并完成 ask（run 0ce810df，worker_wake=started，1 citation）；DeepSeek 官方 `deepseek-flash` usage 已记账。
 - [ ] `npm run typecheck/lint/test/build`、worker pytest、原仓库 site-check/validate_research/unified-research-check 实际运行记录。
