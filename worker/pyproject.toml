@@ -1,0 +1,31 @@
+[project]
+name = "campus-pathway-worker"
+version = "0.1.0"
+description = "知途（Campus Pathway）Python worker：队列消费、资料解析/切块、OpenRouter embedding/chat、混合检索、确定性规则、PDF 导出"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = { text = "Proprietary" }
+dependencies = [
+  "httpx>=0.27,<1",
+  "pydantic>=2.7,<3",
+  "langgraph>=0.2.60,<2",
+  "reportlab>=4.1,<5",
+  "pypdf>=5,<7",
+  "python-docx>=1.1,<2",
+  "jieba>=0.42.1,<1",
+]
+
+[project.optional-dependencies]
+# Docling 是重型可选依赖（含 torch / OCR 模型）。Docker 镜像安装该 extra；
+# 本地测试与轻量部署可以不装，解析器会自动降级到 pypdf / python-docx。
+docling = ["docling>=2.15,<3"]
+dev = ["pytest>=8,<9"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra"
+
+[tool.uv]
+# 不把 worker 自身安装成 wheel：以源码目录方式运行，避免多一层构建。
+package = false

@@ -22,6 +22,7 @@ export const DirectionCardSchema = z.object({
 export type DirectionCard = z.infer<typeof DirectionCardSchema>;
 
 export const DirectionsResponseSchema = z.object({
+  mode: z.enum(["seed", "database"]).optional(),
   category_version: z.string(),
   disclaimer: z.string(),
   directions: z.array(DirectionCardSchema)
@@ -52,3 +53,5 @@ export const AssessmentSchema = z.object({
   reverse_scored: z.array(z.string()).default([])
 });
 export type Assessment = z.infer<typeof AssessmentSchema>;
+
+export type DirectionsResponse = z.infer<typeof DirectionsResponseSchema>;

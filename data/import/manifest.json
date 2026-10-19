@@ -1,0 +1,514 @@
+{
+  "schema_version": "career-import-manifest-v1",
+  "plan_hash": "c11625d6fa9762963f7081144724308a4a462691fc57957b281af2093f875b99",
+  "entity_sets": [
+    {
+      "table": "app_directions",
+      "rows": 6,
+      "upsert_key": "direction_id",
+      "id_sha256": "b26a36f5680bfb596ae52560f2c012158cb6ddcc3ea56b7a322c4e4d02a59392"
+    },
+    {
+      "table": "app_assessments",
+      "rows": 1,
+      "upsert_key": "version",
+      "id_sha256": "c1ecd6cd150d7761fb53f0fb513ff0a3f3d245cfa95ceb2ed23385aa4a7667a3"
+    },
+    {
+      "table": "app_sources",
+      "rows": 319,
+      "upsert_key": "source_id",
+      "id_sha256": "39a74cb4a5d37efa789d4bfcd6187a9e6bc467b2a558f614fdffc0a56ab6a22a"
+    },
+    {
+      "table": "app_source_versions",
+      "rows": 319,
+      "upsert_key": "source_version_id",
+      "id_sha256": "af54266fed2d5012df9797a1752bc393b25b15b2f61860f7fee84667dc8e6267"
+    },
+    {
+      "table": "app_evidence_records",
+      "rows": 243,
+      "upsert_key": "record_id",
+      "id_sha256": "5986561eae9257e6be07e2d8be94dceed881e2d078a4cada2a71263947daf002"
+    },
+    {
+      "table": "app_direction_requirements",
+      "rows": 115,
+      "upsert_key": "requirement_id",
+      "id_sha256": "4d157d89abd5f023b7d36dc85e35c0cbd47b717060e62c216c24cd907c1acbb9"
+    },
+    {
+      "table": "app_source_aliases",
+      "rows": 250,
+      "upsert_key": "batch_id,legacy_id,entity_type",
+      "id_sha256": "9246c8d3d6a8dc145880f5cdcb662f64b237db54dc4870e2d775570617352963"
+    }
+  ],
+  "seed_files": [
+    {
+      "path": "data/import/seed/directions.json",
+      "sha256": "6a9f6ddac40f9d980458f60646f11f4850082c90d400b460863d60b114f3092e",
+      "bytes": 6014
+    },
+    {
+      "path": "data/import/seed/assessment.json",
+      "sha256": "a57bb603b640dd19a1e7ee9df680813eeff2adfdad5c67f84ced210ea56bed94",
+      "bytes": 6227
+    }
+  ],
+  "counts": {
+    "directions": 6,
+    "assessments": 1,
+    "sources": 319,
+    "source_versions": 319,
+    "source_versions_file_hash": 47,
+    "source_versions_reference_hash": 272,
+    "documents": 34,
+    "evidence_records": 243,
+    "evidence_records_by_type": {
+      "official_observation": 57,
+      "job": 28,
+      "social_case": 85,
+      "destination": 15,
+      "graduate_case_or_aggregate": 15,
+      "municipal_metric": 17,
+      "research_claim": 26
+    },
+    "direction_requirements": 115,
+    "direction_requirements_by_direction": {
+      "finance_accounting": 27,
+      "data_business": 22,
+      "public_service": 36,
+      "trade_supply_chain": 30
+    },
+    "direction_requirements_by_level": {
+      "required": 57,
+      "mentioned": 54,
+      "preferred": 4
+    },
+    "aliases": 250,
+    "pilot_sources": 2,
+    "pilot_metrics": 7
+  },
+  "snapshot": {
+    "source_root": "../smart-campus-career/data/research",
+    "unified_snapshot_dir": "unified-2026-10-19",
+    "snapshot_date": "2026-10-19",
+    "schema_version": "research-archive-v1",
+    "snapshot_hash": "53ccc4e73cd2907e768780bf7759faf818678294f9015fd714c1b8112a47e899",
+    "validation_sha256": "8c3c49031a981995ca7b2ba146986b278ad96f80229a2f1404cffa5f9465baa1",
+    "files": [
+      {
+        "path": "data/research/boss-market-2026-10-17/REPORT.md",
+        "sha256": "5e54910a5bf589bcaf8d4058a08d67f4ffce412d7f1849b09f3fcf4b51d9c5f8",
+        "bytes": 12307
+      },
+      {
+        "path": "data/research/shanghai-decade-2026-10-18/REPORT.md",
+        "sha256": "8c4ce62b58505389ec4f57af6ff749a583e91acd5792fabab4eb311666024960",
+        "bytes": 23089
+      },
+      {
+        "path": "data/research/shanghai-official-2026-10-18/REPORT.md",
+        "sha256": "4bb54880772d691b5f450b683977c015dbc6080ce7c31b3d78134dc390f7f7aa",
+        "bytes": 11026
+      },
+      {
+        "path": "data/research/suibe-2026-10-18/checksums.sha256",
+        "sha256": "729b1e3bf8c43cbe68e1740981b8a30fc21c918daba0bedf90e25a1b46a520a2",
+        "bytes": 3003
+      },
+      {
+        "path": "data/research/suibe-2026-10-18/extracted/2023届-就业质量年度报告-公众号图文-OCR提取稿.md",
+        "sha256": "a5e893d4b20cce43b8c0b44bf0e6ac606c99e4036dd664b62745a4df42bf46f6",
+        "bytes": 5639
+      },
+      {
+        "path": "data/research/suibe-2026-10-18/extracted/2024届-毕业生去哪儿了-推文长图-OCR提取稿.md",
+        "sha256": "7dbbc0a9da3c9df2f2d4b6c17c024de89e6b0dacb1ee4a2159c0f31ee11cbb1b",
+        "bytes": 7105
+      },
+      {
+        "path": "data/research/suibe-2026-10-18/extracted/pdf-text/2015届-就业质量年度报告-提取全文.txt",
+        "sha256": "4cfba626a72b3be03e142a29c659459e4d3517fcca810e8fa42f3021024670ec",
+        "bytes": 49321
+      },
+      {
+        "path": "data/research/suibe-2026-10-18/extracted/pdf-text/2016届-就业质量年度报告-A版-提取全文.txt",
+        "sha256": "3da23fe253b22c4717cf1566d5709eb5db64b6b8ac46ca3026e70647e20ff6f5",
+        "bytes": 59622
+      },
+      {
+        "path": "data/research/suibe-2026-10-18/extracted/pdf-text/2016届-就业质量年度报告-B版-提取全文.txt",
+        "sha256": "42f7c07b98c104af03be56cd95302fecf04be6041cbcd69b90d5d6730e2376f4",
+        "bytes": 68667
+      },
+      {
+        "path": "data/research/suibe-2026-10-18/extracted/pdf-text/2017届-就业质量年度报告-提取全文.txt",
+        "sha256": "476b4d29ca073859ee18ec4c80f49fafcbe4cd001dd33c6b52549d039cceee6a",
+        "bytes": 71327
+      },
+      {
+        "path": "data/research/suibe-2026-10-18/extracted/pdf-text/2018届-就业质量年度报告-提取全文.txt",
+        "sha256": "c410ba8452915560ef92b9f217252ff911b76c8a5171788e4a355bceb23790b3",
+        "bytes": 56620
+      },
+      {
+        "path": "data/research/suibe-2026-10-18/extracted/pdf-text/2019届-就业质量年度报告-提取全文.txt",
+        "sha256": "6d3878a3eb7089ad02aa31e11a8981f2e84e30958a6208c0fe9174ed66a0fe53",
+        "bytes": 63382
+      },
+      {
+        "path": "data/research/suibe-2026-10-18/extracted/pdf-text/2020届-就业质量报告-提取全文.txt",
+        "sha256": "e5341760628faa830c9f81dd20e77eb02793cb1988f2089f3ce0fb27d27b2c73",
+        "bytes": 80041
+      },
+      {
+        "path": "data/research/suibe-2026-10-18/extracted/pdf-text/2021届-就业质量年度报告-提取全文.txt",
+        "sha256": "4af3ff2effed29b2727ba24436dc293531b07095d21ae671bbec04a879ccf4c6",
+        "bytes": 82654
+      },
+      {
+        "path": "data/research/suibe-2026-10-18/extracted/pdf-text/2022届-就业质量年度报告-提取全文.txt",
+        "sha256": "4635ccf665380dd849d7b5dd1a7780388593da36da999b26698730c8ad05c7d4",
+        "bytes": 31413
+      },
+      {
+        "path": "data/research/suibe-2026-10-18/README.md",
+        "sha256": "3e9ef0bb09b8bbe2cc0f0baee69d9c8f4d33623c06c618c36ae22139a6ed00be",
+        "bytes": 7949
+      },
+      {
+        "path": "data/research/supabase-pilot-2026-10-19/01-import.sql",
+        "sha256": "fed9afdd0ba028c82131101346e9eb323f0a781f7d9f9e6394366e3c4b4eb7e0",
+        "bytes": 5729
+      },
+      {
+        "path": "data/research/supabase-pilot-2026-10-19/metrics.csv",
+        "sha256": "fbebd3acca52849c484ce245186f9d216c10fe76681912198ec034d3a7400dbc",
+        "bytes": 1445
+      },
+      {
+        "path": "data/research/supabase-pilot-2026-10-19/pilot-data.json",
+        "sha256": "e596d8f3c8dae46a26c54d066c46e4d0c30f87802b1d7bfe317fd9b86ece0013",
+        "bytes": 4450
+      },
+      {
+        "path": "data/research/supabase-pilot-2026-10-19/README.md",
+        "sha256": "b89c7e85fdb0eba1f694b6f49ed187ff361cfcf5c81aa7a54514cb3b8790562b",
+        "bytes": 2772
+      },
+      {
+        "path": "data/research/supabase-pilot-2026-10-19/sources.csv",
+        "sha256": "dcef58b147189f52c9ca23dfa6dd2affaf2399cb538522fc118e465abb72e242",
+        "bytes": 915
+      },
+      {
+        "path": "data/research/unified-2026-10-19/aliases.csv",
+        "sha256": "7531b5987b30b164404f0ec9b1dce666fbee99e0da5ff13ead5acd48504f4d90",
+        "bytes": 29890
+      },
+      {
+        "path": "data/research/unified-2026-10-19/archive.sqlite",
+        "sha256": "8ec2cb3f71ce4fbf660e7bb760f8a966f3d230b366f898fdd9d06f6cd2234649",
+        "bytes": 917504
+      },
+      {
+        "path": "data/research/unified-2026-10-19/dataset.json",
+        "sha256": "e475c4593847892764f18a8d135551d5b61a7a238ad62ce3f4c5d35fba804604",
+        "bytes": 896842
+      },
+      {
+        "path": "data/research/unified-2026-10-19/documents.csv",
+        "sha256": "b36f57e8e23fe21cd07fa8b5028f129b1d926c06e4b6e34cc434283c12ea50fd",
+        "bytes": 20585
+      },
+      {
+        "path": "data/research/unified-2026-10-19/documents.md",
+        "sha256": "df3a009b2c7b54fb18a6567324cad9e8edd64722827b10b12ad0fc983aebe859",
+        "bytes": 8482
+      },
+      {
+        "path": "data/research/unified-2026-10-19/evidence_cells.csv",
+        "sha256": "575fdb7df24dae60ac075b06c1c9fbabfe765fd0fb58f2d063d33e1aaef4f721",
+        "bytes": 1638
+      },
+      {
+        "path": "data/research/unified-2026-10-19/README.md",
+        "sha256": "0cb656f6efe436223416782243487217d174dcc00da2a456ad9a99c7eb0029c8",
+        "bytes": 6594
+      },
+      {
+        "path": "data/research/unified-2026-10-19/records.csv",
+        "sha256": "ec04909fcb169cb9ae7b05cb76c896f8cba0c57af1c2e98abe19de3ac9acb154",
+        "bytes": 293071
+      },
+      {
+        "path": "data/research/unified-2026-10-19/requirements.csv",
+        "sha256": "da96d8a5c802b9a3128c891434622a91d298048450feea407a94883c16bb4ad3",
+        "bytes": 21175
+      },
+      {
+        "path": "data/research/unified-2026-10-19/sources.csv",
+        "sha256": "33b638055460c4c4b58720841206e560faaaa3dba1d5e6f03d3b7a2e7138dc19",
+        "bytes": 263591
+      },
+      {
+        "path": "data/research/unified-2026-10-19/validation.json",
+        "sha256": "8c3c49031a981995ca7b2ba146986b278ad96f80229a2f1404cffa5f9465baa1",
+        "bytes": 962
+      },
+      {
+        "path": "docs/product-v2.md",
+        "sha256": "41271e7cd0e0ab1905fe1386606820d8aac0b8f7aa7d68f66b1490654d7b2246",
+        "bytes": 15158
+      },
+      {
+        "path": "web/plans/m01.md",
+        "sha256": "44b8bd8441b5cb9338b229c921d9571a8a501ac008ffadab1a956f6873f9dfa0",
+        "bytes": 1907
+      },
+      {
+        "path": "web/plans/m02.md",
+        "sha256": "62f502582ca6f359870aee20e12666a6db572fb571b25139d004dddb7263e57a",
+        "bytes": 2182
+      },
+      {
+        "path": "web/plans/m03.md",
+        "sha256": "18aaea0583978f9060bc046529cdf0dcc6254d27a54371f215226695aebd1ea2",
+        "bytes": 2216
+      },
+      {
+        "path": "web/plans/m04.md",
+        "sha256": "26d897e5a9f2b035eeda8042f4feae965523c6dc93556181fb91e39233ac58c8",
+        "bytes": 1418
+      },
+      {
+        "path": "web/plans/m05.md",
+        "sha256": "5b6fca0c4021eaf7ea2c4a7379207a79feee42cfa31c5d07abbdfbd61a4926ad",
+        "bytes": 1594
+      },
+      {
+        "path": "web/plans/m06.md",
+        "sha256": "6754be1665ba4db0afa85e65b748fe027e56d803920fdb15be1c851a6c7ae0fc",
+        "bytes": 1617
+      },
+      {
+        "path": "web/plans/m07.md",
+        "sha256": "00e3030b26d4132f5bd86b4ee5b8952d2905cc5219fffcb219ec25a10218b0f0",
+        "bytes": 1416
+      },
+      {
+        "path": "web/plans/m08.md",
+        "sha256": "d80603620f65769805b229d0587a3d18d8258555da0fa95d5f4b9a075273481a",
+        "bytes": 1444
+      },
+      {
+        "path": "web/plans/m09.md",
+        "sha256": "adbab883b7c170d09a4ca71db1b2d4a087be8cd1f0ba05b5302eb00f832b7b73",
+        "bytes": 2080
+      },
+      {
+        "path": "web/plans/m10.md",
+        "sha256": "b89cf8b3f1c2caffd54c737b8fe68fef58e5ab4de974d861999fe3cf5305eb1d",
+        "bytes": 1906
+      },
+      {
+        "path": "web/plans/m11.md",
+        "sha256": "847e86ed4dbfd84d33b04d2a1f87c4578a1c06ae1ae07981ed289a81d042be23",
+        "bytes": 1663
+      },
+      {
+        "path": "web/plans/m12.md",
+        "sha256": "b1033fe245fdad74681b87c01bd5bc25e0243ae242f1edb6a6b47fd4d74db40e",
+        "bytes": 1460
+      },
+      {
+        "path": "web/plans/m13.md",
+        "sha256": "2750063db2445f9d2b3b6ad19578a92c2e7a6ad40e1137d9970e04f9e6517801",
+        "bytes": 1683
+      },
+      {
+        "path": "web/plans/m14.md",
+        "sha256": "c3390609b4d0a10bb0d278b3514a403d83a22aa1fb26eab39468ac0a6e203032",
+        "bytes": 2095
+      },
+      {
+        "path": "web/plans/m15.md",
+        "sha256": "b05d4a891f6e5457c846b0c190d434c59446b079ae019dd93921982ccb5e1c5a",
+        "bytes": 1876
+      },
+      {
+        "path": "web/plans/m16.md",
+        "sha256": "99d7caf21c215072d73f818fd6d71e8878fa4d30b927719a2db2ebf0308a0579",
+        "bytes": 2254
+      },
+      {
+        "path": "web/plans/m17.md",
+        "sha256": "5c141e78e7f05825ec5542a0d8ca5659489f54a55f801d3e83954f34be39d153",
+        "bytes": 1444
+      },
+      {
+        "path": "web/plans/m18.md",
+        "sha256": "27e3ae5cff6d6e9c8b66b0f1d8dbdd999b21dc296cfb90cbe3768579314d95a7",
+        "bytes": 1478
+      },
+      {
+        "path": "web/plans/m19.md",
+        "sha256": "8a384aa0503a07172b5163fedb5ed443d09e75796ae0f4341557f8031c568638",
+        "bytes": 2073
+      },
+      {
+        "path": "web/plans/m20.md",
+        "sha256": "8c25530cd0cb0ab677c45b91fca2cdee4dd134f3f11f740f03ec943cb09d5baf",
+        "bytes": 1634
+      }
+    ]
+  },
+  "repositories": {
+    "product_repo": "suibe-ai-team-2026/campus_life-career_decision_agent",
+    "product_commit_recorded": "8c72ad4",
+    "product_commit_detected": "67adddf7a565df2b9083e15b21b3f64f9398375e",
+    "source_repo": "suibe-ai-team-2026/smart-campus-career",
+    "source_commit_recorded": "ba2794b",
+    "source_commit_resolved": "ba2794b3a0e54711d0457298254fc1baaad2eb2b",
+    "source_commit_detected": "a5a5eecbddd9e1dafadf9e0a2371bd7f49c18178",
+    "source_validation_baseline_commit": "82ea5c316170b93be437dc830201717f0a6d7c9e",
+    "source_validation_baseline_branch": "feat/shanghai-graduate-outcomes"
+  },
+  "pilot_aliases": [
+    {
+      "legacy_id": "M001",
+      "entity_type": "municipal_metric",
+      "stable_id": "rec_c720d2c002a3c4436f808636"
+    },
+    {
+      "legacy_id": "M002",
+      "entity_type": "municipal_metric",
+      "stable_id": "rec_362faa5b72b5f29cc287a958"
+    },
+    {
+      "legacy_id": "M003",
+      "entity_type": "municipal_metric",
+      "stable_id": "rec_8c42620914a30bf48dccfb2d"
+    },
+    {
+      "legacy_id": "M004",
+      "entity_type": "municipal_metric",
+      "stable_id": "rec_1bd674a468a8780619d1936d"
+    },
+    {
+      "legacy_id": "M005",
+      "entity_type": "municipal_metric",
+      "stable_id": "rec_c984e838b3427a3cbe21e791"
+    },
+    {
+      "legacy_id": "M006",
+      "entity_type": "municipal_metric",
+      "stable_id": "rec_4ffc97a425faa347d184ac19"
+    },
+    {
+      "legacy_id": "M007",
+      "entity_type": "municipal_metric",
+      "stable_id": "rec_12975509da7ab028778ea188"
+    }
+  ],
+  "direction_requirements": {
+    "rows": 115,
+    "direction_counts": {
+      "finance_accounting": 27,
+      "data_business": 22,
+      "public_service": 36,
+      "trade_supply_chain": 30
+    },
+    "level_counts": {
+      "required": 57,
+      "mentioned": 54,
+      "preferred": 4
+    },
+    "status_counts": {
+      "unverified": 115
+    },
+    "mapping_method_counts": {
+      "parent_job_group": 41,
+      "term_keyword_and_parent_group": 74
+    }
+  },
+  "documents": {
+    "rows": 34,
+    "id_sha256": "7a2a7befc9e97cccee9b13e5ea3d43121f61917ae027b7fb15a34b30d622b903",
+    "content_hash_kinds": {
+      "file": 47,
+      "source_reference": 272
+    }
+  },
+  "exclusions": [
+    {
+      "item": "docs/product-v2.md",
+      "reason": "产品提案材料（未核证的通过率、薪资、英语门槛、竞品数字）；不进入事实库与语料，不升级 verified。"
+    },
+    {
+      "item": "supabase-pilot-2026-10-19/01-import.sql",
+      "reason": "旧项目 ltxgjjcxuvqwnjtpegye 的首次建表/导入 SQL；按任务要求只读参考，绝不执行，不导入本库。"
+    },
+    {
+      "item": "pilot M001–M007 指标",
+      "reason": "不重复导入为新 record：通过 app_source_aliases(batch=supabase-pilot-2026-10-19) 映射到 unified rec_*，记录数不计两次。",
+      "count": 7
+    },
+    {
+      "item": "pilot C17/C18 来源",
+      "reason": "不重复导入为新 source：canonical URL 映射到 unified src_*，legacy id 记录在 app_sources.metadata.legacy_ids。",
+      "count": 2
+    },
+    {
+      "item": "32 份培养方案 PDF / 2 份官方附件",
+      "reason": "仅登记文档哈希与来源元数据（source_versions.metadata.document），不解析 PDF 正文，不生成 app_courses/学分/先修行。",
+      "count": 34
+    },
+    {
+      "item": "2023/2024 届 OCR 提取稿（公众号图文/推文长图）",
+      "reason": "OCR 图表标签-数值配对存在系统性错位，未通过人工复核；不进入 corpus。2015–2022 届机器提取 PDF 文本才进入。"
+    },
+    {
+      "item": "social_case 社交备用内容",
+      "reason": "导入数据库时保留 included=false、verification_status 原文；不进入 corpus，不升级 verified，不作为就业结果。",
+      "count": 85
+    },
+    {
+      "item": "research_claim / job 中 included=false 的记录",
+      "reason": "保留在库中供审计（included=false），不作为事实结论；corpus 仅按 record_type 准入规则决定是否收录。",
+      "count": 28
+    },
+    {
+      "item": "17 个精确同名专业证据格（evidence_cells.csv）",
+      "reason": "派生证据映射，不是新表；用于校验 17/600，不能制造 600 格逐格检索完成的假象。",
+      "count": 17
+    },
+    {
+      "item": "file-audit.json / file-audit.csv / documents.md",
+      "reason": "快照内文件处置与调阅审计文件，不属于实体数据，不导入。"
+    },
+    {
+      "item": "web/plans 重复副本（m01 2.md … m20 2.md）",
+      "reason": "与 m01.md … m20.md 内容哈希相同，corpus 只收录 20 份去重后的方案文件。",
+      "count": 20
+    },
+    {
+      "item": "旧数据库/压缩包、页面截图副本、原始采集或运行文件",
+      "reason": "未随统一快照提交（unified README 记录 94 个原始采集/运行文件被排除），无导入对象。"
+    },
+    {
+      "item": "app_courses / app_credit_rules / app_requirement_actions",
+      "reason": "本轮没有结构化的课程、学分或要求-行动映射来源；保持空表，等待课程 PDF 的人工复核。"
+    }
+  ],
+  "safety": {
+    "contains_secrets": false,
+    "contains_student_personal_data": false,
+    "contains_absolute_local_paths": false,
+    "old_import_sql_executed": false
+  },
+  "manifest_sha256": "5d9bf235cf036c6985a8cc90a8af0bdfd8ef2e84f0822e0f5889e4d9910626a2"
+}

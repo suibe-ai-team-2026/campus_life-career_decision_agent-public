@@ -30,3 +30,11 @@ export function supabaseSecretKey(): string {
 export function appUrl(): string {
   return optionalEnv("NEXT_PUBLIC_APP_URL") ?? "http://127.0.0.1:3000";
 }
+
+export function supabaseConfigured(): boolean {
+  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
+}
+
+export function supabaseAdminConfigured(): boolean {
+  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SECRET_KEY);
+}

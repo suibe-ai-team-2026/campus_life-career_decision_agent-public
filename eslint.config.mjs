@@ -1,14 +1,7 @@
-import { dirname } from "node:path";
-import { fileURLToPath } from "node:url";
-import { FlatCompat } from "@eslint/eslintrc";
+import next from "eslint-config-next";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({ baseDirectory: __dirname });
-
-const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+const config = [
+  ...next,
   {
     ignores: [
       ".next/**",
@@ -17,9 +10,22 @@ const eslintConfig = [
       "prototype/**",
       "open-notebook/**",
       "data/**",
-      "public/**"
+      "public/**",
+      "scripts/probe-embedding.ts",
+      "scripts/probe-models.ts",
+      "scripts/smoke.ts",
+      "scripts/import-research.ts",
+      "scripts/build-corpus.ts",
+      "scripts/import/**"
     ]
+  },
+  {
+    rules: {
+      // These are deliberate hydration-safe patterns (read localStorage in an
+      // effect, then hydrate state). The React Compiler rule flags them as errors.
+      "react-hooks/set-state-in-effect": "off"
+    }
   }
 ];
 
-export default eslintConfig;
+export default config;

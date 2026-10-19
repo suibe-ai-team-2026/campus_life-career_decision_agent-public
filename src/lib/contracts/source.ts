@@ -23,6 +23,7 @@ export const SourceSchema = z.object({
 export type Source = z.infer<typeof SourceSchema>;
 
 export const UploadIntentSchema = z.object({
+  title: z.string().trim().min(1).max(200).optional(),
   filename: z.string().trim().min(1).max(200),
   mime_type: z.enum([
     "application/pdf",

@@ -11,6 +11,7 @@ export const RunSubmitSchema = z
     profile_id: z.string().uuid().optional(),
     profile_version: z.number().int().positive().optional(),
     direction_id: DirectionIdSchema.optional(),
+    direction_ids: z.array(DirectionIdSchema).min(2).max(3).optional(),
     plan_id: z.string().uuid().optional(),
     plan_version_id: z.string().uuid().optional(),
     source_version_ids: z.array(z.string().uuid()).max(20).optional(),
@@ -43,8 +44,8 @@ export const RunSubmitSchema = z
     if (value.kind === "export" && !value.plan_id) {
       ctx.addIssue({ code: "custom", message: "export 需要 plan_id" });
     }
-    if (value.kind === "compare" && !value.direction_id) {
-      ctx.addIssue({ code: "custom", message: "compare 需要方向的对比集合" });
+    if (value.kind === "compare" && !(value.direction_ids && value.direction_ids.length >= 2) && !value.direction_id) {
+      ctx.addIssue({ code: "custom", message: "compare 需要 2–3 个方向的对比集合" });
     }
   });
 export type RunSubmit = z.infer<typeof RunSubmitSchema>;

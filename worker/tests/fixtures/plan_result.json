@@ -1,0 +1,52 @@
+{
+  "status": "partial",
+  "rules_version": "career-rules-2026-10-19.1",
+  "profile_version": 1,
+  "direction_id": "trade_supply_chain",
+  "actions": [
+    {
+      "action_id": "verify-curriculum",
+      "title": "向学院教务核对本专业培养方案（课程、学分与开课学期）",
+      "direction_id": "trade_supply_chain",
+      "window": "current_term",
+      "effort": {"hours": null, "basis": "unknown"},
+      "prerequisites": [],
+      "evidence_ids": [],
+      "rule_id": "career-rule-verify-data",
+      "rules_version": "career-rules-2026-10-19.1",
+      "status": "pending_verification",
+      "user_adjusted": false
+    }
+  ],
+  "courses": [
+    {
+      "course_id": "CUR001",
+      "title": "国际贸易实务",
+      "credits": 3.0,
+      "offered_terms": ["2024-秋", "2025-春"],
+      "prerequisites": [],
+      "verification_status": "verified"
+    }
+  ],
+  "competitions": [],
+  "credits": null,
+  "gaps": [
+    {"code": "curriculum_unavailable", "message": "尚未取得适用年级的结构化培养方案（课程/学分/开课学期）", "module": "courses"}
+  ],
+  "evidence": [
+    {
+      "citation_no": 1,
+      "source_id": "src_fixture_001",
+      "source_version_id": "77777777-7777-7777-7777-777777777777",
+      "chunk_id": "88888888-8888-8888-8888-888888888888",
+      "record_id": null,
+      "title": "合成测试来源：就业质量报告样例",
+      "locator": {"kind": "page_range", "page_start": 12, "page_end": 13, "pages": [12, 13]},
+      "excerpt": "这是合成测试证据片段，不进入正式库。",
+      "verification_status": "verified",
+      "source_scope": "official"
+    }
+  ],
+  "explanation": "【合成测试】规则事实说明，引用见 [1]。",
+  "warnings": ["rules_version=career-rules-2026-10-19.1"]
+}

@@ -16,7 +16,15 @@ export const LocalProgressV1Schema = z.object({
       skipped: z.boolean().default(false),
       completed_at: z.string().nullable().default(null)
     })
-    .default({}),
+    .default({
+      school: "",
+      major: "",
+      enrollment_year: null,
+      current_term: "",
+      answers: {},
+      skipped: false,
+      completed_at: null
+    }),
   favorites: z.array(DirectionIdSchema).max(6).default([]),
   provisional_direction: DirectionIdSchema.nullable().default(null),
   reason_summary: z.string().max(1000).default(""),

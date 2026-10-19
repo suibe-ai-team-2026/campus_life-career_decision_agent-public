@@ -1,0 +1,48 @@
+# 知途（Campus Pathway）worker · systemd 单元示例
+#
+# 适用：不用 Docker 的 Freestyle VM / 普通 Linux VM。假设：
+#   - 代码在 /opt/campus-pathway/worker，venv 在同一目录（uv sync --python 3.12 --extra docling）
+#   - 运行用户 campus-pathway（不带登录 shell），可读 /etc/campus-pathway/worker.env
+#   - 密钥文件 /etc/campus-pathway/worker.env 权限 600、属主 root:campus-pathway
+#
+# 安装：
+#   sudo install -m 600 worker.env.example /etc/campus-pathway/worker.env
+#   sudoedit /etc/campus-pathway/worker.env
+#   sudo cp systemd/campus-pathway-worker.service /etc/systemd/system/
+#   sudo systemctl daemon-reload && sudo systemctl enable --now campus-pathway-worker
+#   journalctl -u campus-pathway-worker -f
+
+[Unit]
+Description=Campus Pathway Python worker (Supabase queue consumer)
+Documentation=https://github.com/suibe-ai-team-2026/campus_life-career_decision_agent
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=campus-pathway
+Group=campus-pathway
+WorkingDirectory=/opt/campus-pathway/worker
+EnvironmentFile=/etc/campus-pathway/worker.env
+Environment=PYTHONUNBUFFERED=1
+# 预下载过 Docling 模型时，缓存目录在服务用户 home 下：
+# Environment=HF_HOME=/home/campus-pathway/.cache/huggingface
+# Environment=DOCLING_CACHE_DIR=/home/campus-pathway/.cache/docling
+ExecStartPre=/opt/campus-pathway/worker/.venv/bin/python -m app.runtime.worker --check
+ExecStart=/opt/campus-pathway/worker/.venv/bin/python -m app.runtime.worker
+Restart=always
+RestartSec=5
+# 优雅退出：不再 claim 新任务，当前任务跑完后退出；超过 90s 再强杀。
+KillSignal=SIGTERM
+TimeoutStopSec=90
+# 权限收紧
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/campus-pathway/worker /home/campus-pathway/.cache
+ReadOnlyPaths=/etc/campus-pathway
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target
