@@ -19,6 +19,10 @@
 | 云端部署 | 公开生产站已上线 | https://campuslife-careerdecisionagent.vercel.app （Vercel Hobby，CLI 部署；Git 自动部署待 GitHub org 安装 Vercel App） |
 | 旧 `prototype/` | 归档参考 | 不再是产品入口；保留只读历史，避免破坏团队资产 |
 
+## 界面
+
+- 支持深色 / 浅色两套主题，默认跟随操作系统（`prefers-color-scheme`），也可用页头按钮切换并记住选择；跟随系统时会随系统变化自动更新。
+
 ## 快速开始（本地）
 
 需要 Node.js 22+。用户无需安装 Docker。

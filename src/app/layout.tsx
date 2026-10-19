@@ -24,12 +24,24 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#171310"
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#171310" },
+    { media: "(prefers-color-scheme: light)", color: "#fbf7f0" }
+  ]
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="zh-CN" data-scroll-behavior="smooth">
+    <html lang="zh-CN" data-scroll-behavior="smooth" suppressHydrationWarning>
+      <head>
+        <script
+          // Applies a saved explicit theme before first paint; system mode uses CSS media.
+          dangerouslySetInnerHTML={{
+            __html:
+              "(function(){try{var m=localStorage.getItem('campus-pathway:theme');if(m==='light'||m==='dark'){document.documentElement.dataset.theme=m;}}catch(e){}})();"
+          }}
+        />
+      </head>
       <body>
         <a className="skip-link" href="#main">
           跳到主要内容

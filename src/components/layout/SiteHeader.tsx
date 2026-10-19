@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useLocalProgress, isMeaningfulProgress, nextStepForProgress } from "@/lib/local-progress/store";
 import { Icon } from "@/components/ui/primitives";
 import { RestartProgress } from "./RestartProgress";
+import { ThemeToggle } from "./ThemeToggle";
 
 const NAV_ITEMS = [
   { href: "/", label: "首页" },
@@ -53,6 +54,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="site-header-actions">
+          <ThemeToggle />
           {next ? (
             <Link href={next.href} className="header-cta">
               <Icon name="compass" size={14} />
