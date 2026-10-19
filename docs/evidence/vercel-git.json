@@ -8,7 +8,7 @@
   },
   "repo": "suibe-ai-team-2026/campus_life-career_decision_agent-public",
   "production_branch": "main",
-  "trigger_commit": "0f31523",
+  "trigger_commit": "7da60d4",
   "deployment": {
     "id": "dpl_5ZypCFTLv2We5A9ZYSC6DNHAxuxg",
     "url": "https://campuslife-careerdecisionagent-mkyvdkob6-turtojian520s-projects.vercel.app",
@@ -17,6 +17,18 @@
     "git_alias": "https://campuslife-careerdecisionagent-git-main-turtojian520s-projects.vercel.app",
     "production_alias": "https://campuslife-careerdecisionagent.vercel.app"
   },
-  "verification": "push to public main triggered an automatic Production deployment; production health returned HTTP 200",
-  "protection": "Standard Protection: production is public, preview remains behind Vercel Authentication"
+  "verification": "push of 7da60d4 to public branch created a Preview deployment, and push of the same commit to public main created a Production deployment; production health returned HTTP 200",
+  "protection": "Standard Protection: production is public, preview remains behind Vercel Authentication",
+  "latest_production_deployment": {
+    "id": "dpl_DsYGNKWgWLNXEimLysM5CRbx6TBH",
+    "url": "https://campuslife-careerdecisionagent-eunshoi6w-turtojian520s-projects.vercel.app",
+    "target": "production",
+    "status": "Ready",
+    "git_alias": "https://campuslife-careerdecisionagent-git-main-turtojian520s-projects.vercel.app"
+  },
+  "branch_preview": {
+    "deployment": "https://campuslife-careerdecisionagent-7ka70m9lc-turtojian520s-projects.vercel.app",
+    "source_branch": "feat/career-cloud-wizard",
+    "status": "Ready"
+  }
 }

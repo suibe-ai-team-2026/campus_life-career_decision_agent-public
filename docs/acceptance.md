@@ -46,7 +46,7 @@
 
 ## F. 部署
 
-- [x] Preview/Production 均指向正确项目；Production `https://campuslife-careerdecisionagent.vercel.app` 公开可访问，`/api/health` 返回 351 sources/764 chunks；Git 自动部署待 Vercel App 安装。
+- [x] Preview/Production 均指向正确项目；Production `https://campuslife-careerdecisionagent.vercel.app` 公开可访问，`/api/health` 返回 351 sources/764 chunks；GitHub push 到 main 自动 Production、到 feature 分支自动 Preview（Vercel Git 连接已生效）。
 - [x] 匿名 Auth 在云端 Preview/BFF 实测；关闭开发电脑后 worker 仍可运行（已由 VM 承担）。
 - [ ] 未做 VM 重启演练。
 - [ ] 回滚未演练；文档已写步骤。

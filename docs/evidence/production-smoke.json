@@ -1,5 +1,5 @@
 {
-  "executed_at": "2026-10-19T23:13+08:00",
+  "executed_at": "2026-10-19T23:29+08:00",
   "url": "https://campuslife-careerdecisionagent.vercel.app",
   "environment": "production",
   "public_access": true,
@@ -15,5 +15,7 @@
     "directions": 6
   },
   "deployment_protection": "Vercel Standard Protection: production is public; preview remains protected by Vercel Authentication",
-  "note": "首次 production 部署通过 CLI 完成；Git push 自动部署尚未连接（需要 GitHub org 安装 Vercel App）。"
+  "note": "push 到 public main 自动触发 Production；push 到 feature branch 自动触发 Preview。生产域名保持 https://campuslife-careerdecisionagent.vercel.app。",
+  "deployment_id": "dpl_DsYGNKWgWLNXEimLysM5CRbx6TBH",
+  "git_auto_deploy": true
 }
