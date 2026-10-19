@@ -1,0 +1,28 @@
+{
+  "ok": true,
+  "provider": "deepseek-official",
+  "base": "https://api.deepseek.com",
+  "model_requested": "deepseek-flash",
+  "model_returned": "deepseek-flash",
+  "latency_ms": 172,
+  "usage": {
+    "prompt_tokens": 73,
+    "completion_tokens": 175,
+    "total_tokens": 248,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 162
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 73
+  },
+  "content_preview": "{\"ok\":true,\"model\":\"deepseek-flash\"}",
+  "checked_at": "2026-10-19T23:46+08:00",
+  "notes": [
+    "模型列表来自 https://api.deepseek.com/models：deepseek-flash = DeepSeek-V4.1-Flash（2026-10-17 批次），deepseek-v4-pro 为另一模型",
+    "本产品 chat 使用 deepseek-flash + reasoning_effort=low；embedding 仍走 OpenRouter Qwen3 8B",
+    "探针不打印 key"
+  ]
+}

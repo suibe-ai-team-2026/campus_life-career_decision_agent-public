@@ -231,11 +231,15 @@ class Config:
     embedding_instruction_mode: str = "explicit_template"
     embedding_profile_id: str = "career-qwen3-embedding-8b-4096-career-qwen-v1"
     embedding_batch_size: int = 16
-    # chat
-    chat_model: str = "deepseek/deepseek-chat"
+    # chat: DeepSeek 官方 API（与 embedding 的 OpenRouter 账号分离）
+    chat_provider: str = "deepseek"
+    chat_api_key: str = field(default="", repr=False)
+    chat_base_url: str = "https://api.deepseek.com"
+    chat_model: str = "deepseek-flash"
     chat_temperature: float = 0.1
     chat_max_tokens: int = 1600
     chat_json_mode: str = "auto"
+    chat_reasoning_effort: str | None = None
     # 运行时
     worker_concurrency: int = 1
     run_max_attempts: int = 3
@@ -251,6 +255,11 @@ class Config:
     heartbeat_interval_seconds: float = 30.0
     lease_seconds: int = 120
     shutdown_grace_seconds: float = 30.0
+    # Freestyle：空闲时主动 pause，BFF 在用户提交任务前 start/resume。
+    freestyle_api_key: str | None = field(default=None, repr=False)
+    freestyle_vm_id: str | None = None
+    freestyle_base_url: str = "https://api.freestyle.sh"
+    idle_pause_seconds: float = 120.0
     # 检索 / 切块 / 规则
     retrieval: RetrievalConfig = field(default_factory=RetrievalConfig)
     ingest: IngestConfig = field(default_factory=IngestConfig)
@@ -270,12 +279,18 @@ class Config:
             "supabase_url": self.supabase_url,
             "has_supabase_secret_key": bool(self.supabase_secret_key),
             "has_openrouter_api_key": bool(self.openrouter_api_key),
+            "has_chat_api_key": bool(self.chat_api_key),
             "openrouter_base_url": self.openrouter_base_url,
+            "chat_provider": self.chat_provider,
+            "chat_base_url": self.chat_base_url,
             "embedding_model": self.embedding_model,
             "embedding_dimensions": self.embedding_dimensions,
             "embedding_profile_id": self.embedding_profile_id,
             "embedding_query_template_version": self.embedding_query_template_version,
             "chat_model": self.chat_model,
+            "chat_reasoning_effort": self.chat_reasoning_effort,
+            "freestyle_vm_id": self.freestyle_vm_id,
+            "idle_pause_seconds": self.idle_pause_seconds,
             "worker_concurrency": self.worker_concurrency,
             "budget": "unset" if self.model_monthly_budget_usd is None else str(self.model_monthly_budget_usd),
             "gate_version": self.retrieval.gate_version,
@@ -284,7 +299,10 @@ class Config:
         }
 
     def secret_values(self) -> tuple[str, ...]:
-        return (self.supabase_secret_key, self.openrouter_api_key)
+        secrets = [self.supabase_secret_key, self.openrouter_api_key, self.chat_api_key]
+        if self.freestyle_api_key:
+            secrets.append(self.freestyle_api_key)
+        return tuple(secrets)
 
     def query_template(self) -> str:
         try:
@@ -320,8 +338,22 @@ class Config:
         default_profile_id = "career-" + re.sub(r"[^a-z0-9]+", "-", model_slug).strip("-") + f"-{dimensions}-{template_version}"
         embedding_profile_id = _env(env, "EMBEDDING_PROFILE_ID", default_profile_id) or default_profile_id
 
-        chat_model = _env(env, "OPENROUTER_CHAT_MODEL", "deepseek/deepseek-chat") or "deepseek/deepseek-chat"
+        chat_provider = _choice(env, "CHAT_PROVIDER", "deepseek", {"deepseek", "openrouter"})
+        if chat_provider == "openrouter":
+            # 兼容旧部署；本任务默认使用 DeepSeek 官方 API。
+            chat_api_key = openrouter_api_key
+            chat_base_url = base_url
+            chat_model = _env(env, "OPENROUTER_CHAT_MODEL", "deepseek/deepseek-chat") or "deepseek/deepseek-chat"
+        else:
+            chat_api_key = _env(env, "DEEPSEEK_API_KEY", openrouter_api_key) or openrouter_api_key
+            chat_base_url = _validate_url(
+                "DEEPSEEK_BASE_URL", _env(env, "DEEPSEEK_BASE_URL", "https://api.deepseek.com") or "https://api.deepseek.com"
+            )
+            chat_model = _env(env, "DEEPSEEK_CHAT_MODEL", "deepseek-flash") or "deepseek-flash"
         chat_json_mode = _choice(env, "CHAT_JSON_MODE", "auto", {"auto", "on", "off"})
+        chat_reasoning_effort = _env(env, "DEEPSEEK_REASONING_EFFORT", "low")
+        if chat_reasoning_effort not in (None, "low", "high", "max"):
+            raise ConfigError("DEEPSEEK_REASONING_EFFORT 只能是 low/high/max 或留空")
         worker_concurrency = _int(env, "WORKER_CONCURRENCY", 1, minimum=1, maximum=1)
         run_max_attempts = _int(env, "RUN_MAX_ATTEMPTS", 3, minimum=1, maximum=10)
         timeout = _float(env, "MODEL_REQUEST_TIMEOUT_SECONDS", 60.0, minimum=1.0)
@@ -373,10 +405,14 @@ class Config:
             embedding_instruction_mode=instruction_mode,
             embedding_profile_id=embedding_profile_id,
             embedding_batch_size=_int(env, "EMBEDDING_BATCH_SIZE", 16, minimum=1, maximum=16),
+            chat_provider=chat_provider,
+            chat_api_key=chat_api_key,
+            chat_base_url=chat_base_url,
             chat_model=chat_model,
-            chat_temperature=_float(env, "OPENROUTER_CHAT_TEMPERATURE", 0.1, minimum=0.0),
-            chat_max_tokens=_int(env, "OPENROUTER_CHAT_MAX_TOKENS", 1600, minimum=64, maximum=8192),
+            chat_temperature=_float(env, "CHAT_TEMPERATURE", _float(env, "OPENROUTER_CHAT_TEMPERATURE", 0.1, minimum=0.0), minimum=0.0),
+            chat_max_tokens=_int(env, "CHAT_MAX_TOKENS", _int(env, "OPENROUTER_CHAT_MAX_TOKENS", 1600, minimum=64, maximum=8192), minimum=64, maximum=8192),
             chat_json_mode=chat_json_mode,
+            chat_reasoning_effort=chat_reasoning_effort,
             worker_concurrency=worker_concurrency,
             run_max_attempts=run_max_attempts,
             model_request_timeout_seconds=timeout,
@@ -391,6 +427,10 @@ class Config:
             heartbeat_interval_seconds=_float(env, "WORKER_HEARTBEAT_SECONDS", 30.0, minimum=1.0),
             lease_seconds=_int(env, "WORKER_LEASE_SECONDS", 120, minimum=30, maximum=600),
             shutdown_grace_seconds=_float(env, "WORKER_SHUTDOWN_GRACE_SECONDS", 30.0, minimum=1.0),
+            freestyle_api_key=_env(env, "FREESTYLE_API_KEY"),
+            freestyle_vm_id=_env(env, "FREESTYLE_VM_ID"),
+            freestyle_base_url=_validate_url("FREESTYLE_API_BASE", _env(env, "FREESTYLE_API_BASE", "https://api.freestyle.sh") or "https://api.freestyle.sh"),
+            idle_pause_seconds=_float(env, "WORKER_IDLE_PAUSE_SECONDS", 120.0, minimum=30.0),
             retrieval=retrieval,
             ingest=ingest,
             rules_version=_env(env, "CAREER_RULES_VERSION", RULES_VERSION) or RULES_VERSION,

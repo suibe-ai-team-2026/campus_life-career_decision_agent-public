@@ -17,7 +17,9 @@ def test_defaults_are_frozen_and_correct():
     assert config.embedding_normalization == "l2"
     assert config.embedding_query_template_version == "career-qwen-v1"
     assert config.embedding_batch_size == 16
-    assert config.chat_model == "deepseek/deepseek-chat"
+    assert config.chat_provider == "deepseek"
+    assert config.chat_base_url == "https://api.deepseek.com"
+    assert config.chat_model == "deepseek-flash"
     assert config.worker_concurrency == 1
     assert config.retrieval.rrf_k == 60
     assert config.retrieval.evidence_char_budget == 7000

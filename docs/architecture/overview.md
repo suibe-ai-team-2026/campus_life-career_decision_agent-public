@@ -19,7 +19,7 @@ Vercel / Next.js App Router（BFF：JWT、Zod、所有权、限流、签名地�
   │ Supabase Auth JWT + 用户态 server client（RLS 生效）
 Supabase（Postgres + pgvector + Auth + 私有 Storage + jobs 队列表）
   │ worker 主动 claim（不向公网开放 Python 端口）
-Freestyle 云端 worker（LangGraph 固定流程；Docling；OpenRouter Qwen3 Embedding 8B；OpenRouter chat；PDF）
+Freestyle 云端 worker（LangGraph 固定流程；Docling；OpenRouter Qwen3 Embedding 8B；DeepSeek 官方 V4.1 Flash chat；PDF）
 ```
 
 - 浏览器只拿 Supabase URL + publishable key；service/secret key 只在 BFF 与 worker。
@@ -35,7 +35,7 @@ Freestyle 云端 worker（LangGraph 固定流程；Docling；OpenRouter Qwen3 Em
 | `src/lib/contracts/` | Zod DTO 与错误码，前后端共享 | Lead |
 | `src/lib/supabase/` | browser / server 用户态 / server-only admin | Lead |
 | `src/app/(wizard)/`、`src/components/` | 五步 UI 与本地进度 | web-dev |
-| `worker/` | 队列消费、解析切块、OpenRouter、检索、规则、PDF | worker-dev |
+| `worker/` | 队列消费、解析切块、OpenRouter embedding、DeepSeek chat、检索、规则、PDF | worker-dev |
 | `supabase/migrations/` | 表、RLS、函数、Storage 策略 | Lead |
 | `data/import/`、`scripts/import-research.ts` | 研究快照导入 manifest、别名、校验 | data-dev |
 | `docs/` | ADR、权限矩阵、数据字典、部署、回滚、验收证据 | Lead + QA |
@@ -57,6 +57,7 @@ Freestyle 云端 worker（LangGraph 固定流程；Docling；OpenRouter Qwen3 Em
 
 - Provider：OpenRouter；模型：`qwen/qwen3-embedding-8b`；4096 维；L2 归一化。
 - 查询模板版本 `career-qwen-v1`；文档片段不加 query instruction。
-- Chat：`deepseek/deepseek-chat`（OpenRouter）。
+- Chat：DeepSeek 官方 API `https://api.deepseek.com`，模型 `deepseek-flash`（DeepSeek-V4.1-Flash，2026-10-17 批次），`reasoning_effort=low` 以控制解释成本。
+- 两者账号/endpoint 分离：embedding 用 `OPENROUTER_API_KEY`，chat 用 `DEEPSEEK_API_KEY`；不把 chat 退化为 OpenRouter 或本地模型。
 - 切换模型/维度/模板必须新建 profile、全量重建、回归后原子切换 `active`；绝不混入 BGE/512 维向量。
 - 真实账号权限、余额、返回维度与耗时必须在部署探针确认；本仓库不预置密钥。

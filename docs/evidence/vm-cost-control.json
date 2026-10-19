@@ -1,0 +1,24 @@
+{
+  "executed_at": "2026-10-19T23:47+08:00",
+  "vm_id": "vm-7f674dd9ed5d422b880f5bec7fe9f734",
+  "vm_slug": "campus-pathway-worker-dev",
+  "idle_pause_seconds": 60,
+  "observed_states": [
+    "running after job",
+    "paused after ~60s idle"
+  ],
+  "pause_api": "POST https://api.freestyle.sh/v5/vms/{id}/pause",
+  "wake_api": "POST https://api.freestyle.sh/v5/vms/{id}/start",
+  "wake_test": {
+    "bff_response": "worker_wake=started",
+    "run_status": "succeeded",
+    "answer_citations": 1
+  },
+  "billing_note": "按 Freestyle 官方 Pricing：paused VM 不保留 compute reservation，只计 storage；Free 计划每月 60,000 GiB-hour storage 包含量，32GB 常驻远低于额度，因此暂停时实际 $0。",
+  "logs": [
+    "worker_idle_pause_requested",
+    "freestyle_pause_connection_closed/failed after freeze (expected; pause still took effect)",
+    "state paused"
+  ],
+  "caveat": "pause 请求可能因 VM 立即冻结而超时；worker 将超时/连接中断视为已请求暂停。若未生效会继续轮询，不丢任务。"
+}

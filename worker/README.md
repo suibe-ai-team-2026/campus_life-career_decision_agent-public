@@ -93,14 +93,19 @@ UV_CACHE_DIR=/tmp/uv-cache uv run --python 3.12 python -m app.runtime.worker --o
 |---|---|---|---|
 | `SUPABASE_URL` | 是 | — | Supabase Project URL |
 | `SUPABASE_SECRET_KEY` | 是 | — | service/secret key，仅存在 worker 端 |
-| `OPENROUTER_API_KEY` | 是 | — | OpenRouter key |
+| `OPENROUTER_API_KEY` | 是 | — | 仅用于 OpenRouter embedding |
 | `OPENROUTER_BASE_URL` | 否 | `https://openrouter.ai/api/v1` | OpenAI 兼容 |
 | `OPENROUTER_EMBEDDING_MODEL` | 否 | `qwen/qwen3-embedding-8b` | 冻结，不可静默替换 |
 | `EMBEDDING_DIMENSIONS` | 否 | `4096` | 必须 4096（`vector(4096)` 列） |
 | `EMBEDDING_NORMALIZATION` | 否 | `l2` | 仅支持 l2 |
 | `EMBEDDING_QUERY_TEMPLATE_VERSION` | 否 | `career-qwen-v1` | 模板版本，写入 profile metadata |
 | `EMBEDDING_INSTRUCTION_MODE` | 否 | `explicit_template` | 探针确认提供方自动加 instruction 时改 `provider_auto` |
-| `OPENROUTER_CHAT_MODEL` | 否 | `deepseek/deepseek-chat` | 只用于解释 |
+| `DEEPSEEK_API_KEY` | 是 | — | DeepSeek 官方 chat key（与 embedding key 分离） |
+| `DEEPSEEK_BASE_URL` | 否 | `https://api.deepseek.com` | chat endpoint |
+| `DEEPSEEK_CHAT_MODEL` | 否 | `deepseek-flash` | DeepSeek-V4.1-Flash；只用于解释 |
+| `DEEPSEEK_REASONING_EFFORT` | 否 | `low` | 控制 V4.1 推理 token，省成本 |
+| `WORKER_IDLE_PAUSE_SECONDS` | 否 | `120` | 空闲多少秒后 worker 主动 pause Freestyle VM |
+| `FREESTYLE_API_KEY` / `FREESTYLE_VM_ID` | 否 | — | 仅用于 worker 空闲自暂停；不给浏览器 |
 | `WORKER_CONCURRENCY` | 否 | `1` | v1 固定为 1（一次一个大任务） |
 | `RUN_MAX_ATTEMPTS` | 否 | `3` | 供运维核对；实际值由 DB `jobs.max_attempts` 决定 |
 | `MODEL_REQUEST_TIMEOUT_SECONDS` | 否 | `60` | HTTP 超时 |
@@ -133,6 +138,13 @@ UV_CACHE_DIR=/tmp/uv-cache uv run --python 3.12 python scripts/probe_openrouter.
 探针检查：embedding 维度/条数/index/norm、query 模板与原始问题的余弦相似度
 （判断是否需要 `provider_auto`）、batch 形状、chat `response_format=json_object`
 是否被接受、token usage 是否返回。输出为安全 JSON，不含密钥。
+
+## 5.1 空闲 pause（降低 Freestyle 费用）
+
+- worker 连续 `WORKER_IDLE_PAUSE_SECONDS` 没有任务时，调用 `POST /v5/vms/{id}/pause` 冻结 VM；pause 只计存储，不计 vCPU/内存。
+- 用户点击生成/上传后，BFF 调用 `POST /v5/vms/{id}/start` 唤醒；worker 从冻结处继续 claim 队列。
+- pause 请求常因 VM 立即冻结而连接中断，worker 将 `RemoteProtocolError` 视为已请求暂停；若未生效会继续轮询，不会丢任务。
+- 这是 demo 级单 worker 方案，不是 HA；BFF 唤醒失败时 run 仍保持 queued，不会丢。
 
 ## 6. 队列 / 租约 / 重试 / 优雅退出
 

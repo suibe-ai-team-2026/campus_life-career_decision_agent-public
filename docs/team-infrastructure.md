@@ -13,8 +13,9 @@
 | Vercel | Team | 个人 Hobby `turtojian520s-projects` | 公开副本可免费部署；非比赛专用 Team | @turtojian520 | 单人 | Hobby（免费） | 待团队约定 |
 | Vercel | 项目 | `campus_life-career_decision_agent` | 公开 Production：https://campuslife-careerdecisionagent.vercel.app ；另有受保护 Preview | @turtojian520 | 单人；未连接 Git（GitHub App org 安装需 sudo/2FA） | Hobby | 待团队约定 |
 | Freestyle | Team | 个人账号（API key 绑定个人团队） | worker 执行面（demo） | @turtojian520 | 单人 | 按实际用量 | 待团队约定 |
-| Freestyle | VM | `campus-pathway-worker-dev`（`vm-7f674dd9ed5d422b880f5bec7fe9f734`） | 单 worker 演示部署，4 vCPU/8 GiB，不称高可用 | @turtojian520 | 单人 | 按实际用量 | 待团队约定 |
-| OpenRouter | API Key | 用户受保护文件 | embedding + chat | 用户 | 仅本地/worker secret | 按用量；用户预算 | 用户 |
+| Freestyle | VM | `campus-pathway-worker-dev`（`vm-7f674dd9ed5d422b880f5bec7fe9f734`） | 单 worker 演示；空闲 60s 自动 pause，pause 只计存储；BFF 点生成时 start | @turtojian520 | 单人 | 按实际用量（暂停时仅存储） | 待团队约定 |
+| OpenRouter | API Key | 用户受保护文件 | 仅 embedding `qwen/qwen3-embedding-8b` | 用户 | 仅 worker secret | 按用量；用户预算 | 用户 |
+| DeepSeek 官方 | API Key | 用户受保护文件 | chat `deepseek-flash`（V4.1-Flash，low effort） | 用户 | 仅 worker secret | 按官方用量；用户预算 | 用户 |
 
 ## 2. 角色分工（建议，待用户确认）
 

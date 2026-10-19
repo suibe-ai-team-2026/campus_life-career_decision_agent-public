@@ -41,7 +41,8 @@ def test_json_mode_is_requested_and_usage_parsed():
     response = _client(config, recorder).chat(MESSAGES, operation="test_chat")
     first_body = recorder.requests[0]["body"]
     assert first_body["response_format"] == {"type": "json_object"}
-    assert first_body["model"] == "deepseek/deepseek-chat"
+    assert first_body["model"] == "deepseek-flash"
+    assert "api.deepseek.com" in recorder.requests[0]["url"]
     assert first_body["temperature"] == 0.1
     assert response.content == '{"ok": true}'
     assert response.usage is not None

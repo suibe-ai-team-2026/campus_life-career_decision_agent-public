@@ -149,15 +149,20 @@ class OpenRouterClient:
     # ------------------------------------------------------------------
     # HTTP / 重试
     # ------------------------------------------------------------------
-    def _url(self, path: str) -> str:
-        return f"{self.config.openrouter_base_url.rstrip('/')}{path}"
+    def _url(self, path: str, *, chat: bool = False) -> str:
+        base = self.config.chat_base_url if chat else self.config.openrouter_base_url
+        return f"{base.rstrip('/')}{path}"
 
-    def _headers(self) -> dict[str, str]:
-        return {
-            "Authorization": f"Bearer {self.config.openrouter_api_key}",
+    def _headers(self, *, chat: bool = False) -> dict[str, str]:
+        key = self.config.chat_api_key if chat else self.config.openrouter_api_key
+        headers = {
+            "Authorization": f"Bearer {key}",
             "Content-Type": "application/json",
             "X-Title": "campus-pathway-worker",
         }
+        if chat and self.config.chat_provider == "openrouter":
+            headers["HTTP-Referer"] = "https://campuspathway.example"
+        return headers
 
     def _retry_after_seconds(self, response: httpx.Response) -> float | None:
         raw = response.headers.get("retry-after")
@@ -216,6 +221,7 @@ class OpenRouterClient:
         operation: str,
         estimated_cost: Decimal | None,
         allow_response_format_retry: bool = False,
+        chat: bool = False,
     ) -> tuple[dict[str, Any], int]:
         max_attempts = 1 + int(self.config.max_model_retries)
         last_error: Exception | None = None
@@ -226,7 +232,7 @@ class OpenRouterClient:
                 self._budget.assert_can_spend(estimated_cost, operation=operation)
             started = time.monotonic()
             try:
-                response = self._client.post(self._url(path), json=body, headers=self._headers())
+                response = self._client.post(self._url(path, chat=chat), json=body, headers=self._headers(chat=chat))
             except httpx.TimeoutException as exc:
                 last_error = ModelTimeout("模型请求超时", detail=operation)
                 latency_ms = int((time.monotonic() - started) * 1000)
@@ -266,7 +272,7 @@ class OpenRouterClient:
                 self._json_mode_supported = False
                 retry_body = dict(body)
                 retry_body.pop("response_format", None)
-                response = self._client.post(self._url(path), json=retry_body, headers=self._headers())
+                response = self._client.post(self._url(path, chat=chat), json=retry_body, headers=self._headers(chat=chat))
                 if response.status_code >= 400:
                     raise self._error_from_response(response, operation=operation) from error
                 try:
@@ -421,6 +427,10 @@ class OpenRouterClient:
             "temperature": self.config.chat_temperature if temperature is None else temperature,
             "max_tokens": self.config.chat_max_tokens if max_tokens is None else max_tokens,
         }
+        if self.config.chat_provider == "deepseek" and self.config.chat_reasoning_effort:
+            # DeepSeek V4.1 Flash supports low/high/max reasoning effort. Default
+            # to low here to keep explanation calls cheap; override per deployment.
+            body["reasoning_effort"] = self.config.chat_reasoning_effort
         json_mode = (not self._json_mode_locked_off) and self._json_mode_supported
         if json_mode:
             body["response_format"] = {"type": "json_object"}
@@ -435,6 +445,7 @@ class OpenRouterClient:
             operation=operation,
             estimated_cost=estimated_cost,
             allow_response_format_retry=(json_mode and self.config.chat_json_mode == "auto"),
+            chat=True,
         )
         return self._parse_chat_response(payload, operation=operation, latency_ms=latency_ms, json_mode=json_mode)
 
@@ -472,7 +483,7 @@ class OpenRouterClient:
             input_tokens is not None or output_tokens is not None
         ) else None
         usage = ModelUsage(
-            provider=PROVIDER_NAME,
+            provider=self.config.chat_provider,
             model=self.config.chat_model,
             operation=operation,
             input_tokens=input_tokens,

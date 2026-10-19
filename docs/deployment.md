@@ -1,6 +1,6 @@
 # 部署与运维 Runbook
 
-状态：**2026-10-19 已执行迁移、数据导入、匿名 Auth、Freestyle worker 与 Vercel Preview；生产域名未主动部署。** 用户无需安装 Docker；本机无 Docker/Postgres，Supabase 迁移通过 Management API 的事务执行（详见 `docs/evidence/migration-apply.json`）。
+状态：**2026-10-19 已执行迁移、数据导入、匿名 Auth、Freestyle worker 与 Vercel Production；公开地址 https://campuslife-careerdecisionagent.vercel.app 。** 用户无需安装 Docker；本机无 Docker/Postgres，Supabase 迁移通过 Management API 的事务执行（详见 `docs/evidence/migration-apply.json`）。
 
 ## 0. 资源与前置确认
 
@@ -10,7 +10,8 @@
 | Supabase | org `suibeAIproductcompe` / 项目 `cvohcdzfscoxytmpbwsk`（campus_life-career_decision_agent，Free，us-east-2） | 已应用 7 个迁移、导入数据、启用匿名 Auth |
 | Vercel | 个人 Hobby 项目 `turtojian520s-projects/campus_life-career_decision_agent`，源码为本地同 commit；Preview 已部署 | 已部署 Preview；production 域名未主动推广 |
 | Freestyle | 个人账号 VM `campus-pathway-worker-dev`（`vm-7f674dd9ed5d422b880f5bec7fe9f734`） | 已创建并运行 worker 容器（healthy） |
-| OpenRouter | 模型 `qwen/qwen3-embedding-8b` + `deepseek/deepseek-chat` | 真实探针通过；成本记录见 `docs/evidence/model-probe.json` |
+| OpenRouter | 仅 embedding：`qwen/qwen3-embedding-8b` | 真实探针通过（`docs/evidence/model-probe.json`） |
+| DeepSeek 官方 | chat：`deepseek-flash`（V4.1-Flash），`reasoning_effort=low` | 真实 chat 探针通过；比 OpenRouter 中转的 V3 更省 |
 
 **不自动做的事**：升级套餐、增加收费席位、公开私有仓库、修改/导出同学数据库、用个人空间冒充团队资源。
 
@@ -109,7 +110,7 @@ npx vercel deploy
 npx vercel deploy --prod
 ```
 
-production 环境变量单独添加，不能把 preview 数据库当生产库。Freestyle 团队管理 key、OpenRouter key **不**放 Vercel（BFF 不直接调用它们）。
+production 环境变量单独添加，不能把 preview 数据库当生产库。BFF 需要 `FREESTYLE_API_KEY`/`FREESTYLE_VM_ID` 以便用户点生成时唤醒 worker（server-only；不是团队管理 key）；OpenRouter/DeepSeek key **不**放 Vercel（BFF 不直接调用模型）。
 
 ## 4. Freestyle worker（M3/M4）
 
@@ -168,5 +169,5 @@ npx tsx scripts/smoke.ts
 1. Supabase 迁移/导入/匿名 Auth 已完成并验证；项目为 Free 计划、单项目，未建 dev/prod 分离。
 2. OpenRouter 探针通过；索引 profile `career-qwen3-embedding-8b-4096-career-qwen-v1` 已 active。
 3. Vercel Preview 已部署且有 Vercel Authentication 保护；正式生产部署、域名、Git 自动部署未完成（GitHub App 对 org 安装需要 GitHub sudo 模式，当前未完成）。
-4. Freestyle worker 单 VM 已跑通；VM 重启恢复/断点续跑/多 worker HA 未验证。
+4. Freestyle worker 单 VM 已跑通；空闲 60 秒自动 `pause`，BFF 在提交 run/上传时调用 `/start` 唤醒；pause 只计存储，不计 vCPU/内存。VM 重启恢复/断点续跑/多 worker HA 未验证。
 5. 课程/竞赛/学分结构化资料缺失 → Step 4 规则闭环返回 `data_unavailable` + 核对任务；RAG 仅做小样本回归，未做完整题集与 10 条人工引用抽检。

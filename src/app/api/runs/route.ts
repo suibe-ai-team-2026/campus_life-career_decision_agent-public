@@ -5,6 +5,7 @@ import { createServerSupabase } from "@/lib/supabase/server";
 import { RunSubmitSchema } from "@/lib/contracts/run";
 import { inputHash } from "@/lib/runs/hash";
 import { checkMonthlyBudget, checkRateLimit, directionExists, loadOwnedPlan, loadOwnedProfile } from "@/lib/runs/guards";
+import { wakeWorker } from "@/lib/freestyle/vm";
 
 export async function POST(request: Request) {
   const auth = await requireUser();
@@ -89,12 +90,16 @@ export async function POST(request: Request) {
   if (error) return dbErrorResponse(error);
   const run = Array.isArray(data) ? data[0] : data;
   if (!run) return jsonError("internal_error", "任务创建失败");
+  // User clicked generate/ask: wake the idle worker VM, then let the worker claim
+  // the already-queued job. Wake failure does not lose the run; it stays queued.
+  const workerWake = await wakeWorker();
   return jsonOk(
     {
       run_id: run.run_id,
       status: run.status,
       status_url: `/api/runs/${run.run_id}`,
-      events_url: `/api/runs/${run.run_id}/events`
+      events_url: `/api/runs/${run.run_id}/events`,
+      worker_wake: workerWake
     },
     { status: 202 }
   );

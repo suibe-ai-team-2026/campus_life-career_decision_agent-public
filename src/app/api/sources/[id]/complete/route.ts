@@ -6,6 +6,7 @@ import { createServerSupabase } from "@/lib/supabase/server";
 import { createAdminSupabase } from "@/lib/supabase/admin";
 import { UploadCompleteSchema } from "@/lib/contracts/source";
 import { inputHash } from "@/lib/runs/hash";
+import { wakeWorker } from "@/lib/freestyle/vm";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -107,6 +108,6 @@ export async function POST(request: Request, { params }: Params) {
     .select("run_id, status")
     .single();
   if (runError) return jsonError("internal_error", "任务创建失败");
-
-  return jsonOk({ run_id: run.run_id, status: run.status, source_version_id: sourceVersionId }, { status: 202 });
+  const workerWake = await wakeWorker();
+  return jsonOk({ run_id: run.run_id, status: run.status, source_version_id: sourceVersionId, worker_wake: workerWake }, { status: 202 });
 }

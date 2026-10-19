@@ -15,7 +15,7 @@
 | 数据库/RLS | 已应用并验证 | Supabase 项目 `cvohcdzfscoxytmpbwsk`（org `suibeAIproductcompe`，us-east-2）：7 个迁移、24 表全部 RLS、33 policy、2 私有 bucket；数据已导入 |
 | Freestyle worker | 已部署并跑通 | VM `vm-7f674dd9ed5d422b880f5bec7fe9f734` / `campus-pathway-worker-dev`；plan/ask/export 均 succeeded；单 worker，无公网端口 |
 | 数据导入 | 已 apply | 319 来源 / 243 记录 / 115 要求 / 250 aliases / pilot 2+7；另有 32 个 corpus-only 来源，764 chunks/embeddings |
-| 模型探针 | 已通过 | `qwen/qwen3-embedding-8b` 返回 4096 维、有限、L2 norm=1；chat `deepseek/deepseek-chat` 可用 |
+| 模型探针 | 已通过 | embedding：OpenRouter `qwen/qwen3-embedding-8b` 4096 维/L2；chat：DeepSeek 官方 `deepseek-flash`（V4.1-Flash，low effort） |
 | 云端部署 | 公开生产站已上线 | https://campuslife-careerdecisionagent.vercel.app （Vercel Hobby，CLI 部署；Git 自动部署待 GitHub org 安装 Vercel App） |
 | 旧 `prototype/` | 归档参考 | 不再是产品入口；保留只读历史，避免破坏团队资产 |
 

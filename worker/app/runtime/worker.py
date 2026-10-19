@@ -40,6 +40,7 @@ from ..logging_setup import configure_logging, get_logger, log_event
 from ..models import ClaimedJob
 from ..providers.openrouter import OpenRouterClient
 from ..retrieval.service import RetrievalService
+from .freestyle import pause_vm
 from ..rules.engine import RulesEngine
 from ..graphs.common import JobContext
 from ..rules.repository import SupabaseRulesRepository
@@ -109,6 +110,8 @@ class Worker:
             budget_state="unset" if self.deps.budget.budget_usd is None else "configured",
         )
         backoff = max(1.0, self.config.poll_interval_seconds)
+        last_activity = time.monotonic()
+        last_pause_attempt = 0.0
         while not self.shutdown_event.is_set():
             try:
                 job = self.deps.db.claim_job(self.deps.worker_id, self.config.lease_seconds)
@@ -125,8 +128,33 @@ class Worker:
                 continue
             backoff = max(1.0, self.config.poll_interval_seconds)
             if job is None:
+                now = time.monotonic()
+                idle_for = now - last_activity
+                if (
+                    self.config.idle_pause_seconds > 0
+                    and self.config.freestyle_api_key
+                    and self.config.freestyle_vm_id
+                    and idle_for >= self.config.idle_pause_seconds
+                    and now - last_pause_attempt >= 60.0
+                ):
+                    last_pause_attempt = now
+                    log_event(
+                        self.logger,
+                        "worker_idle_pause_requested",
+                        worker_id=self.deps.worker_id,
+                        idle_seconds=round(idle_for, 1),
+                    )
+                    if pause_vm(self.config):
+                        log_event(self.logger, "worker_paused_idle", worker_id=self.deps.worker_id)
+                        # API 请求成功时 VM 可能已冻结；resume 后该 sleep 继续完成，
+                        # 然后回到 claim 循环。paused 期间进程不消耗 CPU。
+                        time.sleep(3.0)
+                        last_activity = time.monotonic()
+                        continue
+                    log_event(self.logger, "worker_idle_pause_failed", level=30, worker_id=self.deps.worker_id)
                 self.shutdown_event.wait(self.config.poll_interval_seconds)
                 continue
+            last_activity = time.monotonic()
             self.process_job(job)
         log_event(self.logger, "worker_stopped", worker_id=self.deps.worker_id, status="stopped")
         self.close()

@@ -50,4 +50,10 @@
 - [x] 匿名 Auth 在云端 Preview/BFF 实测；关闭开发电脑后 worker 仍可运行（已由 VM 承担）。
 - [ ] 未做 VM 重启演练。
 - [ ] 回滚未演练；文档已写步骤。
+
+## G. 成本控制
+
+- [x] Chat 从 OpenRouter 中转 V3 换为 DeepSeek 官方 `deepseek-flash`（V4.1-Flash），`reasoning_effort=low`；embedding 仍为 OpenRouter Qwen3 8B（`deepseek-probe.json`）。
+- [x] Freestyle VM 空闲 60s 自动 pause；用户点生成/上传时 BFF 调用 `/start` 唤醒；pause 只计存储（`vm-cost-control.json`）。
+- [x] 公开生产站仍可访问，模型调用在 VM 唤醒后完成。
 - [ ] `npm run typecheck/lint/test/build`、worker pytest、原仓库 site-check/validate_research/unified-research-check 实际运行记录。
