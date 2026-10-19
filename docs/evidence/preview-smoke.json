@@ -1,0 +1,20 @@
+{
+  "executed_at": "2026-10-19T20:32+08:00",
+  "deployment": "https://campuslife-careerdecisionagent-pfbcligxt-turtojian520s-projects.vercel.app",
+  "environment": "preview",
+  "project": "turtojian520s-projects/campus_life-career_decision_agent",
+  "health_http": 200,
+  "health_ok": true,
+  "database_reachable": true,
+  "sources": 351,
+  "chunks": 764,
+  "embedding_profile": "career-qwen3-embedding-8b-4096-career-qwen-v1",
+  "home_http": 200,
+  "home_title": "知途 Campus Pathway · 五步生涯向导",
+  "catalog_mode": "database",
+  "catalog_http": 200,
+  "deployment_protection": "Vercel Authentication 开启；项目 owner 可直接打开，公开查看需 Vercel 登录或 bypass token。",
+  "note": "首次 CLI 部署被 Vercel 自动分配为 production；随后已用 vercel rm 删除该 production deployment 与旧 preview，当前项目只保留一个显式 --target preview 部署，未主动推广生产域名。",
+  "home_cloud_mode": true,
+  "home_note": "Preview 首页标题与云端模式正常；未出现本地演示模式横幅（早期 404 页面缓存除外）"
+}

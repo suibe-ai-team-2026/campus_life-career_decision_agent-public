@@ -1,0 +1,22 @@
+{
+  "vm_id": "vm-7f674dd9ed5d422b880f5bec7fe9f734",
+  "vm_slug": "campus-pathway-worker-dev",
+  "vm_state": "running",
+  "spec": "4 vCPU / 8 GiB / 32 GB",
+  "image": "campus-pathway-worker:local",
+  "image_id": "5d31b2bca8ea",
+  "base": "python:3.12-slim",
+  "docling_extra": false,
+  "compose_status": "Up, healthy",
+  "worker_id": "eb5468004dd6-1-1c0071",
+  "budget_state": "configured",
+  "jobs_verified": [
+    "plan succeeded with 12 evidence chunks",
+    "ask succeeded with 1 citation",
+    "export succeeded with 9049-byte PDF"
+  ],
+  "notes": [
+    "v1 单 worker；无公网端口；服务端 600 权限 env_file；镜像不含密钥",
+    "Docling 生产构建使用 --build-arg INSTALL_DOCLING=1；本次 demo 使用 pypdf fallback 以控制镜像体积"
+  ]
+}

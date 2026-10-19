@@ -1,0 +1,108 @@
+{
+  "executed_at": "2026-10-19T20:55+08:00",
+  "purpose": "对首轮 38 题中 7 个 expected-answer 但被拒的题，在加入 coverage retry 后复测",
+  "questions": 7,
+  "results": [
+    {
+      "id": "E08",
+      "status": "succeeded",
+      "refusal": false,
+      "citation_count": 8,
+      "answer": "上海工程技术大学2025届本科毕业去向落实率为97.48%[1]。",
+      "citation_source_ids": [
+        "src_7cee69bdfd1a45aa4ed39390",
+        "src_968e33cc85292b1089768201",
+        "src_968e33cc85292b1089768201",
+        "src_968e33cc85292b1089768201",
+        "src_7cee69bdfd1a45aa4ed39390",
+        "src_7cee69bdfd1a45aa4ed39390",
+        "src_201de99acf92d27c6a0001f8",
+        "src_201de99acf92d27c6a0001f8"
+      ]
+    },
+    {
+      "id": "E12",
+      "status": "succeeded",
+      "refusal": true,
+      "citation_count": 0,
+      "answer": "资料不足，无法基于已归档资料安全回答这个问题。\n当前语料缺少：能直接支持该问题的已归档资料。\n已检索到的最接近资料是《2018年上海市高校毕业生就业质量年度报告》、《2017年上海市高校毕业生就业质量年度报告》，但不足以支撑结论。\n可以把问题限定到具体届别、学校、学历或文件后重试；本轮不会用模型知识补全外部事实。",
+      "citation_source_ids": []
+    },
+    {
+      "id": "C01",
+      "status": "succeeded",
+      "refusal": true,
+      "citation_count": 0,
+      "answer": "资料不足，无法基于已归档资料安全回答这个问题。\n当前语料缺少：2016、2025的能直接支持该问题的已归档资料。\n已检索到的最接近资料是《上海高校毕业去向十年观察 · 研究初版》、《2016届全国普通高校毕业生预计规模》，但不足以支撑结论。\n可以把问题限定到具体届别、学校、学历或文件后重试；本轮不会用模型知识补全外部事实。",
+      "citation_source_ids": []
+    },
+    {
+      "id": "C02",
+      "status": "succeeded",
+      "refusal": true,
+      "citation_count": 0,
+      "answer": "资料不足，无法基于已归档资料安全回答这个问题。\n当前语料缺少：2022的官方统计（就业质量报告等）类可核验内容。\n已检索到的最接近资料是《上海师范大学2022届就业质量报告》、《上海师范大学2022届就业质量报告》，但不足以支撑结论。\n可以把问题限定到具体届别、学校、学历或文件后重试；本轮不会用模型知识补全外部事实。",
+      "citation_source_ids": []
+    },
+    {
+      "id": "A04",
+      "status": "succeeded",
+      "refusal": false,
+      "citation_count": 7,
+      "answer": "根据招聘快照和能力准备路线，国际经济与贸易专业同学可准备以下外贸业务作品：1. 脱敏询盘回复 [1][2][7]；2. 报价单和订单异常处理记录 [1][7]；3. 展示英语沟通和跨境平台操作能力的任务记录 [2][7]。",
+      "citation_source_ids": [
+        "src_plan_suggestion_m03",
+        "src_af93a4ca924438cf8c932ea4",
+        "src_d80b13314147715303fde351",
+        "src_f8eec4a2c077863e04bee233",
+        "src_300ef3ad29408240d789224d",
+        "src_fa777ee147f92ceb58d99293",
+        "src_abb921b7f4e67e6c98b47527"
+      ]
+    },
+    {
+      "id": "A06",
+      "status": "succeeded",
+      "refusal": false,
+      "citation_count": 11,
+      "answer": "国企和蚂蚁集团的路径差异主要体现在能力要求上：国企案例强调信息整合、团队组织和调研沟通[1]，蚂蚁集团案例则侧重财经业务理解、专业实务和赛道判断[2]。准备作品时，建议参考《财务管理 · 能力准备路线》的四步执行方法，包括核对JD、选择实践任务、完成作品并获取反馈[5]。",
+      "citation_source_ids": [
+        "src_e441725775a6336c3ae09e00",
+        "src_e441725775a6336c3ae09e00",
+        "src_8480471976a8b7693c2bcc4a",
+        "src_plan_suggestion_m04",
+        "src_plan_suggestion_m05",
+        "src_8480471976a8b7693c2bcc4a",
+        "src_8480471976a8b7693c2bcc4a",
+        "src_e441725775a6336c3ae09e00",
+        "src_plan_suggestion_m06",
+        "src_3c13ef7bcd285a2d47f37a06",
+        "src_ac11ab659e693003fd7bed2b"
+      ]
+    },
+    {
+      "id": "B01",
+      "status": "succeeded",
+      "refusal": true,
+      "citation_count": 0,
+      "answer": "资料不足，无法基于已归档资料安全回答这个问题。\n当前语料缺少：2022的官方统计（就业质量报告等）类可核验内容。\n已检索到的最接近资料是《上海交通大学2022届就业质量报告》、《上海交通大学2022届就业质量报告》，但不足以支撑结论。\n可以把问题限定到具体届别、学校、学历或文件后重试；本轮不会用模型知识补全外部事实。",
+      "citation_source_ids": []
+    }
+  ],
+  "improved": [
+    "E08",
+    "A04",
+    "A06"
+  ],
+  "still_refused": [
+    "E12",
+    "C01",
+    "C02",
+    "B01"
+  ],
+  "notes": [
+    "E08 复测返回 97.48%[1]，说明 coverage retry 能纠正部分 no_evidence 误判。",
+    "E12/C01/C02/B01 仍被拒；部分原因是检索未把问题指向的精确证据段纳入上下文（如 B01 少了 95.60% 那段），或问题问的是证据未覆盖的口径。",
+    "这是复测，不是完整 38 题重跑；完整报告仍是修复前的 rag-eval-cloud.json。"
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "courses": [
+    {
+      "course_id": "CUR001",
+      "school": "上海对外经贸大学",
+      "major": "国际经济与贸易",
+      "enrollment_year": 2023,
+      "curriculum_version": "2023",
+      "title": "国际贸易实务",
+      "credits": "3.0",
+      "offered_terms": ["2024-秋", "2025-春"],
+      "status": "verified"
+    },
+    {
+      "course_id": "CUR002",
+      "school": "上海对外经贸大学",
+      "major": "国际经济与贸易",
+      "enrollment_year": 2023,
+      "curriculum_version": "2023",
+      "title": "国际市场营销",
+      "credits": "2.5",
+      "offered_terms": ["2025-春"],
+      "status": "verified"
+    },
+    {
+      "course_id": "CUR003",
+      "school": "上海对外经贸大学",
+      "major": "国际经济与贸易",
+      "enrollment_year": 2023,
+      "curriculum_version": "2023",
+      "title": "单证与关务实务（未核验样例）",
+      "credits": "4.0",
+      "offered_terms": ["2025-秋"],
+      "status": "partial"
+    }
+  ],
+  "prerequisites": [
+    {
+      "course_id": "CUR002",
+      "prerequisite_id": "CUR001",
+      "relation_type": "required",
+      "rule_version": "career-rules-2026-10-19.1"
+    }
+  ],
+  "competitions": [
+    {
+      "competition_id": "COMP001",
+      "title": "全国大学生国际贸易综合技能大赛（合成测试条目）",
+      "application_window": "2026-09 至 2026-11",
+      "status": "verified"
+    },
+    {
+      "competition_id": "COMP002",
+      "title": "未核验竞赛样例",
+      "application_window": null,
+      "status": "unverified"
+    }
+  ],
+  "credit_rules": [
+    {
+      "rule_id": "CR001",
+      "school": "上海对外经贸大学",
+      "enrollment_year": 2023,
+      "category": "创新创业",
+      "valid_from": "2026-01-01",
+      "valid_to": "2026-12-31",
+      "cap": "2",
+      "status": "verified"
+    },
+    {
+      "rule_id": "CR002",
+      "school": "上海对外经贸大学",
+      "enrollment_year": 2023,
+      "category": "未核验学分规则",
+      "valid_from": null,
+      "valid_to": null,
+      "cap": "4",
+      "status": "unverified"
+    }
+  ],
+  "direction_requirements": [
+    {
+      "requirement_id": "REQ001",
+      "direction_id": "trade_supply_chain",
+      "skill_id": "skill_trade_practice",
+      "skill_label": "国际贸易实务",
+      "requirement_level": "required",
+      "status": "verified"
+    },
+    {
+      "requirement_id": "REQ002",
+      "direction_id": "trade_supply_chain",
+      "skill_id": "skill_excel",
+      "skill_label": "Excel 数据处理",
+      "requirement_level": "preferred",
+      "status": "verified"
+    },
+    {
+      "requirement_id": "REQ003",
+      "direction_id": "trade_supply_chain",
+      "skill_id": "skill_unverified",
+      "skill_label": "未核验能力要求",
+      "requirement_level": "required",
+      "status": "unverified"
+    }
+  ],
+  "requirement_actions": [
+    {
+      "requirement_id": "REQ001",
+      "action_id": "act-read-trade",
+      "mapping_status": "verified"
+    },
+    {
+      "requirement_id": "REQ002",
+      "action_id": "act-excel",
+      "mapping_status": "suggested"
+    }
+  ]
+}

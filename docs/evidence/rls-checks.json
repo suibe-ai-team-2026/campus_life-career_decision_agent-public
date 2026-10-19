@@ -1,0 +1,60 @@
+{
+  "executed_at": "2026-10-19T20:32+08:00",
+  "project_ref": "cvohcdzfscoxytmpbwsk",
+  "checks": [
+    {
+      "check": "anon SELECT app_runs",
+      "result": "HTTP 200, [] (RLS denies rows)",
+      "expected": "no rows"
+    },
+    {
+      "check": "anon RPC worker_claim_job",
+      "result": "HTTP 401 permission denied for function",
+      "expected": "denied"
+    },
+    {
+      "check": "anon SELECT app_private.jobs via PostgREST",
+      "result": "HTTP 404 PGRST205 (schema not exposed)",
+      "expected": "not exposed"
+    },
+    {
+      "check": "anon SELECT app_profiles",
+      "result": "HTTP 200, []",
+      "expected": "no rows"
+    },
+    {
+      "check": "anon SELECT app_sources",
+      "result": "HTTP 200, []",
+      "expected": "no rows"
+    },
+    {
+      "check": "anon SELECT app_directions",
+      "result": "HTTP 200, 6 rows",
+      "expected": "public catalog readable"
+    },
+    {
+      "check": "B reads A profile/run via BFF",
+      "result": "404 resource_not_found",
+      "expected": "404"
+    },
+    {
+      "check": "service key",
+      "result": "server/worker only; repository secret scan no matches",
+      "expected": "not in client"
+    }
+  ],
+  "storage_buckets": [
+    {
+      "id": "career-source-files",
+      "public": false
+    },
+    {
+      "id": "career-artifacts",
+      "public": false
+    }
+  ],
+  "notes": [
+    "匿名登录已开启，BFF 将其 JWT 视为 authenticated；RLS 仍按 auth.uid() 隔离",
+    "不向匿名用户开放表直接读写；仅目录/测评为公开只读策略"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "executed_at": "2026-10-19T20:51+08:00",
+  "vm_id": "vm-7f674dd9ed5d422b880f5bec7fe9f734",
+  "action": "sudo docker compose restart (container only)",
+  "observed": [
+    "worker_stopped worker_id=36b9e3579932-1-9682b6",
+    "worker_started worker_id=36b9e3579932-1-dfd395",
+    "container healthy after restart"
+  ],
+  "post_restart_job": "private upload ingest run 01b52e37-84e4-4982-9131-749d5c4233a3 succeeded in 7.07s",
+  "not_tested": [
+    "full VM reboot",
+    "lease-expiry mid-task fencing demo",
+    "multi-worker failover"
+  ],
+  "notes": [
+    "worker uses docker compose restart: unless-stopped; single VM is demo deployment, not HA",
+    "old worker fencing is enforced by worker_id+lease_epoch in SQL, but no forced stale-worker test was run"
+  ]
+}

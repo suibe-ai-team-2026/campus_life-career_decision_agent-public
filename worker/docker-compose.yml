@@ -1,0 +1,52 @@
+# 知途（Campus Pathway）worker · docker compose 部署示例
+#
+# - restart: unless-stopped：VM 重启/进程崩溃后自动恢复；
+# - 不映射任何公网端口：worker 只主动 claim Supabase 队列（pull 模型）；
+# - env_file 指向宿主机的密钥文件（chmod 600，仅部署用户可读），文件不进仓库。
+#
+# 用法：
+#   sudo install -d -m 700 /etc/campus-pathway
+#   sudo install -m 600 worker.env.example /etc/campus-pathway/worker.env
+#   sudoedit /etc/campus-pathway/worker.env      # 填真实值
+#   docker compose up -d --build
+#   docker compose logs -f worker
+
+services:
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PREWARM_DOCLING: "0"
+        # Demo: pypdf fallback keeps the image small. Set to "1" for Docling.
+        INSTALL_DOCLING: "0"
+    image: campus-pathway-worker:local
+    container_name: campus-pathway-worker
+    restart: unless-stopped
+    env_file:
+      - /etc/campus-pathway/worker.env
+    environment:
+      # 模型缓存落在命名卷里，容器重建不重复下载。
+      HF_HOME: /home/worker/.cache/huggingface
+      DOCLING_CACHE_DIR: /home/worker/.cache/docling
+      WORKER_LOG_LEVEL: INFO
+    volumes:
+      - docling-cache:/home/worker/.cache
+    # 无需 ports；不要打开任何入站端口。
+    stop_grace_period: 90s
+    healthcheck:
+      test: ["CMD", "python", "-m", "app.runtime.worker", "--check"]
+      interval: 60s
+      timeout: 20s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "5"
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  docling-cache:

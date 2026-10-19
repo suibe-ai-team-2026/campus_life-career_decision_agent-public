@@ -1,0 +1,132 @@
+{
+  "migrations": [
+    {
+      "version": "20261019000100",
+      "name": "20261019000100_career_cloud_tables"
+    },
+    {
+      "version": "20261019000200",
+      "name": "20261019000200_career_cloud_rls"
+    },
+    {
+      "version": "20261019000300",
+      "name": "20261019000300_career_cloud_functions"
+    },
+    {
+      "version": "20261019000400",
+      "name": "20261019000400_career_cloud_storage"
+    },
+    {
+      "version": "20261019000500",
+      "name": "20261019000500_career_cloud_private_sources"
+    },
+    {
+      "version": "20261019000600",
+      "name": "20261019000600_fix_worker_function_ambiguity"
+    },
+    {
+      "version": "20261019000700",
+      "name": "20261019000700_fix_save_plan_version_id"
+    }
+  ],
+  "counts": [
+    {
+      "directions": 6,
+      "assessments": 1,
+      "sources": 351,
+      "source_versions": 351,
+      "records": 243,
+      "requirements": 115,
+      "aliases": 250,
+      "chunks": 764,
+      "embeddings": 764,
+      "import_batches": 1,
+      "profiles": 4,
+      "plans": 5,
+      "runs": 11,
+      "auth_users": 7
+    }
+  ],
+  "rls": [
+    {
+      "tables": 24,
+      "with_rls": 24
+    }
+  ],
+  "policies": [
+    {
+      "n": 33
+    }
+  ],
+  "buckets": [
+    {
+      "id": "career-artifacts",
+      "public": false
+    },
+    {
+      "id": "career-source-files",
+      "public": false
+    }
+  ],
+  "extensions": [
+    {
+      "extname": "pg_trgm"
+    },
+    {
+      "extname": "pgcrypto"
+    },
+    {
+      "extname": "vector"
+    }
+  ],
+  "import_batch": [
+    {
+      "batch_id": "career-cloud-import-20261019-c11625d6fa97",
+      "status": "succeeded",
+      "counts": {
+        "aliases": 250,
+        "sources": 319,
+        "documents": 34,
+        "directions": 6,
+        "assessments": 1,
+        "pilot_metrics": 7,
+        "pilot_sources": 2,
+        "source_versions": 319,
+        "evidence_records": 243,
+        "direction_requirements": 115,
+        "evidence_records_by_type": {
+          "job": 28,
+          "destination": 15,
+          "social_case": 85,
+          "research_claim": 26,
+          "municipal_metric": 17,
+          "official_observation": 57,
+          "graduate_case_or_aggregate": 15
+        },
+        "source_versions_file_hash": 47,
+        "source_versions_reference_hash": 272,
+        "direction_requirements_by_level": {
+          "required": 57,
+          "mentioned": 54,
+          "preferred": 4
+        },
+        "direction_requirements_by_direction": {
+          "data_business": 22,
+          "public_service": 36,
+          "finance_accounting": 27,
+          "trade_supply_chain": 30
+        }
+      },
+      "finished_at": "2026-10-19 11:58:00.372+00"
+    }
+  ],
+  "active_profile": [
+    {
+      "profile_id": "career-qwen3-embedding-8b-4096-career-qwen-v1",
+      "provider": "openrouter",
+      "model": "qwen/qwen3-embedding-8b",
+      "dimensions": 4096,
+      "status": "active"
+    }
+  ]
+}

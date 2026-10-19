@@ -1,113 +1,93 @@
-# 知途（Campus Pathway）· 校园 AI 知识库助手
+# 知途（Campus Pathway）· 纯生涯规划版
 
-> **比赛主项目仓库**。赛事：首届「数字赋能经贸，智创未来校园」AI 创新应用大赛。
+> 比赛主项目仓库。赛事：首届「数字赋能经贸，智创未来校园」AI 创新应用大赛。
 > 团队：Organization `suibe-ai-team-2026`（秦翰 @turtojian520、吴迪仪 @Jade-soleil、彭烨 @cactusye79）。
-> 选题与决策以工作空间仓库 [`ai-agent-competition-2026`](https://github.com/suibe-ai-team-2026/ai-agent-competition-2026) 为准。
->
-> 产品名 **知途（Campus Pathway）** 由团队 2026-10-18 确定，取代此前文档中的「Genote / 生思笔记」作为**比赛版对外名称**；仓库 slug 为 `campus_life-career_decision_agent`。
+> 产品名 **知途（Campus Pathway）** 由团队 2026-10-18 确定；仓库 slug 为 `campus_life-career_decision_agent`。
 
-## 仓库定位
+当前分支 `feat/career-cloud-wizard` 实现用户明确要求的**纯生涯规划版本**：五步向导（定位 → 自我探索 → 方向认知 → 暂定方向 → 行动方案 → 导出分享），复用既有研究资料，采用 Next.js/Vercel + Supabase + Freestyle worker + OpenRouter 云端架构。范围登记见 [`docs/adr/0001-career-cloud-wizard-scope.md`](docs/adr/0001-career-cloud-wizard-scope.md)。
 
-本仓库由个人项目 **Genote（面向考研 / 考公学生的 AI 学习助手）** fork 而来，现作为团队的比赛主项目使用。**Genote 是 fork 上游的原产品名称，仅在描述来源与历史时保留**；本仓库代表的产品是知途。两者**产品方向并不相同**：
-
-| 维度 | Genote 原产品 | 比赛版 |
-|---|---|---|
-| 产品定位 | 面向考研 / 考公学生的 AI 学习助手 SaaS | 通用校园 AI 知识库助手（办公 + 知识库 + RAG + 生成，生涯规划为模块） |
-| 目标用户 | 备考学生 | 大一大二学生与校园用户 |
-| 技术底座 | Open Notebook（Next.js + FastAPI + SurrealDB + Docker） | Next.js（Vercel）+ Supabase + Python Deep Agents / LangGraph + Freestyle VM |
-| 商业模式 | 月度订阅 | 比赛 MVP 不接入支付 |
-
-比赛版**复用** Genote 的原型界面、RAG 引用交互与 PRD 方法，但**不直接沿用**考研 / 考公的 C 端定位与订阅模式。逐项映射见 [比赛版对齐说明](docs/product-alignment.md)。
-
-## 当前状态
+## 当前状态（2026-10-19）
 
 | 项 | 状态 | 说明 |
 |---|---|---|
-| UI 原型 | 可用 | `prototype/`，React 18 + Babel CDN 单页，需联网 |
-| PRD | v0.1 + 比赛版裁剪 | 见 `PRD_v0.1.md` 的「0.1 比赛版范围裁剪」 |
-| 产品实现 | 未开始 | 待按共识技术底座搭建 |
-| 部署 | 未部署 | 尚无正式演示地址 |
-| 许可证 | 未授予 | 私有仓库，待团队与学校要求确认 |
+| 五步向导前端 | 已实现 | Next.js 16 App Router + React 19 + TypeScript；本地进度、跳过、方向切换、方案调整、导出空态 |
+| BFF | 已实现 | 同源 API：画像、run 提交/轮询/取消、方案、来源、PDF 签名下载、健康检查 |
+| 数据库/RLS | 已应用并验证 | Supabase 项目 `cvohcdzfscoxytmpbwsk`（org `suibeAIproductcompe`，us-east-2）：7 个迁移、24 表全部 RLS、33 policy、2 私有 bucket；数据已导入 |
+| Freestyle worker | 已部署并跑通 | VM `vm-7f674dd9ed5d422b880f5bec7fe9f734` / `campus-pathway-worker-dev`；plan/ask/export 均 succeeded；单 worker，无公网端口 |
+| 数据导入 | 已 apply | 319 来源 / 243 记录 / 115 要求 / 250 aliases / pilot 2+7；另有 32 个 corpus-only 来源，764 chunks/embeddings |
+| 模型探针 | 已通过 | `qwen/qwen3-embedding-8b` 返回 4096 维、有限、L2 norm=1；chat `deepseek/deepseek-chat` 可用 |
+| 云端部署 | Preview 已上线 | Vercel Hobby 项目 `campus_life-career_decision_agent`；Preview 链接见 `docs/evidence/preview-smoke.json`；未主动部署生产域名 |
+| 旧 `prototype/` | 归档参考 | 不再是产品入口；保留只读历史，避免破坏团队资产 |
 
-## 快速开始
+## 快速开始（本地）
 
-### 1. 打开 UI 原型（最快）
-
-原型是静态文件，但 `.jsx` 由 Babel 通过 XHR 加载，`file://` 会被浏览器拦截，**必须经 HTTP 访问**；同时需联网加载 unpkg 的 React / Babel 与 Google Fonts。
-
-```bash
-cd prototype
-python3 -m http.server 5500 --bind 127.0.0.1
-# 浏览器打开 http://127.0.0.1:5500/
-```
-
-### 2. 运行 Open Notebook 参考实现（非比赛主线）
-
-`open-notebook-genote` 分支是 Genote 原产品基于 Open Notebook 的实现，作为**可复用参考**保留；比赛版技术底座以团队决策为准。
+需要 Node.js 22+。用户无需安装 Docker。
 
 ```bash
-git clone --single-branch --branch open-notebook-genote https://github.com/suibe-ai-team-2026/campus_life-career_decision_agent.git open-notebook
-cd open-notebook
-docker compose up -d          # 访问 http://localhost:8502
-```
-
-手动启动前端开发：
-
-```bash
-cd open-notebook/frontend
 npm install
-npm run dev
+cp .env.example .env.local   # 或从受保护文件注入；真实密钥不要提交
+npm run dev                  # http://127.0.0.1:3000
+npm run check                # typecheck + lint + vitest + production build
 ```
 
-`open-notebook/` 是独立 Git 工作树，已在 `.gitignore` 中忽略，不提交到本仓库 `main` 分支。
+未配置 `NEXT_PUBLIC_SUPABASE_*` 时是本地演示模式：前四步与导出空态可用，云端生成/上传/PDF 明确禁用，不伪造结果。
+
+配置了 Supabase 后，本地联调：
+
+```bash
+npm run dev -- -H 127.0.0.1 -p 3100
+```
+
+Python worker（本机默认 Python 3.14，必须用 3.12）：
+
+```bash
+cd worker
+UV_CACHE_DIR=/tmp/uv-cache uv sync --python 3.12 --extra dev
+UV_CACHE_DIR=/tmp/uv-cache uv run --python 3.12 pytest -q
+UV_CACHE_DIR=/tmp/uv-cache uv run --python 3.12 python -m app.runtime.worker --check
+```
 
 ## 目录
 
 | 位置 | 用途 |
 |---|---|
-| `prototype/` | UI 原型（React 18 + CDN Babel），可直接静态托管 |
-| `docs/product-alignment.md` | 比赛版对齐说明：可复用 / 需改造 / 不采用 |
-| `PRD_v0.1.md` | 需求文档；含比赛版范围裁剪章节 |
-| `PRODUCT_CONTEXT.md` | 技术上下文与架构说明（fork 上游的原始实现） |
-| `AGENTS.md` | 协作与 Agent 操作约束 |
+| `src/app/` | 首页、五步路由、工具区、BFF API routes |
+| `src/components/wizard/` | 五步交互、方向对比、方案、来源/引用卡 |
+| `src/lib/contracts/` | Zod DTO 与错误码（前后端共享） |
+| `src/lib/supabase/` | browser / server 用户态 / server-only admin |
+| `src/lib/runs/` | 幂等、所有权校验、预算/限流 |
+| `worker/` | Python 3.12 worker：队列、解析、embedding、检索、规则、PDF |
+| `supabase/migrations/` | 表、RLS、函数/队列、Storage 策略 |
+| `scripts/` | 研究导入、corpus 构建、模型探针、smoke |
+| `data/import/` | 导入 manifest 与产品种子；生成物 gitignored |
+| `docs/` | ADR、架构、权限/安全、数据字典、部署、验收 |
+| `prototype/` | 旧 Genote/比赛初期 UI 原型，仅历史参考 |
 
-## Genote 原功能与比赛版去向
+## 数据边界（必须保留）
 
-| Genote 原功能 | 比赛版处理 |
-|---|---|
-| 学习库驾驶舱（考研倒计时、签到、学习指标） | 改造：换成校园学习 / 资料场景，去掉考研倒计时类文案 |
-| 闪卡复习（SM-2 间隔重复） | 保留：对应共识中的「学习 Studio」闪卡 |
-| 专注模式（三档切换） | 保留：通用 UI 能力 |
-| 视频时间戳同步问答 | 保留：长视频学习场景 |
-| ⌘K 命令面板 | 保留：全局搜索与 AI 提问入口 |
-| RAG 聊天 / 来源引用（Open Notebook） | 参考：按共识架构重写「只用所选资料 + 引用」的问答 |
-| 订阅计费（Stripe） | 暂缓：比赛 MVP 不接入支付 |
-| 生涯规划 | 新增：原型中没有，按 v2 三段式探索漏斗新做 |
+- `unified-2026-10-19`：319 来源、243 条分类记录、115 条招聘要求、34 文件引用；**不是 243 名毕业生**。
+- 17/600 精确同专业证据格不代表其余格为零，也不代表全矩阵已完成逐格检索。
+- 32 份培养方案 PDF 只有原件/目录，**不等于**结构化课程、学期与先修表；缺数据时 `credits=null`、返回 `data_unavailable`，不编造。
+- `docs/product-v2.md` 的约 5% 通过率、薪资、英语门槛等是未核证提案，禁止进入生产事实库。
+- AI 三个不：不替用户做决定、不替用户算数、不编造；规则引擎管确定性计算，LLM 只解释。
 
-## Genote 原架构（参考）
+## 文档
 
-基于 **Open Notebook**（23k+ stars，MIT）扩展：学习库、闪卡复习、专注模式、视频时间戳、暖琥珀暗色主题；Open Notebook 原有的 RAG 聊天、播客生成、内容转换、多模型切换保留。完整说明见 [`PRODUCT_CONTEXT.md`](PRODUCT_CONTEXT.md)。比赛版不沿用其 Docker 自托管形态与 SurrealDB 数据层。
+- 架构与契约：[docs/architecture/overview.md](docs/architecture/overview.md)、[contracts.md](docs/architecture/contracts.md)、[database.md](docs/architecture/database.md)
+- 权限与密钥：[docs/architecture/security.md](docs/architecture/security.md)
+- 部署 Runbook：[docs/deployment.md](docs/deployment.md)
+- 验收清单：[docs/acceptance.md](docs/acceptance.md)
+- 资源归属：[docs/team-infrastructure.md](docs/team-infrastructure.md)
+- 导入记录与数据字典：[docs/import-record.md](docs/import-record.md)、[docs/data-dictionary.md](docs/data-dictionary.md)
+- 团队工作空间：[`suibe-ai-team-2026/ai-agent-competition-2026`](https://github.com/suibe-ai-team-2026/ai-agent-competition-2026)
 
 ## 团队与协作
 
-| 姓名 | GitHub | 年级 / 专业 | 仓库角色 |
-|---|---|---|---|
-| 秦翰 | @turtojian520 | 大三 / 国际经济与贸易（全英） | Organization Admin、仓库 Admin |
-| 吴迪仪 | @Jade-soleil | 大一 / 国际经济与贸易 | developers，Write |
-| 彭烨 | @cactusye79 | 研一 / 旅游管理 | developers，Write |
-
-- 仓库保持**私有**，权限由 Organization `developers` 团队控制。
-- 会议记录、选题决策与申报材料在 [`ai-agent-competition-2026`](https://github.com/suibe-ai-team-2026/ai-agent-competition-2026)，本仓库只负责产品原型与实现。
-- 短期任务分支（`feat/`、`fix/`、`docs/`）通过 PR 合并到 `main`；不保留个人长期分支。
-- 不提交 `.env`、密钥、真实学生数据和未授权课程材料。
-
-## 相关文档
-
-- 比赛版对齐说明：[`docs/product-alignment.md`](docs/product-alignment.md)
-- 团队工作空间：[`suibe-ai-team-2026/ai-agent-competition-2026`](https://github.com/suibe-ai-team-2026/ai-agent-competition-2026)
-- 选题决策：`docs/discovery/decision.md`（工作空间仓库内）
-- 会议记录：`docs/meetings/2026-10-15-选题确定.md`（工作空间仓库内）
+- 仓库保持私有；比赛主项目。公开只读副本用于 Vercel Hobby 部署，不含 Issues/PR/Secrets。
+- 短期任务分支（`feat/`、`fix/`、`docs/`）通过 PR 合并到 `main`。
+- 不提交 `.env`、密钥、真实学生数据和未授权课程材料；`prototype/` 不需要构建步骤。
+- 用户只需浏览器；不依赖 Docker 或本地 Python 服务即可访问前端。
 
 ## License
 
-当前**未授予开源许可证**。仓库为私有；是否开源、采用何种许可，待团队确认学校与第三方资源要求后决定。知途参考的 Open Notebook 项目本身采用 MIT 许可，但本仓库不是它的发行版。
+当前未授予开源许可证。参考的 Open Notebook 项目为 MIT，本仓库不是其发行版。
