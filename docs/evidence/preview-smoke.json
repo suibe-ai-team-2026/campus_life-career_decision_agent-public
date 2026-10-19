@@ -1,6 +1,6 @@
 {
-  "executed_at": "2026-10-19T20:24+08:00",
-  "deployment": "https://campuslife-careerdecisionagent-cohh1bb6t-turtojian520s-projects.vercel.app",
+  "executed_at": "2026-10-19T20:32+08:00",
+  "deployment": "https://campuslife-careerdecisionagent-pfbcligxt-turtojian520s-projects.vercel.app",
   "environment": "preview",
   "project": "turtojian520s-projects/campus_life-career_decision_agent",
   "health_http": 200,
@@ -14,5 +14,7 @@
   "catalog_mode": "database",
   "catalog_http": 200,
   "deployment_protection": "Vercel Authentication enabled; owner can open, public viewers need bypass/login",
-  "note": "首次 Vercel 部署被平台自动分配为 production；之后显式 --target preview 生成预览部署，未主动推广生产域名"
+  "note": "首次 Vercel 部署被平台自动分配为 production；之后显式 --target preview 生成预览部署，未主动推广生产域名",
+  "home_cloud_mode": true,
+  "home_note": "Preview 首页标题与云端模式正常；未出现本地演示模式横幅（早期 404 页面缓存除外）"
 }
