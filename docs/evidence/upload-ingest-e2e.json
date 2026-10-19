@@ -1,0 +1,43 @@
+{
+  "executed_at": "2026-10-19T20:52:24+0800",
+  "base": "http://127.0.0.1:3100",
+  "source_id": "user_b719dbd2-8367-4817-b6b4-be7f03dcd592",
+  "source_version_id": "6700b817-8fc6-4ffc-858d-7c59ac67969b",
+  "signed_upload_http": 200,
+  "ingest_run": {
+    "run_id": "01b52e37-84e4-4982-9131-749d5c4233a3",
+    "status": "succeeded",
+    "seconds": 7.07,
+    "error_code": null
+  },
+  "ask_run": {
+    "status": "succeeded",
+    "seconds": 13.11,
+    "error_code": null
+  },
+  "answer": "国际贸易实务课程为 3 学分，计划在第 3 学期开课 [1]。",
+  "citations": [
+    {
+      "citation_no": 1,
+      "source_id": "user_b719dbd2-8367-4817-b6b4-be7f03dcd592",
+      "source_version_id": "6700b817-8fc6-4ffc-858d-7c59ac67969b",
+      "title": "E2E 私有上传测试",
+      "locator": {
+        "kind": "line_range",
+        "line_end": 4,
+        "line_start": 1,
+        "block_types": [
+          "paragraph"
+        ],
+        "token_estimate": 77,
+        "token_estimator_version": "career-cjk-estimator-v1"
+      }
+    }
+  ],
+  "private_source_cited": true,
+  "notes": [
+    "源文件与版本是测试用户私有数据；worker 用 service key 下载，BFF 用用户会话创建 run。",
+    "answer 只允许引用 allowlist source_version_ids；shared corpus 不会混入该问题的引用。",
+    "该测试文件是合成样例，不是正式培养方案；测试后可删除 source 级联清理。"
+  ]
+}

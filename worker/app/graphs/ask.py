@@ -130,6 +130,36 @@ def build_ask_graph(ctx: JobContext):
         boundary = parsed.boundary_note or prompt_validate.build_boundary_note(
             question, gate_version=retrieval.gate.version
         )
+        if parsed.no_evidence and retrieval.gate.passed and retrieval.gate.dense_top >= 0.70 and retrieval.gate.keyword_overlap >= 5 and len(retrieval.evidence) >= 3:
+            # The model occasionally reports no_evidence even though high-scoring
+            # evidence exists (e.g. an exact official rate chunk). Retry once with
+            # an explicit coverage hint instead of silently discarding the sources.
+            retry_messages = [
+                *messages,
+                {
+                    "role": "user",
+                    "content": (
+                        "补充核对要求：以上证据中确实存在与问题相关的内容（例如 [1]）。"
+                        "请先逐条核对证据，只回答证据明确写出的部分；"
+                        "只有证据完全没有覆盖问题时才把 no_evidence 设为 true。"
+                    ),
+                },
+            ]
+            try:
+                parsed_retry, reasons_retry = generate_validated_json(
+                    ctx,
+                    retry_messages,
+                    operation="chat_ask_coverage_retry",
+                    validator=validator,
+                    max_attempts=1,
+                )
+                if not parsed_retry.no_evidence:
+                    parsed = parsed_retry
+                    reasons = reasons_retry
+            except (OutputValidationError, ModelOutputInvalid):
+                # Keep the original refusal if the retry is still invalid.
+                pass
+
         if parsed.no_evidence:
             # The model may set no_evidence=true while still giving a useful partial
             # answer that cites evidence ("only 2022 data is available"). If every

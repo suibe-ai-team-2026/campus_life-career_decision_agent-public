@@ -1,0 +1,889 @@
+{
+  "executed_at": "2026-10-19T20:50:10+0800",
+  "base": "http://127.0.0.1:3100",
+  "questions": 38,
+  "succeeded": 38,
+  "failed": 0,
+  "expected_answer": 31,
+  "expected_refuse": 7,
+  "answered": 31,
+  "refused": 7,
+  "source_hit": 20,
+  "source_hit_rate": 0.526,
+  "false_refusal": 7,
+  "missed_refusal": 7,
+  "citation_count_total": 146,
+  "latency_ms": {
+    "avg": 16867.2,
+    "p50": 13143,
+    "p95": 33477
+  },
+  "notes": [
+    "旧 PR #7 的 38/38 只是该 PR 快照的回归数字，不作为本版准确率或 SLA 承诺。",
+    "expected_source_hit 只验证引用 source_id 是否命中，不等于人工确认引用支持关系。",
+    "未做 10 条人工引用支持关系抽检时，本报告不宣称事实准确性。"
+  ],
+  "rows": [
+    {
+      "id": "E01",
+      "category": "evidence",
+      "question": "上海交通大学2022届本科毕业生的毕业去向落实率是多少？统计的毕业生有多少人？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "src_ee2d22bde33899ffd198c5bb"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 7,
+      "citation_source_ids": [
+        "src_201de99acf92d27c6a0001f8",
+        "src_a5bd186ee5a641557d85572c",
+        "src_b1c6d6809a383156ae7dd6cf",
+        "src_ee2d22bde33899ffd198c5bb",
+        "src_research_synthesis_shanghai_decade"
+      ],
+      "expected_source_hit": true,
+      "min_citations_met": true,
+      "answer": "上海交通大学2022届本科毕业生的毕业去向落实率为95.6%，统计的毕业生有3928人[1][3]。",
+      "boundary_note": "统计日为2022-11-30，含医学院全日制学生",
+      "latency_ms": 17562
+    },
+    {
+      "id": "E02",
+      "category": "evidence",
+      "question": "上海大学2020届本科毕业生的就业率是多少？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "src_a54714c64b40a258fa6b0f6e"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 6,
+      "citation_source_ids": [
+        "src_1de4a18e9fa22095abd1865b",
+        "src_201de99acf92d27c6a0001f8",
+        "src_a54714c64b40a258fa6b0f6e",
+        "src_f95f68cb42ab6468f0cf7e21"
+      ],
+      "expected_source_hit": true,
+      "min_citations_met": true,
+      "answer": "上海大学2020届本科毕业生的就业率为92.26%，统计日为2020-10-25，分母为4626人[4]。",
+      "boundary_note": "统计口径含升学，国内博士后归直接就业，与2018/2019分类不同。",
+      "latency_ms": 15702
+    },
+    {
+      "id": "E03",
+      "category": "evidence",
+      "question": "上海科技大学信息学院2023届博士毕业生有多少人？毕业去向落实率是多少？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "src_2490f5ba29d4b76c3fe43fa7"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 6,
+      "citation_source_ids": [
+        "src_2490f5ba29d4b76c3fe43fa7",
+        "src_a54714c64b40a258fa6b0f6e",
+        "src_b1c6d6809a383156ae7dd6cf",
+        "src_research_synthesis_shanghai_decade"
+      ],
+      "expected_source_hit": true,
+      "min_citations_met": true,
+      "answer": "上海科技大学信息学院2023届博士毕业生人数为45人，毕业去向落实率为100%[1]。",
+      "boundary_note": "统计截止日为2023-06-20，院系汇总数据",
+      "latency_ms": 9667
+    },
+    {
+      "id": "E04",
+      "category": "evidence",
+      "question": "上海立信会计金融学院2024届硕士毕业去向落实率是多少？对应多少毕业生？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "src_067b2be1c9f57180ca31036e"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 8,
+      "citation_source_ids": [
+        "src_067b2be1c9f57180ca31036e",
+        "src_7cee69bdfd1a45aa4ed39390",
+        "src_968e33cc85292b1089768201"
+      ],
+      "expected_source_hit": true,
+      "min_citations_met": true,
+      "answer": "上海立信会计金融学院2024届硕士毕业去向落实率为98.87%，对应毕业生人数为177人[1][2]。",
+      "boundary_note": "统计截止日为2024-08-28，包含升学等已落实去向。",
+      "latency_ms": 12635
+    },
+    {
+      "id": "E05",
+      "category": "evidence",
+      "question": "上海外国语大学2023届国际经济与贸易本科专业，签约就业、境外升学和考取研究生各有多少人？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "src_d80b13314147715303fde351"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 4,
+      "citation_source_ids": [
+        "src_d80b13314147715303fde351",
+        "src_suibe_employment_report_2016b"
+      ],
+      "expected_source_hit": true,
+      "min_citations_met": true,
+      "answer": "上海外国语大学2023届国际经济与贸易本科专业：签约就业17人，境外升学10人，考取研究生9人[1]。",
+      "boundary_note": "统计截止2023-09-30，分母49人；分专业签约数不等于全部落实人数",
+      "latency_ms": 9718
+    },
+    {
+      "id": "E06",
+      "category": "evidence",
+      "question": "2025届应用统计专硕的毕业生案例里，那位同学最终去了哪家公司、做什么岗位？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "src_34c6ac5166602c03b9f4c0d9"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 7,
+      "citation_source_ids": [
+        "src_13699bb5c5cccb75b9b283e6",
+        "src_34c6ac5166602c03b9f4c0d9",
+        "src_3c13ef7bcd285a2d47f37a06",
+        "src_4e510992725b0e897f37b53c",
+        "src_suibe_employment_report_2015"
+      ],
+      "expected_source_hit": true,
+      "min_citations_met": true,
+      "answer": "根据现有资料，2025届应用统计专硕毕业生案例中：1. 一位同学入职中海石油财务有限责任公司，但岗位未披露[1]；2. 另一位同学入职快手科技，担任多模态大模型算法工程师[2]。",
+      "boundary_note": "资料仅覆盖上海财经大学个案，未提及其他院校案例",
+      "latency_ms": 12594
+    },
+    {
+      "id": "E07",
+      "category": "evidence",
+      "question": "上海电力大学2018届电气工程及其自动化本科的就业率和统计人数是多少？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "src_5d4ffb8e619b25e4b13ae2fa"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 7,
+      "citation_source_ids": [
+        "src_1de4a18e9fa22095abd1865b",
+        "src_52bf62d992ae14b63febd2b3",
+        "src_5d4ffb8e619b25e4b13ae2fa",
+        "src_968e33cc85292b1089768201"
+      ],
+      "expected_source_hit": true,
+      "min_citations_met": true,
+      "answer": "上海电力大学2018届电气工程及其自动化本科的就业率为98.23%，统计人数为282人[1]。",
+      "boundary_note": "统计日为2018-09-01，就业率包含升学等去向",
+      "latency_ms": 10976
+    },
+    {
+      "id": "E08",
+      "category": "evidence",
+      "question": "上海工程技术大学2025届本科毕业去向落实率是多少？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "src_7cee69bdfd1a45aa4ed39390"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": true,
+      "citation_count": 0,
+      "citation_source_ids": [],
+      "expected_source_hit": false,
+      "min_citations_met": false,
+      "answer": "资料不足，无法基于已归档资料安全回答这个问题。\n当前语料缺少：2025的官方统计（就业质量报告等）类可核验内容。\n已检索到的最接近资料是《上海工程技术大学2025届就业质量报告》、《上海工程技术大学2023届就业质量报告》，但不足以支撑结论。\n可以把问题限定到具体届别、学校、学历或文件后重试；本轮不会用模型知识补全外部事实。",
+      "boundary_note": "含升学等去向；统计口径以学校原报告为准",
+      "latency_ms": 12759
+    },
+    {
+      "id": "E09",
+      "category": "evidence",
+      "question": "上海大学法学本科2023届的就业率，原文写的是多少？有分项和分母吗？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "src_f95f68cb42ab6468f0cf7e21"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 7,
+      "citation_source_ids": [
+        "src_05794f657bb9205a37f60970",
+        "src_1de4a18e9fa22095abd1865b",
+        "src_52bf62d992ae14b63febd2b3",
+        "src_f95f68cb42ab6468f0cf7e21"
+      ],
+      "expected_source_hit": true,
+      "min_citations_met": true,
+      "answer": "上海大学法学本科2023届就业率为75.49%[1]。原文未提供分项数据和分母[1]。",
+      "boundary_note": "资料未说明统计截止日期及具体去向分项",
+      "latency_ms": 12596
+    },
+    {
+      "id": "E10",
+      "category": "evidence",
+      "question": "沪教委学〔2025〕23号文件对上海高校毕业生就业创业工作强调了哪些方向？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "P2025"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 1,
+      "citation_source_ids": [
+        "src_6b952da9d40ca8377e4639fb"
+      ],
+      "expected_source_hit": false,
+      "min_citations_met": true,
+      "answer": "当前证据中未包含沪教委学〔2025〕23号文件的正文内容，无法提供该文件强调的具体方向[1]。建议通过官方URL核对原文[1]。",
+      "boundary_note": "资料仅登记了文件标题与URL，未收录正文内容",
+      "latency_ms": 12589
+    },
+    {
+      "id": "E11",
+      "category": "evidence",
+      "question": "2017年上海市高校毕业生总量和旧口径就业率分别是多少？直接用工率是多少？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "src_22a1f0f92dd412aa8d714538"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 6,
+      "citation_source_ids": [
+        "src_1de4a18e9fa22095abd1865b",
+        "src_22a1f0f92dd412aa8d714538",
+        "src_52bf62d992ae14b63febd2b3"
+      ],
+      "expected_source_hit": true,
+      "min_citations_met": true,
+      "answer": "2017年上海市高校毕业生总量为174206人[1]。旧口径就业率为96.88%[2]。直接用工率为74.67%[1]。",
+      "boundary_note": "数据统计截止日期为2017-09-01，涵盖全市高校本科、研究生与专科/高职毕业生。",
+      "latency_ms": 15459
+    },
+    {
+      "id": "E12",
+      "category": "evidence",
+      "question": "2018年上海市高校毕业生的直接用工率是多少？和2017年相比变化多少？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "src_52bf62d992ae14b63febd2b3"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": true,
+      "citation_count": 0,
+      "citation_source_ids": [],
+      "expected_source_hit": false,
+      "min_citations_met": false,
+      "answer": "资料不足，无法基于已归档资料安全回答这个问题。\n当前语料缺少：能直接支持该问题的已归档资料。\n已检索到的最接近资料是《2018年上海市高校毕业生就业质量年度报告》、《2017年上海市高校毕业生就业质量年度报告》，但不足以支撑结论。\n可以把问题限定到具体届别、学校、学历或文件后重试；本轮不会用模型知识补全外部事实。",
+      "boundary_note": "统计口径为全市高校含本科、研究生与专科/高职，统计日分别为2017-09-01和2018-09-01",
+      "latency_ms": 15436
+    },
+    {
+      "id": "C01",
+      "category": "cross",
+      "question": "2016届和2025届全国高校毕业生预计规模分别是多少？这十年规模变化说明什么？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "N2016",
+        "N2025"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": true,
+      "citation_count": 0,
+      "citation_source_ids": [],
+      "expected_source_hit": false,
+      "min_citations_met": false,
+      "answer": "资料不足，无法基于已归档资料安全回答这个问题。\n当前语料缺少：2016、2025的能直接支持该问题的已归档资料。\n已检索到的最接近资料是《上海高校毕业去向十年观察 · 研究初版》、《2016届全国普通高校毕业生预计规模》，但不足以支撑结论。\n可以把问题限定到具体届别、学校、学历或文件后重试；本轮不会用模型知识补全外部事实。",
+      "boundary_note": "数据来自教育部官方预计规模，部分原页访问失败需进一步核验",
+      "latency_ms": 9915
+    },
+    {
+      "id": "C02",
+      "category": "cross",
+      "question": "同为2022届，上海交通大学和上海师范大学的本科毕业去向落实率各是多少？差距能说明两校就业谁更好吗？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "src_b1c6d6809a383156ae7dd6cf",
+        "src_ee2d22bde33899ffd198c5bb"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": true,
+      "citation_count": 0,
+      "citation_source_ids": [],
+      "expected_source_hit": false,
+      "min_citations_met": false,
+      "answer": "资料不足，无法基于已归档资料安全回答这个问题。\n当前语料缺少：2022的官方统计（就业质量报告等）类可核验内容。\n已检索到的最接近资料是《上海师范大学2022届就业质量报告》、《上海师范大学2022届就业质量报告》，但不足以支撑结论。\n可以把问题限定到具体届别、学校、学历或文件后重试；本轮不会用模型知识补全外部事实。",
+      "boundary_note": "两校统计均含升学；交大含医学院数据，师大含师范特色专业",
+      "latency_ms": 12782
+    },
+    {
+      "id": "C03",
+      "category": "cross",
+      "question": "上海工程技术大学2023届和2025届本科毕业去向落实率、制造业就业占比和在沪就业占比各是多少？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "src_7cee69bdfd1a45aa4ed39390",
+        "src_968e33cc85292b1089768201"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 4,
+      "citation_source_ids": [
+        "src_7cee69bdfd1a45aa4ed39390",
+        "src_968e33cc85292b1089768201"
+      ],
+      "expected_source_hit": true,
+      "min_citations_met": true,
+      "answer": "1. 2023届本科毕业去向落实率：机械工程98.4%[1]，数据科学与大数据技术98.53%[邻近块]，电气工程及其自动化98.36%[2]，自动化100%[邻近块]，计算机科学与技术96.94%[3]，财务管理95.38%[邻近块]。\n2. 2025届本科毕业去向落实率：全校各专业97.48%[4]。\n3. 资料中未提及2023届和2025届制造业就业占比及在沪就业占比的具体数据。",
+      "boundary_note": "2023届数据为各专业单独统计，2025届为全校汇总；制造业和在沪就业占比无数据。",
+      "latency_ms": 24142
+    },
+    {
+      "id": "C04",
+      "category": "cross",
+      "question": "2025届全国高校毕业生预计有多少人？同年上海的高校毕业生就业创业政策强调什么？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "N2025",
+        "P2025"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 2,
+      "citation_source_ids": [
+        "src_6b952da9d40ca8377e4639fb",
+        "src_b3b7ce8afb74c8ed07e2c0ba"
+      ],
+      "expected_source_hit": false,
+      "min_citations_met": true,
+      "answer": "1. 2025届全国普通高校毕业生预计规模见教育部页面[6]，但当前证据未提供具体数字。需核对原URL。2. 上海2025年政策强调内容见沪教委学〔2025〕23号文件[1]，但当前证据仅登记来源标题，未提供正文细节。需核对原URL。",
+      "boundary_note": "需核对教育部2025届预计规模原文及上海2025政策文件正文",
+      "latency_ms": 18871
+    },
+    {
+      "id": "C05",
+      "category": "cross",
+      "question": "上海大学2020届本科就业率是多少？2020届全国高校毕业生预计规模有多大？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "N2020",
+        "src_a54714c64b40a258fa6b0f6e"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 1,
+      "citation_source_ids": [
+        "src_research_synthesis_shanghai_decade"
+      ],
+      "expected_source_hit": false,
+      "min_citations_met": false,
+      "answer": "2020届全国高校毕业生预计规模为874万[2]。上海大学2020届本科就业率资料不足，无法提供具体数字。",
+      "boundary_note": "资料未提供上海大学2020届本科就业率的具体数字",
+      "latency_ms": 19094
+    },
+    {
+      "id": "C06",
+      "category": "cross",
+      "question": "2023届和2024届的高校毕业生就业部署各强调什么？对准备竞赛和实习有什么启发？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "P01",
+        "P02",
+        "P2023"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 2,
+      "citation_source_ids": [
+        "src_47d7e161d94c8eef0b0fc88a",
+        "src_research_synthesis_shanghai_decade"
+      ],
+      "expected_source_hit": false,
+      "min_citations_met": true,
+      "answer": "2023届和2024届高校毕业生就业部署的具体内容未在证据中详细说明，资料缺口为具体政策细节[1][2]。建议关注职业规划大赛和校企实习机会，这些活动可能有助于提升就业竞争力[1]。",
+      "boundary_note": "资料未提供2023届和2024届就业部署的具体政策细节",
+      "latency_ms": 18331
+    },
+    {
+      "id": "A01",
+      "category": "action",
+      "question": "从上海对外经贸大学财务管理毕业生曾获事务所offer的案例看，会计或审计方向应该怎样准备可展示的作品和实习记录？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "file:web/plans/m04.md",
+        "file:web/plans/m06.md",
+        "src_ac11ab659e693003fd7bed2b"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 4,
+      "citation_source_ids": [
+        "src_28c305134294af08b1792274",
+        "src_ac11ab659e693003fd7bed2b",
+        "src_research_synthesis_boss_market"
+      ],
+      "expected_source_hit": true,
+      "min_citations_met": true,
+      "answer": "1. 根据2024届财务管理毕业生案例，审计方向需展示审计执行、证据核验、沟通与按时交付能力[1]。2. 当前审计实习岗位普遍要求办公软件、沟通协作等基础技能，部分优先相关实习[2]。3. 可准备审计程序练习、底稿/报告表达作为能力证据[2]。4. 资料未提及具体作品形式（如报告模板/案例分析），需进一步核验。",
+      "boundary_note": "案例为2024届个案；招聘快照为2026年10月上海样本",
+      "latency_ms": 12847
+    },
+    {
+      "id": "A02",
+      "category": "action",
+      "question": "上海财经大学法律（法学）硕士去厦门港务做法务的案例，说明法学方向可以怎样准备实践和作品？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "file:web/plans/m07.md",
+        "src_7dfca3fcdf76f9be8167ff8e"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 11,
+      "citation_source_ids": [
+        "src_23229a836c9f03df533c24eb",
+        "src_323df95798b8ddc77cd8e5e2",
+        "src_7dfca3fcdf76f9be8167ff8e",
+        "src_8ea0233932a7ef2e97d16ac7",
+        "src_ab1055888c55a5f2c375001b",
+        "src_b312ae0a941fda5f7e67703b",
+        "src_b4404e1241df33c34a32cdd2",
+        "src_f95f68cb42ab6468f0cf7e21",
+        "src_plan_suggestion_m07"
+      ],
+      "expected_source_hit": true,
+      "min_citations_met": true,
+      "answer": "1. 上海财经大学2025届法律（法学）硕士有去厦门港务做法务的案例，涉及案例分析、法律文书、团队驻场沟通能力[1]。2. 法学方向准备实践和作品可参考四步执行：核对JD、选择实践形式、完成作品并记录、请导师评阅[2]。3. 硕士阶段需补研究方法、问题拆解与业务交付能力[2]。",
+      "boundary_note": "案例为2025届个案，能力准备路线为建议非录用数据",
+      "latency_ms": 15446
+    },
+    {
+      "id": "A03",
+      "category": "action",
+      "question": "上海财经大学应用统计专硕转向多模态算法岗的案例，对数据或算法方向的自学与作品准备有什么启发？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "file:web/plans/m11.md",
+        "file:web/plans/m12.md",
+        "src_34c6ac5166602c03b9f4c0d9"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 7,
+      "citation_source_ids": [
+        "src_34c6ac5166602c03b9f4c0d9",
+        "src_3c13ef7bcd285a2d47f37a06",
+        "src_4a2679e1fb1600bff79dee6d",
+        "src_plan_suggestion_m11",
+        "src_plan_suggestion_m12",
+        "src_research_synthesis_shanghai_decade"
+      ],
+      "expected_source_hit": true,
+      "min_citations_met": true,
+      "answer": "上海财经大学2025届应用统计专硕毕业生成功转向多模态算法岗的案例表明，自学与作品准备应注重以下方面：1. 统计建模、数据清洗、代码工程、业务分析和实验复现能力是关键[1][2]。2. 建议完成可复现的实验作品，记录消融与失败案例[3]。3. 作品应展示个人贡献、方法、错误和结果，并确保可复现步骤[3][4]。4. 请导师或面试方评阅作品，并根据反馈修改准备路线[3][4]。",
+      "boundary_note": "案例为2025届上海财经大学应用统计专硕毕业生，不能代表总体算法岗位门槛。",
+      "latency_ms": 20415
+    },
+    {
+      "id": "A04",
+      "category": "action",
+      "question": "上海外国语大学2023届国际经济与贸易本科签约就业17人，这个专业的同学可以准备哪些外贸业务作品？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "file:web/plans/m03.md",
+        "src_d80b13314147715303fde351"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": true,
+      "citation_count": 0,
+      "citation_source_ids": [],
+      "expected_source_hit": false,
+      "min_citations_met": false,
+      "answer": "资料不足，无法基于已归档资料安全回答这个问题。\n当前语料缺少：2023的能直接支持该问题的已归档资料。\n已检索到的最接近资料是《国际经济与贸易 · 能力准备路线》、《外贸业务员》，但不足以支撑结论。\n可以把问题限定到具体届别、学校、学历或文件后重试；本轮不会用模型知识补全外部事实。",
+      "boundary_note": "建议作品类型基于岗位JD归纳，未核验2023届毕业生实际使用情况",
+      "latency_ms": 9973
+    },
+    {
+      "id": "A05",
+      "category": "action",
+      "question": "上海工程技术大学有计算机和数据类专业的官方去向统计，结合能力路线，本科同学应该准备哪些可展示成果？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "file:web/plans/m09.md",
+        "file:web/plans/m10.md",
+        "file:web/plans/m11.md",
+        "src_968e33cc85292b1089768201"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 7,
+      "citation_source_ids": [
+        "src_968e33cc85292b1089768201",
+        "src_plan_suggestion_m09",
+        "src_plan_suggestion_m10",
+        "src_plan_suggestion_m11",
+        "src_plan_suggestion_m13"
+      ],
+      "expected_source_hit": true,
+      "min_citations_met": true,
+      "answer": "1. 计算机科学与技术专业2023届本科毕业去向落实率96.94%[1]，数据科学与大数据技术专业98.53%[4]。2. 计算机类建议准备：可运行项目、测试与问题排查说明[2]。3. 数据类建议准备：含数据字典、分析过程和误差的项目[3]。4. 资料未提供具体就业单位分布或岗位类型数据。",
+      "boundary_note": "仅含2023届本科去向率，不含细分岗位/升学去向/薪资数据",
+      "latency_ms": 13143
+    },
+    {
+      "id": "A06",
+      "category": "action",
+      "question": "2024届MPAcc公司财务方向的毕业生有的去国企、有的去蚂蚁集团，财会硕士应该怎样比较这两类路径并准备作品？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "file:web/plans/m05.md",
+        "file:web/plans/m06.md",
+        "src_e441725775a6336c3ae09e00"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": true,
+      "citation_count": 0,
+      "citation_source_ids": [],
+      "expected_source_hit": false,
+      "min_citations_met": false,
+      "answer": "资料不足，无法基于已归档资料安全回答这个问题。\n当前语料缺少：2024的能直接支持该问题的已归档资料。\n已检索到的最接近资料是《2024届MPAcc毕业生故事⑤》、《2024届MPAcc毕业生故事⑤》，但不足以支撑结论。\n可以把问题限定到具体届别、学校、学历或文件后重试；本轮不会用模型知识补全外部事实。",
+      "boundary_note": "资料仅涵盖2024届上海财经大学MPAcc公司财务方向的个别案例，未提供总体比例或详细岗位信息。",
+      "latency_ms": 33477
+    },
+    {
+      "id": "B01",
+      "category": "boundary",
+      "question": "上海交通大学2022届本科95.60%的毕业去向落实率，是否等同于就业率？其中就业和深造各占多少？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "src_ee2d22bde33899ffd198c5bb"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": true,
+      "citation_count": 0,
+      "citation_source_ids": [],
+      "expected_source_hit": false,
+      "min_citations_met": false,
+      "answer": "资料不足，无法基于已归档资料安全回答这个问题。\n当前语料缺少：2022的官方统计（就业质量报告等）类可核验内容。\n已检索到的最接近资料是《上海交通大学2022届就业质量报告》、《上海交通大学2022届就业质量报告》，但不足以支撑结论。\n可以把问题限定到具体届别、学校、学历或文件后重试；本轮不会用模型知识补全外部事实。",
+      "boundary_note": "数据统计截止2022-11-30，全日制全校含医学院",
+      "latency_ms": 33037
+    },
+    {
+      "id": "B02",
+      "category": "boundary",
+      "question": "上海大学2020届本科就业率92.26%和2019届99.34%，能直接比较并说成下降吗？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "src_05794f657bb9205a37f60970",
+        "src_a54714c64b40a258fa6b0f6e"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 6,
+      "citation_source_ids": [
+        "src_05794f657bb9205a37f60970",
+        "src_1de4a18e9fa22095abd1865b",
+        "src_a54714c64b40a258fa6b0f6e"
+      ],
+      "expected_source_hit": true,
+      "min_citations_met": true,
+      "answer": "不能直接比较。2020届就业率统计日为2020-10-25，2019届为2019-08-25，统计时点不同[4][5]。此外，2020届国内博士后归直接就业，2019届归深造，口径不一致[4][5]。",
+      "boundary_note": "统计时点和口径差异影响直接比较",
+      "latency_ms": 35680
+    },
+    {
+      "id": "B03",
+      "category": "boundary",
+      "question": "上海立信会计金融学院2024届硕士98.87%能代表审计学本科的就业情况吗？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "src_067b2be1c9f57180ca31036e"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 5,
+      "citation_source_ids": [
+        "src_067b2be1c9f57180ca31036e",
+        "src_plan_suggestion_m06",
+        "src_research_synthesis_shanghai_decade"
+      ],
+      "expected_source_hit": true,
+      "min_citations_met": true,
+      "answer": "不能代表。证据显示：1. 2024届审计专硕去向落实率98.87%[1]，本科全校落实率96.28%[3]；2. 审计专硕与本科审计学数据未合并统计[4]；3. 资料未提供本科审计学单独数据[4]。",
+      "boundary_note": "统计含升学；本科审计学无单独数据",
+      "latency_ms": 36712
+    },
+    {
+      "id": "B04",
+      "category": "boundary",
+      "question": "上海科技大学信息学院2023届本科92%的落实率，能当作人工智能专业的就业率吗？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "src_2490f5ba29d4b76c3fe43fa7"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 1,
+      "citation_source_ids": [
+        "src_2490f5ba29d4b76c3fe43fa7"
+      ],
+      "expected_source_hit": true,
+      "min_citations_met": true,
+      "answer": "不能。上海科技大学信息学院2023届本科92%的落实率是院系汇总数据，不能单独代表人工智能专业的就业率[1]。资料中未提供人工智能专业的具体落实率，存在资料缺口。",
+      "boundary_note": "资料仅提供院系汇总数据，未细分到人工智能专业",
+      "latency_ms": 21763
+    },
+    {
+      "id": "B05",
+      "category": "boundary",
+      "question": "上海电力大学2018届电气工程及其自动化本科98.23%这个数字，能和其他学校电气专业直接比较吗？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "src_5d4ffb8e619b25e4b13ae2fa"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 6,
+      "citation_source_ids": [
+        "src_1de4a18e9fa22095abd1865b",
+        "src_5d4ffb8e619b25e4b13ae2fa",
+        "src_968e33cc85292b1089768201",
+        "src_plan_suggestion_m15"
+      ],
+      "expected_source_hit": true,
+      "min_citations_met": true,
+      "answer": "上海电力大学2018届电气工程及其自动化本科就业率为98.23%，包含升学等已落实去向[1]。由于不同学校的统计口径、届别、专业样本等存在差异，不能直接与其他学校电气专业比较[1][5]。",
+      "boundary_note": "资料仅涵盖2018届上海电力大学电气工程及其自动化本科就业率，未提供其他学校同届同专业数据。",
+      "latency_ms": 24215
+    },
+    {
+      "id": "B06",
+      "category": "boundary",
+      "question": "上海工程技术大学2023届96.92%和2025届97.48%的本科落实率，能连成全市就业趋势吗？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "src_7cee69bdfd1a45aa4ed39390",
+        "src_968e33cc85292b1089768201"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 2,
+      "citation_source_ids": [
+        "src_7cee69bdfd1a45aa4ed39390",
+        "src_968e33cc85292b1089768201"
+      ],
+      "expected_source_hit": true,
+      "min_citations_met": true,
+      "answer": "上海工程技术大学2023届和2025届本科毕业去向落实率分别为96.92%和97.48%，但这些数据仅代表该校的本科毕业生情况，不能直接推断为全市就业趋势[1][4]。资料中缺少其他高校的就业数据，无法进行全市范围的比较。",
+      "boundary_note": "资料仅涵盖上海工程技术大学2023届和2025届本科毕业生，未包含其他高校数据。",
+      "latency_ms": 15603
+    },
+    {
+      "id": "B07",
+      "category": "boundary",
+      "question": "上海外国语大学2023届会计学本科签约就业25人，能结合立信2024届硕士98.87%推断会计本科就业率吗？",
+      "expected_behavior": "answer",
+      "expected_source_ids": [
+        "src_067b2be1c9f57180ca31036e",
+        "src_d80b13314147715303fde351"
+      ],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 4,
+      "citation_source_ids": [
+        "src_067b2be1c9f57180ca31036e",
+        "src_d80b13314147715303fde351"
+      ],
+      "expected_source_hit": true,
+      "min_citations_met": true,
+      "answer": "无法推断。证据显示：1. 上外2023届会计学本科签约就业25人，分母67人[1]；2. 立信2024届硕士落实率98.87%[2][4][6]，但该校硕士均为审计专硕且样本仅177人。两校专业、学历层次、统计年份均不同，无直接可比性。",
+      "boundary_note": "缺少上外会计学本科整体落实率数据及立信本科会计专业单独数据",
+      "latency_ms": 12549
+    },
+    {
+      "id": "R01",
+      "category": "refusal",
+      "question": "上海高校计算机专业2025届就业率排名前十的是哪些学校？",
+      "expected_behavior": "refuse",
+      "expected_source_ids": [],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 2,
+      "citation_source_ids": [
+        "src_research_synthesis_shanghai_decade",
+        "src_research_synthesis_shanghai_official"
+      ],
+      "expected_source_hit": false,
+      "min_citations_met": true,
+      "answer": "资料不足，无法提供2025届上海高校计算机专业就业率排名前十的学校名单。现有证据仅包含部分高校的目录核验状态和全市层面的就业率数据，未涉及具体专业的就业率排名[1][2]。",
+      "boundary_note": "资料覆盖2016-2025届，但未包含计算机专业分校就业率数据",
+      "latency_ms": 9667
+    },
+    {
+      "id": "R02",
+      "category": "refusal",
+      "question": "上海交通大学计算机科学与技术专业2022届本科的精确就业率是多少？",
+      "expected_behavior": "refuse",
+      "expected_source_ids": [],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 3,
+      "citation_source_ids": [
+        "src_ee2d22bde33899ffd198c5bb"
+      ],
+      "expected_source_hit": false,
+      "min_citations_met": true,
+      "answer": "资料中未提供上海交通大学计算机科学与技术专业2022届本科的精确就业率数据[1][2][3]。现有数据仅包含全校本科整体就业占比（28.26%）和毕业去向落实率（95.6%）[1][3]。",
+      "boundary_note": "统计截止2022-11-30，含医学院全日制数据",
+      "latency_ms": 12847
+    },
+    {
+      "id": "R03",
+      "category": "refusal",
+      "question": "2026届上海高校毕业生的平均起薪是多少？",
+      "expected_behavior": "refuse",
+      "expected_source_ids": [],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 4,
+      "citation_source_ids": [
+        "src_22a1f0f92dd412aa8d714538",
+        "src_52bf62d992ae14b63febd2b3",
+        "src_6b952da9d40ca8377e4639fb",
+        "src_suibe_employment_report_2016a"
+      ],
+      "expected_source_hit": false,
+      "min_citations_met": true,
+      "answer": "资料中未提供2026届上海高校毕业生的平均起薪数据[1][2][3][4]。",
+      "boundary_note": "资料仅涵盖2016、2017和2018届数据，未涉及2026届。",
+      "latency_ms": 18809
+    },
+    {
+      "id": "R04",
+      "category": "refusal",
+      "question": "上海对外经贸大学法学专业2025届有多少人进了红圈所？",
+      "expected_behavior": "refuse",
+      "expected_source_ids": [],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 2,
+      "citation_source_ids": [
+        "src_7dfca3fcdf76f9be8167ff8e",
+        "src_suibe_employment_report_2022"
+      ],
+      "expected_source_hit": false,
+      "min_citations_met": true,
+      "answer": "现有资料未提及上海对外经贸大学法学专业2025届进入红圈所的具体人数[1][2]。就业质量报告仅列出2022届部分企业名单且未区分专业[1]，2025届法律硕士案例为上海财经大学个案[2]。",
+      "boundary_note": "2022届报告未区分法学专业去向；2025届案例为上海财经大学非红圈所个案",
+      "latency_ms": 9989
+    },
+    {
+      "id": "R05",
+      "category": "refusal",
+      "question": "我是双非本科，报考上海市公务员能加几分？有哪些岗位可以报？",
+      "expected_behavior": "refuse",
+      "expected_source_ids": [],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 8,
+      "citation_source_ids": [
+        "src_05794f657bb9205a37f60970",
+        "src_22a1f0f92dd412aa8d714538",
+        "src_4e510992725b0e897f37b53c",
+        "src_52bf62d992ae14b63febd2b3",
+        "src_6b952da9d40ca8377e4639fb",
+        "src_b3df928bba3b0e727a398a10",
+        "src_cb57c63ca3c27c794fe760de",
+        "src_suibe_employment_report_2020"
+      ],
+      "expected_source_hit": false,
+      "min_citations_met": true,
+      "answer": "资料中未提及双非本科报考上海市公务员的加分政策或具体岗位清单[1][2][3][4][5][6][7][8]。需查阅2025年上海市公务员招考公告或咨询招录单位获取最新细则。",
+      "boundary_note": "证据覆盖2017-2020年就业报告及2025年政策标题，未包含公务员招录细则",
+      "latency_ms": 13064
+    },
+    {
+      "id": "R06",
+      "category": "refusal",
+      "question": "帮我预测一下我考上上海财经大学MPAcc的概率有多大？",
+      "expected_behavior": "refuse",
+      "expected_source_ids": [],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 4,
+      "citation_source_ids": [
+        "src_8480471976a8b7693c2bcc4a",
+        "src_e441725775a6336c3ae09e00"
+      ],
+      "expected_source_hit": false,
+      "min_citations_met": true,
+      "answer": "当前资料中未提供上海财经大学MPAcc的录取率或报考人数数据，无法计算或预测具体概率[1][2][3][4]。建议查阅该校官方发布的招生简章或联系招生办获取准确信息。",
+      "boundary_note": "资料仅含2024届毕业生个案，无报考/录取基数或选拔规则",
+      "latency_ms": 12562
+    },
+    {
+      "id": "R07",
+      "category": "refusal",
+      "question": "上海工程技术大学2026届本科毕业去向落实率是多少？",
+      "expected_behavior": "refuse",
+      "expected_source_ids": [],
+      "status": "succeeded",
+      "error_code": null,
+      "refusal": false,
+      "citation_count": 2,
+      "citation_source_ids": [
+        "src_7cee69bdfd1a45aa4ed39390",
+        "src_968e33cc85292b1089768201"
+      ],
+      "expected_source_hit": false,
+      "min_citations_met": true,
+      "answer": "资料中未提供上海工程技术大学2026届本科毕业去向落实率的具体数据。现有证据仅涵盖2023届和2025届的数据[1][4]。",
+      "boundary_note": "资料仅涵盖2023届和2025届，未涉及2026届数据。",
+      "latency_ms": 18328
+    }
+  ]
+}
