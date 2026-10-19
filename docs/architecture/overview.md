@@ -19,7 +19,7 @@ Vercel / Next.js App Router（BFF：JWT、Zod、所有权、限流、签名地�
   │ Supabase Auth JWT + 用户态 server client（RLS 生效）
 Supabase（Postgres + pgvector + Auth + 私有 Storage + jobs 队列表）
   │ worker 主动 claim（不向公网开放 Python 端口）
-Freestyle 云端 worker（LangGraph 固定流程；Docling；OpenRouter Qwen3 Embedding 8B；DeepSeek 官方 V4.1 Flash chat；PDF）
+Freestyle 云端 worker（LangGraph 固定流程；Docling；OpenRouter Qwen3 Embedding 8B；DeepSeek 官方 V4.1 Flash chat；空闲自动 pause；PDF）
 ```
 
 - 浏览器只拿 Supabase URL + publishable key；service/secret key 只在 BFF 与 worker。

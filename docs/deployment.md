@@ -169,5 +169,5 @@ npx tsx scripts/smoke.ts
 1. Supabase 迁移/导入/匿名 Auth 已完成并验证；项目为 Free 计划、单项目，未建 dev/prod 分离。
 2. OpenRouter 探针通过；索引 profile `career-qwen3-embedding-8b-4096-career-qwen-v1` 已 active。
 3. Vercel Preview 已部署且有 Vercel Authentication 保护；正式生产部署、域名、Git 自动部署未完成（GitHub App 对 org 安装需要 GitHub sudo 模式，当前未完成）。
-4. Freestyle worker 单 VM 已跑通；空闲 60 秒自动 `pause`，BFF 在提交 run/上传时调用 `/start` 唤醒；pause 只计存储，不计 vCPU/内存。VM 重启恢复/断点续跑/多 worker HA 未验证。
+4. Freestyle worker 单 VM 已跑通；空闲 60 秒自动 `pause`，BFF 在提交 run/上传时先检查 VM 状态，若 paused 则 `/start` 并 `exec-await` 重启 worker 容器（清除旧 idle clock）；pause 只计存储，不计 vCPU/内存。VM 重启恢复/断点续跑/多 worker HA 未验证。
 5. 课程/竞赛/学分结构化资料缺失 → Step 4 规则闭环返回 `data_unavailable` + 核对任务；RAG 仅做小样本回归，未做完整题集与 10 条人工引用抽检。

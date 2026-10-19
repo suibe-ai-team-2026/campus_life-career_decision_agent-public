@@ -11,10 +11,13 @@
   "wake_api": "POST https://api.freestyle.sh/v5/vms/{id}/start",
   "wake_test": {
     "bff_response": "worker_wake=started",
+    "sequence": "VM state paused -> BFF GET /v5/vms/{id} -> POST /start -> POST /exec-await \"sudo -n docker restart campus-pathway-worker\" -> run claimed",
+    "run_id": "34e2d58c-c62d-4a89-a67d-69f8e45679f6",
     "run_status": "succeeded",
-    "answer_citations": 1
+    "answer_citations": 1,
+    "note": "只 start 不 restart 时，旧进程可能带着 stale idle clock 立即再次 pause；因此唤醒时显式重启 worker 容器。"
   },
-  "billing_note": "按 Freestyle 官方 Pricing：paused VM 不保留 compute reservation，只计 storage；Free 计划每月 60,000 GiB-hour storage 包含量，32GB 常驻远低于额度，因此暂停时实际 $0。",
+  "billing_note": "按 Freestyle 官方 Pricing：paused VM 不保留 compute reservation，只计 storage；Free 每月 60,000 GiB-hour storage 包含量，32GB 常驻远低于额度。",
   "logs": [
     "worker_idle_pause_requested",
     "freestyle_pause_connection_closed/failed after freeze (expected; pause still took effect)",
