@@ -1,7 +1,22 @@
 {
-  "executed_at": "2026-10-19T23:26+08:00",
-  "event": "GitHub org installed Vercel app (installation id 173078061) and `vercel git connect` reports the public repo is already connected",
+  "executed_at": "2026-10-19T23:27+08:00",
+  "github_app": {
+    "app": "vercel",
+    "installation_id": 173078061,
+    "organization": "suibe-ai-team-2026",
+    "repository_selection": "all"
+  },
   "repo": "suibe-ai-team-2026/campus_life-career_decision_agent-public",
   "production_branch": "main",
-  "verification": "waiting for a push-triggered deployment; this file itself is the trigger commit"
+  "trigger_commit": "0f31523",
+  "deployment": {
+    "id": "dpl_5ZypCFTLv2We5A9ZYSC6DNHAxuxg",
+    "url": "https://campuslife-careerdecisionagent-mkyvdkob6-turtojian520s-projects.vercel.app",
+    "target": "production",
+    "status": "Ready",
+    "git_alias": "https://campuslife-careerdecisionagent-git-main-turtojian520s-projects.vercel.app",
+    "production_alias": "https://campuslife-careerdecisionagent.vercel.app"
+  },
+  "verification": "push to public main triggered an automatic Production deployment; production health returned HTTP 200",
+  "protection": "Standard Protection: production is public, preview remains behind Vercel Authentication"
 }
