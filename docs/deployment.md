@@ -1,6 +1,6 @@
 # 部署与运维 Runbook
 
-状态：**2026-10-19 已执行迁移、数据导入、匿名 Auth、Freestyle worker 与 Vercel Production；公开地址 https://campuslife-careerdecisionagent.vercel.app 。** 用户无需安装 Docker；本机无 Docker/Postgres，Supabase 迁移通过 Management API 的事务执行（详见 `docs/evidence/migration-apply.json`）。
+状态：**2026-10-20 已执行迁移、数据导入、匿名 Auth、Freestyle worker 与 Vercel Production；公开主地址 https://zhitu.quest （旧地址 https://campuslife-careerdecisionagent.vercel.app 保留）。** 用户无需安装 Docker；本机无 Docker/Postgres，Supabase 迁移通过 Management API 的事务执行（详见 `docs/evidence/migration-apply.json`）。
 
 ## 0. 资源与前置确认
 
@@ -8,7 +8,7 @@
 |---|---|---|
 | GitHub | `suibe-ai-team-2026/campus_life-career_decision_agent`，分支 `feat/career-cloud-wizard` | 已创建分支/提交 |
 | Supabase | org `suibeAIproductcompe` / 项目 `cvohcdzfscoxytmpbwsk`（campus_life-career_decision_agent，Free，us-east-2） | 已应用 7 个迁移、导入数据、启用匿名 Auth |
-| Vercel | 个人 Hobby 项目 `turtojian520s-projects/campus_life-career_decision_agent`，源码为本地同 commit；Preview 已部署 | 已部署 Preview；production 域名未主动推广 |
+| Vercel | 个人 Hobby 项目 `turtojian520s-projects/campus_life-career_decision_agent`，源码为本地同 commit；Preview 已部署 | Production 已上线 https://zhitu.quest；Preview 受 Vercel Authentication 保护 |
 | Freestyle | 个人账号 VM `campus-pathway-worker-dev`（`vm-7f674dd9ed5d422b880f5bec7fe9f734`） | 已创建并运行 worker 容器（healthy） |
 | OpenRouter | 仅 embedding：`qwen/qwen3-embedding-8b` | 真实探针通过（`docs/evidence/model-probe.json`） |
 | DeepSeek 官方 | chat：`deepseek-flash`（V4.1-Flash），`reasoning_effort=low` | 真实 chat 探针通过；比 OpenRouter 中转的 V3 更省 |
@@ -168,6 +168,6 @@ npx tsx scripts/smoke.ts
 
 1. Supabase 迁移/导入/匿名 Auth 已完成并验证；项目为 Free 计划、单项目，未建 dev/prod 分离。
 2. OpenRouter 探针通过；索引 profile `career-qwen3-embedding-8b-4096-career-qwen-v1` 已 active。
-3. Vercel Preview 已部署且有 Vercel Authentication 保护；正式生产部署、域名、Git 自动部署未完成（GitHub App 对 org 安装需要 GitHub sudo 模式，当前未完成）。
+3. Production 已部署并绑定 `zhitu.quest`（阿里云 DNS A/CNAME，Vercel 自动 HTTPS）；Preview 仍受 Vercel Authentication 保护；Git push 自动部署已验证。
 4. Freestyle worker 单 VM 已跑通；空闲 60 秒自动 `pause`，BFF 在提交 run/上传时先检查 VM 状态，若 paused 则 `/start` 并 `exec-await` 重启 worker 容器（清除旧 idle clock）；pause 只计存储，不计 vCPU/内存。VM 重启恢复/断点续跑/多 worker HA 未验证。
 5. 课程/竞赛/学分结构化资料缺失 → Step 4 规则闭环返回 `data_unavailable` + 核对任务；RAG 仅做小样本回归，未做完整题集与 10 条人工引用抽检。

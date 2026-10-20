@@ -1,0 +1,87 @@
+{
+  "executed_at": "2026-10-20T10:05:00+08:00",
+  "domain": "zhitu.quest",
+  "registrar": "Aliyun / HiChina",
+  "dns_nameservers": [
+    "dns23.hichina.com",
+    "dns24.hichina.com"
+  ],
+  "dns_records": [
+    {
+      "host": "@",
+      "type": "A",
+      "values": ["216.198.79.1", "64.29.17.1"],
+      "ttl_seconds": 600
+    },
+    {
+      "host": "www",
+      "type": "CNAME",
+      "value": "caf4b24e47ed9bdd.vercel-dns-017.com",
+      "ttl_seconds": 600
+    }
+  ],
+  "vercel": {
+    "project": "turtojian520s-projects/campus_life-career_decision_agent",
+    "project_id": "prj_0v2d8wTR3GPHmnRivwLzlPcnrUMY",
+    "apex_verified": true,
+    "apex_misconfigured": false,
+    "www_verified": true,
+    "www_misconfigured": false,
+    "www_redirect": {
+      "location": "https://zhitu.quest/",
+      "status": 308
+    },
+    "production_deployment": "campuslife-careerdecisionagent-elv532lab-turtojian520s-projects.vercel.app",
+    "production_env_updated": {
+      "NEXT_PUBLIC_APP_URL": "https://zhitu.quest"
+    }
+  },
+  "supabase_auth": {
+    "project_ref": "cvohcdzfscoxytmpbwsk",
+    "site_url": "https://zhitu.quest",
+    "uri_allow_list_includes": [
+      "https://zhitu.quest",
+      "https://www.zhitu.quest",
+      "https://campuslife-careerdecisionagent.vercel.app"
+    ]
+  },
+  "verification": {
+    "dns_doh_aliyun": {
+      "apex": ["216.198.79.1", "64.29.17.1"],
+      "www_cname": "caf4b24e47ed9bdd.vercel-dns-017.com."
+    },
+    "https_apex": {
+      "status": 200,
+      "server": "Vercel",
+      "certificate_san": ["zhitu.quest"]
+    },
+    "https_www": {
+      "status": 200,
+      "certificate_san": ["www.zhitu.quest"]
+    },
+    "end_to_end_run": {
+      "run_id": "4c8ed2ef-12ab-43ad-a41a-52013eaf849d",
+      "kind": "ask",
+      "status": "succeeded",
+      "refusal": false,
+      "citations": 1,
+      "worker_wake": "started"
+    },
+    "worker_vm_after_idle": "paused",
+    "mainland_direct_test": {
+      "executed_at": "2026-10-20T10:25:00+08:00",
+      "tester": "用户",
+      "network": "用户设备直连（未挂代理；具体运营商/网络类型未记录）",
+      "result": "passed",
+      "checks": [
+        "打开 https://zhitu.quest 首页正常",
+        "在站内提问并正常返回回答"
+      ]
+    }
+  },
+  "known_limits": [
+    "大陆直连已由用户在 2026-10-20 实测通过；本记录未保存具体运营商/网络类型。",
+    "自定义域名只能降低 vercel.app 被单独封锁的概率；若大陆线路封锁 Vercel IP/跨境路由，仍需香港镜像或国内部署。",
+    "www 与 apex 均已签发证书；www 308 重定向到 apex。"
+  ]
+}
