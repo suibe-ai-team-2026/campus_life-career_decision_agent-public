@@ -2,6 +2,13 @@
 
 状态：**2026-10-20 已执行迁移、数据导入、匿名 Auth、Freestyle worker 与 Vercel Production；公开主地址 https://zhitu.quest （旧地址 https://campuslife-careerdecisionagent.vercel.app 保留）。** 用户无需安装 Docker；本机无 Docker/Postgres，Supabase 迁移通过 Management API 的事务执行（详见 `docs/evidence/migration-apply.json`）。
 
+## 仓库与自动镜像
+
+- **开发/PR 只在私有仓** `suibe-ai-team-2026/campus_life-career_decision_agent` 进行；`main` 更新后，`.github/workflows/mirror-main-to-public.yml` 会自动把同一 commit 推送到 public 镜像仓的 `main`。
+- **public 仓是只读镜像**，不要直接向 public 提交；Vercel 项目监听 public `main` 做生产自动部署。
+- 镜像使用私有仓 Actions secret `PUBLIC_MIRROR_TOKEN`（只授予 public 仓 `Contents: Read and write`）。
+- 注意：如果以后修改 `.github/workflows/*` 本身，mirror token 还需要 public 仓的 `Workflows` 权限；普通代码/文档同步不需要。
+
 ## 0. 资源与前置确认
 
 | 资源 | 建议 | 当前状态 |
