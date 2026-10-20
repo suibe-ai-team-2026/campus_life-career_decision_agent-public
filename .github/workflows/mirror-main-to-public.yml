@@ -1,0 +1,46 @@
+name: mirror-main-to-public
+
+# private 仓是唯一开发仓；本 workflow 在 main 更新后把同一 commit 推到 public 镜像仓。
+# public 仓只读，Vercel 监听 public main 做生产部署。
+# 需要 private 仓 Actions secret: PUBLIC_MIRROR_TOKEN
+# 该 token 只需 public 仓的 Contents: Read and write 权限。
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mirror-main-to-public
+  cancel-in-progress: true
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout private main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Push to public mirror
+        env:
+          PUBLIC_MIRROR_TOKEN: ${{ secrets.PUBLIC_MIRROR_TOKEN }}
+        run: |
+          if [ -z "$PUBLIC_MIRROR_TOKEN" ]; then
+            echo "::error::PUBLIC_MIRROR_TOKEN is not configured"
+            exit 1
+          fi
+
+          git config --global credential.helper store
+          printf 'https://x-access-token:%s@github.com\n' "$PUBLIC_MIRROR_TOKEN" > "$HOME/.git-credentials"
+          chmod 600 "$HOME/.git-credentials"
+
+          git remote add public https://github.com/suibe-ai-team-2026/campus_life-career_decision_agent-public.git
+          git push public HEAD:main
+
+          rm -f "$HOME/.git-credentials"
