@@ -4,6 +4,9 @@ name: mirror-main-to-public
 # public 仓只读，Vercel 监听 public main 做生产部署。
 # 需要 private 仓 Actions secret: PUBLIC_MIRROR_TOKEN
 # 该 token 只需 public 仓的 Contents: Read and write 权限。
+#
+# 本文件会随镜像同步到 public 仓。public 仓没有（也不应保存）该 secret，
+# 因此在 public 仓触发时显式跳过，避免镜像仓出现误报的失败记录。
 
 on:
   push:
@@ -21,13 +24,19 @@ jobs:
   mirror:
     runs-on: ubuntu-latest
     steps:
+      - name: Skip in public mirror repo
+        if: github.repository != 'suibe-ai-team-2026/campus_life-career_decision_agent'
+        run: echo "::notice::public mirror repo detected; mirroring only runs in the private repo. Skipping."
+
       - name: Checkout private main
+        if: github.repository == 'suibe-ai-team-2026/campus_life-career_decision_agent'
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           persist-credentials: false
 
       - name: Push to public mirror
+        if: github.repository == 'suibe-ai-team-2026/campus_life-career_decision_agent'
         env:
           PUBLIC_MIRROR_TOKEN: ${{ secrets.PUBLIC_MIRROR_TOKEN }}
         run: |
