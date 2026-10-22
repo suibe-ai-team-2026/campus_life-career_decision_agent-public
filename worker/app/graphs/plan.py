@@ -12,7 +12,14 @@ from typing import Any, TypedDict
 
 from langgraph.graph import END, START, StateGraph
 
-from ..errors import BadRequest, InvalidProfile, UnsupportedDirection, WorkerError
+from ..errors import (
+    BadRequest,
+    InvalidProfile,
+    OutputValidationError,
+    UnsupportedDirection,
+    WorkerError,
+    redact,
+)
 from ..models import DIRECTION_IDS, PlanInput, PlanResult, citation_payload, plan_result_payload
 from ..prompts import career as prompts
 from ..prompts import validate as prompt_validate
@@ -149,9 +156,23 @@ def build_plan_graph(ctx: JobContext):
                     warnings.append("boundary_note_dropped_number_mismatch")
         except WorkerError as exc:
             # 解释失败不阻塞确定性方案发布：回退为规则事实说明，并记录安全错误码。
-            fallback_reason = getattr(exc, "code", "model_unavailable")
+            # 校验类失败必须与基础设施失败分开：OutputValidationError 的 code 是
+            # internal_error，直接取 code 会把"模型输出越界"误报成"服务内部错误"，
+            # 让用户和日志都无法定位原因。这里按类型分支并记录越界原因。
+            if isinstance(exc, OutputValidationError):
+                fallback_reason = "validation"
+                reasons = [
+                    redact(reason)
+                    for reason in getattr(exc, "reasons", [])
+                    if str(reason).strip()
+                ][:3]
+                ctx.logger.error(
+                    "plan_explanation_invalid reasons=%s", "；".join(reasons) or "unknown"
+                )
+            else:
+                fallback_reason = getattr(exc, "code", "model_unavailable")
+                ctx.logger.error("plan_explanation_failed code=%s", fallback_reason)
             warnings.append(f"plan_explanation_fallback:{fallback_reason}")
-            ctx.logger.error("plan_explanation_failed code=%s", fallback_reason)
         except Exception as exc:  # noqa: BLE001 - 输出校验失败/异常 JSON 都走兜底
             fallback_reason = type(exc).__name__
             warnings.append("plan_explanation_fallback:validation")

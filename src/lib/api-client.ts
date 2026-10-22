@@ -18,7 +18,7 @@ import type { Assessment, DirectionCard } from "@/lib/contracts/catalog";
 import type { Plan, PlanAction, PlanResult } from "@/lib/contracts/plan";
 import type { Profile, ProfileInput } from "@/lib/contracts/profile";
 import type { Citation, Run, RunSubmit } from "@/lib/contracts/run";
-import type { Source } from "@/lib/contracts/source";
+import type { Source, UploadIntent } from "@/lib/contracts/source";
 
 /**
  * Local type for run events. The frozen contracts expose only
@@ -610,6 +610,74 @@ export async function patchPlanAction(
 
 export async function cancelRun(runId: string, signal?: AbortSignal): Promise<void> {
   await envelopeFetch(`/api/runs/${encodeURIComponent(runId)}/cancel`, { method: "POST", body: {}, signal });
+}
+
+/* ------------------------------------------------------------------ */
+/* 用户资料上传（培养方案等）                                          */
+/* ------------------------------------------------------------------ */
+
+export type SourceUploadIntent = {
+  sourceId: string;
+  signedUrl: string;
+  maxBytes: number;
+};
+
+/** 第一步：登记来源并取得 Supabase Storage 签名上传地址。 */
+export async function requestSourceUpload(
+  input: UploadIntent,
+  signal?: AbortSignal
+): Promise<SourceUploadIntent> {
+  const data = await envelopeFetch("/api/sources/upload-intent", {
+    method: "POST",
+    body: input,
+    signal
+  });
+  const record = recordOrEmpty(data);
+  const sourceId = str(record.source_id);
+  const signedUrl = str(record.signed_url);
+  if (!sourceId || !/^https?:\/\//i.test(signedUrl)) throw new ApiError("unexpected_response");
+  const maxBytes = intOrNull(record.max_bytes) ?? 20 * 1024 * 1024;
+  return { sourceId, signedUrl, maxBytes };
+}
+
+/**
+ * 第二步：把文件直接 PUT 到签名地址。这条请求不经过 BFF，因此不走 envelopeFetch；
+ * 失败不携带上游原文，只保留状态码。
+ */
+export async function putSourceFile(signedUrl: string, file: Blob): Promise<void> {
+  let response: Response;
+  try {
+    response = await fetch(signedUrl, {
+      method: "PUT",
+      headers: {
+        "Content-Type": (file as File).type || "application/octet-stream",
+        "cache-control": "3600",
+        "x-upsert": "false"
+      },
+      body: file
+    });
+  } catch {
+    throw new ApiError("network_error");
+  }
+  if (!response.ok) throw new ApiError("internal_error", { status: response.status });
+}
+
+export type SourceUploadComplete = { runId: string; status: string; sourceVersionId: string };
+
+/** 第三步：提交入库，服务端校验 sha256 并创建 ingest run。 */
+export async function completeSourceUpload(
+  input: { source_id: string; declared_sha256: string; title: string; idempotency_key: string },
+  signal?: AbortSignal
+): Promise<SourceUploadComplete> {
+  const data = await envelopeFetch(
+    `/api/sources/${encodeURIComponent(input.source_id)}/complete`,
+    { method: "POST", body: input, signal }
+  );
+  const record = recordOrEmpty(data);
+  const runId = str(record.run_id);
+  const sourceVersionId = str(record.source_version_id);
+  if (!runId || !sourceVersionId) throw new ApiError("unexpected_response");
+  return { runId, status: str(record.status, "queued"), sourceVersionId };
 }
 
 export type ArtifactDownload = { url: string; expiresInSeconds: number | null };

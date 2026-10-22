@@ -147,7 +147,9 @@ def test_plan_graph_discards_out_of_bounds_explanation_and_keeps_facts():
     payload = run_plan(ctx)
     result = payload["result"]
     assert "回退" in (result["explanation"] or "")
-    assert any("plan_explanation_fallback" in warning for warning in result["warnings"])
+    # 越界属于"校验失败"，必须与模型/服务不可用区分开，不能报成 internal_error。
+    assert "plan_explanation_fallback:validation" in result["warnings"]
+    assert not any("internal_error" in warning for warning in result["warnings"])
     # 规则事实不变：没有《量化交易》，学分仍是 5.5
     assert result["credits"] == 5.5
     assert "量化交易" not in json.dumps(result["courses"], ensure_ascii=False)

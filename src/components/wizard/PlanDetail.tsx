@@ -6,6 +6,8 @@ import type { DirectionId } from "@/lib/contracts/common";
 import { PLAN_WINDOW_LABELS, PLAN_WINDOW_ORDER, getDirection, windowLabel } from "@/lib/content";
 import { Badge, Button, Callout, EmptyState, Icon, formatDateTime, formatDate } from "@/components/ui/primitives";
 import { CitationList } from "@/components/ui/CitationCard";
+import { formatPlanWarnings, summarizeDataGaps, summarizeEffort } from "@/lib/plan-display";
+import { SourceUploadPanel } from "@/components/tools/SourceUploadPanel";
 import { ActionCard, type ActionOverrides } from "./PlanActionCard";
 
 export function pickCurrentVersion(plan: Plan | null) {
@@ -109,8 +111,10 @@ export function PlanDetail({
   })).filter((group) => group.actions.length > 0);
 
   const pendingVerification = result.actions.filter((action) => action.status === "pending_verification");
-  const totalEstimatedHours = result.actions.reduce((sum, action) => sum + (action.effort.hours ?? 0), 0);
-  const hasUnknownHours = result.actions.some((action) => action.effort.hours === null);
+  const effort = summarizeEffort(result.actions);
+  const gapSummary = summarizeDataGaps(result.actions);
+  const displayWarnings = formatPlanWarnings(result.warnings);
+  const isDataGapState = result.status === "data_unavailable";
 
   function move(action: PlanAction, directionDelta: -1 | 1) {
     const ids = orderedActions.map((item) => item.action_id);
@@ -164,10 +168,10 @@ export function PlanDetail({
           </div>
           <div className="plan-fact">
             <span className="plan-fact-label">预计投入</span>
-            <span className="plan-fact-value">
-              {result.actions.length === 0 ? "—" : `${Math.round(totalEstimatedHours * 10) / 10} 小时`}
+            <span className={effort.value === "未估算" ? "plan-fact-value is-missing" : "plan-fact-value"}>
+              {effort.value}
             </span>
-            <span className="plan-fact-note">{hasUnknownHours ? "部分行动的工时未知，未计入总数" : "机器估计，可在下方按项修改"}</span>
+            <span className="plan-fact-note">{effort.note}</span>
           </div>
           <div className="plan-fact">
             <span className="plan-fact-label">待核验</span>
@@ -182,18 +186,43 @@ export function PlanDetail({
         </div>
       </section>
 
-      {result.warnings.length > 0 ? (
+      {displayWarnings.length > 0 ? (
         <Callout tone="warn" title="生成时提示">
           <ul className="callout-list">
-            {result.warnings.map((warning) => (
+            {displayWarnings.map((warning) => (
               <li key={warning}>{warning}</li>
             ))}
           </ul>
         </Callout>
       ) : null}
 
-      {result.status !== "ok" ? (
-        <Callout tone={result.status === "unsupported_direction" || result.status === "invalid_profile" ? "danger" : "warn"} title="这是部分结果">
+      {isDataGapState ? (
+        <section className="plan-gap-panel" aria-labelledby="plan-gap-title">
+          <Callout tone="warn" title="这次没有你的专业资料，所以只生成了核对清单">
+            <p>
+              规则引擎只使用已核验的资料。对你填写的学校、专业与年级，当前还没有核验过的培养方案、
+              学分认定规则、竞赛目录与方向要求，因此<strong>不会生成课程和学分数</strong>。
+              下面这 {gapSummary.verifyCount} 项是「去核对什么」，不是「你要上什么课」。
+            </p>
+            {gapSummary.titles.length > 0 ? (
+              <ul className="callout-list">
+                {gapSummary.titles.map((title) => (
+                  <li key={title}>{title}</li>
+                ))}
+              </ul>
+            ) : null}
+            <p>
+              补齐资料后重新生成，才会出现课程、学分与竞赛。核对任务不需要你估工时，
+              如果你也想记录，可以在下方按项填写。
+            </p>
+          </Callout>
+          <SourceUploadPanel />
+        </section>
+      ) : result.status !== "ok" ? (
+        <Callout
+          tone={result.status === "unsupported_direction" || result.status === "invalid_profile" ? "danger" : "warn"}
+          title="这是部分结果"
+        >
           <p>
             方案状态为「{status.label}」：缺失的资料不会被补成虚构数字。请阅读下方数据缺口与待核验项，或在补齐资料后重新生成。
           </p>

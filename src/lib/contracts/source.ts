@@ -37,7 +37,9 @@ export type UploadIntent = z.infer<typeof UploadIntentSchema>;
 
 export const UploadCompleteSchema = z.object({
   source_id: z.string().regex(/^user_[0-9a-f-]{8,}$/),
-  source_version_id: z.string().uuid(),
+  // 服务端按内容 sha256 自行解析或复用版本，不需要客户端提供；
+  // 保留可选字段只为兼容旧调用方，避免客户端被迫编造一个 UUID。
+  source_version_id: z.string().uuid().optional(),
   declared_sha256: z.string().regex(/^[0-9a-f]{64}$/),
   title: z.string().trim().min(1).max(200),
   idempotency_key: z.string().uuid()
