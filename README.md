@@ -14,7 +14,7 @@
 | BFF | 已实现 | 同源 API：画像、run 提交/轮询/取消、方案、来源、PDF 签名下载、健康检查 |
 | 数据库/RLS | 已应用并验证 | Supabase 项目 `cvohcdzfscoxytmpbwsk`（org `suibeAIproductcompe`，us-east-2）：7 个迁移、24 表全部 RLS、33 policy、2 私有 bucket；数据已导入 |
 | Freestyle worker | 已部署并跑通 | VM `vm-7f674dd9ed5d422b880f5bec7fe9f734` / `campus-pathway-worker-dev`；plan/ask/export 均 succeeded；单 worker，无公网端口 |
-| 数据导入 | 已 apply | 319 来源 / 243 记录 / 115 要求 / 250 aliases / pilot 2+7；另有 32 个 corpus-only 来源，764 chunks/embeddings |
+| 数据导入 | 已 apply；corpus v2 | 319 来源 / 243 记录 / 115 要求 / 250 aliases / pilot 2+7；corpus v2（2026-10-22）把 33 份已登记 PDF 全文入库：764 + 974 = 1738 chunks/embeddings（profile `career-qwen3-embedding-8b-4096-career-qwen-v2`），详见 `docs/evidence/pdf-corpus-ingest-2026-10-22.md` |
 | 模型探针 | 已通过 | embedding：OpenRouter `qwen/qwen3-embedding-8b` 4096 维/L2；chat：DeepSeek 官方 `deepseek-flash`（V4.1-Flash，low effort） |
 | 云端部署 | 公开生产站已上线 | https://zhitu.quest （主域名，阿里云 DNS → Vercel；已实测大陆直连可访问并完成站内问答；旧地址 https://campuslife-careerdecisionagent.vercel.app 保留；Git push 自动部署） |
 | 旧 `prototype/` | 归档参考 | 不再是产品入口；保留只读历史，避免破坏团队资产 |
@@ -71,7 +71,7 @@ UV_CACHE_DIR=/tmp/uv-cache uv run --python 3.12 python -m app.runtime.worker --c
 
 - `unified-2026-10-19`：319 来源、243 条分类记录、115 条招聘要求、34 文件引用；**不是 243 名毕业生**。
 - 17/600 精确同专业证据格不代表其余格为零，也不代表全矩阵已完成逐格检索。
-- 32 份培养方案 PDF 只有原件/目录，**不等于**结构化课程、学期与先修表；缺数据时 `credits=null`、返回 `data_unavailable`，不编造。
+- 32 份培养方案 PDF 只有原件/目录，**不等于**结构化课程、学期与先修表；缺数据时 `credits=null`、返回 `data_unavailable`，不编造。2026-10-22 起这些 PDF 的**逐页文本**已进入问答语料（可引用原文与页码），但规则引擎仍不据此填课程/学分/先修结论。
 - `docs/product-v2.md` 的约 5% 通过率、薪资、英语门槛等是未核证提案，禁止进入生产事实库。
 - AI 三个不：不替用户做决定、不替用户算数、不编造；规则引擎管确定性计算，LLM 只解释。
 

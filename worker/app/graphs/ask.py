@@ -105,7 +105,13 @@ def build_ask_graph(ctx: JobContext):
             evidence=retrieval.evidence,
         )
         allowed_urls = [str(item.get("canonical_url") or "") for item in retrieval.evidence if item.get("canonical_url")]
-        evidence_texts = [str(item.get("text") or "") for item in retrieval.evidence]
+        # 数字白名单必须包含 prompt 里实际注入的 context（锚点正文 + 邻近块），
+        # 否则模型合法引用相邻段落里的数字也会被判为越界。
+        evidence_texts = [
+            str(item.get("text") or "") + "\n" + str(item.get("context") or "")
+            for item in retrieval.evidence
+        ]
+        last_parsed: dict[str, Any] = {}
 
         def validator(raw: str):
             parsed = prompt_validate.parse_ask_output(
@@ -114,14 +120,32 @@ def build_ask_graph(ctx: JobContext):
                 evidence_texts=evidence_texts,
                 allowed_urls=allowed_urls,
             )
-            new_reasons = list(parsed.validation_reasons)
-            return parsed, new_reasons
+            last_parsed["value"] = parsed
+            if parsed.validation_reasons:
+                # 交给 generate_validated_json 带反馈重试；仍不合规时由调用方决定
+                # 硬拒（编造引用编号）还是降级（数字/引用格式瑕疵）。
+                raise OutputValidationError("模型输出未通过校验", reasons=list(parsed.validation_reasons))
+            return parsed, []
 
+        soft_note = ""
         try:
-            parsed, reasons = generate_validated_json(
+            parsed, _reasons = generate_validated_json(
                 ctx, messages, operation="chat_ask", validator=validator, max_attempts=2
             )
-        except (OutputValidationError, ModelOutputInvalid):
+        except OutputValidationError as exc:
+            fallback = last_parsed.get("value")
+            hard_failures = [reason for reason in exc.reasons if reason.startswith("invalid_citation_numbers")]
+            if fallback is None or hard_failures or not str(fallback.answer or "").strip():
+                answer = prompt_validate.build_refusal_text(
+                    question, evidence=retrieval.evidence, reason="invalid_model_output"
+                )
+                boundary = prompt_validate.build_boundary_note(question, gate_version=retrieval.gate.version)
+                ctx.emit("validating", 82)
+                return {"result": _refusal_payload(answer, "explanation_discarded", boundary_note=boundary)}
+            # 校验瑕疵降级：保留有证据支撑的回答，只提示需人工核对，不再整段丢弃。
+            parsed = fallback
+            soft_note = "校验提示：个别数字或引用标注未与证据逐字一致，请以引用卡原文为准。"
+        except ModelOutputInvalid:
             answer = prompt_validate.build_refusal_text(question, evidence=retrieval.evidence, reason="invalid_model_output")
             boundary = prompt_validate.build_boundary_note(question, gate_version=retrieval.gate.version)
             ctx.emit("validating", 82)
@@ -146,7 +170,7 @@ def build_ask_graph(ctx: JobContext):
                 },
             ]
             try:
-                parsed_retry, reasons_retry = generate_validated_json(
+                parsed_retry, _ = generate_validated_json(
                     ctx,
                     retry_messages,
                     operation="chat_ask_coverage_retry",
@@ -155,8 +179,17 @@ def build_ask_graph(ctx: JobContext):
                 )
                 if not parsed_retry.no_evidence:
                     parsed = parsed_retry
-                    reasons = reasons_retry
-            except (OutputValidationError, ModelOutputInvalid):
+            except OutputValidationError as exc:
+                fallback = last_parsed.get("value")
+                hard_failures = [
+                    reason for reason in exc.reasons if reason.startswith("invalid_citation_numbers")
+                ]
+                if fallback is not None and not hard_failures and not fallback.no_evidence:
+                    parsed = fallback
+                    soft_note = soft_note or (
+                        "校验提示：个别数字或引用标注未与证据逐字一致，请以引用卡原文为准。"
+                    )
+            except ModelOutputInvalid:
                 # Keep the original refusal if the retry is still invalid.
                 pass
 
@@ -175,7 +208,7 @@ def build_ask_graph(ctx: JobContext):
                     value = getattr(citation, "citation_no", None)
                 return int(value) if value is not None else None
 
-            if cited_numbers and cited_numbers <= valid_numbers and not reasons:
+            if cited_numbers and cited_numbers <= valid_numbers and not soft_note:
                 result = AskRunResult(
                     answer=parsed.answer,
                     citations=[
@@ -193,10 +226,8 @@ def build_ask_graph(ctx: JobContext):
             )
             ctx.emit("validating", 82)
             return {"result": _refusal_payload(answer, "model_no_evidence", boundary_note=boundary)}
-        if reasons:
-            answer = prompt_validate.build_refusal_text(question, evidence=retrieval.evidence, reason="validation_failed")
-            ctx.emit("validating", 82)
-            return {"result": _refusal_payload(answer, "explanation_discarded", boundary_note=boundary)}
+        if soft_note:
+            boundary = f"{boundary}；{soft_note}" if boundary else soft_note
 
         result = AskRunResult(
             answer=parsed.answer,

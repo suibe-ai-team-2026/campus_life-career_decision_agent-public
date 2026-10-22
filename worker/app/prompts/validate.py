@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import re
 from dataclasses import dataclass, field
+from decimal import Decimal, InvalidOperation
 from typing import Any, Sequence
 
 from ..errors import ModelOutputInvalid, OutputValidationError
@@ -100,14 +101,32 @@ def allowed_number_tokens(allowed_texts: Sequence[str]) -> set[str]:
     return allowed
 
 
+def _canonical_number(token: str) -> tuple[str, Decimal] | None:
+    """把数字 token 归一为 (是否百分比, 数值)，用于容忍 95.60% 与 95.6% 等写法差异。"""
+
+    percent = token.endswith("%")
+    raw = token[:-1] if percent else token
+    try:
+        value = Decimal(raw)
+    except (InvalidOperation, ValueError):
+        return None
+    return ("pct" if percent else "num", value)
+
+
 def validate_numbers(text: str, allowed_texts: Sequence[str]) -> list[str]:
     """返回回答中出现、但证据/规则事实里不存在的数字 token。"""
 
     allowed = allowed_number_tokens(allowed_texts)
+    allowed_canonical = {
+        canonical for token in allowed if (canonical := _canonical_number(token)) is not None
+    }
     offenders: list[str] = []
     seen: set[str] = set()
     for token in number_tokens(text):
         if token in allowed or token in seen:
+            continue
+        canonical = _canonical_number(token)
+        if canonical is not None and canonical in allowed_canonical:
             continue
         seen.add(token)
         offenders.append(token)

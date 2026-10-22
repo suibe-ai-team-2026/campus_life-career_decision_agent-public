@@ -123,3 +123,9 @@ def test_plan_explanation_cannot_add_quoted_entities():
         allowed_entity_titles=["国际贸易实务"],
     )
     assert allowed.validation_reasons == []
+
+def test_validate_numbers_tolerates_numeric_notation_variants():
+    # 千分位与末尾零在数值上等价，不应把合法引用判成越界。
+    assert validate.validate_numbers("2024届规模为3,928人[1]。", ["2024届规模为3928人。"]) == []
+    assert validate.validate_numbers("落实率为95.60%[1]。", ["落实率为95.6%。"]) == []
+    assert validate.validate_numbers("落实率为95.7%[1]。", ["落实率为95.6%。"]) == ["95.7%"]

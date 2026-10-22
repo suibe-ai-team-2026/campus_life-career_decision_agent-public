@@ -256,6 +256,30 @@ def test_ask_discards_answer_with_invalid_citation():
     assert payload["citations"] == []
 
 
+def test_ask_keeps_answer_when_only_number_format_validation_fails():
+    config = make_config()
+    db = FakeDb(config=config)
+    response = json.dumps(
+        {
+            "answer": "该届毕业生就业率为99.9%[1]。",
+            "citation_numbers": [1],
+            "no_evidence": False,
+            "boundary_note": "",
+        },
+        ensure_ascii=False,
+    )
+    provider = FakeProvider(config, chat_responses={"chat_ask": [response, response]})
+    db.search_rows = [_evidence_row(text="2024届毕业生去向落实率为95.0%。")]
+    job = make_claim({"question": "2024届毕业生就业率是多少？"}, kind="ask", owner_id=OWNER)
+    ctx = make_context(config=config, db=db, provider=provider, job=job)
+    payload = run_ask(ctx)
+    # 数字不一致属于软校验失败：保留有引用支撑的回答并提示核对，而不是整题拒答。
+    assert payload["refusal"] is False
+    assert "99.9%" in payload["answer"]
+    assert payload["citations"]
+    assert "校验提示" in (payload["boundary_note"] or "")
+
+
 def test_ask_model_no_evidence_results_in_refusal():
     config = make_config()
     db = FakeDb(config=config)

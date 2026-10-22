@@ -93,14 +93,32 @@ def generate_validated_json(
     """
 
     last_error: Exception | None = None
+    attempt_messages = list(messages)
     for attempt in range(max(1, max_attempts)):
-        response = ctx.provider.chat(messages, operation=operation)
+        response = ctx.provider.chat(attempt_messages, operation=operation)
         ctx.record_usage(response.usage)
         try:
             return validator(response.content)
         except (ModelOutputInvalid, OutputValidationError) as exc:
             last_error = exc
             if attempt + 1 < max_attempts:
+                reasons = [str(reason) for reason in getattr(exc, "reasons", []) if str(reason).strip()]
+                if any(reason.startswith("invalid_citation_numbers") for reason in reasons):
+                    # 编造引用编号属于硬失败，直接丢弃，不用第二次模型调用掩盖。
+                    raise
+                if reasons:
+                    # 把校验失败原因回传给模型，让它修正而不是用完全相同的输入重试。
+                    attempt_messages = [
+                        *attempt_messages,
+                        {
+                            "role": "user",
+                            "content": (
+                                "上一次输出未通过程序校验：" + "；".join(reasons[:5]) + "。"
+                                "请逐条核对证据后重新输出完整 JSON；引用编号只能来自给定证据，"
+                                "数字必须逐字出现在证据中，每个含数字的事实句都要带 [n]。"
+                            ),
+                        },
+                    ]
                 continue
             raise
     raise last_error or ModelOutputInvalid("模型输出校验失败")
