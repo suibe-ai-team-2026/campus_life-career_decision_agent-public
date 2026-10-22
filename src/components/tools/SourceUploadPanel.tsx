@@ -80,9 +80,10 @@ export function SourceUploadPanel({
         <p className="eyebrow">可选 · 补充自己的资料</p>
         <h2 id="source-upload-title">上传培养方案等文件</h2>
         <p className="section-description">
-          上传的文件只保存在你自己的账号下，供问答与解释检索引用。它
-          <strong>不会让规则引擎凭空生成课程和学分</strong>：课程、学分与竞赛仍要求已核验的数据，
-          导入后才会出现在方案里。支持 PDF、DOCX、TXT、Markdown，单个不超过 20MB。
+          上传的文件只保存在你自己的账号下，供问答与解释检索引用。上传
+          <strong>只影响检索与解释</strong>，<strong>不会让规则引擎凭空生成课程和学分</strong>：
+          课程、学分与竞赛需要团队把这些资料<strong>核验并导入规则库</strong>后才会出现在方案里。
+          支持 PDF、DOCX、TXT、Markdown，单个不超过 20MB。
         </p>
         <ul className="callout-list">
           {UPLOAD_KIND_HINTS.map((hint) => (

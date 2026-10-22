@@ -171,7 +171,14 @@ def build_plan_graph(ctx: JobContext):
                 )
             else:
                 fallback_reason = getattr(exc, "code", "model_unavailable")
-                ctx.logger.error("plan_explanation_failed code=%s", fallback_reason)
+                # 只记 error_code 定位不到来源：DatabaseError / RetrievalError /
+                # ConfigError 的 code 都是 internal_error。补上异常类型与脱敏后的 detail。
+                ctx.logger.error(
+                    "plan_explanation_failed code=%s type=%s detail=%s",
+                    fallback_reason,
+                    type(exc).__name__,
+                    redact(getattr(exc, "detail", "") or ""),
+                )
             warnings.append(f"plan_explanation_fallback:{fallback_reason}")
         except Exception as exc:  # noqa: BLE001 - 输出校验失败/异常 JSON 都走兜底
             fallback_reason = type(exc).__name__
