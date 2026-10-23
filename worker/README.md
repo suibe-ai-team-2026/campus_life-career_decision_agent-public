@@ -336,6 +336,16 @@ docker compose exec worker python -m app.runtime.worker --check
 - 密钥只通过 `env_file` 注入宿主文件，镜像/仓库不含真实值；
 - 健康检查 = `--check`（校验配置与预算，不触网）。
 
+#### 低 CPU / 慢盘构建机（本项目的 Freestyle VM）
+
+- 用 legacy builder 避开 BuildKit 卡在 `exporting layers`：
+  `DOCKER_BUILDKIT=0 docker compose build`；
+- `uv` 编译单个文件有 60s 硬超时，`jieba/posseg/char_state_tab.py` 在 4 vCPU +
+  fuse 盘上会超时导致构建失败；compose 已传 `UV_COMPILE_BYTECODE=0`，不要再改回 1。
+- 构建上下文要干净：只放 `Dockerfile`、`docker-compose.yml`、`app/`、`scripts/`、
+  `pyproject.toml`、`uv.lock`、`README.md`、`worker.env.example`。若把整个根文件系统
+  误解压进构建目录，构建会先花很久打包上下文。
+
 ### 13.2 systemd（裸机 VM）
 
 见 `systemd/campus-pathway-worker.service`：`EnvironmentFile=/etc/campus-pathway/worker.env`，
