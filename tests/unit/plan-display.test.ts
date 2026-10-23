@@ -50,6 +50,12 @@ describe("formatPlanWarning", () => {
     expect(formatPlanWarning("plan_id_not_found_created_new")).toContain("已改为新建方案版本");
   });
 
+  it("用户上传资料并入证据时不再原样显示机器码", () => {
+    const text = formatPlanWarning("user_sources_included:1");
+    expect(text).toContain("你上传的 1 条资料");
+    expect(text).not.toContain("user_sources_included");
+  });
+
   it("未识别的普通文本原样返回", () => {
     expect(formatPlanWarning("something else")).toBe("something else");
   });

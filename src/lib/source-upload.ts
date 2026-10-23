@@ -92,7 +92,7 @@ export const UPLOAD_STEP_LABELS: Record<UploadStep, string> = {
   requesting: "申请上传地址",
   uploading: "上传文件",
   completing: "提交入库",
-  done: "已提交，等待解析"
+  done: "已加入你的知识库"
 };
 
 export type UploadResult = {

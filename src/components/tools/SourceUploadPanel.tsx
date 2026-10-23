@@ -23,8 +23,8 @@ import {
 /**
  * 用户上传培养方案等资料的可选入口。
  *
- * 上传只解决"检索与解释时没有你的资料"；它不会让规则引擎凭空产出课程与学分，
- * 因为规则库只认已核验数据。这一点必须写在界面上，避免把上传误解成"补齐即可出结果"。
+ * 上传的资料会进入「你个人知识库」，作为问答与方案生成的检索来源，并排在方案证据前列。
+ * 规则库的确定性数字（如学分认定规则）仍以已核验数据为准，不会被上传内容改写。
  */
 export function SourceUploadPanel({
   title,
@@ -124,10 +124,10 @@ export function SourceUploadPanel({
       ) : null}
 
       {result ? (
-        <Callout tone="ok" title="已提交，等待解析">
+        <Callout tone="ok" title="已加入你的知识库">
           <p>
-            来源 <code>{result.sourceId}</code> 已登记，解析任务 <code>{result.runId}</code>（状态：
-            {result.status}）。解析完成后，问答与方案解释可以引用它；课程与学分仍需核验数据才会出现。
+            来源 <code>{result.sourceId}</code> 已入库，解析任务 <code>{result.runId}</code>（状态：
+            {result.status}）。解析完成后，问答与方案生成都会把它作为检索来源引用，你上传的资料会排在方案证据前列。
           </p>
           <p>
             <Badge tone="muted">仅本人可见</Badge>

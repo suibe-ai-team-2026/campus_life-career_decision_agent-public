@@ -51,7 +51,12 @@ const WARNING_RULES: WarningRule[] = [
     pattern: /^prerequisite_cycle_detected:(.*)$/,
     render: (match) => `先修关系出现环，已标记待核验：${match[1]}`
   },
-  { pattern: /^profile_invalid:(.*)$/, render: (match) => `画像字段不完整：${match[1]}` }
+  { pattern: /^profile_invalid:(.*)$/, render: (match) => `画像字段不完整：${match[1]}` },
+  {
+    pattern: /^user_sources_included:(\d+)$/,
+    render: (match) =>
+      `已把你上传的 ${match[1]} 条资料并入方案证据，引用编号从 1 开始重排；这些资料标注为待核验来源。`
+  }
 ];
 
 export function formatPlanWarning(warning: string): string {
