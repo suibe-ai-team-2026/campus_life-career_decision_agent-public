@@ -114,7 +114,19 @@ def test_plan_explanation_cannot_add_quoted_entities():
         allowed_entity_titles=["国际贸易实务"],
     )
     assert any("unknown_entities" in reason for reason in parsed.validation_reasons)
-    assert validate.quoted_entities("见《国际贸易实务》与「量化交易」") == ["国际贸易实务", "量化交易"]
+    # 只有书名号被视为实体；「」/“”里的强调短语不参与实体校验。
+    assert validate.quoted_entities("见《国际贸易实务》与「量化交易」") == ["国际贸易实务"]
+
+
+def test_emphasis_quotes_are_not_treated_as_entities():
+    parsed = validate.parse_plan_explanation(
+        '{"explanation":"还需要核对「该方向应修哪些课、何时开课」与“已修学分可认定多少”[1]",'
+        '"cited_action_ids":[],"citation_numbers":[1],"boundary_note":""}',
+        valid_citations={1},
+        action_ids=set(),
+        allowed_texts=["已有课程：《国际贸易实务》"],
+    )
+    assert parsed.validation_reasons == []
     allowed = validate.parse_plan_explanation(
         '{"explanation":"课程《国际贸易实务》是已核验内容[1]","cited_action_ids":[],"citation_numbers":[1],"boundary_note":""}',
         valid_citations={1},

@@ -21,7 +21,9 @@ CITE_RE = re.compile(r"\[(\d{1,2})\]")
 NUMBER_RE = re.compile(r"(?<![A-Za-z0-9_.\-])(\d[\d,]*(?:\.\d+)?)(\s*[%％])?(?![A-Za-z0-9_.\-])")
 CHINESE_PERCENT_RE = re.compile(r"百分之\s*(\d[\d,]*(?:\.\d+)?)")
 URL_RE = re.compile(r"https?://[^\s）)\]】\"'，。；;]+", re.IGNORECASE)
-QUOTED_ENTITY_RE = re.compile(r"[《「“]([^》」”\n]{1,80})[》」”]")
+# 只有书名号表示"标题/实体"；「」与“”常被模型用来强调描述性短语
+# （如「该方向应修哪些课」），把它们当实体校验会把正常解释整段否掉。
+QUOTED_ENTITY_RE = re.compile(r"《([^》\n]{1,80})》")
 SENTENCE_RE = re.compile(r"[^。！？!?\n]+[。！？!?]?")
 
 COHORT_RE = re.compile(r"(20[1-2]\d)\s*届")
