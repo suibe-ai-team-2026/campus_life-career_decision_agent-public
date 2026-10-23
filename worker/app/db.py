@@ -802,6 +802,22 @@ class SupabaseDb:
             filters=[("profile_id", f"eq.{profile_id}")],
         )
 
+    def list_owner_upload_versions(self, owner_id: str) -> list[dict[str, Any]]:
+        """用户自己上传、且解析完成的来源版本。
+
+        用于把"我的资料"并入方案证据：私有的未核验资料只对本人可见，
+        不能进入规则库，但应当参与检索与解释。
+        """
+
+        rows = self.select(
+            "app_source_versions",
+            filters=[("owner_id", f"eq.{owner_id}"), ("visibility", "eq.private")],
+            columns="source_version_id,source_id,extraction_status",
+            order="source_version_id.asc",
+            limit=DEFAULT_PAGE_SIZE,
+        )
+        return [row for row in rows if str(row.get("extraction_status")) == "parsed"]
+
     def list_all_source_versions(self) -> list[dict[str, Any]]:
         """corpus seed 用：一次读取所有来源版本，避免 300+ 次逐条查询。"""
 

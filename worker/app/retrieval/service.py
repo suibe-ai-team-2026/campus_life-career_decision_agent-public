@@ -173,3 +173,50 @@ def evidence_text_bundle(evidence: Sequence[dict[str, Any]]) -> str:
     """给数字校验用：所有可引用证据的正文（不含邻近块的是否引用歧义，按全部正文）。"""
 
     return "\n".join(str(item.get("text") or "") for item in evidence)
+
+
+def merge_user_evidence(
+    primary: RetrievalOutcome,
+    extra: RetrievalOutcome,
+    *,
+    max_evidence: int,
+) -> RetrievalOutcome:
+    """把用户私有上传的召回结果并入主检索，并重建引用编号。
+
+    - 用户自己的资料排在前面，方便解释直接引用；
+    - 主检索原有相对顺序不变；
+    - 同一 chunk 只保留一次；总条数受 max_evidence 限制。
+    """
+
+    merged: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    limit = max(1, int(max_evidence))
+    for item in [*(extra.evidence or []), *(primary.evidence or [])]:
+        chunk_id = str(item.get("chunk_id") or "")
+        if chunk_id:
+            if chunk_id in seen:
+                continue
+            seen.add(chunk_id)
+        merged.append(dict(item))
+        if len(merged) >= limit:
+            break
+
+    for index, item in enumerate(merged, start=1):
+        item["citation_no"] = index
+
+    warnings = list(primary.warnings)
+    if extra.evidence:
+        warnings.append(f"user_sources_included:{len(extra.evidence)}")
+    counts = dict(primary.candidate_counts)
+    counts["user_upload_evidence"] = len(extra.evidence)
+
+    return RetrievalOutcome(
+        evidence=merged,
+        citations=[RetrievalService._citation(item) for item in merged],
+        gate=primary.gate,
+        embedding_profile=primary.embedding_profile,
+        corpus_version=primary.corpus_version,
+        candidate_counts=counts,
+        warnings=warnings,
+        selection=primary.selection,
+    )

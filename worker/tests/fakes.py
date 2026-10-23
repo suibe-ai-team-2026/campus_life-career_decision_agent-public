@@ -143,6 +143,8 @@ class FakeDb:
         self.plan_versions: dict[str, dict[str, Any]] = {}
         # 传入这些 plan_id 时 save_plan 抛 ResourceNotFound，用于测试"旧方案已被清理"。
         self.missing_plan_ids: set[str] = set()
+        # 用户私有上传（已解析）的来源版本；默认空，个别用例按需填充。
+        self.owner_upload_versions: list[dict[str, Any]] = []
         self.directions: dict[str, dict[str, Any]] = {}
         self.assessments: dict[str, dict[str, Any]] = {}
         self.source_versions: dict[str, dict[str, Any]] = {}
@@ -234,6 +236,9 @@ class FakeDb:
         return self.cancel_requested
 
     # -- worker 发布 ---------------------------------------------------
+    def list_owner_upload_versions(self, owner_id: str) -> list[dict[str, Any]]:
+        return list(self.owner_upload_versions)
+
     def save_plan(self, **kwargs: Any) -> tuple[str, str, int]:
         requested = kwargs.get("plan_id")
         if requested and requested in self.missing_plan_ids:

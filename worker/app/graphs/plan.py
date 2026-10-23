@@ -24,6 +24,7 @@ from ..errors import (
 from ..models import DIRECTION_IDS, PlanInput, PlanResult, citation_payload, plan_result_payload
 from ..prompts import career as prompts
 from ..prompts import validate as prompt_validate
+from ..retrieval.service import merge_user_evidence
 from .common import (
     JobContext,
     direction_title,
@@ -88,6 +89,27 @@ def build_plan_graph(ctx: JobContext):
             run_id=ctx.job.run_id,
             question=question,
         )
+        # 用户自己上传的资料（私有、未核验）不能进规则库，但要参与检索与解释：
+        # 单独召回本人上传的来源版本并并入证据，排在前面便于引用。
+        try:
+            owner_versions = ctx.db.list_owner_upload_versions(str(ctx.job.owner_id))
+        except Exception:  # noqa: BLE001 - 私有资料并入失败不应中断方案生成
+            ctx.logger.exception("owner_upload_versions_failed")
+            owner_versions = []
+        if owner_versions:
+            extra = ctx.retrieval.search(
+                owner_id=ctx.job.owner_id,
+                run_id=ctx.job.run_id,
+                question=question,
+                source_version_ids=[str(row["source_version_id"]) for row in owner_versions],
+            )
+            if extra.evidence:
+                outcome = merge_user_evidence(
+                    outcome,
+                    extra,
+                    max_evidence=ctx.config.retrieval.max_evidence + len(extra.evidence),
+                )
+                ctx.logger.info("user_sources_included count=%s", len(extra.evidence))
         ctx.emit("retrieving", 38)
         return {"retrieval": outcome}
 
