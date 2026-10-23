@@ -141,6 +141,8 @@ class FakeDb:
         self.profiles: dict[str, dict[str, Any]] = {}
         self.plans: dict[str, dict[str, Any]] = {}
         self.plan_versions: dict[str, dict[str, Any]] = {}
+        # 传入这些 plan_id 时 save_plan 抛 ResourceNotFound，用于测试"旧方案已被清理"。
+        self.missing_plan_ids: set[str] = set()
         self.directions: dict[str, dict[str, Any]] = {}
         self.assessments: dict[str, dict[str, Any]] = {}
         self.source_versions: dict[str, dict[str, Any]] = {}
@@ -233,8 +235,13 @@ class FakeDb:
 
     # -- worker 发布 ---------------------------------------------------
     def save_plan(self, **kwargs: Any) -> tuple[str, str, int]:
+        requested = kwargs.get("plan_id")
+        if requested and requested in self.missing_plan_ids:
+            from app.errors import ResourceNotFound
+
+            raise ResourceNotFound("方案不存在或不属于当前会话")
         self.saved_plans.append(kwargs)
-        plan_id = kwargs.get("plan_id") or "44444444-4444-4444-4444-444444444444"
+        plan_id = requested or "44444444-4444-4444-4444-444444444444"
         return plan_id, "55555555-5555-5555-5555-555555555555", 1
 
     def register_artifact(self, **kwargs: Any) -> str:

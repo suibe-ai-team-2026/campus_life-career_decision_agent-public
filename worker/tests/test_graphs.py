@@ -166,6 +166,41 @@ def test_plan_graph_falls_back_when_model_unavailable():
     assert db.saved_plans
 
 
+def test_plan_graph_creates_new_plan_when_requested_plan_id_is_missing():
+    """本地缓存里的 plan_id 已不属于当前会话时，不应把用户卡死。"""
+
+    config = make_config()
+    provider = FakeProvider(
+        config,
+        chat_responses={
+            "chat_plan_explain": [
+                json.dumps(
+                    {
+                        "explanation": "根据已核验资料补强国际贸易实务能力[1]。",
+                        "cited_action_ids": [],
+                        "citation_numbers": [1],
+                        "boundary_note": "",
+                    },
+                    ensure_ascii=False,
+                )
+            ]
+        },
+    )
+    ctx, db, _emits = _plan_context(provider)
+    missing = "99999999-9999-4999-8999-999999999999"
+    db.missing_plan_ids.add(missing)
+    ctx.job = make_claim(
+        {"profile_id": PROFILE_ID, "direction_id": "trade_supply_chain", "plan_id": missing},
+        kind="plan",
+        owner_id=OWNER,
+    )
+
+    payload = run_plan(ctx)
+
+    assert payload["plan_id"] != missing
+    assert any("plan_id_not_found_created_new" in warning for warning in payload["result"]["warnings"])
+
+
 def test_plan_graph_fails_on_profile_version_mismatch():
     config = make_config()
     provider = FakeProvider(config)

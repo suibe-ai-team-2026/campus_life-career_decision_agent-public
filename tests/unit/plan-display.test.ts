@@ -46,6 +46,10 @@ describe("formatPlanWarning", () => {
     expect(formatPlanWarning("course_credits_missing=c1,c2")).toContain("c1,c2");
   });
 
+  it("旧方案 id 失效时给出可读说明", () => {
+    expect(formatPlanWarning("plan_id_not_found_created_new")).toContain("已改为新建方案版本");
+  });
+
   it("未识别的普通文本原样返回", () => {
     expect(formatPlanWarning("something else")).toBe("something else");
   });

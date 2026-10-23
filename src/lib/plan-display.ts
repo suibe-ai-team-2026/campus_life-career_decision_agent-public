@@ -33,6 +33,10 @@ const WARNING_RULES: WarningRule[] = [
     pattern: /^boundary_note_dropped_number_mismatch$/,
     render: () => "资料边界说明里出现了证据中没有的数字，已丢弃该说明。"
   },
+  {
+    pattern: /^plan_id_not_found_created_new$/,
+    render: () => "本地记录里的旧方案已不存在，已改为新建方案版本；旧方案不会恢复。"
+  },
   { pattern: /^rules_version=(.+)$/, render: (match) => `规则版本：${match[1]}` },
   { pattern: /^as_of=(.+)$/, render: (match) => `规则基准日：${match[1]}` },
   {

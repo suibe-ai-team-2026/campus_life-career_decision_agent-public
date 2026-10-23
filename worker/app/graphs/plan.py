@@ -16,6 +16,7 @@ from ..errors import (
     BadRequest,
     InvalidProfile,
     OutputValidationError,
+    ResourceNotFound,
     UnsupportedDirection,
     WorkerError,
     redact,
@@ -140,6 +141,9 @@ def build_plan_graph(ctx: JobContext):
                     *[str(course.get("title") or "") for course in rule_payload.get("courses", [])],
                     *[str(competition.get("title") or "") for competition in rule_payload.get("competitions", [])],
                     *[str(action.get("title") or "") for action in rule_payload.get("actions", [])],
+                    # 解释里引用证据来源的名称是正常的；此前只放课程/竞赛/行动标题，
+                    # 模型一提来源名就被判 unknown_entities 并整段丢弃。
+                    *[str(item.get("title") or "") for item in retrieval.evidence],
                 ],
             )
             require_no_validation_reasons(parsed.validation_reasons, what="方案解释")
@@ -207,20 +211,36 @@ def build_plan_graph(ctx: JobContext):
         rule_payload["warnings"] = warnings
         final_result = PlanResult.model_validate(rule_payload)
         final_payload = plan_result_payload(final_result)
-        plan_id, version_id, version = ctx.db.save_plan(
-            job_id=ctx.job.job_id,
-            worker_id=ctx.worker_id,
-            lease_epoch=ctx.job.lease_epoch,
-            plan_id=run_input.get("plan_id") or None,
-            profile_id=str(run_input["profile_id"]),
-            direction_id=str(run_input["direction_id"]),
-            rules_version=final_result.rules_version,
-            corpus_version=retrieval.corpus_version,
-            embedding_profile_id=retrieval.embedding_profile.profile_id,
-            actions=final_payload["actions"],
-            result=final_payload,
-            warnings=list(final_result.warnings),
-        )
+        def save(target_plan_id: str | None):
+            return ctx.db.save_plan(
+                job_id=ctx.job.job_id,
+                worker_id=ctx.worker_id,
+                lease_epoch=ctx.job.lease_epoch,
+                plan_id=target_plan_id,
+                profile_id=str(run_input["profile_id"]),
+                direction_id=str(run_input["direction_id"]),
+                rules_version=final_result.rules_version,
+                corpus_version=retrieval.corpus_version,
+                embedding_profile_id=retrieval.embedding_profile.profile_id,
+                actions=final_payload["actions"],
+                result=final_payload,
+                warnings=list(final_result.warnings),
+            )
+
+        requested_plan_id = run_input.get("plan_id") or None
+        try:
+            plan_id, version_id, version = save(requested_plan_id)
+        except ResourceNotFound:
+            if not requested_plan_id:
+                raise
+            # 客户端传来的 plan_id 已不属于当前匿名会话（本地缓存跨会话残留、
+            # 或云端方案被清理）。不把用户卡死：改为新建方案并说明原因。
+            ctx.logger.error("plan_id_not_found creating_new_plan requested=%s", redact(requested_plan_id))
+            warnings.append("plan_id_not_found_created_new")
+            rule_payload["warnings"] = warnings
+            final_result = PlanResult.model_validate(rule_payload)
+            final_payload = plan_result_payload(final_result)
+            plan_id, version_id, version = save(None)
         payload = {
             "plan_id": plan_id,
             "version_id": version_id,
