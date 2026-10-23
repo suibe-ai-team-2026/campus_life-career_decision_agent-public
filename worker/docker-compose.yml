@@ -20,6 +20,9 @@ services:
         PREWARM_DOCLING: "0"
         # Demo: pypdf fallback keeps the image small. Set to "1" for Docling.
         INSTALL_DOCLING: "0"
+        # 4 vCPU / 慢盘构建机上，jieba 的 char_state_tab.py 字节码编译会超过
+        # uv 的 60s 单文件超时导致构建失败；关闭预编译只影响首次导入速度。
+        UV_COMPILE_BYTECODE: "0"
     image: campus-pathway-worker:local
     container_name: campus-pathway-worker
     restart: unless-stopped

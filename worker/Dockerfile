@@ -14,11 +14,14 @@ ARG PREWARM_DOCLING=0
 # Demo images can skip the multi-GB Docling/CUDA stack and use the pypdf fallback.
 # Production should build with --build-arg INSTALL_DOCLING=1.
 ARG INSTALL_DOCLING=1
+# 字节码预编译默认开启。低 CPU / 慢盘构建机可传 --build-arg UV_COMPILE_BYTECODE=0：
+# uv 对单个文件的编译有 60s 硬超时，jieba 的 char_state_tab.py 在慢机器上会超时。
+ARG UV_COMPILE_BYTECODE=1
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
-    UV_COMPILE_BYTECODE=1 \
+    UV_COMPILE_BYTECODE=${UV_COMPILE_BYTECODE} \
     UV_LINK_MODE=copy \
     UV_CACHE_DIR=/opt/uv-cache \
     PATH="/app/.venv/bin:${PATH}" \
