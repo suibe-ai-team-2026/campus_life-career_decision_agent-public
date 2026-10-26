@@ -181,7 +181,7 @@ export function PlanDetail({
           <div className="plan-fact">
             <span className="plan-fact-label">证据引用</span>
             <span className="plan-fact-value">{evidence.length} 条</span>
-            <span className="plan-fact-note">引用编号由服务端分配，不生成外部链接</span>
+            <span className="plan-fact-note">引用编号由服务端分配；网页来源会单独标注未核验</span>
           </div>
         </div>
       </section>

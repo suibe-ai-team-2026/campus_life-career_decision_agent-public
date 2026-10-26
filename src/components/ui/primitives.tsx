@@ -27,7 +27,9 @@ export type IconName =
   | "info"
   | "sun"
   | "moon"
-  | "monitor";
+  | "monitor"
+  | "globe"
+  | "activity";
 
 const ICON_PATHS: Record<IconName, ReactNode> = {
   "arrow-right": <path d="M5 12h14M13 6l6 6-6 6" />,
@@ -106,7 +108,14 @@ const ICON_PATHS: Record<IconName, ReactNode> = {
       <rect x="3" y="4" width="18" height="13" rx="2" />
       <path d="M8 21h8M12 17v4" />
     </>
-  )
+  ),
+  globe: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9S14.5 18.4 12 21c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3Z" />
+    </>
+  ),
+  activity: <path d="M3 12h4l2.5-7 5 14 2.5-7h4" />
 };
 
 export function Icon({

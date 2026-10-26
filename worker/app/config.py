@@ -240,6 +240,14 @@ class Config:
     chat_max_tokens: int = 1600
     chat_json_mode: str = "auto"
     chat_reasoning_effort: str | None = None
+    # 联网搜索：DeepSeek Search/Fetch，仅在 run.input.web_search=true 时触发。
+    web_search_enabled: bool = True
+    web_search_base_url: str = "https://api.deepseek.com"
+    web_search_max_searches: int = 4
+    web_search_max_fetches: int = 3
+    web_search_max_steps: int = 6
+    web_search_deadline_seconds: float = 75.0
+    web_search_fetch_chars: int = 12000
     # 运行时
     worker_concurrency: int = 1
     run_max_attempts: int = 3
@@ -352,6 +360,9 @@ class Config:
             )
             chat_model = _env(env, "DEEPSEEK_CHAT_MODEL", "deepseek-flash") or "deepseek-flash"
         chat_json_mode = _choice(env, "CHAT_JSON_MODE", "auto", {"auto", "on", "off"})
+        web_search_base_url = _validate_url(
+            "DEEPSEEK_SEARCH_BASE_URL", _env(env, "DEEPSEEK_SEARCH_BASE_URL", "https://api.deepseek.com") or "https://api.deepseek.com"
+        )
         chat_reasoning_effort = _env(env, "DEEPSEEK_REASONING_EFFORT", "low")
         if chat_reasoning_effort not in (None, "low", "high", "max"):
             raise ConfigError("DEEPSEEK_REASONING_EFFORT 只能是 low/high/max 或留空")
@@ -414,6 +425,13 @@ class Config:
             chat_max_tokens=_int(env, "CHAT_MAX_TOKENS", _int(env, "OPENROUTER_CHAT_MAX_TOKENS", 1600, minimum=64, maximum=8192), minimum=64, maximum=8192),
             chat_json_mode=chat_json_mode,
             chat_reasoning_effort=chat_reasoning_effort,
+            web_search_enabled=_bool(env, "WEB_SEARCH_ENABLED", True),
+            web_search_base_url=web_search_base_url,
+            web_search_max_searches=_int(env, "WEB_SEARCH_MAX_SEARCHES", 4, minimum=1, maximum=12),
+            web_search_max_fetches=_int(env, "WEB_SEARCH_MAX_FETCHES", 3, minimum=0, maximum=8),
+            web_search_max_steps=_int(env, "WEB_SEARCH_MAX_STEPS", 6, minimum=2, maximum=16),
+            web_search_deadline_seconds=_float(env, "WEB_SEARCH_DEADLINE_SECONDS", 75.0, minimum=10.0),
+            web_search_fetch_chars=_int(env, "WEB_SEARCH_FETCH_CHARS", 12000, minimum=1000, maximum=40000),
             worker_concurrency=worker_concurrency,
             run_max_attempts=run_max_attempts,
             model_request_timeout_seconds=timeout,

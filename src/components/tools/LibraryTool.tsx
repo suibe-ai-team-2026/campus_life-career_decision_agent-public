@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Citation } from "@/lib/contracts/run";
 import type { Source } from "@/lib/contracts/source";
+import { toTraceEvents, type TraceEvent } from "@/lib/agent-trace";
 import {
   cloudConfigured,
   createAnonymousSession,
@@ -12,9 +13,9 @@ import {
   parseAskResult,
   pollRunUntilDone,
   runFailureMessage,
-  runStageLabel,
   safeExternalUrl,
-  submitRun
+  submitRun,
+  type RunEvent
 } from "@/lib/api-client";
 import {
   DATA_SOURCES,
@@ -24,8 +25,10 @@ import {
   LIBRARY_EXAMPLE_QUESTIONS,
   RESOURCE_BOUNDARIES
 } from "@/lib/content";
-import { Badge, Button, Callout, EmptyState, Icon, ListBlock, ProgressBar, formatDateTime } from "@/components/ui/primitives";
+import { Badge, Button, Callout, EmptyState, Icon, ListBlock, formatDateTime } from "@/components/ui/primitives";
 import { CitationList, verificationDisplay } from "@/components/ui/CitationCard";
+import { AgentTrace } from "@/components/run/AgentTrace";
+import { ResearchToggle } from "@/components/run/ResearchToggle";
 import { useHydrated } from "@/lib/local-progress/store";
 
 type TabId = "ask" | "sources" | "reports";
@@ -38,9 +41,10 @@ type AskMessage = {
   refused?: boolean;
   boundaryNote?: string | null;
   isError?: boolean;
+  /** Finished run trace attached to the answer so it stays readable afterwards. */
+  trace?: TraceEvent[];
+  traceStatus?: string | null;
 };
-
-type AskStage = { label: string; progress: number };
 
 function messageId(): string {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") return crypto.randomUUID();
@@ -61,7 +65,9 @@ export function LibraryTool() {
   const [question, setQuestion] = useState("");
   const [composerError, setComposerError] = useState<string | null>(null);
   const [asking, setAsking] = useState(false);
-  const [askStage, setAskStage] = useState<AskStage | null>(null);
+  const [askEvents, setAskEvents] = useState<RunEvent[]>([]);
+  const [askRunStatus, setAskRunStatus] = useState<string | null>(null);
+  const [webSupplement, setWebSupplement] = useState(false);
   const [sources, setSources] = useState<Source[] | null>(null);
   const [sourcesState, setSourcesState] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const [sourcesError, setSourcesError] = useState<string | null>(null);
@@ -128,6 +134,8 @@ export function LibraryTool() {
     return counts;
   }, [sources]);
 
+  const askTrace = useMemo(() => toTraceEvents(askEvents), [askEvents]);
+
   async function handleAsk(preset?: string) {
     const text = (preset ?? question).trim();
     if (asking) return;
@@ -151,10 +159,11 @@ export function LibraryTool() {
     setQuestion("");
     setComposerError(null);
     setAsking(true);
-    setAskStage({ label: "提交问题", progress: 8 });
+    setAskEvents([]);
+    setAskRunStatus(null);
     const controller = new AbortController();
     abortRef.current = controller;
-    const askedAt = Date.now();
+    let latestEvents: RunEvent[] = [];
     try {
       await createAnonymousSession(controller.signal);
       const ack = await submitRun(
@@ -162,33 +171,31 @@ export function LibraryTool() {
           kind: "ask",
           idempotency_key: newIdempotencyKey(),
           question: text,
+          web_search: webSupplement,
           ...(history.length > 0 ? { history } : {})
         },
         controller.signal
       );
-      const { run } = await pollRunUntilDone(ack.runId, {
+      const { run, events: finalEvents } = await pollRunUntilDone(ack.runId, {
         signal: controller.signal,
-        onUpdate: (nextRun) => {
-          // A paused Freestyle VM has to boot before it can claim the run; the
-          // status stays "queued" meanwhile. Say what is actually happening
-          // instead of an opaque "排队中".
-          const queuedFor = Date.now() - askedAt;
-          const label =
-            nextRun.status === "queued"
-              ? queuedFor > 20_000
-                ? "云端 worker 正在唤醒（首次约 30–90 秒）"
-                : "排队中，等待云端 worker"
-              : runStageLabel(nextRun.status);
-          setAskStage({
-            label,
-            progress: Math.max(nextRun.progress, 15)
-          });
+        onUpdate: (nextRun, nextEvents) => {
+          latestEvents = nextEvents;
+          setAskRunStatus(nextRun.status);
+          setAskEvents(nextEvents);
         }
       });
+      const finishedTrace = toTraceEvents(finalEvents);
       if (run.status !== "succeeded") {
         setMessages((current) => [
           ...current,
-          { id: messageId(), role: "assistant", content: runFailureMessage(run), isError: true }
+          {
+            id: messageId(),
+            role: "assistant",
+            content: runFailureMessage(run),
+            isError: true,
+            trace: finishedTrace,
+            traceStatus: run.status
+          }
         ]);
         return;
       }
@@ -200,7 +207,9 @@ export function LibraryTool() {
             id: messageId(),
             role: "assistant",
             content: "回答已返回，但格式无法识别。没有生成引用时系统不会把内容当作事实展示，请稍后重试或换一个问法。",
-            isError: true
+            isError: true,
+            trace: finishedTrace,
+            traceStatus: run.status
           }
         ]);
         return;
@@ -214,7 +223,9 @@ export function LibraryTool() {
           content: outcome.answer,
           citations: outcome.citations,
           refused,
-          boundaryNote: outcome.boundaryNote
+          boundaryNote: outcome.boundaryNote,
+          trace: finishedTrace,
+          traceStatus: run.status
         }
       ]);
     } catch (error) {
@@ -222,11 +233,19 @@ export function LibraryTool() {
       if (code === "aborted") return;
       setMessages((current) => [
         ...current,
-        { id: messageId(), role: "assistant", content: friendlyErrorMessage(error), isError: true }
+        {
+          id: messageId(),
+          role: "assistant",
+          content: friendlyErrorMessage(error),
+          isError: true,
+          trace: toTraceEvents(latestEvents),
+          traceStatus: "failed"
+        }
       ]);
     } finally {
       setAsking(false);
-      setAskStage(null);
+      setAskEvents([]);
+      setAskRunStatus(null);
     }
   }
 
@@ -239,7 +258,7 @@ export function LibraryTool() {
               <EmptyState
                 icon="book"
                 title="只回答与生涯资料有关的问题"
-                description="资料问答只使用已载入且允许展示的生涯资料，回答必须带引用；没有证据时会明确拒答。它不联网、不编造来源，也不做通用办公或闲聊。"
+                description="资料问答默认只使用已载入且允许展示的生涯资料，回答必须带引用；没有证据时会明确拒答。需要实时信息时可开启「联网补充」，网页结果会单独标注未核验。它不编造来源，也不做通用办公或闲聊。"
               />
               <div className="example-questions">
                 <p className="panel-title">
@@ -299,6 +318,19 @@ export function LibraryTool() {
                       ) : null}
                     </div>
                   )}
+                  {message.trace && message.trace.length > 0 ? (
+                    <details className="message-trace">
+                      <summary>
+                        <Icon name="activity" size={13} />
+                        执行轨迹
+                        <span className="message-trace-meta">
+                          {message.traceStatus === "succeeded" ? "已完成" : message.traceStatus === "failed" ? "失败" : "已结束"} ·{" "}
+                          {message.trace.length} 条活动
+                        </span>
+                      </summary>
+                      <AgentTrace events={message.trace} running={false} status={message.traceStatus ?? null} />
+                    </details>
+                  ) : null}
                 </li>
               ))}
               {asking ? (
@@ -306,10 +338,16 @@ export function LibraryTool() {
                   <div className="message-head">
                     <span className="message-role">知途资料助手</span>
                   </div>
-                  <div className="message-thinking">
-                    <ProgressBar value={askStage?.progress ?? 8} label={askStage?.label ?? "检索资料"} />
-                    <span>正在检索已载入资料并生成带引用的回答…</span>
-                  </div>
+                  <AgentTrace
+                    events={askTrace}
+                    running
+                    status={askRunStatus}
+                    emptyHint={
+                      webSupplement
+                        ? "正在提交问题；开启联网补充后会先检索实时网页，等待云端 worker 的第一条活动…"
+                        : "正在提交问题，等待云端 worker 的第一条活动（首次唤醒约 30–90 秒）…"
+                    }
+                  />
                 </li>
               ) : null}
             </ul>
@@ -327,6 +365,14 @@ export function LibraryTool() {
           <label className="sr-only" htmlFor="library-question">
             输入资料问题
           </label>
+          <ResearchToggle
+            checked={webSupplement}
+            onChange={setWebSupplement}
+            disabled={!cloud || asking}
+            label="联网补充（实时网页搜索）"
+            description="开启后会访问外部网站做实时网页搜索，结果未经核验，只作为补充线索；引用会单独标注「实时网页 · 未核验」。默认关闭，只用已载入资料。"
+            className="composer-options"
+          />
           <textarea
             id="library-question"
             className="textarea composer-textarea"
@@ -576,7 +622,9 @@ export function LibraryTool() {
               <Icon name="database" size={15} /> 计划中的数据来源
             </p>
             <ListBlock items={DATA_SOURCES.slice()} />
-            <p className="panel-note">未授权或未载入的资料不会进入问答；不做联网抓取。</p>
+            <p className="panel-note">
+              未授权或未载入的资料不会进入问答；默认不联网，开启「联网补充」时才会检索实时网页并标注未核验。
+            </p>
           </div>
           <div className="panel">
             <p className="panel-title">
@@ -596,6 +644,10 @@ export function LibraryTool() {
                 <strong>{messages.filter((message) => !message.isError).length} 条（最多带 4 条给模型）</strong>
               </li>
               <li>
+                <span>联网补充</span>
+                <strong>{webSupplement ? "开启（本次提问会检索实时网页）" : "关闭（只用已载入资料）"}</strong>
+              </li>
+              <li>
                 <span>页面状态</span>
                 <strong>{hydrated ? "就绪" : "加载中"}</strong>
               </li>
@@ -606,7 +658,7 @@ export function LibraryTool() {
               <Icon name="alert" size={15} /> 引用与拒答
             </p>
             <p className="panel-note">
-              回答中的引用编号由服务端分配，对应消息下方的引用卡；不生成外部链接。没有证据时会明确拒答，而不是给一个听起来合理的答案。
+              回答中的引用编号由服务端分配，对应消息下方的引用卡；开启联网补充时，网页引用会提供来源链接并标注「实时网页 · 未核验」。没有证据时会明确拒答，而不是给一个听起来合理的答案。
             </p>
           </div>
         </aside>

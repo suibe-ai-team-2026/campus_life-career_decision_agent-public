@@ -91,6 +91,23 @@ class EmbeddingResponse:
 
 
 @dataclass
+class ToolCall:
+    id: str
+    name: str
+    arguments: dict[str, Any]
+    raw_arguments: str
+
+
+@dataclass
+class ChatToolResponse:
+    content: str
+    tool_calls: list[ToolCall]
+    usage: ModelUsage | None
+    latency_ms: int
+    model: str
+
+
+@dataclass
 class ChatResponse:
     content: str
     usage: ModelUsage | None
@@ -448,6 +465,103 @@ class OpenRouterClient:
             chat=True,
         )
         return self._parse_chat_response(payload, operation=operation, latency_ms=latency_ms, json_mode=json_mode)
+
+    def chat_with_tools(
+        self,
+        messages: Sequence[dict[str, str]],
+        tools: Sequence[dict[str, Any]],
+        *,
+        operation: str,
+        max_tokens: int | None = None,
+        temperature: float | None = None,
+    ) -> ChatToolResponse:
+        """带工具调用的 chat（OpenAI 格式 tool_calls），供 agent 循环使用。
+
+        不发 ``response_format``（与 tools 冲突）；reasoning_effort 沿用配置。
+        """
+
+        body: dict[str, Any] = {
+            "model": self.config.chat_model,
+            "messages": list(messages),
+            "temperature": self.config.chat_temperature if temperature is None else temperature,
+            "max_tokens": self.config.chat_max_tokens if max_tokens is None else max_tokens,
+            "tools": list(tools),
+        }
+        if self.config.chat_provider == "deepseek" and self.config.chat_reasoning_effort:
+            body["reasoning_effort"] = self.config.chat_reasoning_effort
+        input_chars = sum(len(message.get("content", "")) for message in messages)
+        estimated_cost = self.config.model_pricing.estimate(
+            input_tokens=max(1, input_chars // 2),
+            output_tokens=int(body["max_tokens"]),
+        )
+        payload, latency_ms = self._post_json(
+            "/chat/completions",
+            body,
+            operation=operation,
+            estimated_cost=estimated_cost,
+            chat=True,
+        )
+        return self._parse_chat_tool_response(payload, operation=operation, latency_ms=latency_ms)
+
+    def _parse_chat_tool_response(
+        self,
+        payload: dict[str, Any],
+        *,
+        operation: str,
+        latency_ms: int,
+    ) -> ChatToolResponse:
+        choices = payload.get("choices")
+        if not isinstance(choices, list) or not choices:
+            raise ModelOutputInvalid("chat 响应缺少 choices")
+        first = choices[0]
+        if not isinstance(first, dict):
+            raise ModelOutputInvalid("chat 响应 choice 结构异常")
+        message = first.get("message")
+        if not isinstance(message, dict):
+            raise ModelOutputInvalid("chat 响应缺少 message")
+        content = _content_to_text(message.get("content")).strip()
+        tool_calls: list[ToolCall] = []
+        for item in message.get("tool_calls") or []:
+            if not isinstance(item, dict):
+                continue
+            function = item.get("function") if isinstance(item.get("function"), dict) else None
+            name = str((function or {}).get("name") or "").strip()
+            raw_arguments = str((function or {}).get("arguments") or "").strip()
+            arguments: dict[str, Any] = {}
+            if raw_arguments:
+                try:
+                    parsed = json.loads(raw_arguments)
+                    if isinstance(parsed, dict):
+                        arguments = parsed
+                except json.JSONDecodeError:
+                    arguments = {}
+            tool_calls.append(
+                ToolCall(id=str(item.get("id") or ""), name=name, arguments=arguments, raw_arguments=raw_arguments)
+            )
+        usage_info = payload.get("usage") or {}
+        input_tokens: int | None = None
+        output_tokens: int | None = None
+        if isinstance(usage_info, dict):
+            raw_in = usage_info.get("prompt_tokens")
+            raw_out = usage_info.get("completion_tokens")
+            if isinstance(raw_in, int) and not isinstance(raw_in, bool) and raw_in >= 0:
+                input_tokens = raw_in
+            if isinstance(raw_out, int) and not isinstance(raw_out, bool) and raw_out >= 0:
+                output_tokens = raw_out
+        estimated_cost = self.config.model_pricing.estimate(input_tokens=input_tokens, output_tokens=output_tokens) if (
+            input_tokens is not None or output_tokens is not None
+        ) else None
+        usage = ModelUsage(
+            provider=self.config.chat_provider,
+            model=self.config.chat_model,
+            operation=operation,
+            input_tokens=input_tokens,
+            output_tokens=output_tokens,
+            latency_ms=latency_ms,
+            estimated_cost=estimated_cost,
+            pricing_snapshot_at=datetime.now(timezone.utc) if estimated_cost is not None else None,
+        )
+        return ChatToolResponse(content=content, tool_calls=tool_calls, usage=usage, latency_ms=latency_ms, model=self.config.chat_model)
 
     def _parse_chat_response(
         self,

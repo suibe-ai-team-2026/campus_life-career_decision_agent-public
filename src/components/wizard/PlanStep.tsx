@@ -46,7 +46,10 @@ import {
   type CachedPlan,
   type LocalProgressV1
 } from "@/lib/local-progress/store";
-import { Badge, Button, Callout, EmptyState, Icon, ProgressBar, formatDateTime } from "@/components/ui/primitives";
+import { toTraceEvents } from "@/lib/agent-trace";
+import { Badge, Button, Callout, EmptyState, Icon, formatDateTime } from "@/components/ui/primitives";
+import { AgentTrace } from "@/components/run/AgentTrace";
+import { ResearchToggle } from "@/components/run/ResearchToggle";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { StepHeader } from "./StepHeader";
 import { PlanDetail, pickCurrentVersion } from "./PlanDetail";
@@ -65,24 +68,8 @@ const STAGE_LABELS: Record<Stage, string> = {
   loading: "加载方案详情"
 };
 
-const STAGE_PROGRESS: Record<Stage, number> = {
-  session: 4,
-  profile: 10,
-  submit: 16,
-  polling: 40,
-  loading: 92
-};
-
-const RUN_STAGE_SEQUENCE = [
-  "queued",
-  "running",
-  "parsing",
-  "embedding",
-  "retrieving",
-  "planning",
-  "validating",
-  "succeeded"
-];
+const RESEARCH_TOGGLE_DESCRIPTION =
+  "开启后，重新生成方案时会访问外部网站检索实时网页（就业报告、招聘与行业信息），结果未经核验，只作补充线索；已生成的方案与规则数字不会被改写。";
 
 type PendingPlanRun = { run_id: string; direction_id: DirectionId; started_at: string };
 
@@ -212,7 +199,9 @@ export function PlanStep() {
   const [phase, setPhase] = useState<Phase>("boot");
   const [stage, setStage] = useState<Stage>("session");
   const [run, setRun] = useState<Run | null>(null);
-  const [, setEvents] = useState<RunEvent[]>([]);
+  const [events, setEvents] = useState<RunEvent[]>([]);
+  const [webSupplement, setWebSupplement] = useState(true);
+  const [runWebSupplement, setRunWebSupplement] = useState(true);
   const [plan, setPlan] = useState<Plan | null>(null);
   const [result, setResult] = useState<PlanResult | null>(null);
   const [viewIsCached, setViewIsCached] = useState(false);
@@ -251,6 +240,7 @@ export function PlanStep() {
   }, [favoriteDirections, direction]);
   const profileReady = progress ? hasCloudProfile(progress) : false;
   const cacheMatches = Boolean(cache && direction && cache.direction_id === direction);
+  const traceEvents = useMemo(() => toTraceEvents(events), [events]);
 
   useEffect(
     () => () => {
@@ -330,6 +320,7 @@ export function PlanStep() {
     setStage("session");
     setRun(null);
     setEvents([]);
+    setRunWebSupplement(webSupplement);
     const controller = new AbortController();
     abortRef.current?.abort();
     abortRef.current = controller;
@@ -378,6 +369,7 @@ export function PlanStep() {
           profile_id: profileId,
           profile_version: profileVersion,
           direction_id: options.directionId,
+          web_search: webSupplement,
           ...(options.existingPlanId ? { plan_id: options.existingPlanId } : {})
         },
         controller.signal
@@ -690,11 +682,8 @@ export function PlanStep() {
   const cachedPlanAvailable = cacheMatches && cache !== null;
 
   function renderGenerating() {
-    const currentStatus = run?.status ?? "queued";
-    const currentStageIndex = Math.max(0, RUN_STAGE_SEQUENCE.indexOf(currentStatus));
-    const progressValue = run ? Math.max(run.progress, STAGE_PROGRESS.polling) : STAGE_PROGRESS[stage];
     return (
-      <section className="panel run-panel" aria-labelledby="run-title" aria-live="polite">
+      <section className="panel run-panel" aria-labelledby="run-title">
         <div className="panel-head">
           <div>
             <p className="eyebrow">云端生成中</p>
@@ -702,25 +691,22 @@ export function PlanStep() {
           </div>
           <Badge tone="accent">{run ? runStageLabel(run.status) : STAGE_LABELS[stage]}</Badge>
         </div>
-        <ProgressBar value={progressValue} label="整体进度" />
-        <ol className="run-stages">
-          {RUN_STAGE_SEQUENCE.map((status, index) => (
-            <li
-              key={status}
-              className={
-                index < currentStageIndex ? "run-stage is-done" : index === currentStageIndex ? "run-stage is-current" : "run-stage"
-              }
-            >
-              <span className="run-stage-dot" aria-hidden="true">
-                {index < currentStageIndex ? <Icon name="check" size={11} /> : index + 1}
-              </span>
-              <span>{runStageLabel(status)}</span>
-            </li>
-          ))}
-        </ol>
+        <AgentTrace
+          events={traceEvents}
+          running
+          status={run?.status ?? null}
+          emptyHint={
+            runWebSupplement
+              ? "正在建立会话并唤醒云端 worker（首次约 30–90 秒）；本次已开启联网补充调研，会检索实时网页…"
+              : "正在建立会话并唤醒云端 worker（首次约 30–90 秒），等待第一条活动…"
+          }
+        />
         <div className="run-meta">
           <span>
             <Icon name="clock" size={13} /> 已等待 {elapsed} 秒
+          </span>
+          <span>
+            <Icon name="globe" size={13} /> 联网补充调研：{runWebSupplement ? "开启" : "关闭"}
           </span>
           <span>页面隐藏时轮询会自动退避，避免浪费资源。</span>
           <Button variant="ghost" size="sm" onClick={handleStopWaiting}>
@@ -728,9 +714,26 @@ export function PlanStep() {
           </Button>
         </div>
         <p className="panel-note">
-          流程：建立匿名会话 → 保存画像快照（服务端会重新计分）→ 提交 kind=plan 任务 → 轮询 GET /api/runs/:id 与 events。任务失败不会展示虚构方案。
+          流程：建立匿名会话 → 保存画像快照（服务端会重新计分）→ 提交 kind=plan 任务 → 轮询 GET /api/runs/:id 与 events。
+          轨迹会保留工具调用与网页阅读记录；任务失败不会展示虚构方案。
         </p>
       </section>
+    );
+  }
+
+  function renderFinishedTrace() {
+    if (events.length === 0) return null;
+    return (
+      <details className="message-trace plan-trace-details">
+        <summary>
+          <Icon name="activity" size={13} />
+          执行轨迹
+          <span className="message-trace-meta">
+            {run ? runStageLabel(run.status) : "已结束"} · {events.length} 条活动
+          </span>
+        </summary>
+        <AgentTrace events={traceEvents} running={false} status={run?.status ?? null} />
+      </details>
     );
   }
 
@@ -891,6 +894,15 @@ export function PlanStep() {
           {error?.code ? <p className="run-error-code">错误码：{error.code}（已转换为可读说明）</p> : null}
           <p>你可以重试、回到暂定方向检查资料，或稍后刷新页面查看任务是否已在服务端完成。</p>
         </Callout>
+        {renderFinishedTrace()}
+        <ResearchToggle
+          checked={webSupplement}
+          onChange={setWebSupplement}
+          disabled={!cloud}
+          label="联网补充调研"
+          description={RESEARCH_TOGGLE_DESCRIPTION}
+          className="plan-research-toggle"
+        />
         <div className="local-actions">
           <Button variant="primary" size="md" onClick={handleRetry}>
             <Icon name="refresh" size={14} /> 重试生成
@@ -999,6 +1011,14 @@ export function PlanStep() {
 
       {phase === "ready" && result ? (
         <div className="plan-ready">
+          <ResearchToggle
+            checked={webSupplement}
+            onChange={setWebSupplement}
+            disabled={cloudRunActive || !cloud}
+            label="联网补充调研"
+            description={RESEARCH_TOGGLE_DESCRIPTION}
+            className="plan-research-toggle"
+          />
           <div className="plan-toolbar">
             <div className="plan-toolbar-group">
               <label className="plan-toolbar-label" htmlFor="plan-direction-switch">
@@ -1038,6 +1058,8 @@ export function PlanStep() {
               {plan ? `方案 v${pickCurrentVersion(plan)?.version ?? "?"}` : "本次生成结果"}
             </Badge>
           </div>
+
+          {renderFinishedTrace()}
 
           <PlanDetail
             plan={plan}

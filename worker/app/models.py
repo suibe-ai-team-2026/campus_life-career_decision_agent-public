@@ -219,11 +219,12 @@ class RunInputBase(ContractModel):
 
 
 class PlanInput(RunInputBase):
-    pass
+    web_search: bool = False
 
 
 class AskInput(RunInputBase):
     question: str = Field(min_length=2, max_length=1000)
+    web_search: bool = False
     history: list[dict[str, str]] = Field(default_factory=list, max_length=4)
     source_version_ids: list[str] | None = Field(default=None, max_length=20)
 

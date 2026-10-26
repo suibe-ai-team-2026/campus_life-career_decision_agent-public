@@ -50,7 +50,8 @@ export async function POST(request: Request) {
     input = {
       profile_id: submit.profile_id,
       direction_id: submit.direction_id,
-      plan_id: submit.plan_id ?? null
+      plan_id: submit.plan_id ?? null,
+      web_search: submit.web_search ?? false
     };
   } else if (submit.kind === "export") {
     if (!submit.plan_id) return jsonError("bad_request", "缺少 plan_id");
@@ -67,7 +68,8 @@ export async function POST(request: Request) {
       question: submit.question,
       history: submit.history ?? [],
       source_version_ids: submit.source_version_ids ?? [],
-      profile_id: submit.profile_id ?? null
+      profile_id: submit.profile_id ?? null,
+      web_search: submit.web_search ?? false
     };
   } else if (submit.kind === "compare") {
     input = {

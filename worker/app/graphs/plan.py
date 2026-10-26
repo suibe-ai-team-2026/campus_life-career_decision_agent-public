@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import json
+import time
 from typing import Any, TypedDict
 
 from langgraph.graph import END, START, StateGraph
@@ -32,6 +33,7 @@ from .common import (
     profile_summary,
     require_no_validation_reasons,
 )
+from ..agent.research import run_web_research
 
 
 class PlanState(TypedDict, total=False):
@@ -42,6 +44,7 @@ class PlanState(TypedDict, total=False):
     retrieval: Any
     explanation: str | None
     warnings: list[str]
+    web: Any
     payload: dict[str, Any]
 
 
@@ -64,6 +67,7 @@ def build_plan_graph(ctx: JobContext):
         ctx.check_cancel()
         ctx.emit("retrieving", 15)
         run_input = _parse_input(ctx)
+        ctx.trace("agent_step", {"step": 1, "label": "读取画像与暂定方向"})
         profile = ctx.db.get_profile(ctx.job.owner_id, str(run_input.profile_id))
         if ctx.job.profile_version is not None and int(profile.get("version") or 0) != int(ctx.job.profile_version):
             raise WorkerError("画像版本与 run.profile_version 不一致", detail="version_conflict")
@@ -84,10 +88,17 @@ def build_plan_graph(ctx: JobContext):
             )
             if part
         )
+        ctx.trace("tool_call", {"step": 1, "tool": "corpus_search", "input": {"query": question[:120]}})
+        started = time.monotonic()
         outcome = ctx.retrieval.search(
             owner_id=ctx.job.owner_id,
             run_id=ctx.job.run_id,
             question=question,
+        )
+        ctx.trace(
+            "tool_result",
+            {"step": 1, "tool": "corpus_search", "ok": True, "ms": int((time.monotonic() - started) * 1000),
+             "hits": len(outcome.evidence), "titles": [str(item.get("title") or "")[:60] for item in outcome.evidence[:6]]},
         )
         # 用户自己上传的资料（私有、未核验）不能进规则库，但要参与检索与解释：
         # 单独召回本人上传的来源版本并并入证据，排在前面便于引用。
@@ -128,6 +139,10 @@ def build_plan_graph(ctx: JobContext):
         if result.status == "unsupported_direction":
             raise UnsupportedDirection("规则引擎不支持该方向")
         payload = plan_result_payload(result)
+        ctx.trace(
+            "agent_note",
+            {"text": f"规则引擎已冻结事实：行动 {len(result.actions)} 项 · 课程 {len(result.courses)} 门 · 竞赛 {len(result.competitions)} 项 · 缺口 {len(result.gaps)} 项"},
+        )
         ctx.emit("planning", 52)
         return {"rule_result": result, "rule_payload": payload}
 
@@ -141,21 +156,51 @@ def build_plan_graph(ctx: JobContext):
         warnings: list[str] = list(state.get("warnings") or [])
         explanation: str | None = None
         fallback_reason: str | None = None
+
+        # 可选：联网补充调研。结果接在本地证据之后，复用同一套引用/校验。
+        web = None
+        if run_input.get("web_search") and ctx.config.web_search_enabled:
+            ctx.trace("agent_note", {"text": "已开启联网补充调研，检索实时就业/培养方案信息"})
+            direction = str(run_input["direction_id"])
+            prof = profile_summary(profile)
+            research_question = " ".join(
+                part
+                for part in (
+                    str(prof.get("school") or ""),
+                    str(prof.get("major") or ""),
+                    direction_title(direction, ctx.db.get_direction(direction)),
+                    "就业去向 培养方案 课程 招聘要求",
+                )
+                if part
+            )
+            web = run_web_research(
+                ctx,
+                question=research_question,
+                site_hint=None,
+                numbering_start=len(retrieval.citations) + 1,
+            )
+
+        evidence: list[dict[str, Any]] = [dict(item) for item in retrieval.evidence]
+        citations: list[Any] = list(retrieval.citations)
+        if web is not None:
+            evidence.extend(web.evidence)
+            citations.extend(web.citations)
+
         messages = prompts.build_plan_messages(
             direction_id=str(run_input["direction_id"]),
             profile_summary=profile_summary(profile),
             rule_facts=rule_payload,
-            evidence=retrieval.evidence,
+            evidence=evidence,
         )
-        allowed_texts = [str(item.get("text") or "") for item in retrieval.evidence] + [
+        allowed_texts = [str(item.get("text") or "") for item in evidence] + [
             json.dumps(rule_payload, ensure_ascii=False, sort_keys=True)
         ]
-        allowed_urls = [str(item.get("canonical_url") or "") for item in retrieval.evidence if item.get("canonical_url")]
+        allowed_urls = [str(item.get("canonical_url") or "") for item in evidence if item.get("canonical_url")]
 
         def validator(raw: str):
             parsed = prompt_validate.parse_plan_explanation(
                 raw,
-                valid_citations={item["citation_no"] for item in retrieval.evidence},
+                valid_citations={item["citation_no"] for item in evidence},
                 action_ids={action["action_id"] for action in rule_payload["actions"]},
                 allowed_texts=allowed_texts,
                 allowed_urls=allowed_urls,
@@ -165,7 +210,7 @@ def build_plan_graph(ctx: JobContext):
                     *[str(action.get("title") or "") for action in rule_payload.get("actions", [])],
                     # 解释里引用证据来源的名称是正常的；此前只放课程/竞赛/行动标题，
                     # 模型一提来源名就被判 unknown_entities 并整段丢弃。
-                    *[str(item.get("title") or "") for item in retrieval.evidence],
+                    *[str(item.get("title") or "") for item in evidence],
                 ],
             )
             require_no_validation_reasons(parsed.validation_reasons, what="方案解释")
@@ -217,8 +262,11 @@ def build_plan_graph(ctx: JobContext):
                 gap_codes=[str(gap.get("code")) for gap in rule_payload.get("gaps", [])],
                 reason=fallback_reason or "",
             )
+        if web is not None and web.note and web.sources:
+            explanation = f"{explanation}\n资料边界：{web.note}"
+        ctx.trace("validation", {"ok": True, "citations": len(citations), "web_citations": len(web.citations) if web else 0})
         ctx.emit("planning", 76)
-        return {"explanation": explanation, "warnings": warnings}
+        return {"explanation": explanation, "warnings": warnings, "web": web}
 
     def publish_node(state: PlanState) -> PlanState:
         ctx.check_cancel()
@@ -228,7 +276,9 @@ def build_plan_graph(ctx: JobContext):
         rule_payload = dict(state["rule_payload"])
         warnings: list[str] = list(state.get("warnings") or []) + list(getattr(retrieval, "warnings", []) or [])
         # 证据由检索层分配 citation_no；模型不能新增。
-        rule_payload["evidence"] = [citation_payload(citation) for citation in retrieval.citations]
+        web = state.get("web")
+        citations = list(retrieval.citations) + (web.citations if web is not None else [])
+        rule_payload["evidence"] = [citation_payload(citation) for citation in citations]
         rule_payload["explanation"] = state.get("explanation")
         rule_payload["warnings"] = warnings
         final_result = PlanResult.model_validate(rule_payload)

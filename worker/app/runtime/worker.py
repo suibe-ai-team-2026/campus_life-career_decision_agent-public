@@ -251,6 +251,7 @@ class Worker:
             job=job,
             worker_id=self.deps.worker_id,
             emit_progress=lambda status, progress: self._emit_progress(job, lease, status, progress),
+            emit_trace=lambda event_type, payload: self._emit_trace(job, event_type, payload),
             cancel_check=lambda: self._check_cancel(job, lease),
             logger=self.logger,
             budget=self.deps.budget,
@@ -315,6 +316,14 @@ class Worker:
     # ------------------------------------------------------------------
     # 内部
     # ------------------------------------------------------------------
+    def _emit_trace(self, job: ClaimedJob, event_type: str, payload: dict[str, Any]) -> None:
+        """写入一条前端可读的轨迹事件；失败不影响任务。"""
+
+        try:
+            self.deps.db.append_event(job.run_id, event_type, payload)
+        except Exception:  # noqa: BLE001 - 轨迹只用于展示
+            return
+
     def _emit_progress(self, job: ClaimedJob, lease, status: str, progress: int) -> None:
         lease.assert_alive()
         ok = self.deps.db.set_progress(job.job_id, self.deps.worker_id, job.lease_epoch, status, progress)

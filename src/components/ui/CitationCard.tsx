@@ -2,6 +2,7 @@
 
 import { useId, useState } from "react";
 import type { Citation } from "@/lib/contracts/run";
+import { safeExternalUrl } from "@/lib/api-client";
 import { Badge, Icon, type BadgeTone } from "./primitives";
 
 export function verificationDisplay(status: string): { label: string; tone: BadgeTone } {
@@ -47,12 +48,24 @@ export function locatorSummary(locator: Record<string, unknown> | null | undefin
   return parts.length > 0 ? parts.join(" · ") : "定位信息未提供";
 }
 
+function domainOf(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+}
+
 export function CitationCard({ citation, dense = false }: { citation: Citation; dense?: boolean }) {
   const [expanded, setExpanded] = useState(false);
   const id = useId();
   const verification = verificationDisplay(citation.verification_status);
   const excerpt = citation.excerpt?.trim() ?? "";
   const longExcerpt = excerpt.length > 160;
+  // Only http(s) locator URLs become links; anything else keeps the old
+  // "locator shows text, never a URL" behaviour.
+  const rawWebUrl = typeof citation.locator?.url === "string" ? citation.locator.url : null;
+  const webUrl = rawWebUrl ? safeExternalUrl(rawWebUrl) : null;
 
   return (
     <article className={dense ? "citation-card citation-card-dense" : "citation-card"}>
@@ -67,6 +80,16 @@ export function CitationCard({ citation, dense = false }: { citation: Citation; 
         </div>
         <Badge tone={verification.tone}>{verification.label}</Badge>
       </header>
+      {webUrl ? (
+        <div className="citation-web-row">
+          <Badge tone="info">实时网页 · 未核验</Badge>
+          <a className="citation-web-link" href={webUrl} target="_blank" rel="noopener noreferrer" title={webUrl}>
+            <span className="citation-domain">{domainOf(webUrl)}</span>
+            <span>打开网页</span>
+            <Icon name="external" size={12} />
+          </a>
+        </div>
+      ) : null}
       {excerpt ? (
         <div className="citation-excerpt-wrap">
           <blockquote id={`${id}-excerpt`} className={!expanded && longExcerpt ? "citation-excerpt is-clamped" : "citation-excerpt"}>
@@ -89,7 +112,9 @@ export function CitationCard({ citation, dense = false }: { citation: Citation; 
         <p className="citation-empty">该引用未提供摘录，请以来源条目为准。</p>
       )}
       <p className="citation-footnote">
-        引用编号与定位由服务端分配，本页面不拼接外部链接。
+        {webUrl
+          ? "引用编号与定位由服务端分配；实时网页引用未经核验，请以官方来源为准。"
+          : "引用编号与定位由服务端分配；内部资料引用不拼接外部链接。"}
       </p>
     </article>
   );

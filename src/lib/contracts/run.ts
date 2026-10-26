@@ -15,6 +15,7 @@ export const RunSubmitSchema = z
     plan_id: z.string().uuid().optional(),
     plan_version_id: z.string().uuid().optional(),
     source_version_ids: z.array(z.string().uuid()).max(20).optional(),
+    web_search: z.boolean().optional(),
     question: z.string().trim().min(2).max(1000).optional(),
     history: z
       .array(z.object({ role: z.enum(["user", "assistant"]), content: z.string().max(1000) }))
@@ -71,6 +72,7 @@ export const RunEventSchema = z.object({
   safe_payload: z.record(z.string(), z.unknown()).nullable().optional(),
   created_at: z.string()
 });
+export type RunEvent = z.infer<typeof RunEventSchema>;
 
 export const CitationSchema = z.object({
   citation_no: z.number().int().positive(),

@@ -44,6 +44,7 @@ class JobContext:
     cancel_check: Callable[[], None]
     logger: logging.Logger
     budget: BudgetGuard | None = None
+    emit_trace: Callable[[str, dict[str, Any]], None] = field(default=lambda _type, _payload: None)
     _last_progress: int = field(default=0, repr=False)
 
     # -- 进度 ---------------------------------------------------------
@@ -54,6 +55,10 @@ class JobContext:
             value = min(PROGRESS_MAX_BEFORE_COMPLETE, self._last_progress + 1)
         self._last_progress = value
         self.emit_progress(status, value)
+
+    # -- 轨迹事件（只展示，不影响进度/结果） ---------------------------
+    def trace(self, event_type: str, payload: dict[str, Any] | None = None) -> None:
+        self.emit_trace(event_type, payload or {})
 
     # -- 取消 ---------------------------------------------------------
     def check_cancel(self) -> None:

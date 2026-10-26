@@ -412,6 +412,29 @@ class SupabaseDb:
         )
         return bool(result)
 
+    def append_event(self, run_id: str, event_type: str, safe_payload: dict[str, Any]) -> bool:
+        """Best-effort 追加一条 trace 事件（不回退进度，也不影响 run 结果）。
+
+        与 ``worker_set_progress`` 不同，这里不校验租约、不改 status；只用于
+        前端展示「后台正在做什么」。单 worker 串行，seq = max+1 无并发风险。
+        """
+
+        try:
+            last = self.select_maybe_one(
+                "app_run_events",
+                filters=[("run_id", f"eq.{run_id}")],
+                columns="seq",
+                order="seq.desc",
+            )
+            seq = (int(last["seq"]) + 1) if last and isinstance(last.get("seq"), int) else 1
+            self.insert(
+                "app_run_events",
+                [{"run_id": run_id, "seq": seq, "event_type": event_type, "safe_payload": safe_payload}],
+            )
+            return True
+        except Exception:  # noqa: BLE001 - 轨迹事件失败绝不影响任务
+            return False
+
     def complete_job(
         self,
         job_id: str,

@@ -10,6 +10,7 @@
 from __future__ import annotations
 
 import re
+import time
 from typing import Any, TypedDict
 
 from langgraph.graph import END, START, StateGraph
@@ -19,6 +20,7 @@ from ..models import AskInput, AskRunResult
 from ..prompts import career as prompts
 from ..prompts import validate as prompt_validate
 from .common import JobContext, generate_validated_json, profile_summary
+from ..agent.research import run_web_research
 
 
 class AskState(TypedDict, total=False):
@@ -67,11 +69,25 @@ def build_ask_graph(ctx: JobContext):
         ctx.check_cancel()
         ctx.emit("retrieving", 25)
         run_input = state["run_input"]
+        question = str(run_input["question"])
+        ctx.trace("tool_call", {"step": 0, "tool": "corpus_search", "input": {"query": question[:120]}})
+        started = time.monotonic()
         outcome = ctx.retrieval.search(
             owner_id=ctx.job.owner_id,
             run_id=ctx.job.run_id,
-            question=str(run_input["question"]),
+            question=question,
             source_version_ids=run_input.get("source_version_ids") or None,
+        )
+        ctx.trace(
+            "tool_result",
+            {
+                "step": 0,
+                "tool": "corpus_search",
+                "ok": True,
+                "ms": int((time.monotonic() - started) * 1000),
+                "hits": len(outcome.evidence),
+                "titles": [str(item.get("title") or "")[:60] for item in outcome.evidence[:6]],
+            },
         )
         ctx.emit("retrieving", 38)
         return {"retrieval": outcome}
@@ -81,49 +97,69 @@ def build_ask_graph(ctx: JobContext):
         run_input = state["run_input"]
         retrieval = state["retrieval"]
         question = str(run_input["question"])
-        # 1) 闸门拒答：不调生成模型。
-        if not retrieval.evidence or not retrieval.gate.passed:
+
+        # 0) 可选：联网补充。结果转成 citation_no 接在本地证据之后。
+        web = None
+        if run_input.get("web_search") and ctx.config.web_search_enabled:
+            ctx.trace("agent_note", {"text": "已开启联网补充，开始实时网页调研"})
+            web = run_web_research(
+                ctx,
+                question=question,
+                site_hint=None,
+                numbering_start=len(retrieval.citations) + 1,
+            )
+        else:
+            ctx.trace("agent_note", {"text": "未开启联网补充，仅使用已载入资料"})
+
+        evidence = [dict(item) for item in retrieval.evidence]
+        citations: list[Any] = list(retrieval.citations)
+        if web is not None:
+            evidence.extend(web.evidence)
+            citations.extend(web.citations)
+
+        valid_numbers = {int(item["citation_no"]) for item in evidence}
+        corpus_gate_ok = bool(retrieval.evidence and retrieval.gate.passed)
+        web_ok = bool(web is not None and web.sources)
+
+        if not evidence:
             answer = prompt_validate.build_refusal_text(
-                question,
-                evidence=retrieval.evidence,
-                reason="gate_failed" if retrieval.evidence else "no_candidates",
+                question, evidence=evidence, reason="no_candidates"
             )
             boundary = prompt_validate.build_boundary_note(question, gate_version=retrieval.gate.version)
+            ctx.trace("validation", {"ok": False, "citations": 0, "web_citations": 0, "note": "no_evidence"})
             ctx.emit("validating", 82)
-            return {
-                "result": _refusal_payload(
-                    answer,
-                    "gate_failed" if retrieval.evidence else "no_evidence",
-                    boundary_note=boundary,
-                )
-            }
+            return {"result": _refusal_payload(answer, "no_evidence", boundary_note=boundary)}
+        if not corpus_gate_ok and not web_ok:
+            answer = prompt_validate.build_refusal_text(
+                question, evidence=evidence, reason="gate_failed"
+            )
+            boundary = prompt_validate.build_boundary_note(question, gate_version=retrieval.gate.version)
+            ctx.trace("validation", {"ok": False, "citations": len(citations), "web_citations": len(web.citations) if web else 0, "note": "gate_failed"})
+            ctx.emit("validating", 82)
+            return {"result": _refusal_payload(answer, "gate_failed", boundary_note=boundary)}
 
         ctx.emit("planning", 55)
         messages = prompts.build_ask_messages(
             question=question,
             history=run_input.get("history") or [],
-            evidence=retrieval.evidence,
+            evidence=evidence,
         )
-        allowed_urls = [str(item.get("canonical_url") or "") for item in retrieval.evidence if item.get("canonical_url")]
-        # 数字白名单必须包含 prompt 里实际注入的 context（锚点正文 + 邻近块），
-        # 否则模型合法引用相邻段落里的数字也会被判为越界。
+        allowed_urls = [str(item.get("canonical_url") or "") for item in evidence if item.get("canonical_url")]
         evidence_texts = [
             str(item.get("text") or "") + "\n" + str(item.get("context") or "")
-            for item in retrieval.evidence
+            for item in evidence
         ]
         last_parsed: dict[str, Any] = {}
 
         def validator(raw: str):
             parsed = prompt_validate.parse_ask_output(
                 raw,
-                valid_citations={item["citation_no"] for item in retrieval.evidence},
+                valid_citations=valid_numbers,
                 evidence_texts=evidence_texts,
                 allowed_urls=allowed_urls,
             )
             last_parsed["value"] = parsed
             if parsed.validation_reasons:
-                # 交给 generate_validated_json 带反馈重试；仍不合规时由调用方决定
-                # 硬拒（编造引用编号）还是降级（数字/引用格式瑕疵）。
                 raise OutputValidationError("模型输出未通过校验", reasons=list(parsed.validation_reasons))
             return parsed, []
 
@@ -137,27 +173,27 @@ def build_ask_graph(ctx: JobContext):
             hard_failures = [reason for reason in exc.reasons if reason.startswith("invalid_citation_numbers")]
             if fallback is None or hard_failures or not str(fallback.answer or "").strip():
                 answer = prompt_validate.build_refusal_text(
-                    question, evidence=retrieval.evidence, reason="invalid_model_output"
+                    question, evidence=evidence, reason="invalid_model_output"
                 )
                 boundary = prompt_validate.build_boundary_note(question, gate_version=retrieval.gate.version)
+                ctx.trace("validation", {"ok": False, "citations": len(citations), "web_citations": len(web.citations) if web else 0, "note": "invalid_model_output"})
                 ctx.emit("validating", 82)
                 return {"result": _refusal_payload(answer, "explanation_discarded", boundary_note=boundary)}
-            # 校验瑕疵降级：保留有证据支撑的回答，只提示需人工核对，不再整段丢弃。
             parsed = fallback
             soft_note = "校验提示：个别数字或引用标注未与证据逐字一致，请以引用卡原文为准。"
         except ModelOutputInvalid:
-            answer = prompt_validate.build_refusal_text(question, evidence=retrieval.evidence, reason="invalid_model_output")
+            answer = prompt_validate.build_refusal_text(question, evidence=evidence, reason="invalid_model_output")
             boundary = prompt_validate.build_boundary_note(question, gate_version=retrieval.gate.version)
+            ctx.trace("validation", {"ok": False, "citations": len(citations), "web_citations": len(web.citations) if web else 0, "note": "invalid_model_output"})
             ctx.emit("validating", 82)
             return {"result": _refusal_payload(answer, "explanation_discarded", boundary_note=boundary)}
 
         boundary = parsed.boundary_note or prompt_validate.build_boundary_note(
             question, gate_version=retrieval.gate.version
         )
+        if web is not None and web.note and web.sources:
+            boundary = f"{boundary}；{web.note}" if boundary else web.note
         if parsed.no_evidence and retrieval.gate.passed and retrieval.gate.dense_top >= 0.70 and retrieval.gate.keyword_overlap >= 5 and len(retrieval.evidence) >= 3:
-            # The model occasionally reports no_evidence even though high-scoring
-            # evidence exists (e.g. an exact official rate chunk). Retry once with
-            # an explicit coverage hint instead of silently discarding the sources.
             retry_messages = [
                 *messages,
                 {
@@ -190,16 +226,11 @@ def build_ask_graph(ctx: JobContext):
                         "校验提示：个别数字或引用标注未与证据逐字一致，请以引用卡原文为准。"
                     )
             except ModelOutputInvalid:
-                # Keep the original refusal if the retry is still invalid.
                 pass
 
         if parsed.no_evidence:
-            # The model may set no_evidence=true while still giving a useful partial
-            # answer that cites evidence ("only 2022 data is available"). If every
-            # cited number is valid and no validation reason fired, keep it as a
-            # normal answer with sources instead of discarding the citations.
             cited_numbers = {int(match) for match in re.findall(r"\[(\d+)\]", parsed.answer or "")}
-            valid_numbers = {item["citation_no"] for item in retrieval.evidence}
+            valid_numbers = {int(item["citation_no"]) for item in evidence}
 
             def citation_no(citation: Any) -> int | None:
                 if isinstance(citation, dict):
@@ -213,17 +244,19 @@ def build_ask_graph(ctx: JobContext):
                     answer=parsed.answer,
                     citations=[
                         citation
-                        for citation in retrieval.citations
+                        for citation in citations
                         if citation_no(citation) in cited_numbers
                     ],
                     refusal=False,
                     boundary_note=boundary or None,
                 ).model_dump(mode="json", exclude_none=True)
+                ctx.trace("validation", {"ok": True, "citations": len(citations), "web_citations": len(web.citations) if web else 0})
                 ctx.emit("validating", 86)
                 return {"result": result}
             answer = parsed.answer or prompt_validate.build_refusal_text(
-                question, evidence=retrieval.evidence, reason="model_no_evidence"
+                question, evidence=evidence, reason="model_no_evidence"
             )
+            ctx.trace("validation", {"ok": False, "citations": len(citations), "web_citations": len(web.citations) if web else 0, "note": "model_no_evidence"})
             ctx.emit("validating", 82)
             return {"result": _refusal_payload(answer, "model_no_evidence", boundary_note=boundary)}
         if soft_note:
@@ -231,10 +264,11 @@ def build_ask_graph(ctx: JobContext):
 
         result = AskRunResult(
             answer=parsed.answer,
-            citations=retrieval.citations,
+            citations=citations,
             refusal=False,
             boundary_note=boundary or None,
         ).model_dump(mode="json", exclude_none=True)
+        ctx.trace("validation", {"ok": True, "citations": len(citations), "web_citations": len(web.citations) if web else 0})
         ctx.emit("validating", 86)
         return {"result": result}
 
