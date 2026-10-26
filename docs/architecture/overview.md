@@ -27,6 +27,8 @@ Freestyle 云端 worker（LangGraph 固定流程；Docling；OpenRouter Qwen3 Em
 - 队列是 Supabase Postgres `app_private.jobs` 表（不是 pgmq，也不声称已接托管 Queues）。
 - 检索在 SQL 候选集阶段按 `visibility`/`owner_id` 过滤；4096 维向量用精确 cosine 扫描，不建超出 pgvector 限制的 ANN 索引。
 
+> 更 agentic 的演进研究（固定工作流 vs 通用 agent、Deep Agents 选型、DeepSeek 联网搜索接入、分阶段落地）：见 [`agentic-capability-research-2026-10-26.md`](agentic-capability-research-2026-10-26.md)。
+
 ## 3. 目录与模块边界
 
 | 目录 | 职责 | 负责人 |
