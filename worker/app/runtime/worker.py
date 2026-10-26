@@ -21,6 +21,7 @@ import uuid
 from dataclasses import dataclass
 from decimal import Decimal
 from typing import Any
+from urllib.parse import urlparse
 
 from ..budget import BudgetGuard, utc_month_start
 from ..config import Config
@@ -101,6 +102,43 @@ class Worker:
             log_event(self.logger, "worker_shutdown_requested", level=30, worker_id=self.deps.worker_id)
         self.shutdown_event.set()
 
+    def warm_network(self) -> None:
+        """Best-effort DNS warm-up for the Supabase and model endpoints.
+
+        The Freestyle VM resolver can spend several seconds on a cold lookup
+        (IPv6 DNS first, UDP/53 blocked). Warming once at startup keeps the
+        first claim and the first retrieval from failing with a transient
+        DatabaseError, and makes the first user request noticeably faster.
+        """
+
+        hosts: list[str] = []
+        for raw in (
+            self.config.supabase_url,
+            self.config.openrouter_base_url,
+            self.config.chat_base_url,
+        ):
+            host = urlparse(raw or "").hostname
+            if host and host not in hosts:
+                hosts.append(host)
+        for host in hosts:
+            started = time.monotonic()
+            try:
+                socket.getaddrinfo(host, 443, proto=socket.IPPROTO_TCP)
+                log_event(
+                    self.logger,
+                    "dns_warm_ok",
+                    host=host,
+                    duration_ms=int((time.monotonic() - started) * 1000),
+                )
+            except OSError as exc:  # noqa: BLE001 - 预热失败不阻塞 worker
+                log_event(
+                    self.logger,
+                    "dns_warm_failed",
+                    level=30,
+                    host=host,
+                    error_code=type(exc).__name__,
+                )
+
     def run_forever(self) -> None:
         log_event(
             self.logger,
@@ -109,6 +147,7 @@ class Worker:
             status="ready",
             budget_state="unset" if self.deps.budget.budget_usd is None else "configured",
         )
+        self.warm_network()
         backoff = max(1.0, self.config.poll_interval_seconds)
         last_activity = time.monotonic()
         last_pause_attempt = 0.0
@@ -123,8 +162,11 @@ class Worker:
                     worker_id=self.deps.worker_id,
                     error_code=type(exc).__name__,
                 )
+                # Cap the backoff: a transient DNS/database blip used to stall the
+                # queue for up to 60s per retry, which users experienced as "ask
+                # never returns". 15s is enough to avoid hammering the DB.
                 self.shutdown_event.wait(backoff)
-                backoff = min(60.0, backoff * 2)
+                backoff = min(15.0, backoff * 2)
                 continue
             backoff = max(1.0, self.config.poll_interval_seconds)
             if job is None:

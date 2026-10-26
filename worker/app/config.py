@@ -256,10 +256,11 @@ class Config:
     lease_seconds: int = 120
     shutdown_grace_seconds: float = 30.0
     # Freestyle：空闲时主动 pause，BFF 在用户提交任务前 start/resume。
+    # 30 分钟：冷启动一次要 30–90 秒，120 秒空闲就暂停会让每次问答都付这个代价。
     freestyle_api_key: str | None = field(default=None, repr=False)
     freestyle_vm_id: str | None = None
     freestyle_base_url: str = "https://api.freestyle.sh"
-    idle_pause_seconds: float = 120.0
+    idle_pause_seconds: float = 1800.0
     # 检索 / 切块 / 规则
     retrieval: RetrievalConfig = field(default_factory=RetrievalConfig)
     ingest: IngestConfig = field(default_factory=IngestConfig)
@@ -430,7 +431,7 @@ class Config:
             freestyle_api_key=_env(env, "FREESTYLE_API_KEY"),
             freestyle_vm_id=_env(env, "FREESTYLE_VM_ID"),
             freestyle_base_url=_validate_url("FREESTYLE_API_BASE", _env(env, "FREESTYLE_API_BASE", "https://api.freestyle.sh") or "https://api.freestyle.sh"),
-            idle_pause_seconds=_float(env, "WORKER_IDLE_PAUSE_SECONDS", 120.0, minimum=30.0),
+            idle_pause_seconds=_float(env, "WORKER_IDLE_PAUSE_SECONDS", 1800.0, minimum=30.0),
             retrieval=retrieval,
             ingest=ingest,
             rules_version=_env(env, "CAREER_RULES_VERSION", RULES_VERSION) or RULES_VERSION,

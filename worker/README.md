@@ -104,11 +104,12 @@ UV_CACHE_DIR=/tmp/uv-cache uv run --python 3.12 python -m app.runtime.worker --o
 | `DEEPSEEK_BASE_URL` | 否 | `https://api.deepseek.com` | chat endpoint |
 | `DEEPSEEK_CHAT_MODEL` | 否 | `deepseek-flash` | DeepSeek-V4.1-Flash；只用于解释 |
 | `DEEPSEEK_REASONING_EFFORT` | 否 | `low` | 控制 V4.1 推理 token，省成本 |
-| `WORKER_IDLE_PAUSE_SECONDS` | 否 | `120` | 空闲多少秒后 worker 主动 pause Freestyle VM |
+| `WORKER_IDLE_PAUSE_SECONDS` | 否 | `1800` | 空闲多少秒后 worker 主动 pause Freestyle VM；间隔太短会让每次问答先等 30–90 秒冷启动 |
 | `FREESTYLE_API_KEY` / `FREESTYLE_VM_ID` | 否 | — | 仅用于 worker 空闲自暂停；不给浏览器 |
 | `WORKER_CONCURRENCY` | 否 | `1` | v1 固定为 1（一次一个大任务） |
 | `RUN_MAX_ATTEMPTS` | 否 | `3` | 供运维核对；实际值由 DB `jobs.max_attempts` 决定 |
 | `MODEL_REQUEST_TIMEOUT_SECONDS` | 否 | `60` | HTTP 超时 |
+| `MODEL_MAX_RETRIES` | 否 | `1` | 单次模型调用重试次数；60s 超时 × 多次重试会把交互式问答拖到数分钟 |
 | `MODEL_MONTHLY_BUDGET_USD` | **是** | 未设置 | 未设置时模型调用被拒绝（fail closed） |
 | `UNKNOWN_USAGE_RESERVE_USD` | 否 | `0.02` | 成本未知的历史用量按条预留，避免当作 0 |
 | `MODEL_INPUT_PRICE_USD_PER_MTOK` 等 | 否 | 未设置 | 设置后写 `estimated_cost`；不设置则成本 NULL |
@@ -143,6 +144,7 @@ UV_CACHE_DIR=/tmp/uv-cache uv run --python 3.12 python scripts/probe_openrouter.
 
 - worker 连续 `WORKER_IDLE_PAUSE_SECONDS` 没有任务时，调用 `POST /v5/vms/{id}/pause` 冻结 VM；pause 只计存储，不计 vCPU/内存。
 - 用户点击生成/上传后，BFF 调用 `POST /v5/vms/{id}/start` 唤醒；worker 从冻结处继续 claim 队列。
+- **冷启动成本 30–90 秒**（含 `/start` 与 4 vCPU 容器恢复）。2026-10-25 线上把默认值从 60/120 秒调到 1800 秒：之前几乎每次问答都要先等唤醒，叠加 DNS 问题后一次 ask 要 4–6 分钟；调大后实测 ask 全流程 42 秒（检索 23 秒 + 生成 19 秒）。
 - pause 请求常因 VM 立即冻结而连接中断，worker 将 `RemoteProtocolError` 视为已请求暂停；若未生效会继续轮询，不会丢任务。
 - 这是 demo 级单 worker 方案，不是 HA；BFF 唤醒失败时 run 仍保持 queued，不会丢。
 
@@ -345,6 +347,49 @@ docker compose exec worker python -m app.runtime.worker --check
 - 构建上下文要干净：只放 `Dockerfile`、`docker-compose.yml`、`app/`、`scripts/`、
   `pyproject.toml`、`uv.lock`、`README.md`、`worker.env.example`。若把整个根文件系统
   误解压进构建目录，构建会先花很久打包上下文。
+
+#### Freestyle VM 的 DNS 修复（必做）
+
+Freestyle VM 的 `/etc/resolv.conf` 默认把 IPv6 DNS 排在前面，而该 VM 出站 UDP/53
+被阻断：冷查询要 5–17 秒，并会间歇性报 `Temporary failure in name resolution`。
+worker 的表现是 `claim_failed` / `heartbeat_failed` / `usage_record_failed`，
+一次 ask 的检索阶段卡 4–6 分钟，用户侧就是“问答一直不出结果”。
+
+出站 TCP/853（DoT）可用，所以用 DoT 替代 UDP/53，并让 Docker 容器通过宿主
+systemd-resolved 解析：
+
+```bash
+sudo bash worker/scripts/fix-vm-dns.sh
+```
+
+脚本会备份 `/etc/resolv.conf`，停用 `60-freestyle-vms.conf`，写入
+`70-dot.conf`（1.1.1.1 / 8.8.8.8 的 DoT），把 `resolv.conf` 指向
+`127.0.0.53`，然后 `docker compose up -d --force-recreate` 让容器重新生成
+`/etc/resolv.conf`。验证：
+
+```bash
+dig +time=8 www.wikipedia.org @127.0.0.53 | grep 'Query time'
+docker exec campus-pathway-worker /app/.venv/bin/python -c \
+  "import socket,time; t=time.time(); print(socket.getaddrinfo('api.deepseek.com',443)[0][4][0], round((time.time()-t)*1000),'ms')"
+```
+
+正常应 <1 秒。worker 启动时也会做一次 DNS 预热（`dns_warm_ok` 日志），避免第一个
+claim 因冷解析失败。
+
+该 VM 还是 dual-stack，但 **IPv6 出口不稳定**（实测 OpenRouter IPv6 7.6s、IPv4 2.0s；
+DeepSeek IPv6 直接失败）。httpx 先试 IPv6，15 秒 connect timeout 后才回退，embedding /
+chat 会出现 15–60 秒超时并触发整任务重试。`/etc/gai.conf` 的 precedence 在这台机器上
+没有生效，所以用 hosts 固定 IPv4，并每 30 分钟刷新一次：
+
+```bash
+sudo bash worker/scripts/pin-vm-ipv4.sh
+# 使用 systemd timer 定时刷新（无 crontab 的镜像）
+sudo /usr/local/bin/pin-vm-ipv4.sh   # 脚本可重复执行，保留其他 hosts 行
+```
+
+改完 DNS / hosts 后必须 `docker restart campus-pathway-worker`：旧进程会继续复用失效
+连接，重启后同类 ask 从超时恢复为 28.6 秒。`pin-vm-ipv4.sh` 的 systemd timer 配置见
+`docs/deployment.md`「VM DNS」一节。
 
 ### 13.2 systemd（裸机 VM）
 

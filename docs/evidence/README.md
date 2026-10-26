@@ -16,6 +16,7 @@
 | `upload-ingest-e2e.json` | 私有上传→ingest→ask 的端到端结果 |
 | `worker-restart.json` | worker 容器重启恢复记录与未演练项 |
 | `deepseek-probe.json` | DeepSeek 官方 V4.1-Flash chat 探针（JSON 模式/usage） |
+| `ask-latency-2026-10-25.md` | 资料问答慢/失败的定位：VM DNS（UDP/53 被阻断）、空闲暂停过短、模型重试叠加；修复后 ask 39 秒、pause 后 48 秒 |
 | `vm-cost-control.json` | Freestyle 空闲自动 pause 与 BFF 唤醒验证、计费说明 |
 
 复跑命令见 `docs/deployment.md`；云端迁移通过 Management API 执行，因为本机到 5432/6543 的直连被网络代理阻断。

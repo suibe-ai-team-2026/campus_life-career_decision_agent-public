@@ -3,9 +3,13 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  experimental: {
-    typedRoutes: false
-  },
+  // `typedRoutes` is stable in Next.js 16; it is no longer read from `experimental`.
+  typedRoutes: false,
+  // The dev server is sometimes opened through 127.0.0.1 instead of localhost.
+  // Without this allow-list Next.js blocks its dev resources on that origin and
+  // the page ships without hydration (buttons/forms do nothing until a reload
+  // on `localhost`).
+  allowedDevOrigins: ["127.0.0.1", "localhost"],
   async headers() {
     return [
       {

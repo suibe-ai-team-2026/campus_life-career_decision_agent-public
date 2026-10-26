@@ -154,6 +154,7 @@ export function LibraryTool() {
     setAskStage({ label: "提交问题", progress: 8 });
     const controller = new AbortController();
     abortRef.current = controller;
+    const askedAt = Date.now();
     try {
       await createAnonymousSession(controller.signal);
       const ack = await submitRun(
@@ -168,8 +169,18 @@ export function LibraryTool() {
       const { run } = await pollRunUntilDone(ack.runId, {
         signal: controller.signal,
         onUpdate: (nextRun) => {
+          // A paused Freestyle VM has to boot before it can claim the run; the
+          // status stays "queued" meanwhile. Say what is actually happening
+          // instead of an opaque "排队中".
+          const queuedFor = Date.now() - askedAt;
+          const label =
+            nextRun.status === "queued"
+              ? queuedFor > 20_000
+                ? "云端 worker 正在唤醒（首次约 30–90 秒）"
+                : "排队中，等待云端 worker"
+              : runStageLabel(nextRun.status);
           setAskStage({
-            label: runStageLabel(nextRun.status),
+            label,
             progress: Math.max(nextRun.progress, 15)
           });
         }

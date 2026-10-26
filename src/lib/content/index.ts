@@ -79,6 +79,9 @@ export const COVERAGE_LOCAL_LABEL = "云端证据未载入";
 
 export type DirectionCoverageView = {
   pending: boolean;
+  /** Short status shown inside a badge (must not contain a full sentence). */
+  badgeLabel: string;
+  /** Long data-boundary sentence; rendered once, never inside a nowrap badge. */
   label: string;
   exactMajorRecords: number | null;
   officialRecords: number | null;
@@ -101,6 +104,7 @@ export function directionCoverage(
   if (!cloud) {
     return {
       pending: true,
+      badgeLabel: COVERAGE_LOCAL_LABEL,
       label: COVERAGE_LOCAL_LABEL,
       exactMajorRecords: null,
       officialRecords: null,
@@ -110,6 +114,7 @@ export function directionCoverage(
   }
   return {
     pending: !hasRecords,
+    badgeLabel: hasRecords ? "云端证据已载入" : COVERAGE_PENDING_LABEL,
     label: cloud.label || (hasRecords ? "云端证据已载入" : COVERAGE_PENDING_LABEL),
     exactMajorRecords: hasRecords ? cloud.exact_major_records : null,
     officialRecords: hasRecords ? cloud.official_records : null,

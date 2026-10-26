@@ -142,6 +142,19 @@ npx freestyle vm exec campus-pathway-worker-dev -- bash -lc 'chmod 600 /etc/camp
 
 worker 无公网端口；systemd/docker restart 策略常驻；记录 VM ID、镜像 digest、commit、CLI 版本。密钥不进 snapshot/镜像。
 
+**VM DNS（必做）**：Freestyle VM 默认 resolv.conf 把 IPv6 DNS 排前面，而该 VM 出站 UDP/53 被阻断，冷解析要 5–17 秒并会间歇失败（表现为 worker `claim_failed`、ask 检索卡 4–6 分钟）。用 DoT 修复并让容器走宿主 systemd-resolved：
+
+```bash
+sudo bash worker/scripts/fix-vm-dns.sh          # DoT + 重建容器（走宿主 systemd-resolved）
+sudo bash worker/scripts/pin-vm-ipv4.sh         # 关键域名固定 IPv4（重启后仍生效）
+sudo docker restart campus-pathway-worker       # 让 worker 丢掉旧的失效连接
+```
+
+验证：`dig +time=8 example.com @127.0.0.53 | grep 'Query time'`、容器内
+`getaddrinfo` 均应 <1 秒；`getent ahosts api.deepseek.com` 只返回 IPv4。
+IPv6 出口不稳定（OpenRouter 7.6s、DeepSeek 失败）时，这一步是必需的。
+IP 可能轮换，建议用 `worker/scripts/pin-vm-ipv4.sh` 配 systemd timer（30 分钟刷新）。
+
 ## 5. 模型探针与索引（M4）
 
 ```bash
@@ -176,5 +189,5 @@ npx tsx scripts/smoke.ts
 1. Supabase 迁移/导入/匿名 Auth 已完成并验证；项目为 Free 计划、单项目，未建 dev/prod 分离。
 2. OpenRouter 探针通过；索引 profile `career-qwen3-embedding-8b-4096-career-qwen-v1` 已 active。
 3. Production 已部署并绑定 `zhitu.quest`（阿里云 DNS A/CNAME，Vercel 自动 HTTPS）；Preview 仍受 Vercel Authentication 保护；Git push 自动部署已验证。
-4. Freestyle worker 单 VM 已跑通；空闲 60 秒自动 `pause`，BFF 在提交 run/上传时先检查 VM 状态，若 paused 则 `/start` 并 `exec-await` 重启 worker 容器（清除旧 idle clock）；pause 只计存储，不计 vCPU/内存。VM 重启恢复/断点续跑/多 worker HA 未验证。
+4. Freestyle worker 单 VM 已跑通；空闲 1800 秒自动 `pause`（2026-10-25 从 60 秒调大，避免每次问答都付 30–90 秒冷启动），BFF 在提交 run/上传时检查 VM 状态，若 paused 则 `/start`；run 先入库再唤醒，worker 恢复后会先 claim 队列。pause 只计存储，不计 vCPU/内存。VM 重启恢复/断点续跑/多 worker HA 未验证。
 5. 课程/竞赛/学分结构化资料缺失 → Step 4 规则闭环返回 `data_unavailable` + 核对任务；RAG 仅做小样本回归，未做完整题集与 10 条人工引用抽检。

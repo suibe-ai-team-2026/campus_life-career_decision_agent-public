@@ -25,6 +25,11 @@ services:
         UV_COMPILE_BYTECODE: "0"
     image: campus-pathway-worker:local
     container_name: campus-pathway-worker
+    # Freestyle VM 上 Docker 内嵌 DNS 转发到 127.0.0.53 时解析会间歇失败
+    # （Temporary failure in name resolution），表现为 ask 卡在检索、claim/heartbeat
+    # 报 DatabaseError。host 网络让容器直接用宿主 systemd-resolved（DoT），
+    # 冷解析稳定在 1 秒内；worker 不监听任何入站端口，不会因此暴露服务。
+    network_mode: host
     restart: unless-stopped
     env_file:
       - /etc/campus-pathway/worker.env

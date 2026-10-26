@@ -17,7 +17,6 @@ import {
   type CompareOutcome
 } from "@/lib/api-client";
 import {
-  COVERAGE_LOCAL_LABEL,
   DIRECTIONS,
   DIRECTIONS_CATEGORY_VERSION,
   DIRECTIONS_DISCLAIMER,
@@ -158,6 +157,14 @@ export function DirectionsStep() {
   }
 
   const ready = hydrated && progress !== null;
+  // The long data-boundary sentence returned by the catalog is identical for
+  // every card. Render it once below the grid so it never stretches a nowrap
+  // badge (which used to force the whole page into horizontal scroll).
+  const coverageFootnote = useMemo(() => {
+    if (catalogState !== "ready") return null;
+    const first = DIRECTIONS.map((direction) => coverage[direction.direction_id]).find(Boolean);
+    return first?.label ?? null;
+  }, [catalogState, coverage]);
 
   return (
     <div className="step-page">
@@ -225,8 +232,7 @@ export function DirectionsStep() {
               {DIRECTIONS.map((direction) => {
                 const isFavorite = favorites.includes(direction.direction_id);
                 const coverageView = directionCoverage(direction, coverage[direction.direction_id] ?? null);
-                const coverageLabel =
-                  catalogState === "loading" ? "云端证据载入中" : catalogState === "error" ? COVERAGE_LOCAL_LABEL : coverageView.label;
+                const coverageBadge = catalogState === "loading" ? "云端证据载入中" : coverageView.badgeLabel;
                 return (
                   <article className={isFavorite ? "direction-card is-favorite" : "direction-card"} key={direction.direction_id}>
                     <header className="direction-card-head">
@@ -287,7 +293,7 @@ export function DirectionsStep() {
                     </div>
                     <footer className="direction-card-foot">
                       <div className="coverage-line">
-                        <Badge tone={coverageView.pending || catalogState !== "ready" ? "warn" : "ok"}>{coverageLabel}</Badge>
+                        <Badge tone={coverageView.pending || catalogState !== "ready" ? "warn" : "ok"}>{coverageBadge}</Badge>
                         {!coverageView.pending && catalogState === "ready" ? (
                           <span className="coverage-counts">
                             同专业精确记录 {coverageView.exactMajorRecords} · 官方记录 {coverageView.officialRecords} · 招聘要求{" "}
@@ -303,6 +309,11 @@ export function DirectionsStep() {
                 );
               })}
             </div>
+            {coverageFootnote ? (
+              <p className="coverage-footnote">
+                <Icon name="database" size={13} /> 数据覆盖口径：{coverageFootnote}
+              </p>
+            ) : null}
           </section>
 
           {favoriteError ? (
@@ -437,7 +448,7 @@ export function DirectionsStep() {
                         const view = directionCoverage(direction, coverage[direction.direction_id] ?? null);
                         return (
                           <td key={direction.direction_id}>
-                            <Badge tone={view.pending ? "warn" : "ok"}>{catalogState === "loading" ? "载入中" : view.label}</Badge>
+                            <Badge tone={view.pending ? "warn" : "ok"}>{catalogState === "loading" ? "载入中" : view.badgeLabel}</Badge>
                           </td>
                         );
                       })}

@@ -1831,6 +1831,7 @@ svg {
   display: flex;
   flex-direction: column;
   padding: 22px;
+  min-width: 0;
   border-radius: var(--r-lg);
   border: 1px solid var(--line-soft);
   background: linear-gradient(180deg, rgba(33, 26, 21, 0.78), rgba(24, 19, 15, 0.82));
@@ -1939,6 +1940,7 @@ svg {
 .direction-card-foot {
   margin-top: auto;
   padding-top: 14px;
+  min-width: 0;
   border-top: 1px solid var(--line-soft);
   display: flex;
   align-items: flex-start;
@@ -1949,12 +1951,37 @@ svg {
 .coverage-line {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 4px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+/* Coverage status is short, but the data-boundary sentence is long: keep both
+   inside the card instead of pushing the page into horizontal scroll. */
+.direction-card .badge,
+.compare-table .badge {
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 .coverage-counts {
   font-size: 10px;
   color: var(--fg-3);
   line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.coverage-footnote {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 12px 0 0;
+  color: var(--fg-3);
+  font-size: 11px;
+  line-height: 1.65;
+}
+.coverage-footnote .icon {
+  flex: none;
+  margin-top: 3px;
+  color: var(--warn);
 }
 .source-count {
   font-family: var(--font-mono);
@@ -3865,7 +3892,7 @@ svg {
   }
   .direction-grid,
   .skeleton-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .steps-grid {
     grid-template-columns: 1fr;
@@ -4124,6 +4151,31 @@ svg {
 }
 :root[data-theme="light"] .message-citations,
 :root[data-theme="light"] .citation-excerpt {
+  background: var(--bg-2);
+}
+
+/* Light theme fixes for surfaces that still carried a dark translucent fill:
+   the footer and the wizard progress strip kept dark backgrounds while their
+   text tokens switched to dark, which made the copy nearly unreadable. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .site-footer {
+    background: rgba(244, 236, 225, 0.82);
+  }
+  :root:not([data-theme="dark"]) .wizard-progress-wrap {
+    background: rgba(251, 247, 240, 0.92);
+  }
+  :root:not([data-theme="dark"]) .compare-table tbody th {
+    background: var(--bg-2);
+  }
+}
+
+:root[data-theme="light"] .site-footer {
+  background: rgba(244, 236, 225, 0.82);
+}
+:root[data-theme="light"] .wizard-progress-wrap {
+  background: rgba(251, 247, 240, 0.92);
+}
+:root[data-theme="light"] .compare-table tbody th {
   background: var(--bg-2);
 }
 

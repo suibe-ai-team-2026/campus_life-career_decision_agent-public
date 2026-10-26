@@ -4,8 +4,11 @@ import { createServerClient } from "@supabase/ssr";
 /**
  * Refreshes the Supabase session cookie for every same-origin request.
  * Skips static assets; API routes still enforce auth server-side.
+ *
+ * Next.js 16 renamed the `middleware` file convention to `proxy`; the exported
+ * function must be named `proxy`.
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const response = NextResponse.next({ request });
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;

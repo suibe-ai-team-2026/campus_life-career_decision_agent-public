@@ -61,7 +61,7 @@ export default function HomePage() {
           <aside className="hero-preview" aria-label="方向卡预览">
             <div className="hero-preview-top">
               <span className="preview-kicker">方向牌面 · 预览</span>
-              <Badge tone="warn">云端证据未载入</Badge>
+              <Badge tone="muted">静态预览 · 非实时数据</Badge>
             </div>
             <h2>{previewDirection.title}</h2>
             <p className="preview-summary">{previewDirection.summary}</p>

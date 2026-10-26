@@ -543,6 +543,22 @@ export async function getRun(runId: string, signal?: AbortSignal): Promise<Run> 
   return normalizeRun(record.run ?? record);
 }
 
+export type WakeRunResult = { runId: string; workerWake: string };
+
+/**
+ * Ask the BFF to wake the worker VM for a queued run. Used by the polling loop
+ * as a retry path when the first wake (on submit) did not get the VM running.
+ */
+export async function wakeRun(runId: string, signal?: AbortSignal): Promise<WakeRunResult> {
+  const data = await envelopeFetch(`/api/runs/${encodeURIComponent(runId)}/wake`, {
+    method: "POST",
+    signal,
+    timeoutMs: 30_000
+  });
+  const record = recordOrEmpty(data);
+  return { runId: str(record.run_id) || runId, workerWake: str(record.worker_wake) || "unknown" };
+}
+
 export async function getRunEvents(
   runId: string,
   afterSeq: number,
@@ -947,6 +963,7 @@ export async function pollRunUntilDone(
   const timeoutMs = options.timeoutMs ?? 8 * 60 * 1000;
   const startedAt = Date.now();
   let afterSeq = 0;
+  let lastWakeAt = startedAt;
   const events: RunEvent[] = [];
 
   for (;;) {
@@ -973,6 +990,14 @@ export async function pollRunUntilDone(
 
     if (isTerminalRunStatus(run.status)) return { run, events };
     if (Date.now() - startedAt > timeoutMs) throw new ApiError("timeout");
+
+    // A queued run means the worker VM is still waking up. The submit path
+    // already tried once; retry here at most every 30s so a slow cold start
+    // does not leave the user staring at a spinner.
+    if (run.status === "queued" && Date.now() - startedAt > 20_000 && Date.now() - lastWakeAt > 30_000) {
+      lastWakeAt = Date.now();
+      void wakeRun(runId, options.signal).catch(() => undefined);
+    }
 
     const hidden = typeof document !== "undefined" && document.hidden;
     await sleepWithSignal(hidden ? hiddenIntervalMs : intervalMs, options.signal);
