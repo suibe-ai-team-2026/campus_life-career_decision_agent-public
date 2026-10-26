@@ -108,6 +108,37 @@ class PlanGap(ContractModel):
     module: Literal["courses", "competitions", "credits", "evidence", "profile"] | None = None
 
 
+class PlanEvidenceCourseHint(ContractModel):
+    name: str = Field(min_length=1, max_length=200)
+    citation_no: int = Field(gt=0)
+    note: str = Field(default="", max_length=300)
+
+
+class PlanEvidenceCompetitionHint(ContractModel):
+    name: str = Field(min_length=1, max_length=200)
+    citation_no: int = Field(gt=0)
+    note: str = Field(default="", max_length=300)
+
+
+class PlanAnalysis(ContractModel):
+    """模型生成的“方向分析”：只解释规则事实与证据，不新增实体/数字。
+
+    课程/竞赛线索是从证据文本中逐字抽取的（validator 校验名字必须出现在证据里），
+    与规则引擎的结构化 courses/competitions 严格分开：前者是资料线索、未核验，
+    后者才是确定性事实（缺数据时为 null/空）。
+    """
+
+    overview: str = Field(default="", max_length=2000)
+    match: str = Field(default="", max_length=2000)
+    action_rationale: list[str] = Field(default_factory=list, max_length=12)
+    evidence_courses: list[PlanEvidenceCourseHint] = Field(default_factory=list, max_length=10)
+    evidence_competitions: list[PlanEvidenceCompetitionHint] = Field(default_factory=list, max_length=8)
+    risks: list[str] = Field(default_factory=list, max_length=8)
+    next_steps: list[str] = Field(default_factory=list, max_length=8)
+    citation_numbers: list[int] = Field(default_factory=list)
+    boundary_note: str = Field(default="", max_length=500)
+
+
 class PlanResult(ContractModel):
     status: PlanStatus
     rules_version: str
@@ -120,6 +151,7 @@ class PlanResult(ContractModel):
     gaps: list[PlanGap] = Field(default_factory=list)
     evidence: list[Citation] = Field(default_factory=list)
     explanation: str | None = None
+    analysis: PlanAnalysis | None = None
     warnings: list[str] = Field(default_factory=list)
 
 
@@ -163,6 +195,28 @@ def action_payload(action: PlanAction) -> dict[str, Any]:
     return payload
 
 
+def plan_analysis_payload(analysis: PlanAnalysis | None) -> dict[str, Any] | None:
+    if analysis is None:
+        return None
+    return {
+        "overview": analysis.overview,
+        "match": analysis.match,
+        "action_rationale": list(analysis.action_rationale),
+        "evidence_courses": [
+            {"name": item.name, "citation_no": item.citation_no, "note": item.note}
+            for item in analysis.evidence_courses
+        ],
+        "evidence_competitions": [
+            {"name": item.name, "citation_no": item.citation_no, "note": item.note}
+            for item in analysis.evidence_competitions
+        ],
+        "risks": list(analysis.risks),
+        "next_steps": list(analysis.next_steps),
+        "citation_numbers": list(analysis.citation_numbers),
+        "boundary_note": analysis.boundary_note,
+    }
+
+
 def plan_result_payload(result: PlanResult) -> dict[str, Any]:
     """生成严格符合 ``PlanResultSchema`` 的 JSON（含必要 null 键）。"""
 
@@ -203,6 +257,7 @@ def plan_result_payload(result: PlanResult) -> dict[str, Any]:
         ],
         "evidence": [citation_payload(citation) for citation in result.evidence],
         "explanation": result.explanation,
+        "analysis": plan_analysis_payload(result.analysis),
         "warnings": list(result.warnings),
     }
 

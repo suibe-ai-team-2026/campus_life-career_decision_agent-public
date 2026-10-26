@@ -91,6 +91,7 @@ def generate_validated_json(
     operation: str,
     validator: Callable[[str], T],
     max_attempts: int = 2,
+    max_tokens: int | None = None,
 ) -> T:
     """调用 chat 并把输出交给 validator；只对 JSON/格式/越界校验失败重试一次。
 
@@ -100,7 +101,7 @@ def generate_validated_json(
     last_error: Exception | None = None
     attempt_messages = list(messages)
     for attempt in range(max(1, max_attempts)):
-        response = ctx.provider.chat(attempt_messages, operation=operation)
+        response = ctx.provider.chat(attempt_messages, operation=operation, max_tokens=max_tokens)
         ctx.record_usage(response.usage)
         try:
             return validator(response.content)

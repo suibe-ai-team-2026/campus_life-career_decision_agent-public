@@ -52,6 +52,29 @@ export const PlanGapSchema = z.object({
   module: z.enum(["courses", "competitions", "credits", "evidence", "profile"]).optional()
 });
 
+export const PlanEvidenceCourseHintSchema = z.object({
+  name: z.string().min(1).max(200),
+  citation_no: z.number().int().positive(),
+  note: z.string().max(300).default("")
+});
+export const PlanEvidenceCompetitionHintSchema = z.object({
+  name: z.string().min(1).max(200),
+  citation_no: z.number().int().positive(),
+  note: z.string().max(300).default("")
+});
+export const PlanAnalysisSchema = z.object({
+  overview: z.string(),
+  match: z.string(),
+  action_rationale: z.array(z.string()).default([]),
+  evidence_courses: z.array(PlanEvidenceCourseHintSchema).default([]),
+  evidence_competitions: z.array(PlanEvidenceCompetitionHintSchema).default([]),
+  risks: z.array(z.string()).default([]),
+  next_steps: z.array(z.string()).default([]),
+  citation_numbers: z.array(z.number().int().positive()).default([]),
+  boundary_note: z.string().default("")
+});
+export type PlanAnalysis = z.infer<typeof PlanAnalysisSchema>;
+
 export const PlanResultSchema = z.object({
   status: PlanStatusSchema,
   rules_version: z.string(),
@@ -64,6 +87,7 @@ export const PlanResultSchema = z.object({
   gaps: z.array(PlanGapSchema),
   evidence: z.array(CitationSchema),
   explanation: z.string().nullable(),
+  analysis: PlanAnalysisSchema.nullable().optional(),
   warnings: z.array(z.string()).default([])
 });
 export type PlanResult = z.infer<typeof PlanResultSchema>;

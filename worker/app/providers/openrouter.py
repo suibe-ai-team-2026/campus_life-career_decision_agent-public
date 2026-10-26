@@ -444,13 +444,16 @@ class OpenRouterClient:
             "temperature": self.config.chat_temperature if temperature is None else temperature,
             "max_tokens": self.config.chat_max_tokens if max_tokens is None else max_tokens,
         }
-        if self.config.chat_provider == "deepseek" and self.config.chat_reasoning_effort:
-            # DeepSeek V4.1 Flash supports low/high/max reasoning effort. Default
-            # to low here to keep explanation calls cheap; override per deployment.
-            body["reasoning_effort"] = self.config.chat_reasoning_effort
         json_mode = (not self._json_mode_locked_off) and self._json_mode_supported
         if json_mode:
             body["response_format"] = {"type": "json_object"}
+        if self.config.chat_provider == "deepseek":
+            if json_mode:
+                # 思考模式会偶尔返回空 content（推理 token 抢占），JSON 提取因此失败；
+                # JSON 输出关思考更稳。
+                body["thinking"] = {"type": "disabled"}
+            elif self.config.chat_reasoning_effort:
+                body["reasoning_effort"] = self.config.chat_reasoning_effort
         input_chars = sum(len(message.get("content", "")) for message in messages)
         estimated_cost = self.config.model_pricing.estimate(
             input_tokens=max(1, input_chars // 2),
@@ -487,8 +490,9 @@ class OpenRouterClient:
             "max_tokens": self.config.chat_max_tokens if max_tokens is None else max_tokens,
             "tools": list(tools),
         }
-        if self.config.chat_provider == "deepseek" and self.config.chat_reasoning_effort:
-            body["reasoning_effort"] = self.config.chat_reasoning_effort
+        # DeepSeek 在 tools 与 thinking 同时开启时会返回 400；关掉思考模式保证工具调用可用。
+        if self.config.chat_provider == "deepseek":
+            body["thinking"] = {"type": "disabled"}
         input_chars = sum(len(message.get("content", "")) for message in messages)
         estimated_cost = self.config.model_pricing.estimate(
             input_tokens=max(1, input_chars // 2),

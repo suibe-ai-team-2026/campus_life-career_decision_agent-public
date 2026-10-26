@@ -5054,3 +5054,125 @@ a.trace-hit-title:hover {
     box-shadow: none;
   }
 }
+
+/* ==========================================================================
+   Plan analysis（方向分析）
+   ========================================================================== */
+.plan-analysis {
+  margin: 28px 0;
+}
+.analysis-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.analysis-card {
+  padding: 18px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-md);
+  background: var(--bg-1);
+}
+.analysis-card h3,
+.analysis-block h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  margin: 0 0 10px;
+  color: var(--fg-0);
+}
+.analysis-card h3 .icon,
+.analysis-block h3 .icon {
+  color: var(--accent);
+}
+.analysis-body {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--fg-1);
+}
+.analysis-block {
+  margin-top: 18px;
+}
+.analysis-list {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  color: var(--fg-1);
+  font-size: 13.5px;
+  line-height: 1.65;
+}
+.analysis-hints {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.analysis-hints li {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-width: 100%;
+  padding: 9px 11px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-sm);
+  background: var(--bg-2);
+}
+.analysis-hint-name {
+  font-size: 13px;
+  color: var(--fg-0);
+  line-height: 1.5;
+}
+.analysis-hint-name sup {
+  color: var(--accent);
+  margin-left: 2px;
+}
+.analysis-hint-note {
+  font-size: 11.5px;
+  color: var(--fg-3);
+  line-height: 1.5;
+}
+.analysis-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.analysis-steps li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  color: var(--fg-1);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+.analysis-step-no {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-size: 12px;
+  font-weight: 600;
+}
+.plan-analysis-boundary {
+  margin-top: 14px;
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+}
+@media (max-width: 720px) {
+  .analysis-grid {
+    grid-template-columns: 1fr;
+  }
+}

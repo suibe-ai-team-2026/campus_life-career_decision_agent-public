@@ -196,6 +196,99 @@ export function PlanDetail({
         </Callout>
       ) : null}
 
+      {result.analysis ? (
+        <section className="plan-analysis" aria-labelledby="plan-analysis-title">
+          <div className="section-heading">
+            <div className="section-heading-text">
+              <p className="eyebrow">方向分析</p>
+              <h2 id="plan-analysis-title">把方向讲清楚，而不是只给时间线</h2>
+              <p className="section-description">
+                基于你的画像、规则事实与检索证据生成；课程与竞赛是“资料线索”，学分/先修/认定口径仍以官方文件为准。
+              </p>
+            </div>
+            <Badge tone="accent">AI 分析</Badge>
+          </div>
+
+          <div className="analysis-grid">
+            <article className="analysis-card">
+              <h3><Icon name="compass" size={15} /> 方向概览</h3>
+              <p className="analysis-body">{result.analysis.overview}</p>
+            </article>
+            <article className="analysis-card">
+              <h3><Icon name="activity" size={15} /> 画像匹配</h3>
+              <p className="analysis-body">{result.analysis.match}</p>
+            </article>
+          </div>
+
+          {result.analysis.action_rationale.length > 0 ? (
+            <div className="analysis-block">
+              <h3><Icon name="list" size={15} /> 每条行动的依据与做法</h3>
+              <ol className="analysis-list">
+                {result.analysis.action_rationale.map((line, index) => (
+                  <li key={index}>{line}</li>
+                ))}
+              </ol>
+            </div>
+          ) : null}
+
+          {result.analysis.evidence_courses.length > 0 ? (
+            <div className="analysis-block">
+              <h3><Icon name="book" size={15} /> 证据里出现的课程（资料线索 · 未核验）</h3>
+              <ul className="analysis-hints">
+                {result.analysis.evidence_courses.map((hint, index) => (
+                  <li key={index}>
+                    <span className="analysis-hint-name">《{hint.name}》<sup>[{hint.citation_no}]</sup></span>
+                    {hint.note ? <span className="analysis-hint-note">{hint.note}</span> : null}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          {result.analysis.evidence_competitions.length > 0 ? (
+            <div className="analysis-block">
+              <h3><Icon name="flag" size={15} /> 证据里出现的竞赛（资料线索 · 未核验）</h3>
+              <ul className="analysis-hints">
+                {result.analysis.evidence_competitions.map((hint, index) => (
+                  <li key={index}>
+                    <span className="analysis-hint-name">{hint.name}<sup>[{hint.citation_no}]</sup></span>
+                    {hint.note ? <span className="analysis-hint-note">{hint.note}</span> : null}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          {result.analysis.risks.length > 0 ? (
+            <div className="analysis-block">
+              <h3><Icon name="alert" size={15} /> 风险与未知</h3>
+              <ul className="analysis-list">
+                {result.analysis.risks.map((line, index) => (
+                  <li key={index}>{line}</li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          {result.analysis.next_steps.length > 0 ? (
+            <div className="analysis-block">
+              <h3><Icon name="arrow-right" size={15} /> 建议的下一步</h3>
+              <ol className="analysis-steps">
+                {result.analysis.next_steps.map((line, index) => (
+                  <li key={index}><span className="analysis-step-no">{index + 1}</span>{line}</li>
+                ))}
+              </ol>
+            </div>
+          ) : null}
+
+          {result.analysis.boundary_note ? (
+            <p className="panel-note plan-analysis-boundary">
+              <Icon name="info" size={13} /> {result.analysis.boundary_note}
+            </p>
+          ) : null}
+        </section>
+      ) : null}
+
       {isDataGapState ? (
         <section className="plan-gap-panel" aria-labelledby="plan-gap-title">
           <Callout tone="warn" title="这次没有你的专业资料，所以只生成了核对清单">
@@ -338,7 +431,11 @@ export function PlanDetail({
               compact
               icon="book"
               title="课程资料未就绪"
-              description="尚未取得适用年级的结构化培养方案，因此不展示课程与学分推断。培养方案 PDF 不等于结构化课程表。"
+              description={
+                result.analysis && result.analysis.evidence_courses.length > 0
+                  ? "结构化培养方案未取得，因此不展示课程与学分推断；证据里出现的课程线索请见上方「方向分析」。"
+                  : "尚未取得适用年级的结构化培养方案，因此不展示课程与学分推断。培养方案 PDF 不等于结构化课程表。"
+              }
             />
           ) : (
             <ul className="course-list">
@@ -376,7 +473,11 @@ export function PlanDetail({
               compact
               icon="flag"
               title="竞赛目录未载入"
-              description="尚未取得竞赛目录或素拓认定口径，因此不推测可参加的竞赛与认定学分。"
+              description={
+                result.analysis && result.analysis.evidence_competitions.length > 0
+                  ? "竞赛目录与认定口径未核验，因此不推测认定学分；证据里出现的竞赛线索请见上方「方向分析」。"
+                  : "尚未取得竞赛目录或素拓认定口径，因此不推测可参加的竞赛与认定学分。"
+              }
             />
           ) : (
             <ul className="competition-list">

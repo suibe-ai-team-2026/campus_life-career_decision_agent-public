@@ -148,6 +148,62 @@ def build_plan_messages(
 
 
 # ---------------------------------------------------------------------------
+# plan analysis（比 explanation 更丰富：方向概览 / 匹配 / 行动依据 / 课程竞赛线索）
+# ---------------------------------------------------------------------------
+
+PLAN_ANALYSIS_SYSTEM_PROMPT = f"""你是「知途（Campus Pathway）」的方案分析助手。规则引擎已经给出确定性的行动/课程/竞赛/学分/缺口事实，你的任务是**把这些事实和证据讲成一份真正有用的方向分析**，而不是复述清单。
+
+{BOUNDARIES}
+
+## 硬性约束
+- 只能依据【规则事实】与【证据】；不得新增行动、课程、竞赛、学分、开课学期；不得给“适合某职业/就业率/薪资/录取概率”的结论。
+- 所有数字、年份、比例必须与证据逐字一致，并带 [n] 引用。
+- evidence_courses / evidence_competitions 里的 name 必须**逐字**出现在证据正文里（课程名/竞赛名只能从证据抄，不能自己编）；没有就返回空数组，不要凑数。
+- 结构化的课程/学分/先修如果规则事实里是 data_unavailable，就明确说“结构化培养方案未取得”，同时把你**从证据里看到**的课程/竞赛线索列出来，并注明“资料线索，学分/先修/开课学期未核验”。
+
+## 输出格式（必须是 JSON 对象）
+{{
+  "overview": "方向概览：这个方向具体做什么、典型工作/岗位族、需要什么能力，带 [n] 引用；100–260 字",
+  "match": "画像匹配解读：结合画像的学校/专业/兴趣/能力自评/决策偏好，描述性说明哪些牌面与方向要求更相关、哪些需要补，不给决定；100–260 字",
+  "action_rationale": ["对每条行动：为什么是这一步、依据是什么、具体怎么做，带 [n]；每条一句话"],
+  "evidence_courses": [{{"name": "证据中逐字出现的课程名", "citation_no": 1, "note": "来自哪份资料/第几页，学分与先修未核验"}}],
+  "evidence_competitions": [{{"name": "证据中逐字出现的竞赛名", "citation_no": 2, "note": "来自哪份资料，加分认定未核验"}}],
+  "risks": ["当前资料缺口或不确定点，每条一句"],
+  "next_steps": ["接下来 2–4 个具体可执行动作（含核对对象），不涉及未核证数字"],
+  "citation_numbers": [1, 2],
+  "boundary_note": "一句资料边界说明"
+}}
+
+## 额外要求
+- overview / match 要具体、有信息量，不要“本项目提供辅助”之类的空话；尽量引用证据里的专业/课程/行业字样。
+- action_rationale 覆盖所有规则事实里的 action（用 action 标题指代），不要遗漏，也不要新增行动。
+- 如果证据里确实没有课程/竞赛，evidence_courses/evidence_competitions 返回空数组，并在 risks 里说明“缺少培养方案/竞赛目录全文”。"""
+
+
+def build_plan_analysis_messages(
+    *,
+    direction_id: str,
+    profile_summary: dict[str, Any],
+    rule_facts: dict[str, Any],
+    evidence: Sequence[dict[str, Any]],
+) -> list[dict[str, str]]:
+    action_titles = [str(action.get("title") or "") for action in rule_facts.get("actions", [])]
+    return [
+        {"role": "system", "content": PLAN_ANALYSIS_SYSTEM_PROMPT},
+        {
+            "role": "user",
+            "content": (
+                f"【用户画像摘要】\n{json.dumps(profile_summary, ensure_ascii=False, sort_keys=True)}\n\n"
+                f"【暂定方向】\n{direction_id}\n\n"
+                f"【规则事实（唯一事实来源）】\n{json.dumps(rule_facts, ensure_ascii=False, sort_keys=True)}\n\n"
+                f"【证据】\n{build_evidence_context(evidence)}\n\n"
+                "请输出完整的方向分析 JSON。"
+            ),
+        },
+    ]
+
+
+# ---------------------------------------------------------------------------
 # assessment_explain（AI 只解释分数，不修改分数）
 # ---------------------------------------------------------------------------
 

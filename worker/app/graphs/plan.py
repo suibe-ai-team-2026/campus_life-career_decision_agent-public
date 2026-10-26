@@ -22,7 +22,17 @@ from ..errors import (
     WorkerError,
     redact,
 )
-from ..models import DIRECTION_IDS, PlanInput, PlanResult, citation_payload, plan_result_payload
+from ..models import (
+    DIRECTION_IDS,
+    PlanAnalysis,
+    PlanEvidenceCompetitionHint,
+    PlanEvidenceCourseHint,
+    PlanInput,
+    PlanResult,
+    citation_payload,
+    plan_analysis_payload,
+    plan_result_payload,
+)
 from ..prompts import career as prompts
 from ..prompts import validate as prompt_validate
 from ..retrieval.service import merge_user_evidence
@@ -43,6 +53,7 @@ class PlanState(TypedDict, total=False):
     rule_payload: dict[str, Any]
     retrieval: Any
     explanation: str | None
+    analysis: Any
     warnings: list[str]
     web: Any
     payload: dict[str, Any]
@@ -262,11 +273,60 @@ def build_plan_graph(ctx: JobContext):
                 gap_codes=[str(gap.get("code")) for gap in rule_payload.get("gaps", [])],
                 reason=fallback_reason or "",
             )
+
+        # 生成更丰富的“方向分析”：失败只降级，不阻塞确定性方案发布。
+        analysis: PlanAnalysis | None = None
+        try:
+            ctx.trace("agent_note", {"text": "生成方向分析（概览 / 匹配 / 行动依据 / 课程竞赛线索）"})
+            analysis_messages = prompts.build_plan_analysis_messages(
+                direction_id=str(run_input["direction_id"]),
+                profile_summary=profile_summary(profile),
+                rule_facts=rule_payload,
+                evidence=evidence,
+            )
+            analysis_allowed_texts = [str(item.get("text") or "") + "\n" + str(item.get("context") or "") for item in evidence] + [
+                json.dumps(rule_payload, ensure_ascii=False, sort_keys=True)
+            ]
+
+            def analysis_validator(raw: str):
+                parsed_analysis = prompt_validate.parse_plan_analysis(
+                    raw,
+                    valid_citations={item["citation_no"] for item in evidence},
+                    allowed_texts=analysis_allowed_texts,
+                    allowed_urls=allowed_urls,
+                )
+                if parsed_analysis.validation_reasons:
+                    raise OutputValidationError("方向分析未通过校验", reasons=list(parsed_analysis.validation_reasons))
+                return parsed_analysis
+
+            parsed_analysis = generate_validated_json(
+                ctx,
+                analysis_messages,
+                operation="chat_plan_analysis",
+                validator=analysis_validator,
+                max_attempts=1,
+                max_tokens=2800,
+            )
+            analysis = PlanAnalysis(
+                overview=parsed_analysis.overview,
+                match=parsed_analysis.match,
+                action_rationale=parsed_analysis.action_rationale,
+                evidence_courses=[PlanEvidenceCourseHint(**hint) for hint in parsed_analysis.evidence_courses],
+                evidence_competitions=[PlanEvidenceCompetitionHint(**hint) for hint in parsed_analysis.evidence_competitions],
+                risks=parsed_analysis.risks,
+                next_steps=parsed_analysis.next_steps,
+                citation_numbers=parsed_analysis.citation_numbers,
+                boundary_note=parsed_analysis.boundary_note,
+            )
+        except WorkerError as exc:
+            warnings.append("plan_analysis_fallback:validation")
+            ctx.logger.error("plan_analysis_invalid type=%s", type(exc).__name__)
+
         if web is not None and web.note and web.sources:
             explanation = f"{explanation}\n资料边界：{web.note}"
         ctx.trace("validation", {"ok": True, "citations": len(citations), "web_citations": len(web.citations) if web else 0})
         ctx.emit("planning", 76)
-        return {"explanation": explanation, "warnings": warnings, "web": web}
+        return {"explanation": explanation, "analysis": analysis, "warnings": warnings, "web": web}
 
     def publish_node(state: PlanState) -> PlanState:
         ctx.check_cancel()
@@ -280,6 +340,7 @@ def build_plan_graph(ctx: JobContext):
         citations = list(retrieval.citations) + (web.citations if web is not None else [])
         rule_payload["evidence"] = [citation_payload(citation) for citation in citations]
         rule_payload["explanation"] = state.get("explanation")
+        rule_payload["analysis"] = plan_analysis_payload(state.get("analysis"))
         rule_payload["warnings"] = warnings
         final_result = PlanResult.model_validate(rule_payload)
         final_payload = plan_result_payload(final_result)

@@ -253,7 +253,40 @@ function normalizeCompetitions(value: unknown): PlanResult["competitions"] {
   }));
 }
 
-export function normalizePlanResult(raw: unknown): PlanResult | null {
+export function normalizePlanAnalysis(raw: unknown): PlanResult["analysis"] {
+  if (!isRecord(raw)) return null;
+  return {
+    overview: str(raw.overview),
+    match: str(raw.match),
+    action_rationale: strArray(raw.action_rationale),
+    evidence_courses: Array.isArray(raw.evidence_courses)
+      ? raw.evidence_courses
+          .filter(isRecord)
+          .map((item) => ({
+            name: str(item.name),
+            citation_no: intOrNull(item.citation_no) ?? 1,
+            note: str(item.note)
+          }))
+      : [],
+    evidence_competitions: Array.isArray(raw.evidence_competitions)
+      ? raw.evidence_competitions
+          .filter(isRecord)
+          .map((item) => ({
+            name: str(item.name),
+            citation_no: intOrNull(item.citation_no) ?? 1,
+            note: str(item.note)
+          }))
+      : [],
+    risks: strArray(raw.risks),
+    next_steps: strArray(raw.next_steps),
+    citation_numbers: Array.isArray(raw.citation_numbers)
+      ? raw.citation_numbers.map((value) => intOrNull(value)).filter((value): value is number => value !== null)
+      : [],
+    boundary_note: str(raw.boundary_note)
+  };
+}
+
+function normalizePlanResult(raw: unknown): PlanResult | null {
   if (!isRecord(raw)) return null;
   const actions = Array.isArray(raw.actions)
     ? raw.actions.map(normalizeAction).filter((action): action is PlanAction => action !== null)
@@ -276,6 +309,7 @@ export function normalizePlanResult(raw: unknown): PlanResult | null {
     gaps: normalizeGaps(raw.gaps),
     evidence: normalizeCitations(raw.evidence),
     explanation: strOrNull(raw.explanation),
+    analysis: normalizePlanAnalysis(raw.analysis),
     warnings: strArray(raw.warnings)
   };
 }

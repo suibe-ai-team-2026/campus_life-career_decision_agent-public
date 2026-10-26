@@ -446,3 +446,120 @@ def deterministic_compare_text(directions: Sequence[dict[str, Any]]) -> str:
         "系统只展示方向卡中的工作内容、能力要求与资料缺口，不做排名，也不替你做决定；"
         "请结合证据与官方资料自行比较。"
     )
+
+
+@dataclass
+class PlanAnalysisOutput:
+    overview: str
+    match: str
+    action_rationale: list[str]
+    evidence_courses: list[dict[str, Any]]
+    evidence_competitions: list[dict[str, Any]]
+    risks: list[str]
+    next_steps: list[str]
+    citation_numbers: list[int]
+    boundary_note: str
+    validation_reasons: list[str] = field(default_factory=list)
+
+
+def parse_plan_analysis(
+    raw: str,
+    *,
+    valid_citations: set[int],
+    allowed_texts: Sequence[str],
+    allowed_urls: Sequence[str] = (),
+) -> PlanAnalysisOutput:
+    """解析并机械校验“方向分析”输出。
+
+    课程/竞赛线索的 name 必须逐字出现在证据正文里，防止模型在散文里编造课程名。
+    """
+
+    payload = extract_json_object(raw)
+    overview = str(payload.get("overview") or "").strip()
+    match = str(payload.get("match") or "").strip()
+    if not overview or not match:
+        raise OutputValidationError("方向分析缺少 overview/match", reasons=["empty_analysis"])
+
+    def str_list(key: str) -> list[str]:
+        value = payload.get(key) or []
+        if not isinstance(value, list):
+            raise OutputValidationError(f"{key} 必须是数组", reasons=["bad_field"])
+        return [str(item).strip()[:600] for item in value if str(item).strip()]
+
+    action_rationale = str_list("action_rationale")
+    risks = str_list("risks")
+    next_steps = str_list("next_steps")
+
+    corpus = "\n".join(str(item) for item in allowed_texts)
+
+    def hint_list(key: str) -> list[dict[str, Any]]:
+        value = payload.get(key) or []
+        if not isinstance(value, list):
+            raise OutputValidationError(f"{key} 必须是数组", reasons=["bad_field"])
+        out: list[dict[str, Any]] = []
+        for item in value:
+            if not isinstance(item, dict):
+                continue
+            name = str(item.get("name") or "").strip()[:200]
+            if not name:
+                continue
+            citation_no = item.get("citation_no")
+            try:
+                citation_no = int(citation_no)  # type: ignore[assignment]
+            except (TypeError, ValueError) as exc:
+                raise OutputValidationError(f"{key} 含非整数引用", reasons=["bad_field"]) from exc
+            note = str(item.get("note") or "").strip()[:300]
+            out.append({"name": name, "citation_no": citation_no, "note": note})
+        return out
+
+    evidence_courses = hint_list("evidence_courses")
+    evidence_competitions = hint_list("evidence_competitions")
+
+    raw_numbers = payload.get("citation_numbers") or []
+    numbers: list[int] = []
+    if isinstance(raw_numbers, list):
+        for item in raw_numbers:
+            try:
+                numbers.append(int(item))
+            except (TypeError, ValueError):
+                pass
+    boundary_note = str(payload.get("boundary_note") or "").strip()[:500]
+
+    reasons: list[str] = []
+    all_citations = list(dict.fromkeys(numbers + citation_markers(overview) + citation_markers(match)))
+    for line in [*action_rationale, *risks, *next_steps]:
+        all_citations.extend(citation_markers(line))
+    all_citations = list(dict.fromkeys(all_citations))
+    invalid = validate_citation_numbers(all_citations, valid_citations)
+    if invalid:
+        reasons.append("invalid_citation_numbers:" + ",".join(str(item) for item in invalid))
+
+    prose = "\n".join([overview, match, *action_rationale, *risks, *next_steps, boundary_note])
+    offenders = validate_numbers(prose, allowed_texts)
+    if offenders:
+        reasons.append("numbers_not_in_evidence:" + ",".join(offenders[:5]))
+    urls = validate_urls(prose, allowed_urls)
+    if urls:
+        reasons.append("urls_not_in_evidence")
+
+    # 课程/竞赛线索的引用编号与逐字来源校验。
+    for kind, hints in (("course", evidence_courses), ("competition", evidence_competitions)):
+        for hint in hints:
+            if hint["citation_no"] not in valid_citations:
+                reasons.append(f"invalid_{kind}_citation:{hint['citation_no']}")
+            name = hint["name"]
+            if name not in corpus:
+                reasons.append(f"unverified_{kind}_name:{name[:40]}")
+
+    return PlanAnalysisOutput(
+        overview=overview,
+        match=match,
+        action_rationale=action_rationale,
+        evidence_courses=evidence_courses,
+        evidence_competitions=evidence_competitions,
+        risks=risks,
+        next_steps=next_steps,
+        citation_numbers=numbers,
+        boundary_note=boundary_note,
+        validation_reasons=reasons,
+    )
