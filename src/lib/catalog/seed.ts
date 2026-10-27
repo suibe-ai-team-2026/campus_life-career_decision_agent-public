@@ -3,7 +3,7 @@ import assessmentSeed from "../../../data/import/seed/assessment.json";
 import { AssessmentSchema, DirectionsResponseSchema, type Assessment, type DirectionsResponse } from "@/lib/contracts/catalog";
 
 /**
- * Product copy and the self-authored light assessment ship with the app so the
+ * Product copy and the self-authored career-exploration assessment ship with the app so the
  * first three wizard steps work before any cloud account exists. Numbers are
  * never invented here; coverage counts are only read from the database.
  */

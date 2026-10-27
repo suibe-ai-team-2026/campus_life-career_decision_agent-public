@@ -4,7 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { DirectionId } from "@/lib/contracts/common";
-import { DIRECTIONS, getDirection } from "@/lib/content";
+import { ASSESSMENT, DIRECTIONS, getDirection } from "@/lib/content";
+import { scoreAssessment } from "@/lib/assessment/scoring";
+import { recommendDirections } from "@/lib/career/recommend";
 import {
   readChoiceDetail,
   readLocalProgress,
@@ -49,13 +51,20 @@ export function ChoiceStep() {
   const [revisitOn, setRevisitOn] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [switchTarget, setSwitchTarget] = useState<DirectionId | null>(null);
+  const [backup, setBackup] = useState<DirectionId | null>(null);
   const [savedNote, setSavedNote] = useState<string | null>(null);
 
   useEffect(() => {
     if (!hydrated || initialized) return;
     const stored = readLocalProgress();
     const detail = readChoiceDetail();
-    setSelected(stored?.provisional_direction ?? null);
+    const storedMain = stored?.provisional_direction ?? null;
+    setSelected(storedMain);
+    setBackup(
+      stored?.backup_direction && stored.backup_direction !== storedMain
+        ? stored.backup_direction
+        : null
+    );
     setWhy(stored?.reason_summary ?? detail.why ?? "");
     setUnknowns(detail.unknowns ?? "");
     setRevisitOn(stored?.revisit_on ?? defaultRevisitDate());
@@ -68,9 +77,36 @@ export function ChoiceStep() {
     [favorites]
   );
   const selectableDirections = favoriteDirections.length > 0 ? favoriteDirections : DIRECTIONS;
+  const backupOptions = useMemo(() => {
+    const items = favoriteDirections.filter((direction) => direction.direction_id !== selected);
+    if (backup && backup !== selected) {
+      const current = getDirection(backup);
+      if (current && !items.some((direction) => direction.direction_id === backup)) {
+        items.push(current);
+      }
+    }
+    return items;
+  }, [favoriteDirections, selected, backup]);
+  const answers = progress?.profile.answers;
+  const localRecommendations = useMemo(() => {
+    if (!answers) return null;
+    const result = scoreAssessment(ASSESSMENT, answers);
+    if (!result.hasSignals) return null;
+    return recommendDirections(result);
+  }, [answers]);
+  const selectedRecommendation = useMemo(
+    () =>
+      selected && localRecommendations
+        ? (localRecommendations.recommendations.find(
+            (recommendation) => recommendation.directionId === selected
+          ) ?? null)
+        : null,
+    [selected, localRecommendations]
+  );
   const existingDirection = progress?.provisional_direction ?? null;
   const existingDirectionInfo = getDirection(existingDirection);
   const selectedDirection = getDirection(selected);
+  const backupDirection = getDirection(backup);
 
   function saveDraft(nextSelected: DirectionId | null, nextWhy: string, nextUnknowns: string, nextRevisit: string) {
     writeChoiceDetail({ why: nextWhy.slice(0, 1000), unknowns: nextUnknowns.slice(0, 1000) });
@@ -92,18 +128,35 @@ export function ChoiceStep() {
     window.setTimeout(() => setSavedNote(null), 2200);
   }
 
+  /** 备选方向可选；主方向改变时自动清掉冲突的备选，保证两者不同。 */
+  function handleBackupChange(next: DirectionId | null) {
+    const value = next && next !== selected ? next : null;
+    setBackup(value);
+    updateLocalProgress((draft) => {
+      draft.backup_direction = value;
+      return draft;
+    });
+  }
+
+  function clearBackupIfConflicts(nextMain: DirectionId | null) {
+    if (nextMain && backup === nextMain) handleBackupChange(null);
+  }
+
   function handleSelect(directionId: DirectionId) {
     if (directionId === selected) return;
     if (existingDirection && existingDirection !== directionId) {
+      // 先弹确认框；用户取消时不能动已有的备选方向。
       setSwitchTarget(directionId);
       return;
     }
     setSelected(directionId);
+    clearBackupIfConflicts(directionId);
     saveDraft(directionId, why, unknowns, revisitOn);
   }
 
   function confirmSwitch() {
     if (!switchTarget) return;
+    clearBackupIfConflicts(switchTarget);
     const previous = readLocalProgress();
     if (previous?.provisional_direction && previous.provisional_direction !== switchTarget) {
       pushStaleChoiceHistory({
@@ -155,6 +208,7 @@ export function ChoiceStep() {
     const switched = Boolean(previous?.provisional_direction && previous.provisional_direction !== selected);
     updateLocalProgress((draft) => {
       draft.provisional_direction = selected;
+      draft.backup_direction = backup && backup !== selected ? backup : null;
       draft.reason_summary = why.trim().slice(0, 1000);
       draft.revisit_on = revisitOn;
       if (switched) {
@@ -177,7 +231,7 @@ export function ChoiceStep() {
         title="暂定一个方向，而不是一次定死"
         description={
           <>
-            从收藏中选 1 个方向作为<strong>暂定</strong>，写清为什么考虑、还有哪些未知、下次什么时候复核。你可以随时回来修改；切换时旧方案会标记 stale 并保留历史版本提示。
+            从收藏中选 1 个<strong>主方向</strong>，必要时再留 1 个<strong>备选方向</strong>；写清为什么考虑、还有哪些未知、下次什么时候复核。你可以随时回来修改；切换时旧方案会标记 stale 并保留历史版本提示。
           </>
         }
         actions={
@@ -198,7 +252,11 @@ export function ChoiceStep() {
             </span>
             <span className="step-meta-item">
               <Icon name="flag" size={13} />
-              {existingDirectionInfo ? `当前暂定：${existingDirectionInfo.short_title}` : "尚未暂定方向"}
+              {existingDirectionInfo ? `主方向：${existingDirectionInfo.short_title}` : "尚未暂定主方向"}
+            </span>
+            <span className="step-meta-item">
+              <Icon name="list" size={13} />
+              {backupDirection ? `备选：${backupDirection.short_title}` : "备选：未设置"}
             </span>
             {savedNote ? (
               <span className="step-meta-item step-meta-saved">
@@ -267,6 +325,37 @@ export function ChoiceStep() {
             <p className="field-error" role="alert">
               {errors.direction}
             </p>
+          ) : null}
+
+          {selected && selectedRecommendation ? (
+            <div className="choice-recommend-basis">
+              <p className="panel-title">
+                <Icon name="sparkles" size={15} /> 系统给出的推荐依据
+              </p>
+              <p className="panel-note">
+                来自本地程序规则（{localRecommendations?.rulesVersion}），不是匹配打分；只解释相符之处与待补足，不替你决定。
+              </p>
+              <div className="direction-block">
+                <p className="direction-label">相符之处</p>
+                <ul className="recommend-reasons">
+                  {selectedRecommendation.reasons.slice(0, 2).map((reason) => (
+                    <li key={reason}>{reason}</li>
+                  ))}
+                </ul>
+              </div>
+              {selectedRecommendation.gaps.length > 0 ? (
+                <div className="direction-block">
+                  <p className="direction-label">
+                    <Icon name="alert" size={13} /> 待补足
+                  </p>
+                  <ul className="gap-list">
+                    {selectedRecommendation.gaps.slice(0, 1).map((gap) => (
+                      <li key={gap}>{gap}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+            </div>
           ) : null}
         </section>
 
@@ -370,8 +459,12 @@ export function ChoiceStep() {
             </p>
             <ul className="kv-list">
               <li>
-                <span>暂定方向</span>
+                <span>主方向</span>
                 <strong>{selectedDirection ? selectedDirection.title : "尚未选择"}</strong>
+              </li>
+              <li>
+                <span>备选方向</span>
+                <strong>{backupDirection ? backupDirection.title : "暂不设备选"}</strong>
               </li>
               <li>
                 <span>复核时间</span>
@@ -396,6 +489,81 @@ export function ChoiceStep() {
           </div>
         </section>
       </div>
+
+      <section className="panel choice-backup-panel" aria-labelledby="choice-backup-title">
+        <div className="panel-head">
+          <div>
+            <p className="eyebrow">第 3 件事（可选）</p>
+            <h2 id="choice-backup-title">要不要再留一个备选方向？</h2>
+            <p className="panel-subtitle">
+              备选方向必须和主方向不同；它不会自动生成方案，只作为下次复核时的比较对象。你可以随时清除。
+            </p>
+          </div>
+          <Badge tone={backupDirection ? "accent" : "muted"}>
+            {backupDirection ? "已设置备选" : "暂不设备选"}
+          </Badge>
+        </div>
+        {favorites.length === 0 ? (
+          <p className="panel-note">
+            还没有收藏方向，暂时无法设置备选。可以先回
+            <Link href="/directions" className="link-inline"> 方向认知 </Link>
+            收藏 2 个以上方向，再回来设置主方向与备选。
+          </p>
+        ) : (
+          <>
+            <div className="choice-options" role="radiogroup" aria-label="备选方向（可选）">
+              <label className={backup === null ? "choice-option is-selected" : "choice-option"}>
+                <input
+                  type="radio"
+                  name="backup-direction"
+                  value=""
+                  checked={backup === null}
+                  onChange={() => handleBackupChange(null)}
+                />
+                <span className="choice-option-main">
+                  <span className="choice-option-title">暂不设备选</span>
+                  <span className="choice-option-desc">只保留一个暂定主方向，等下次复核时再比较。</span>
+                </span>
+                <span className={backup === null ? "choice-option-mark is-on" : "choice-option-mark"} aria-hidden="true">
+                  {backup === null ? <Icon name="check" size={13} /> : null}
+                </span>
+              </label>
+              {backupOptions.map((direction) => {
+                const checked = backup === direction.direction_id;
+                return (
+                  <label className={checked ? "choice-option is-selected" : "choice-option"} key={direction.direction_id}>
+                    <input
+                      type="radio"
+                      name="backup-direction"
+                      value={direction.direction_id}
+                      checked={checked}
+                      onChange={() => handleBackupChange(direction.direction_id)}
+                    />
+                    <span className="choice-option-main">
+                      <span className="choice-option-title">{direction.title}</span>
+                      <span className="choice-option-desc">{direction.summary}</span>
+                    </span>
+                    <span className={checked ? "choice-option-mark is-on" : "choice-option-mark"} aria-hidden="true">
+                      {checked ? <Icon name="check" size={13} /> : null}
+                    </span>
+                  </label>
+                );
+              })}
+            </div>
+            {selected ? null : (
+              <p className="panel-note">先在上方选择主方向后，备选选项会自动排除主方向。</p>
+            )}
+            {backup && !favorites.includes(backup) ? (
+              <p className="panel-note">
+                当前备选方向已不在收藏中；可以改选其他方向，或点「暂不设备选」清除。
+              </p>
+            ) : null}
+            <p className="panel-note">
+              主方向与备选方向都只保存在本设备；方案仍以主方向为准，备选方向用于下次复核时提醒你比较。
+            </p>
+          </>
+        )}
+      </section>
 
       <section className="panel history-panel" aria-labelledby="choice-history-title">
         <div className="panel-head">

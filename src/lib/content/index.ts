@@ -10,6 +10,7 @@ import assessmentSeed from "../../../data/import/seed/assessment.json";
 import {
   AssessmentSchema,
   type Assessment,
+  type AssessmentSection,
   type DirectionCard
 } from "@/lib/contracts/catalog";
 import { DirectionIdSchema, type DirectionId } from "@/lib/contracts/common";
@@ -68,11 +69,32 @@ export function getDirection(directionId: DirectionId | null | undefined): SeedD
   return DIRECTION_BY_ID[directionId] ?? null;
 }
 
-/** Seed light assessment. Local scoring uses the frozen `scoreAssessment`. */
+/** Seed assessment. Local scoring uses the frozen `scoreAssessment`. */
 export const ASSESSMENT: Assessment = AssessmentSchema.parse(assessmentSeed);
 export const ASSESSMENT_VERSION = ASSESSMENT.version;
 
-export const DIMENSION_ORDER = ["interest", "ability", "decision"] as const;
+/**
+ * 问卷分区顺序：兴趣 → 工作价值 → 能力自评 → 工作方式 → 探索准备度 → 可选经历。
+ * 分区标题与说明来自 `ASSESSMENT.dimensions`（与题库同版本）。
+ */
+export const ASSESSMENT_SECTION_ORDER: AssessmentSection[] = [
+  "interest",
+  "values",
+  "ability",
+  "work_style",
+  "readiness",
+  "experience"
+];
+
+/** 分区预计用时（只用于文案，不参与计分）。 */
+export const ASSESSMENT_SECTION_ESTIMATES: Record<AssessmentSection, string> = {
+  interest: "约 1 分钟",
+  values: "约 30 秒",
+  ability: "约 1 分钟",
+  work_style: "约 30 秒",
+  readiness: "约 30 秒",
+  experience: "可选"
+};
 
 export const COVERAGE_PENDING_LABEL = "待载入";
 export const COVERAGE_LOCAL_LABEL = "云端证据未载入";
@@ -139,8 +161,8 @@ export const WIZARD_STEPS: WizardStep[] = [
     href: "/explore",
     title: "自我探索",
     shortTitle: "探索",
-    description: "补齐学校与专业，用 10 道自编轻测形成描述性画像；每题都可跳过。",
-    estimate: "约 3 分钟"
+    description: "补齐学校与专业，用 16 项自编职业探索问卷形成描述性画像；不确定的题目可跳过。",
+    estimate: "约 4 分钟"
   },
   {
     index: 2,
@@ -155,7 +177,7 @@ export const WIZARD_STEPS: WizardStep[] = [
     href: "/choice",
     title: "暂定方向",
     shortTitle: "暂定",
-    description: "从收藏中选 1 个暂定方向，写下理由、未知与下次复核时间；随时可改。",
+    description: "从收藏或推荐中选 1 个暂定方向与 1 个备选方向，写下理由、未知与下次复核时间；随时可改。",
     estimate: "约 1 分钟"
   },
   {
@@ -171,7 +193,7 @@ export const WIZARD_STEPS: WizardStep[] = [
     href: "/export",
     title: "导出分享",
     shortTitle: "导出",
-    description: "生成带引用与资料版本的 PDF，明确这是自编轻测与自评，不是就业承诺。",
+    description: "生成带引用与资料版本的 PDF，明确这是职业探索问卷与自评，不是就业承诺。",
     estimate: "约 1 分钟"
   }
 ];
@@ -202,7 +224,7 @@ export const RESOURCE_BOUNDARIES = [
   "数据覆盖以快照与授权材料为限；未载入处显示数据缺口，不展示未核证的通过率、薪资、录取概率或报考资格。",
   "六个方向是产品导航分类，不是学校官方就业分类；同一岗位可映射到多个方向。",
   "培养方案 PDF 不等于结构化课程表；17/600 的精确格不代表其余格为零。",
-  "轻测是产品自编的轻量探索题，不是心理学验证的专业测评，也不是职业判决。"
+  "职业探索问卷是产品自编的短版筛查，不是心理学验证的专业测评，也不是职业判决。"
 ] as const;
 
 export type LibraryCategory = {

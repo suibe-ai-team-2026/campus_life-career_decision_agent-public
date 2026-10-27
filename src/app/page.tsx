@@ -29,7 +29,7 @@ export default function HomePage() {
               变成一条<span className="accent-text">可核对的路</span>
             </h1>
             <p className="hero-lead">
-              知途把学校专业、方向牌面、已核技能与准备成本摊开，用自编轻测形成描述性画像，再生成可调整的行动方案与带引用的 PDF。
+              知途把学校专业、方向牌面、已核技能与准备成本摊开，用职业探索问卷形成描述性画像，再生成可调整的行动方案与带引用的 PDF。
               <strong>AI 只做解释：不替你做决定、不算数、不编造。</strong>
             </p>
             <div className="hero-actions">
@@ -168,7 +168,7 @@ export default function HomePage() {
               <Icon name="download" size={18} />
               <div>
                 <h3>带走可核对的 PDF</h3>
-                <p>导出的 PDF 带引用、资料版本与待核验项，并明确写明这是自编轻测与自评，不是就业承诺。</p>
+                <p>导出的 PDF 带引用、资料版本与待核验项，并明确写明这是职业探索问卷与自评，不是就业承诺。</p>
               </div>
             </div>
           </div>
@@ -237,7 +237,7 @@ export default function HomePage() {
       <section className="home-disclaimer" aria-label="免责声明">
         <p>
           <Icon name="info" size={14} />
-          知途是比赛 MVP：轻测为产品自编的探索工具，规划结果用于辅助思考与复核，不构成正式心理测评、就业承诺、录取或报考资格结论。若资料未载入，页面会显示「资料未就绪」或数据缺口，不用虚构数字补齐。
+          知途是比赛 MVP：职业探索问卷为产品自编的探索工具，规划结果用于辅助思考与复核，不构成正式心理测评、就业承诺、录取或报考资格结论。若资料未载入，页面会显示「资料未就绪」或数据缺口，不用虚构数字补齐。
         </p>
       </section>
     </main>

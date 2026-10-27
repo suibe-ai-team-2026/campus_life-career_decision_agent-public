@@ -21,9 +21,10 @@ export async function GET() {
       .limit(1)
       .maybeSingle();
     if (error || !data) return jsonOk({ assessment: fallback, mode: "seed" });
+    if (data.version !== fallback.version) return jsonOk({ assessment: fallback, mode: "seed" });
     const parsed = AssessmentSchema.safeParse({
       version: data.version,
-      title: "生涯轻探索（自编轻测）",
+      title: fallback.title,
       disclaimer: fallback.disclaimer,
       methodology_sources: data.methodology_sources ?? fallback.methodology_sources,
       dimensions: fallback.dimensions,

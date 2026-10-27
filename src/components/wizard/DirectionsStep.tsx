@@ -20,11 +20,16 @@ import {
   type CompareOutcome
 } from "@/lib/api-client";
 import {
+  ASSESSMENT,
+  ASSESSMENT_VERSION,
   DIRECTIONS,
   DIRECTIONS_CATEGORY_VERSION,
   DIRECTIONS_DISCLAIMER,
-  directionCoverage
+  directionCoverage,
+  getDirection
 } from "@/lib/content";
+import { scoreAssessment } from "@/lib/assessment/scoring";
+import { recommendDirections, type DirectionConfidence } from "@/lib/career/recommend";
 import {
   readLocalProgress,
   updateLocalProgress,
@@ -38,10 +43,32 @@ import { StepHeader } from "./StepHeader";
 
 type CoverageMap = Partial<Record<DirectionId, DirectionCard["coverage"]>>;
 
+/** 置信度标签描述「已答信号是否集中」，不是适配程度或概率。 */
+const RECOMMEND_CONFIDENCE_LABELS: Record<DirectionConfidence, string> = {
+  high: "已答信号较集中",
+  medium: "值得比较",
+  low: "先作探索线索"
+};
+
+const RECOMMEND_CONFIDENCE_TONES: Record<DirectionConfidence, "ok" | "accent" | "muted"> = {
+  high: "ok",
+  medium: "accent",
+  low: "muted"
+};
+
 export function DirectionsStep() {
   const router = useRouter();
   const { progress, hydrated } = useLocalProgress();
   const favorites = useMemo(() => (progress?.favorites ?? []) as DirectionId[], [progress?.favorites]);
+  const answers = progress?.profile.answers;
+  const recommendationResult = useMemo(() => {
+    if (!answers) return null;
+    return recommendDirections(scoreAssessment(ASSESSMENT, answers));
+  }, [answers]);
+  const answersVersionStale = Boolean(
+    progress?.profile.assessment_version &&
+      progress.profile.assessment_version !== ASSESSMENT_VERSION
+  );
   const [favoriteError, setFavoriteError] = useState<string | null>(null);
   const [continueError, setContinueError] = useState<string | null>(null);
   const [coverage, setCoverage] = useState<CoverageMap>({});
@@ -264,6 +291,142 @@ export function DirectionsStep() {
         </div>
       ) : (
         <>
+          <section className="panel recommend-panel" aria-labelledby="recommend-title">
+            <div className="panel-head">
+              <div>
+                <p className="eyebrow">基于你的画像</p>
+                <h2 id="recommend-title">基于你的画像的待比较方向</h2>
+                <p className="panel-subtitle">
+                  由程序规则从已答信号中挑出，排序不是匹配打分；兴趣只表示当前更愿意投入，能力只表示自评，经历只表示你提供了相关经历。
+                </p>
+              </div>
+              {recommendationResult && recommendationResult.recommendations.length > 0 ? (
+                <Badge tone="accent">待比较 {recommendationResult.recommendations.length} 个</Badge>
+              ) : null}
+            </div>
+
+            {answersVersionStale ? (
+              <Callout tone="warn" icon="refresh" title="问卷版本已更新">
+                <p>你保存的画像来自旧版问卷，旧答案不再参与方向推荐。先回第 1 步确认画像，再回来比较方向。</p>
+                <div className="recommend-empty-actions">
+                  <Button variant="secondary" size="sm" href="/explore">
+                    去重新确认画像
+                    <Icon name="arrow-right" size={14} />
+                  </Button>
+                </div>
+              </Callout>
+            ) : !recommendationResult || recommendationResult.insufficientSignals ? (
+              <Callout tone="plain" icon="compass" title="画像信号还不够">
+                <p>
+                  方向推荐至少需要 3 个兴趣或 3 个能力信号。先回第 1 步补答几道题；也可以直接浏览下方完整目录，自己收藏方向。
+                </p>
+                <div className="recommend-empty-actions">
+                  <Button variant="secondary" size="sm" href="/explore">
+                    去补答
+                    <Icon name="arrow-right" size={14} />
+                  </Button>
+                </div>
+              </Callout>
+            ) : recommendationResult.recommendations.length === 0 ? (
+              <Callout tone="plain" icon="compass" title="当前画像还不足以给出待比较方向">
+                <p>
+                  已答信号与方向卡的工作内容对应不够明确。可以先浏览下方完整目录，或回第 1 步补充能力自评与经历后再比较。
+                </p>
+                <div className="recommend-empty-actions">
+                  <Button variant="secondary" size="sm" href="/explore">
+                    回第 1 步补画像
+                    <Icon name="arrow-right" size={14} />
+                  </Button>
+                </div>
+              </Callout>
+            ) : (
+              <>
+                {favorites.length >= 3 ? (
+                  <p className="panel-note">
+                    比较位已满（3 / 3）：先移除一个已收藏方向，再加入新的推荐方向。已收藏的方向不会因为换推荐而消失。
+                  </p>
+                ) : null}
+                <div className="recommend-grid">
+                  {recommendationResult.recommendations.map((recommendation) => {
+                    const direction = getDirection(recommendation.directionId);
+                    if (!direction) return null;
+                    const isFavorite = favorites.includes(recommendation.directionId);
+                    const limitReached = !isFavorite && favorites.length >= 3;
+                    return (
+                      <article className="recommend-card" key={recommendation.directionId}>
+                        <header className="recommend-card-head">
+                          <div>
+                            <p className="direction-kicker">{direction.short_title}</p>
+                            <h3>{direction.title}</h3>
+                          </div>
+                          <Badge tone={RECOMMEND_CONFIDENCE_TONES[recommendation.confidence]}>
+                            {RECOMMEND_CONFIDENCE_LABELS[recommendation.confidence]}
+                          </Badge>
+                        </header>
+                        <div className="direction-block">
+                          <p className="direction-label">相符之处</p>
+                          <ul className="recommend-reasons">
+                            {recommendation.reasons.slice(0, 3).map((reason) => (
+                              <li key={reason}>{reason}</li>
+                            ))}
+                          </ul>
+                        </div>
+                        {recommendation.gaps.length > 0 ? (
+                          <div className="direction-block">
+                            <p className="direction-label">
+                              <Icon name="alert" size={13} /> 待补足
+                            </p>
+                            <ul className="gap-list recommend-gaps">
+                              {recommendation.gaps.map((gap) => (
+                                <li key={gap}>{gap}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        ) : null}
+                        {recommendation.matchedSignals.evidence.length > 0 ? (
+                          <p className="panel-note recommend-evidence">
+                            <Icon name="check" size={13} /> 你提供过相关经历：
+                            {recommendation.matchedSignals.evidence.join("、")}（仅表示你提供了经历，未经第三方验证）
+                          </p>
+                        ) : null}
+                        <p className="recommend-boundary">
+                          <Icon name="info" size={13} /> {recommendation.boundaries[2]}
+                        </p>
+                        <p className="recommend-boundary">
+                          <Icon name="database" size={13} /> {recommendation.boundaries[1]}
+                        </p>
+                        <div className="recommend-card-actions">
+                          <Button
+                            variant={isFavorite ? "ghost" : "primary"}
+                            size="sm"
+                            onClick={() => toggleFavorite(recommendation.directionId)}
+                            disabled={limitReached}
+                            ariaLabel={
+                              isFavorite
+                                ? `移出比较：${direction.title}`
+                                : `加入比较：${direction.title}`
+                            }
+                            title={limitReached ? "比较位已满，先移除一个已收藏方向" : undefined}
+                          >
+                            <Icon name={isFavorite ? "check" : "plus"} size={14} />
+                            {isFavorite ? "已收藏，点此移除" : limitReached ? "比较位已满" : "加入比较"}
+                          </Button>
+                          <Button variant="ghost" size="sm" href="/explore">
+                            调整画像
+                          </Button>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+                <p className="coverage-footnote recommend-rule-note">
+                  <Icon name="database" size={13} /> 推荐规则版本 {recommendationResult.rulesVersion} · 方向卡分类版本{" "}
+                  {DIRECTIONS_CATEGORY_VERSION}；依据方向卡「工作内容」「已核技能」字段，不是匹配打分。
+                </p>
+              </>
+            )}
+          </section>
+
           <section aria-labelledby="direction-cards-title">
             <SectionHeading
               eyebrow="方向牌面"

@@ -22,6 +22,7 @@
     "import:dry-run": "tsx scripts/import-research.ts --dry-run",
     "import:apply": "tsx scripts/import-research.ts --apply",
     "probe:models": "tsx scripts/probe-models.ts",
+    "assessment:publish": "tsx scripts/publish-assessment.ts",
     "probe:embedding": "tsx scripts/probe-embedding.ts",
     "smoke": "tsx scripts/smoke.ts"
   },

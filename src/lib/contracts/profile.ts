@@ -4,10 +4,32 @@ import { DirectionIdSchema } from "./common";
 export const ExplorationStatusSchema = z.enum(["completed", "skipped"]);
 export type ExplorationStatus = z.infer<typeof ExplorationStatusSchema>;
 
-export const AnswersSchema = z.record(z.string().min(1).max(40), z.number().int().min(1).max(5));
+/**
+ * 单项作答值：
+ * - `number`：Likert / 准备度单题的 1–5 分；
+ * - `string[]`：价值排序（按重要程度）或单题选项 id；
+ * - `string`：折线之外的短文本选项 id（保留兼容旧数据）；
+ * - `{ text, tags }`：可选经历补充，tags 为能力维度键。
+ */
+export const AnswerValueSchema = z.union([
+  z.number().int().min(1).max(5),
+  // 允许空数组：取消排序选择时可能是空状态，加载时按「未作答」处理，不因此重置本地进度。
+  z.array(z.string().min(1).max(80)).max(10),
+  z.string().min(1).max(1000),
+  z
+    // 允许空对象：清空经历补充时按「未作答」处理。
+    .object({
+      text: z.string().trim().max(300).default(""),
+      tags: z.array(z.string().min(1).max(60)).max(6).default([])
+    })
+]);
+export type AnswerValue = z.infer<typeof AnswerValueSchema>;
+
+export const AnswersSchema = z.record(z.string().min(1).max(40), AnswerValueSchema);
 export type Answers = z.infer<typeof AnswersSchema>;
 
-export const ScoresSchema = z.record(z.string().min(1).max(40), z.number().min(0));
+/** 画像分数只保存可计算的数值信号；未知维度直接缺省，不写 0。 */
+export const ScoresSchema = z.record(z.string().min(1).max(40), z.number());
 export type Scores = z.infer<typeof ScoresSchema>;
 
 export const ProfileInputSchema = z.object({

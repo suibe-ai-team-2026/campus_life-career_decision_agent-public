@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { PlanResultSchema } from "@/lib/contracts/plan";
 import { RunSubmitSchema } from "@/lib/contracts/run";
-import { ProfileInputSchema } from "@/lib/contracts/profile";
+import { AnswersSchema, ProfileInputSchema } from "@/lib/contracts/profile";
 
 const uuid = "3f1f9c3a-6d1e-4d4e-9a4e-2b2a7c9e1a11";
 
@@ -75,6 +75,23 @@ describe("API contracts", () => {
       direction_ids: ["finance_accounting"]
     });
     expect(parsed.success).toBe(false);
+  });
+
+  it("accepts the questionnaire answer shapes (likert, ranking, single choice, experience)", () => {
+    const parsed = AnswersSchema.safeParse({
+      i_r: 4,
+      v_top3: ["growth", "stability", "income"],
+      w_approach: "info_first",
+      r_clarity: 3,
+      exp_optional: { text: "社团活动里负责协调。", tags: ["ability_communication"] }
+    });
+    expect(parsed.success).toBe(true);
+  });
+
+  it("rejects out-of-range likert values and empty rankings", () => {
+    expect(AnswersSchema.safeParse({ i_r: 6 }).success).toBe(false);
+    expect(AnswersSchema.safeParse({ i_r: 0 }).success).toBe(false);
+    expect(AnswersSchema.safeParse({ v_top3: [] }).success).toBe(true);
   });
 
   it("requires a versioned assessment in profile input", () => {

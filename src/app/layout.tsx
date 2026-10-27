@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     template: "%s · 知途 Campus Pathway"
   },
   description:
-    "知途（Campus Pathway）是面向大一大二学生的生涯规划向导：自编轻测画像、六个方向的牌面与数据缺口、可调整的行动方案，以及带引用与资料版本的 PDF。",
+    "知途（Campus Pathway）是面向大一大二学生的生涯规划向导：职业探索问卷画像、六个方向的牌面与数据缺口、可调整的行动方案，以及带引用与资料版本的 PDF。",
   applicationName: "知途 Campus Pathway",
   icons: {
     icon: "/favicon.svg"

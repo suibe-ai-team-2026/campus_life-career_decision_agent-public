@@ -3,8 +3,7 @@
 /**
  * Browser-local progress for the five-step wizard.
  *
- * The canonical payload is `LocalProgressV1` from `./schema` and stays exactly
- * as frozen. Auxiliary records (choice detail, stale choice history, last
+ * The canonical payload is `LocalProgress` from `./schema` (currently schema v2). Auxiliary records (choice detail, stale choice history, last
  * generated plan, local-only ordering, cloud profile pointer) live in separate
  * versioned keys so the frozen schema is never extended. Every key is prefixed
  * with `campus-pathway:` so "重新开始" can clear exactly this app's data.
@@ -234,6 +233,7 @@ export function isMeaningfulProgress(progress: LocalProgressV1): boolean {
       Object.keys(p.answers).length > 0 ||
       progress.favorites.length > 0 ||
       progress.provisional_direction ||
+      progress.backup_direction ||
       progress.reason_summary ||
       progress.plan_id ||
       progress.exported_at
@@ -614,7 +614,7 @@ export function clearCloudProfile() {
 
 export const RESET_SCOPE = [
   "学校、专业、入学年份、当前学期与每周时间/预算偏好",
-  "10 道轻测的作答、跳过标记与本地画像",
+  "职业探索问卷的作答、跳过标记与本地画像",
   "方向收藏、暂定方向、理由、未知与复核时间（含历史版本提示）",
   "本设备缓存的上一次行动方案、本地排序与勾选记录",
   "导出完成标记",

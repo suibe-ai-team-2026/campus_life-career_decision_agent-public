@@ -226,6 +226,7 @@ export function PlanStep() {
 
   const direction = progress?.provisional_direction ?? null;
   const directionInfo = getDirection(direction);
+  const backupDirectionInfo = getDirection(progress?.backup_direction ?? null);
   const favoriteDirections = useMemo(
     () => DIRECTIONS.filter((item) => (progress?.favorites ?? []).includes(item.direction_id)),
     [progress?.favorites]
@@ -435,7 +436,17 @@ export function PlanStep() {
       writePendingPlanRun(null);
       activeRunIdRef.current = null;
       const code = errorCodeOf(caught);
-      if (code === "aborted") return;
+      if (code === "aborted") {
+        // 只有仍属于本次生成的请求才需要收尾：用户点「停止等待」或切换方向时，
+        // 调用方已经接管状态，不能覆盖。开发模式热更新等外部中断则避免卡在「生成中」。
+        if (abortRef.current === controller) {
+          abortRef.current = null;
+          const hasPlan = Boolean(readLocalProgress()?.plan_id);
+          setPhase(hasPlan ? "ready" : "blocked");
+          setNotice("生成已中断，没有产生新方案。可以重新点「生成方案」。");
+        }
+        return;
+      }
       setError({ message: friendlyErrorMessage(caught), code });
       setPhase("error");
     }
@@ -614,6 +625,8 @@ export function PlanStep() {
   function handleStopWaiting() {
     const runId = activeRunIdRef.current;
     abortRef.current?.abort();
+    // 置空后再 abort，让 generatePlan 的 aborted 分支知道这次中断由用户主动发起。
+    abortRef.current = null;
     writePendingPlanRun(null);
     activeRunIdRef.current = null;
     if (runId && cloud) {
@@ -771,14 +784,18 @@ export function PlanStep() {
                 <strong>
                   {progress.profile.completed_at
                     ? progress.profile.skipped
-                      ? "已跳过轻测（画像保持未知）"
-                      : "已完成自编轻测（本地计分）"
+                      ? "已跳过问卷（画像保持未知）"
+                      : "已完成职业探索问卷（本地计分）"
                     : "未完成"}
                 </strong>
               </li>
               <li>
                 <span>暂定方向</span>
                 <strong>{directionInfo?.title ?? "未选择"}</strong>
+              </li>
+              <li>
+                <span>备选方向</span>
+                <strong>{backupDirectionInfo?.title ?? "未选择（可选）"}</strong>
               </li>
               <li>
                 <span>收藏方向</span>
@@ -794,7 +811,7 @@ export function PlanStep() {
             </p>
             <ul className="boundary-list">
               <li>建立匿名会话（不需要注册或邮箱），只保存本次规划所需的最少资料。</li>
-              <li>服务端用同版本轻测重新计分，避免前端被篡改；不信任浏览器提交的分数。</li>
+              <li>服务端用同版本问卷重新计分，避免前端被篡改；不信任浏览器提交的分数。</li>
               <li>提交 kind=plan 任务，由规则引擎与 worker 生成行动、课程、学分与证据引用。</li>
               <li>轮询已提交的任务；失败时展示错误码与本地内容，不伪造方案。</li>
             </ul>
@@ -976,6 +993,11 @@ export function PlanStep() {
             <span className="step-meta-item">
               <Icon name="flag" size={13} /> {directionInfo ? `暂定：${directionInfo.short_title}` : "尚未暂定方向"}
             </span>
+            {backupDirectionInfo ? (
+              <span className="step-meta-item">
+                <Icon name="flag" size={13} /> 备选：{backupDirectionInfo.short_title}
+              </span>
+            ) : null}
             <span className="step-meta-item">
               <Icon name="database" size={13} /> {cloud ? "云端生成已启用" : "本地演示模式"}
             </span>

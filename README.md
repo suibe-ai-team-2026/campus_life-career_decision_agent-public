@@ -11,6 +11,8 @@
 | 项 | 状态 | 说明 |
 |---|---|---|
 | 五步向导前端 | 已实现 | Next.js 16 App Router + React 19 + TypeScript；本地进度、跳过、方向切换、方案调整、导出空态 |
+| 职业探索问卷 | 已升级 | 16 项必答 + 1 项可选经历（兴趣/价值/能力自评/工作方式/准备度/经历），版本 `career-explore-2026-10-27`；旧 10 题轻测退役；发布命令 `npm run assessment:publish -- --apply` |
+| 画像推荐 | P0 已实现 | 方向页按画像给出 2–3 个待比较方向（理由 + 待补足，无适配率）；暂定方向支持主方向 + 备选方向；P1–P3（课程/竞赛/阶段规划数据）待核验后实现 |
 | BFF | 已实现 | 同源 API：画像、run 提交/轮询/取消、方案、来源、PDF 签名下载、健康检查 |
 | 数据库/RLS | 已应用并验证 | Supabase 项目 `cvohcdzfscoxytmpbwsk`（org `suibeAIproductcompe`，us-east-2）：7 个迁移、24 表全部 RLS、33 policy、2 私有 bucket；数据已导入 |
 | Freestyle worker | 已部署并跑通 | VM `vm-7f674dd9ed5d422b880f5bec7fe9f734` / `campus-pathway-worker-dev`；plan/ask/export 均 succeeded；单 worker，无公网端口 |

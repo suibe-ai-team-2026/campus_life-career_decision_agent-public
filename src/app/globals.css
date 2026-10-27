@@ -5193,3 +5193,234 @@ a.trace-hit-title:hover {
     grid-template-columns: 1fr;
   }
 }
+
+/* ------------------------------------------------------------------ */
+/* 职业探索自我画像（16 项问卷）                                        */
+/* ------------------------------------------------------------------ */
+
+.result-block {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--line-soft);
+}
+.result-block:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+.result-block .panel-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.rank-list {
+  gap: 8px;
+}
+.rank-option {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--fg-1);
+}
+.rank-option .option-label {
+  color: inherit;
+  font-size: 13px;
+}
+.rank-option:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.rank-option-index {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid var(--line-soft);
+  background: var(--bg-0);
+  color: var(--fg-3);
+  font-size: 11px;
+  font-weight: 600;
+}
+.rank-option.is-selected .rank-option-index {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--bg-0);
+}
+
+.option-row-single {
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.text-answer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.text-answer-meta {
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.tag-picker {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.value-rank-list {
+  counter-reset: none;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  gap: 8px;
+}
+.value-rank-item {
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+.value-rank-index {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.evidence-line {
+  align-items: flex-start;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.evidence-line .dimension-desc {
+  margin: 0;
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.explore-result-panel .dimension-desc {
+  line-height: 1.6;
+}
+.explore-result-panel .dimension-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+
+/* ------------------------------------------------------------------ */
+/* 画像推荐方向（P0）与主/备选方向                                      */
+/* ------------------------------------------------------------------ */
+
+.recommend-panel {
+  margin-bottom: 22px;
+}
+.recommend-panel .panel-subtitle {
+  margin-top: 6px;
+}
+.recommend-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+.recommend-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  padding: 20px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--accent-line, var(--line-soft));
+  background: var(--bg-1);
+}
+.recommend-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.recommend-card-head h3 {
+  margin: 2px 0 0;
+  font-size: 16px;
+  letter-spacing: 0.01em;
+}
+.recommend-reasons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding-left: 16px;
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--fg-1);
+}
+.recommend-gaps {
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+.recommend-evidence {
+  margin: 0;
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  font-size: 12px;
+}
+.recommend-boundary {
+  margin: 0;
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  color: var(--fg-3);
+  font-size: 11.5px;
+  line-height: 1.55;
+}
+.recommend-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 4px;
+}
+.recommend-empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.recommend-rule-note {
+  margin-top: 12px;
+}
+
+.choice-backup-panel {
+  margin-top: 18px;
+}
+.choice-recommend-basis {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--line-soft);
+}
+.choice-recommend-basis .direction-block {
+  margin-top: 10px;
+}
+
+@media (max-width: 980px) {
+  .recommend-grid {
+    grid-template-columns: 1fr;
+  }
+}

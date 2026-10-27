@@ -1,158 +1,539 @@
 {
-  "version": "career-light-2026-10-19",
-  "title": "生涯轻探索（自编轻测）",
-  "disclaimer": "这是产品自编的轻量探索题，参考公开生涯框架自行编写，不是经过心理学验证的专业测评，也不构成职业判决。结果只用于生成可编辑的描述性画像。",
+  "version": "career-explore-2026-10-27",
+  "title": "职业探索自我画像（短版）",
+  "disclaimer": "这是产品自编的生涯探索工具，参考公开生涯框架自行编写，不是经过心理学验证的专业测评，也不是临床心理测验或标准化能力测验。结果用于整理兴趣、工作价值、能力自评、工作方式与探索准备度，是讨论起点，不替你决定专业、职业或未来规划。",
   "methodology_sources": [
-    "公开生涯规划框架的通用维度（兴趣、能力自评、决策偏好）",
+    "公开生涯规划框架的通用维度（兴趣、工作价值、能力自评、工作方式、探索准备度）",
+    "RIASEC 兴趣类型框架的组织方式（仅借鉴六类活动偏好的结构，不使用其原题或常模）",
     "全国大学生职业规划大赛的自我认知—职业认知—决策—实施结构",
-    "O*NET Interest Profiler 的轻量分层思路（仅借鉴结构，不使用其原题）"
+    "O*NET Interest Profiler 的轻量分层思路（仅了解兴趣类别的组织方式，未使用其正式题目或评分）"
   ],
   "dimensions": {
-    "interest": { "title": "兴趣倾向", "description": "你在哪些活动里更容易投入，而不是你适合什么职业。" },
-    "ability": { "title": "能力自评", "description": "你对自己当前能力的估计，不是客观测评分数。" },
-    "decision": { "title": "决策偏好", "description": "你面对方向选择时更依赖什么信息、需要多少确定性。" }
+    "interest": {
+      "title": "活动兴趣",
+      "description": "如果本学期有机会，你愿意参与这类活动吗？兴趣表示偏好，不等于能力结论，也不称作人格类型。"
+    },
+    "values": {
+      "title": "工作价值",
+      "description": "你目前最看重的工作条件；只记录优先次序，不换算成分数，也不与其他学生比较。"
+    },
+    "ability": {
+      "title": "能力自评",
+      "description": "你对自己当前水平的判断，不是客观能力测评；缺少经历证据时只代表自评。"
+    },
+    "work_style": {
+      "title": "工作方式",
+      "description": "你目前更愿意如何完成任务与协作；没有更好或更差的选项。"
+    },
+    "readiness": {
+      "title": "探索准备度",
+      "description": "你对自己职业方向清晰度的判断；只影响后续引导的颗粒度，不进入方向匹配。"
+    },
+    "experience": {
+      "title": "可选经历补充",
+      "description": "用一件具体经历说明某项能力；不填写也可以，填写的内容不会被当成第三方核验过的能力证明。"
+    }
   },
   "questions": [
     {
-      "question_id": "i1",
-      "dimension": "interest",
-      "prompt": "看到一份陌生行业的资料时，你更愿意先做什么？",
+      "question_id": "i_r",
+      "section": "interest",
+      "dimension": "interest_r",
+      "kind": "likert",
+      "prompt": "动手搭建、操作或改进一个具体产品、设备或流程，并观察它是否好用。",
       "options": [
-        { "value": 1, "label": "几乎不想看" },
-        { "value": 2, "label": "等别人总结" },
-        { "value": 3, "label": "大致翻翻" },
-        { "value": 4, "label": "自己找关键信息" },
-        { "value": 5, "label": "主动做对比和笔记" }
+        {
+          "value": 1,
+          "label": "完全不愿意"
+        },
+        {
+          "value": 2,
+          "label": "不太愿意"
+        },
+        {
+          "value": 3,
+          "label": "一般"
+        },
+        {
+          "value": 4,
+          "label": "比较愿意"
+        },
+        {
+          "value": 5,
+          "label": "非常愿意"
+        }
       ],
-      "reverse": false,
       "optional": false
     },
     {
-      "question_id": "i2",
-      "dimension": "interest",
-      "prompt": "你更享受哪类任务？",
+      "question_id": "i_i",
+      "section": "interest",
+      "dimension": "interest_i",
+      "kind": "likert",
+      "prompt": "围绕一个商业或社会问题搜集资料、比较证据，弄清它为什么发生。",
       "options": [
-        { "value": 1, "label": "完全按流程执行" },
-        { "value": 2, "label": "有明确步骤的重复任务" },
-        { "value": 3, "label": "和人协作完成" },
-        { "value": 4, "label": "需要自己找答案的问题" },
-        { "value": 5, "label": "开放式、需要创造的问题" }
+        {
+          "value": 1,
+          "label": "完全不愿意"
+        },
+        {
+          "value": 2,
+          "label": "不太愿意"
+        },
+        {
+          "value": 3,
+          "label": "一般"
+        },
+        {
+          "value": 4,
+          "label": "比较愿意"
+        },
+        {
+          "value": 5,
+          "label": "非常愿意"
+        }
       ],
-      "reverse": false,
       "optional": false
     },
     {
-      "question_id": "i3",
-      "dimension": "interest",
-      "prompt": "如果有一个下午可以自由安排，你更可能？",
+      "question_id": "i_a",
+      "section": "interest",
+      "dimension": "interest_a",
+      "kind": "likert",
+      "prompt": "为活动、产品或内容提出新点子，并设计一种有吸引力的表达方式。",
       "options": [
-        { "value": 1, "label": "躺着刷视频" },
-        { "value": 2, "label": "和朋友闲聊" },
-        { "value": 3, "label": "看剧或玩游戏" },
-        { "value": 4, "label": "学一个感兴趣的小技能" },
-        { "value": 5, "label": "做一个自己的小项目" }
+        {
+          "value": 1,
+          "label": "完全不愿意"
+        },
+        {
+          "value": 2,
+          "label": "不太愿意"
+        },
+        {
+          "value": 3,
+          "label": "一般"
+        },
+        {
+          "value": 4,
+          "label": "比较愿意"
+        },
+        {
+          "value": 5,
+          "label": "非常愿意"
+        }
       ],
-      "reverse": true,
       "optional": false
     },
     {
-      "question_id": "i4",
-      "dimension": "interest",
-      "prompt": "你更愿意了解一个职业的哪一面？",
+      "question_id": "i_s",
+      "section": "interest",
+      "dimension": "interest_s",
+      "kind": "likert",
+      "prompt": "向同学解释复杂信息、帮助他人解决问题，或组织一次协作活动。",
       "options": [
-        { "value": 1, "label": "薪资传说" },
-        { "value": 2, "label": "别人成功的经历" },
-        { "value": 3, "label": "日常工作内容" },
-        { "value": 4, "label": "需要的能力和门槛" },
-        { "value": 5, "label": "行业变化和长期路径" }
+        {
+          "value": 1,
+          "label": "完全不愿意"
+        },
+        {
+          "value": 2,
+          "label": "不太愿意"
+        },
+        {
+          "value": 3,
+          "label": "一般"
+        },
+        {
+          "value": 4,
+          "label": "比较愿意"
+        },
+        {
+          "value": 5,
+          "label": "非常愿意"
+        }
       ],
-      "reverse": false,
-      "optional": true
-    },
-    {
-      "question_id": "a1",
-      "dimension": "ability",
-      "prompt": "面对一份需要小组完成的分析任务，你通常？",
-      "options": [
-        { "value": 1, "label": "不知道从哪开始" },
-        { "value": 2, "label": "等分工" },
-        { "value": 3, "label": "完成自己被分到的部分" },
-        { "value": 4, "label": "能梳理任务并推进" },
-        { "value": 5, "label": "能搭框架并带大家完成" }
-      ],
-      "reverse": false,
       "optional": false
     },
     {
-      "question_id": "a2",
-      "dimension": "ability",
-      "prompt": "用 Excel 处理一批杂乱数据，你的感觉是？",
+      "question_id": "i_e",
+      "section": "interest",
+      "dimension": "interest_e",
+      "kind": "likert",
+      "prompt": "说服他人支持一个方案、协调资源，或推动团队把想法落地。",
       "options": [
-        { "value": 1, "label": "完全不会" },
-        { "value": 2, "label": "只会简单录入" },
-        { "value": 3, "label": "会用基础公式" },
-        { "value": 4, "label": "会筛选、透视表和清洗" },
-        { "value": 5, "label": "能设计表格并解释结果" }
+        {
+          "value": 1,
+          "label": "完全不愿意"
+        },
+        {
+          "value": 2,
+          "label": "不太愿意"
+        },
+        {
+          "value": 3,
+          "label": "一般"
+        },
+        {
+          "value": 4,
+          "label": "比较愿意"
+        },
+        {
+          "value": 5,
+          "label": "非常愿意"
+        }
       ],
-      "reverse": false,
       "optional": false
     },
     {
-      "question_id": "a3",
-      "dimension": "ability",
-      "prompt": "用英文写一封正式的邮件或说明，你通常？",
+      "question_id": "i_c",
+      "section": "interest",
+      "dimension": "interest_c",
+      "kind": "likert",
+      "prompt": "整理数据、核对细节、维护清楚可靠的记录，让工作按规则准确完成。",
       "options": [
-        { "value": 1, "label": "需要整篇翻译" },
-        { "value": 2, "label": "能写但要反复查" },
-        { "value": 3, "label": "能完成基本表达" },
-        { "value": 4, "label": "结构清楚、错误较少" },
-        { "value": 5, "label": "能按场景调整语气和结构" }
+        {
+          "value": 1,
+          "label": "完全不愿意"
+        },
+        {
+          "value": 2,
+          "label": "不太愿意"
+        },
+        {
+          "value": 3,
+          "label": "一般"
+        },
+        {
+          "value": 4,
+          "label": "比较愿意"
+        },
+        {
+          "value": 5,
+          "label": "非常愿意"
+        }
       ],
-      "reverse": false,
-      "optional": true
-    },
-    {
-      "question_id": "d1",
-      "dimension": "decision",
-      "prompt": "选方向时，你更需要哪类信息？",
-      "options": [
-        { "value": 1, "label": "别人直接告诉我选什么" },
-        { "value": 2, "label": "一个明确排名" },
-        { "value": 3, "label": "几个选项的优缺点" },
-        { "value": 4, "label": "每个选项的依据和代价" },
-        { "value": 5, "label": "依据、代价和可调整路径" }
-      ],
-      "reverse": false,
       "optional": false
     },
     {
-      "question_id": "d2",
-      "dimension": "decision",
-      "prompt": "如果两个方向各有优劣，你更倾向？",
+      "question_id": "v_top3",
+      "section": "values",
+      "dimension": "values",
+      "kind": "rank",
+      "prompt": "以下工作条件中，请选出你目前最看重的 3 项，并按重要程度排序。",
+      "hint": "选择顺序即重要程度；再次点击可取消。并列时允许同级排序。",
+      "max_selections": 3,
       "options": [
-        { "value": 1, "label": "先拖着不选" },
-        { "value": 2, "label": "问很多人再决定" },
-        { "value": 3, "label": "选看起来更稳的" },
-        { "value": 4, "label": "选更想试的，并留后路" },
-        { "value": 5, "label": "先做小成本试验再定" }
+        {
+          "value": "growth",
+          "label": "持续学习，有清楚的成长机会"
+        },
+        {
+          "value": "autonomy",
+          "label": "有自主空间，能自己安排或决定部分工作"
+        },
+        {
+          "value": "stability",
+          "label": "工作稳定，规则和预期比较明确"
+        },
+        {
+          "value": "income",
+          "label": "收入与回报有吸引力"
+        },
+        {
+          "value": "collaboration",
+          "label": "与他人合作，能对团队或客户产生实际帮助"
+        },
+        {
+          "value": "influence",
+          "label": "有机会承担责任、影响决策或获得认可"
+        }
       ],
-      "reverse": false,
       "optional": false
     },
     {
-      "question_id": "d3",
-      "dimension": "decision",
-      "prompt": "你希望「暂定方向」保持多久？",
+      "question_id": "a_info",
+      "section": "ability",
+      "dimension": "ability_research",
+      "kind": "likert",
+      "prompt": "我能搜集与问题相关的信息，判断来源是否可靠，并提炼重点。",
       "options": [
-        { "value": 1, "label": "不想暂定，要一次定死" },
-        { "value": 2, "label": "一学期内不想改" },
-        { "value": 3, "label": "可以按学期复核" },
-        { "value": 4, "label": "随时可以改" },
-        { "value": 5, "label": "边做边改，保留多版本" }
+        {
+          "value": 1,
+          "label": "目前几乎不会"
+        },
+        {
+          "value": 2,
+          "label": "需要别人带"
+        },
+        {
+          "value": 3,
+          "label": "能独立完成基础部分"
+        },
+        {
+          "value": 4,
+          "label": "能独立完成并处理常见问题"
+        },
+        {
+          "value": 5,
+          "label": "能独立做好并处理复杂情况"
+        }
       ],
-      "reverse": false,
-      "optional": true
+      "optional": false
+    },
+    {
+      "question_id": "a_data",
+      "section": "ability",
+      "dimension": "ability_data",
+      "kind": "likert",
+      "prompt": "我能读懂基础数据或图表，发现变化并说明可能的原因。",
+      "options": [
+        {
+          "value": 1,
+          "label": "目前几乎不会"
+        },
+        {
+          "value": 2,
+          "label": "需要别人带"
+        },
+        {
+          "value": 3,
+          "label": "能独立完成基础部分"
+        },
+        {
+          "value": 4,
+          "label": "能独立完成并处理常见问题"
+        },
+        {
+          "value": 5,
+          "label": "能独立做好并处理复杂情况"
+        }
+      ],
+      "optional": false
+    },
+    {
+      "question_id": "a_writing",
+      "section": "ability",
+      "dimension": "ability_writing",
+      "kind": "likert",
+      "prompt": "我能把观点写成结构清楚、适合目标读者的文字。",
+      "options": [
+        {
+          "value": 1,
+          "label": "目前几乎不会"
+        },
+        {
+          "value": 2,
+          "label": "需要别人带"
+        },
+        {
+          "value": 3,
+          "label": "能独立完成基础部分"
+        },
+        {
+          "value": 4,
+          "label": "能独立完成并处理常见问题"
+        },
+        {
+          "value": 5,
+          "label": "能独立做好并处理复杂情况"
+        }
+      ],
+      "optional": false
+    },
+    {
+      "question_id": "a_communication",
+      "section": "ability",
+      "dimension": "ability_communication",
+      "kind": "likert",
+      "prompt": "我能清楚表达观点、倾听对方需求，并进行沟通协调。",
+      "options": [
+        {
+          "value": 1,
+          "label": "目前几乎不会"
+        },
+        {
+          "value": 2,
+          "label": "需要别人带"
+        },
+        {
+          "value": 3,
+          "label": "能独立完成基础部分"
+        },
+        {
+          "value": 4,
+          "label": "能独立完成并处理常见问题"
+        },
+        {
+          "value": 5,
+          "label": "能独立做好并处理复杂情况"
+        }
+      ],
+      "optional": false
+    },
+    {
+      "question_id": "a_execution",
+      "section": "ability",
+      "dimension": "ability_execution",
+      "kind": "likert",
+      "prompt": "我能拆解任务、安排顺序、跟进进度并按时交付。",
+      "options": [
+        {
+          "value": 1,
+          "label": "目前几乎不会"
+        },
+        {
+          "value": 2,
+          "label": "需要别人带"
+        },
+        {
+          "value": 3,
+          "label": "能独立完成基础部分"
+        },
+        {
+          "value": 4,
+          "label": "能独立完成并处理常见问题"
+        },
+        {
+          "value": 5,
+          "label": "能独立做好并处理复杂情况"
+        }
+      ],
+      "optional": false
+    },
+    {
+      "question_id": "a_digital",
+      "section": "ability",
+      "dimension": "ability_digital",
+      "kind": "likert",
+      "prompt": "我能使用表格、数字工具或 AI 工具完成学习和工作任务，并检查输出是否可靠。",
+      "options": [
+        {
+          "value": 1,
+          "label": "目前几乎不会"
+        },
+        {
+          "value": 2,
+          "label": "需要别人带"
+        },
+        {
+          "value": 3,
+          "label": "能独立完成基础部分"
+        },
+        {
+          "value": 4,
+          "label": "能独立完成并处理常见问题"
+        },
+        {
+          "value": 5,
+          "label": "能独立做好并处理复杂情况"
+        }
+      ],
+      "optional": false
+    },
+    {
+      "question_id": "w_approach",
+      "section": "work_style",
+      "dimension": "work_style_approach",
+      "kind": "single",
+      "prompt": "接到一项目标明确、但没有现成做法的任务时，我通常更愿意：",
+      "options": [
+        {
+          "value": "info_first",
+          "label": "先找资料和例子，再拟出步骤。"
+        },
+        {
+          "value": "try_first",
+          "label": "先动手试一个小方案，边做边调整。"
+        },
+        {
+          "value": "discuss_first",
+          "label": "先和同伴讨论，汇总出共同方案。"
+        },
+        {
+          "value": "clear_process",
+          "label": "希望先拿到清楚的要求和流程。"
+        }
+      ],
+      "optional": false
+    },
+    {
+      "question_id": "w_team",
+      "section": "work_style",
+      "dimension": "work_style_team",
+      "kind": "single",
+      "prompt": "做小组任务时，我目前更愿意承担：",
+      "options": [
+        {
+          "value": "research",
+          "label": "搜集资料、核对事实或整理数据。"
+        },
+        {
+          "value": "communicate",
+          "label": "写作、汇报或对外沟通。"
+        },
+        {
+          "value": "coordinate",
+          "label": "分工、排期和进度协调。"
+        },
+        {
+          "value": "create",
+          "label": "提出新思路、设计表达或方案。"
+        },
+        {
+          "value": "follow_process",
+          "label": "按明确流程完成分配给我的部分。"
+        }
+      ],
+      "optional": false
+    },
+    {
+      "question_id": "r_clarity",
+      "section": "readiness",
+      "dimension": "readiness",
+      "kind": "single",
+      "prompt": "目前你对自己未来可能发展的职业方向有多清晰？",
+      "options": [
+        {
+          "value": 1,
+          "label": "还没有线索，希望从基础介绍开始。"
+        },
+        {
+          "value": 2,
+          "label": "有一些兴趣，但还不了解具体工作。"
+        },
+        {
+          "value": 3,
+          "label": "有几个候选方向，想比较它们的差异。"
+        },
+        {
+          "value": 4,
+          "label": "有较明确的倾向，想核对能力要求和准备路径。"
+        },
+        {
+          "value": 5,
+          "label": "已有暂定方向，想把课程、竞赛和阶段规划落下来。"
+        }
+      ],
+      "optional": false
+    },
+    {
+      "question_id": "exp_optional",
+      "section": "experience",
+      "dimension": "experience",
+      "kind": "text",
+      "prompt": "如果愿意，请写一件能说明你某项能力的具体经历（课程作业、社团、兼职、志愿服务、竞赛或个人实践均可），并选择它支持的能力标签。没有经历或暂时不想填写，可以跳过。",
+      "hint": "最多 300 字；标签只表示你提供了相关经历，不代表经历质量已被第三方验证。",
+      "optional": true,
+      "evidence_tags": [
+        "ability_research",
+        "ability_data",
+        "ability_writing",
+        "ability_communication",
+        "ability_execution",
+        "ability_digital"
+      ]
     }
   ],
-  "reverse_scored": ["i3"]
+  "reverse_scored": []
 }

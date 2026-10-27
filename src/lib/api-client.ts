@@ -1067,7 +1067,7 @@ function fnv1a(input: string): string {
 export function profileFingerprint(input: ProfileInput): string {
   const answers = Object.entries(input.answers)
     .sort(([a], [b]) => a.localeCompare(b))
-    .map(([key, value]) => `${key}:${value}`);
+    .map(([key, value]) => `${key}:${JSON.stringify(value)}`);
   const payload = [
     input.school,
     input.major,

@@ -16,6 +16,9 @@ export async function loadCurrentAssessment(): Promise<Assessment> {
       .limit(1)
       .maybeSingle();
     if (error || !data) return fallback;
+    // 题库版本由代码发布：数据库里的 active 行必须与随代码发布的版本一致，
+    // 否则回退到随代码携带的 seed，避免线上出现「新版代码 + 旧版题目」。
+    if (data.version !== fallback.version) return fallback;
     const parsed = AssessmentSchema.safeParse({
       version: data.version,
       title: fallback.title,

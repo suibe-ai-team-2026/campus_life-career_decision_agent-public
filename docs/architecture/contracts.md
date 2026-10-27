@@ -9,7 +9,7 @@
 |---|---|---|
 | GET | `/api/health` | 公开存活状态；不暴露 DB host/key/内部路径 |
 | GET | `/api/catalog/directions` | 六方向卡 + 核验覆盖；可匿名 |
-| GET | `/api/assessments/current` | 当前轻测题目/版本；可匿名 |
+| GET | `/api/assessments/current` | 当前职业探索问卷题目/版本；可匿名 |
 | POST | `/api/profiles` | 保存授权上云的画像快照；需登录（含匿名） |
 | PATCH | `/api/profiles/:id` | `expected_version` 乐观锁 |
 | GET | `/api/profiles/:id` | 本人画像 |
@@ -25,6 +25,24 @@
 | GET | `/api/sources` | 已批准共享来源 + 本人来源 |
 | GET | `/api/artifacts/:id/download` | 验权后返回短期签名地址 |
 | POST | `/api/auth/anonymous` | 建立匿名身份（首次 AI/上传/导出时调用） |
+
+## 职业探索问卷（`/api/assessments/current`）
+
+题库随代码发布（`data/import/seed/assessment.json`，版本 `career-explore-2026-10-27`），
+BFF 只接受 `app_assessments` 中与代码 seed **版本一致**的 `active` 行，否则回退 seed；
+发布命令 `npm run assessment:publish -- --apply`。
+
+```json
+{"question_id":"i_s","section":"interest","dimension":"interest_s","kind":"likert",
+ "prompt":"…","options":[{"value":1,"label":"完全不愿意"}],"optional":false}
+```
+
+- `section`：`interest | values | ability | work_style | readiness | experience`
+- `kind`：`likert | rank | single | text`；`rank` 用 `max_selections`；`text` 用 `evidence_tags`
+- 作答值 `answers`：`number`（1–5）/ `string[]`（排序或选项 id）/ `string`（单题选项 id）/ `{text,tags}`（可选经历）
+- `scores` 只保存可计算信号（`interest_r..c`、`ability_*`、`readiness`，0–1）；漏答缺省，不写 0
+- 服务端保存画像时用同一实现重算 `scores`，不信任客户端提交的分数
+- 极短筛查，不是信效度验证量表；不展示适配率，不把自评当客观能力结论
 
 ## Run 提交
 

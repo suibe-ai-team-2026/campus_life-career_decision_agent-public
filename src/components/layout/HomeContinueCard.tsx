@@ -21,8 +21,8 @@ export function HomeContinueCard() {
   const doneCount = WIZARD_STEPS.filter((step) => progressStepDone(progress, step.index)).length;
   const profileStatus = progress.profile.completed_at
     ? progress.profile.skipped
-      ? "已跳过轻测"
-      : "已完成轻测"
+      ? "已跳过问卷"
+      : "已完成问卷"
     : "进行中";
 
   return (

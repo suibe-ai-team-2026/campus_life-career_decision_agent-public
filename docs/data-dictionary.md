@@ -47,18 +47,19 @@
 **权限**：`anon`/`authenticated` 可 SELECT（公开目录，向导前四步无需登录）；无用户写策略，写入仅 `service_role`。
 **注意**：六个方向是产品导航分类，**不是**学校官方就业分类；`source_ids` 目前为空数组。
 
-### 3.2 `app_assessments`（1 行）
+### 3.2 `app_assessments`（2 行：1 active + 1 retired）
 
 | 字段 | 类型 / 约束 | 来源字段 | 处理规则 | 缺失语义 |
 |---|---|---|---|---|
-| `version` | text PK | 种子 `version` | `career-light-2026-10-19` | 不允许缺失 |
-| `questions` | jsonb not null | 种子 `questions` | 原样（含 `reverse`/`optional`） | 不允许缺失 |
-| `scoring_spec` | jsonb not null | 种子 `dimensions`+`reverse_scored` 等 | 仅登记维度、反向题、5 级量表与“计分在 worker 实现”的说明；**不在此计分** | — |
+| `version` | text PK | 种子 `version` | 当前 `career-explore-2026-10-27`（旧 `career-light-2026-10-19` 置 `retired`，保留旧画像外键） | 不允许缺失 |
+| `questions` | jsonb not null | 种子 `questions` | 原样（17 题：16 必答 + 1 可选经历；含 `section`/`kind`/`options`/`max_selections`/`evidence_tags`） | 不允许缺失 |
+| `scoring_spec` | jsonb not null | `scripts/publish-assessment.ts` | 只登记分区、计分口径、漏答=未知与「不在此计分」说明；**计分在 BFF/前端同源实现** | — |
 | `methodology_sources` | jsonb not null default `[]` | 种子 `methodology_sources` | 原样 | — |
-| `status` | text default `active` | — | `active` | — |
+| `status` | text default `active` | — | 发布新版本时新行 `active`，其余 `retired` | — |
 
+**发布方式**：`npm run assessment:publish -- --apply`（默认 dry-run）。BFF 只接受与代码内 seed 版本一致的 active 行，否则回退 seed，避免「新版代码 + 旧题面」。
 **权限**：`anon`/`authenticated` 可 SELECT（公开题面）；写入仅 `service_role`。
-**注意**：这是产品自编轻测，不是经过心理学验证的专业测评。
+**注意**：这是产品自编的 16 项职业探索短版筛查（PR #20 评审稿），不是经过心理学验证的专业测评；旧 10 题三维轻测已退役。
 
 ### 3.3 `app_sources`（319 行）
 

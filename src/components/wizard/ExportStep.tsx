@@ -424,7 +424,7 @@ export function ExportStep() {
               {downloadUrl ? "你的方案 PDF 已准备好" : "方案已就绪，可以生成 PDF"}
             </h2>
             <p className="panel-note">
-              这份 PDF 会带上引用编号、规则版本、资料版本与待核验项；它明确写明这是<strong>自编轻测与自评</strong>，不是正式测评或就业承诺。
+              这份 PDF 会带上引用编号、规则版本、资料版本与待核验项；它明确写明这是<strong>职业探索问卷与自评</strong>，不是正式测评或就业承诺。
             </p>
             <div className="export-actions">
               {downloadUrl ? (
@@ -511,7 +511,7 @@ export function ExportStep() {
             <ListBlock
               items={[
                 "你的暂定方向、理由、未知与下次复核时间（来自本设备记录）",
-                "描述性画像与自编轻测说明（明确是自评，不是专业测评）",
+                "描述性画像与职业探索问卷说明（明确是自评，不是专业测评）",
                 "按当前学期 / 下学期 / 更晚分组的行动清单，区分机器建议与我的调整",
                 "课程、竞赛、学分与数据缺口；缺失处显示资料未就绪",
                 "引用条目：编号、标题、定位、摘录与核验状态",
@@ -786,7 +786,7 @@ export function ExportStep() {
         title="带走一份可核对的方案 PDF"
         description={
           <>
-            PDF 会带上引用、资料版本、规则版本与待核验项，并写明这是<strong>自编轻测与自评</strong>，不是正式测评或就业承诺。下载链接短期有效，不会在页面显示 token。
+            PDF 会带上引用、资料版本、规则版本与待核验项，并写明这是<strong>职业探索问卷与自评</strong>，不是正式测评或就业承诺。下载链接短期有效，不会在页面显示 token。
           </>
         }
         actions={
