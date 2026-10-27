@@ -45,8 +45,13 @@ export const RunSubmitSchema = z
     if (value.kind === "export" && !value.plan_id) {
       ctx.addIssue({ code: "custom", message: "export 需要 plan_id" });
     }
-    if (value.kind === "compare" && !(value.direction_ids && value.direction_ids.length >= 2) && !value.direction_id) {
-      ctx.addIssue({ code: "custom", message: "compare 需要 2–3 个方向的对比集合" });
+    if (value.kind === "compare") {
+      const ids = value.direction_ids ?? (value.direction_id ? [value.direction_id] : []);
+      if (ids.length < 2) {
+        ctx.addIssue({ code: "custom", message: "compare 需要 2–3 个方向的对比集合", path: ["direction_ids"] });
+      } else if (new Set(ids).size !== ids.length) {
+        ctx.addIssue({ code: "custom", message: "compare 方向不能重复", path: ["direction_ids"] });
+      }
     }
   });
 export type RunSubmit = z.infer<typeof RunSubmitSchema>;

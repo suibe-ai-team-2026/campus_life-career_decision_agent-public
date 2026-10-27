@@ -50,6 +50,33 @@ describe("API contracts", () => {
     expect(parsed.success).toBe(true);
   });
 
+  it("accepts a compare submission without a profile", () => {
+    const parsed = RunSubmitSchema.safeParse({
+      kind: "compare",
+      idempotency_key: uuid,
+      direction_ids: ["cross_border_business", "finance_accounting", "data_business"]
+    });
+    expect(parsed.success).toBe(true);
+  });
+
+  it("rejects compare with a repeated direction", () => {
+    const parsed = RunSubmitSchema.safeParse({
+      kind: "compare",
+      idempotency_key: uuid,
+      direction_ids: ["finance_accounting", "finance_accounting"]
+    });
+    expect(parsed.success).toBe(false);
+  });
+
+  it("rejects compare with a single direction", () => {
+    const parsed = RunSubmitSchema.safeParse({
+      kind: "compare",
+      idempotency_key: uuid,
+      direction_ids: ["finance_accounting"]
+    });
+    expect(parsed.success).toBe(false);
+  });
+
   it("requires a versioned assessment in profile input", () => {
     const parsed = ProfileInputSchema.safeParse({
       school: "上海对外经贸大学",

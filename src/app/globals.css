@@ -2140,6 +2140,23 @@ svg {
   border: 1px solid var(--line-soft);
   background: var(--bg-1);
 }
+.ai-running-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.ai-running-head > :first-child {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+.ai-error-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
 .ai-result {
   margin-top: 18px;
   padding: 18px;

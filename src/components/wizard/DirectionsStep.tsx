@@ -6,7 +6,10 @@ import type { DirectionCard } from "@/lib/contracts/catalog";
 import type { DirectionId } from "@/lib/contracts/common";
 import type { Run } from "@/lib/contracts/run";
 import {
+  ApiError,
+  cancelRun,
   cloudConfigured,
+  createAnonymousSession,
   friendlyErrorMessage,
   newIdempotencyKey,
   parseCompareResult,
@@ -30,6 +33,7 @@ import {
 } from "@/lib/local-progress/store";
 import { Badge, Button, Callout, Icon, ListBlock, ProgressBar, SectionHeading } from "@/components/ui/primitives";
 import { CitationList } from "@/components/ui/CitationCard";
+import { isDeterministicCompareFallback } from "@/lib/compare-display";
 import { StepHeader } from "./StepHeader";
 
 type CoverageMap = Partial<Record<DirectionId, DirectionCard["coverage"]>>;
@@ -49,6 +53,9 @@ export function DirectionsStep() {
   const [aiRun, setAiRun] = useState<Run | null>(null);
   const [aiResult, setAiResult] = useState<CompareOutcome | null>(null);
   const [aiError, setAiError] = useState<string | null>(null);
+  const [aiRequestId, setAiRequestId] = useState<string | null>(null);
+  const [aiSlow, setAiSlow] = useState(false);
+  const [aiDegraded, setAiDegraded] = useState(false);
   const aiAbort = useRef<AbortController | null>(null);
 
   useEffect(() => {
@@ -78,6 +85,13 @@ export function DirectionsStep() {
     },
     []
   );
+
+  // 检索偶尔会很慢（历史上出现过数分钟），超过一分钟就给出提示，避免用户以为卡死。
+  useEffect(() => {
+    if (aiState !== "running") return;
+    const timer = setTimeout(() => setAiSlow(true), 60_000);
+    return () => clearTimeout(timer);
+  }, [aiState]);
 
   const favoriteDirections = useMemo(
     () => favorites.map((id) => DIRECTIONS.find((direction) => direction.direction_id === id)).filter((item): item is (typeof DIRECTIONS)[number] => Boolean(item)),
@@ -126,15 +140,27 @@ export function DirectionsStep() {
     setAiRun(null);
     setAiResult(null);
     setAiError(null);
+    setAiRequestId(null);
+    setAiSlow(false);
+    setAiDegraded(false);
     try {
+      // compare 不要求画像，但 /api/runs 与轮询接口都要求登录态；这里先建立匿名会话，
+      // 否则从「方向」这一步直接点对比的新访客会收到 401。
+      await createAnonymousSession(controller.signal);
       const directionIds = favorites.slice(0, 3);
-      const ack = await submitRun({
-        kind: "compare",
-        direction_ids: directionIds,
-        idempotency_key: newIdempotencyKey()
-      });
+      const ack = await submitRun(
+        {
+          kind: "compare",
+          direction_ids: directionIds,
+          idempotency_key: newIdempotencyKey()
+        },
+        controller.signal
+      );
       const { run } = await pollRunUntilDone(ack.runId, {
         signal: controller.signal,
+        // 检索偶发变慢时，默认 8 分钟会卡在超时边缘；对比任务放宽到 15 分钟，
+        // 用户可以随时点「停止」。超时后仍可重试。
+        timeoutMs: 15 * 60 * 1000,
         onUpdate: (nextRun) => setAiRun(nextRun)
       });
       if (run.status !== "succeeded") {
@@ -149,10 +175,29 @@ export function DirectionsStep() {
         return;
       }
       setAiResult(parsed);
+      setAiDegraded(isDeterministicCompareFallback(parsed.comparison));
       setAiState("done");
     } catch (error) {
+      // 用户主动停止或离开页面时，由调用方负责状态，不显示错误。
+      if (controller.signal.aborted) return;
       setAiError(friendlyErrorMessage(error));
+      if (error instanceof ApiError) setAiRequestId(error.requestId);
       setAiState("error");
+    }
+  }
+
+  /** 停止本地等待并尽力取消服务端任务；取消失败不阻塞用户。 */
+  async function handleStopAiCompare() {
+    const runId = aiRun?.run_id ?? null;
+    aiAbort.current?.abort();
+    aiAbort.current = null;
+    setAiState("idle");
+    setAiRun(null);
+    if (!runId) return;
+    try {
+      await cancelRun(runId);
+    } catch {
+      // 任务可能已结束；本地已经停止展示，不需要再打扰用户。
     }
   }
 
@@ -485,14 +530,30 @@ export function DirectionsStep() {
 
               {aiState === "running" ? (
                 <div className="ai-running">
-                  <ProgressBar value={aiRun?.progress ?? 0} label={`AI 对比 · ${runStageLabel(aiRun?.status ?? "queued")}`} />
+                  <div className="ai-running-head">
+                    <ProgressBar value={aiRun?.progress ?? 0} label={`AI 对比 · ${runStageLabel(aiRun?.status ?? "queued")}`} />
+                    <Button variant="ghost" size="sm" onClick={handleStopAiCompare}>
+                      停止
+                    </Button>
+                  </div>
                   <p className="panel-note">任务运行中。页面隐藏时轮询会自动放慢，避免浪费资源。</p>
+                  {aiSlow ? (
+                    <p className="panel-note">
+                      资料检索比平时慢（偶发时可能持续几分钟）。可以继续等待，或先看上方并排对比；点「停止」不会影响已收藏的方向。
+                    </p>
+                  ) : null}
                 </div>
               ) : null}
               {aiState === "error" && aiError ? (
                 <Callout tone="warn" title="AI 对比暂不可用">
                   <p>{aiError}</p>
                   <p>可以继续使用上方的资料并排对比；它不依赖云端。</p>
+                  {aiRequestId ? <p className="panel-note">问题编号：{aiRequestId}（反馈时附上可帮助定位）</p> : null}
+                  <div className="ai-error-actions">
+                    <Button variant="secondary" size="sm" onClick={handleAiCompare}>
+                      <Icon name="sparkles" size={14} /> 重试生成
+                    </Button>
+                  </div>
                 </Callout>
               ) : null}
               {aiState === "done" && aiResult ? (
@@ -500,6 +561,18 @@ export function DirectionsStep() {
                   <p className="panel-title">
                     <Icon name="sparkles" size={15} /> AI 对比解释
                   </p>
+                  {aiDegraded ? (
+                    <Callout tone="plain" icon="info" title="本次为确定性回退说明">
+                      <p>
+                        AI 解释未通过引用/数字校验，系统已回退为资料说明；方向卡与下方引用没有改变。可以重试生成，或直接使用上方的并排对比。
+                      </p>
+                      <div className="ai-error-actions">
+                        <Button variant="secondary" size="sm" onClick={handleAiCompare}>
+                          <Icon name="sparkles" size={14} /> 重试生成
+                        </Button>
+                      </div>
+                    </Callout>
+                  ) : null}
                   <div className="explanation-text">{aiResult.comparison}</div>
                   {aiResult.directionIds.length > 0 ? (
                     <p className="panel-note">

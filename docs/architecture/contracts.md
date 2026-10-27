@@ -34,6 +34,9 @@
 
 - `kind`：`assessment_explain | compare | plan | ask | export`。
 - `ask` 另带 `question`（≤1000 字）、`history`（≤4 轮）、可选 `source_version_ids`。
+- `compare` 另带 `direction_ids`（2–3 个不重复方向）。它只比较方向卡与证据，**不强制 `profile_id`**；
+  带 `profile_id` 时服务端会校验归属并注入画像版本，仅用于可选的个性化说明。
+- `plan` / `assessment_explain` 仍必须带 `profile_id`（服务端按 `profile_version` 做乐观锁）。
 - 同一 `(owner_id, kind, idempotency_key)` 重试只建一次；同键不同 `input_hash` 返回 409。
 - 202 只代表入队，不代表生成成功；完成状态必须读 run/events。
 

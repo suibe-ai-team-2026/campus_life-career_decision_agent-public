@@ -29,8 +29,14 @@ export async function POST(request: Request) {
   let input: Record<string, unknown>;
   let profileVersion: number | null = submit.profile_version ?? null;
 
-  if (submit.kind === "plan" || submit.kind === "assessment_explain" || submit.kind === "compare") {
-    if (!submit.profile_id) return jsonError("bad_request", "缺少 profile_id");
+  // plan / assessment_explain 依赖已保存的画像，必须带 profile_id。
+  // compare 只比较方向卡与证据，画像仅用于可选的个性化说明，因此不强制；
+  // 带了才校验归属，避免把「还没生成过方案」的用户挡在对比之外。
+  const profileRequired = submit.kind === "plan" || submit.kind === "assessment_explain";
+  if (profileRequired && !submit.profile_id) {
+    return jsonError("bad_request", "缺少 profile_id");
+  }
+  if (submit.profile_id && (profileRequired || submit.kind === "compare")) {
     const loaded = await loadOwnedProfile(submit.profile_id);
     if (loaded.error) return dbErrorResponse(loaded.error);
     if (!loaded.profile) return jsonError("resource_not_found", "画像不存在或无权访问");
@@ -73,7 +79,7 @@ export async function POST(request: Request) {
     };
   } else if (submit.kind === "compare") {
     input = {
-      profile_id: submit.profile_id,
+      profile_id: submit.profile_id ?? null,
       direction_ids: submit.direction_ids ?? (submit.direction_id ? [submit.direction_id] : [])
     };
   } else {
