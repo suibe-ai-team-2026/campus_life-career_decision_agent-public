@@ -28,6 +28,13 @@ STATUS_LABELS = {
     "verified": "已核验",
     "user_modified": "用户已调整",
 }
+VERIFICATION_LABELS = {
+    "known": "已知",
+    "official_lead": "官方线索",
+    "external_reference": "外部参考",
+    "pending_verification": "待核验",
+    "data_missing": "资料缺失",
+}
 
 _font_registered = False
 
@@ -112,7 +119,12 @@ def render_plan_pdf(
     corpus_cutoff = str(plan_version.get("created_at") or "")[:10] or "未知"
 
     story.append(Paragraph("知途（Campus Pathway）生涯行动方案", styles["title"]))
-    story.append(Paragraph("本文件由系统按已核验规则与资料生成，方向为暂定方向，不替你做决定。", styles["small"]))
+    story.append(
+        Paragraph(
+            "本文件区分确定性规则、产品行动蓝图、官方线索与待核验资料；方向为暂定方向，不替你做决定。",
+            styles["small"],
+        )
+    )
     story.append(Spacer(1, 6 * mm))
 
     # 1. 画像摘要
@@ -127,22 +139,68 @@ def render_plan_pdf(
     ]
     story.append(_kv_table(profile_rows, styles))
 
-    # 2. 暂定方向
-    story.append(Paragraph("二、暂定方向", styles["heading"]))
+    # 2. 路线与当前方向
+    story.append(Paragraph("二、路线与当前方向", styles["heading"]))
     direction_id = str(plan_result.get("direction_id") or "")
+    pathway = plan_result.get("pathway") if isinstance(plan_result.get("pathway"), Mapping) else {}
+    if pathway:
+        pathway_lines = [
+            f"<b>当前比较路线：</b>{_escape(pathway.get('label') or pathway.get('primary'))}",
+        ]
+        rationale = list(pathway.get("rationale") or [])
+        if rationale:
+            pathway_lines.append("<b>为什么先走这条路线：</b>" + "；".join(_escape(item) for item in rationale[:3]))
+        alternatives = list(pathway.get("alternatives") or [])
+        if alternatives:
+            pathway_lines.append("<b>备选路线：</b>" + _escape("、".join(str(item) for item in alternatives)))
+        excluded = list(pathway.get("excluded") or [])
+        if excluded:
+            pathway_lines.append("<b>已按硬约束排除：</b>" + _escape("、".join(str(item) for item in excluded)))
+        story.append(Paragraph("<br/>".join(pathway_lines), styles["body"]))
+    else:
+        story.append(Paragraph("本次方案没有返回主路线判断；请回自我探索补充路线偏好与硬约束。", styles["body"]))
     story.append(
         Paragraph(
-            f"{_escape(direction_title or direction_id)}（{_escape(direction_id)}）"
-            f"<br/><font size=9 color='#555555'>方向是产品导航分类，不是学校官方就业分类；可结合后续信息调整。</font>",
+            f"<b>当前比较方向：</b>{_escape(direction_title or direction_id)}（{_escape(direction_id)}）"
+            f"<br/><font size=9 color='#555555'>方向是产品导航分类，不是学校官方就业分类；路线与方向均可结合后续体验调整。</font>",
             styles["body"],
         )
     )
 
-    # 3. 时间线
-    story.append(Paragraph("三、行动时间线", styles["heading"]))
+    analysis = plan_result.get("analysis") if isinstance(plan_result.get("analysis"), Mapping) else {}
+    if analysis:
+        story.append(Paragraph("三、方向分析", styles["heading"]))
+        if analysis.get("overview"):
+            story.append(Paragraph(f"<b>方向概览：</b>{_escape(analysis.get('overview'))}", styles["body"]))
+        if analysis.get("match"):
+            story.append(Paragraph(f"<b>画像如何支撑：</b>{_escape(analysis.get('match'))}", styles["body"]))
+        risks = list(analysis.get("risks") or [])
+        if risks:
+            story.append(Paragraph("<b>风险与未知：</b>" + _escape("；".join(str(item) for item in risks[:4])), styles["body"]))
+
+    # 4. 30 天与本学期
+    roadmap = list(plan_result.get("roadmap") or [])
+    story.append(Paragraph("四、30 天与本学期先做什么", styles["heading"]))
+    prioritized = [stage for stage in roadmap if stage.get("stage") in {"未来 30 天"}]
+    if len(roadmap) > 1:
+        prioritized.append(roadmap[1])
+    if not prioritized:
+        story.append(Paragraph("本次没有返回路线行动蓝图；请先核对画像与资料版本后重新生成。", styles["body"]))
+    for stage in prioritized:
+        story.append(
+            Paragraph(
+                f"<b>{_escape(stage.get('stage'))} · {_escape(stage.get('focus'))}</b>",
+                styles["body"],
+            )
+        )
+        for index, action in enumerate(list(stage.get("actions") or []), start=1):
+            story.append(Paragraph(f"{index}. {_escape(action)}", styles["body"]))
+
+    # 5. 时间线
+    story.append(Paragraph("五、行动时间线", styles["heading"]))
     actions = list(plan_result.get("actions") or [])
     if not actions:
-        story.append(Paragraph("暂无可执行的行动项；请先完成资料核对（见第十节）。", styles["body"]))
+        story.append(Paragraph("暂无可执行的行动项；请先完成资料核对（见第十二节）。", styles["body"]))
     else:
         for window in ("current_term", "next_term", "later"):
             window_actions = [action for action in actions if action.get("window") == window]
@@ -163,10 +221,10 @@ def render_plan_pdf(
                     )
                 )
 
-    # 4. 课程与竞赛（只有规则引擎给出 verified 数据时才展示）
+    # 6. 课程与竞赛（只有规则引擎给出 verified 数据时才展示）
     courses = list(plan_result.get("courses") or [])
     competitions = list(plan_result.get("competitions") or [])
-    story.append(Paragraph("四、课程与竞赛（仅已核验数据）", styles["heading"]))
+    story.append(Paragraph("六、课程与竞赛（仅已核验数据）", styles["heading"]))
     if courses:
         rows = [["课程", "学分", "开课学期", "核验"]]
         for course in courses:
@@ -192,16 +250,52 @@ def render_plan_pdf(
     else:
         story.append(Paragraph("竞赛目录与加分认定规则尚未核验，不展示竞赛加分结论。", styles["body"]))
 
-    # 5. 学分
-    story.append(Paragraph("五、学分", styles["heading"]))
+    # 7. 上经贸课程、竞赛与校内资源线索
+    lead_groups = (
+        ("课程线索", list(plan_result.get("course_leads") or [])),
+        ("竞赛线索", list(plan_result.get("competition_leads") or [])),
+        ("校内与外部资源", list(plan_result.get("campus_resources") or [])),
+    )
+    story.append(Paragraph("七、上经贸课程、竞赛与校内资源线索", styles["heading"]))
+    if not any(items for _, items in lead_groups):
+        story.append(Paragraph("本次没有返回适用于当前学校与专业的资料线索。", styles["body"]))
+    for group_title, items in lead_groups:
+        if not items:
+            continue
+        story.append(Paragraph(f"<b>{group_title}</b>", styles["body"]))
+        for item in items:
+            status = VERIFICATION_LABELS.get(str(item.get("verification_status")), str(item.get("verification_status")))
+            tags = list(item.get("skill_tags") or [])
+            tag_text = f"｜能力标签：{_escape('、'.join(str(tag) for tag in tags))}" if tags else ""
+            source_url = item.get("source_url")
+            source_text = f"｜入口：{_escape(source_url)}" if source_url else ""
+            freshness = item.get("freshness") if isinstance(item.get("freshness"), Mapping) else {}
+            freshness_text = (
+                f"｜更新频率：{_escape(freshness.get('update_frequency'))}"
+                f"｜人工核验：{_escape(freshness.get('last_checked_at') or '尚未完成')}"
+                if freshness
+                else ""
+            )
+            story.append(
+                Paragraph(
+                    f"· <b>{_escape(item.get('title'))}</b> [{_escape(status)}]<br/>"
+                    f"{_escape(item.get('description'))}<br/>"
+                    f"<font size=8 color='#666666'>适用与边界：{_escape(item.get('why'))}｜核验方式："
+                    f"{_escape(item.get('source_label'))}{tag_text}{source_text}{freshness_text}</font>",
+                    styles["body"],
+                )
+            )
+
+    # 8. 学分
+    story.append(Paragraph("八、学分", styles["heading"]))
     credits = plan_result.get("credits")
     if credits is None:
         story.append(Paragraph("credits = null：资料缺失，<b>不表示 0 学分</b>；请以教务系统为准。", styles["body"]))
     else:
         story.append(Paragraph(f"规则引擎按已核验课程汇总的学分为 {_escape(credits)}；如需用于毕业审核，请以教务系统为准。", styles["body"]))
 
-    # 6. 规则版本与资料截止日
-    story.append(Paragraph("六、规则版本与资料截止日", styles["heading"]))
+    # 9. 规则版本与资料截止日
+    story.append(Paragraph("九、规则版本与资料截止日", styles["heading"]))
     story.append(
         Paragraph(
             f"规则版本：{_escape(plan_version.get('rules_version'))}<br/>"
@@ -212,8 +306,8 @@ def render_plan_pdf(
         )
     )
 
-    # 7. 引用标题 + 定位
-    story.append(Paragraph("七、引用资料（标题与定位）", styles["heading"]))
+    # 10. 引用标题 + 定位
+    story.append(Paragraph("十、引用资料（标题与定位）", styles["heading"]))
     evidence = list(plan_result.get("evidence") or [])
     if not evidence:
         story.append(Paragraph("本方案没有可展示的引用资料（资料不足或未检索到可核验证据）。", styles["body"]))
@@ -228,13 +322,13 @@ def render_plan_pdf(
                 )
             )
 
-    # 8. 解释
+    # 11. 解释
     explanation = plan_result.get("explanation")
-    story.append(Paragraph("八、方案说明", styles["heading"]))
+    story.append(Paragraph("十一、方案说明", styles["heading"]))
     story.append(Paragraph(_escape(explanation).replace("\n", "<br/>") if explanation else "（无 AI 解释；方案事实来自规则引擎。）", styles["body"]))
 
-    # 9. 待核验项
-    story.append(Paragraph("九、待核验项", styles["heading"]))
+    # 12. 待核验项
+    story.append(Paragraph("十二、待核验项", styles["heading"]))
     gaps = list(plan_result.get("gaps") or [])
     pending_actions = [action for action in actions if action.get("status") == "pending_verification"]
     if not gaps and not pending_actions:
@@ -244,8 +338,8 @@ def render_plan_pdf(
     for action in pending_actions:
         story.append(Paragraph(f"· 待核验行动：{_escape(action.get('title'))}", styles["body"]))
 
-    # 10. 免责声明
-    story.append(Paragraph("十、免责声明", styles["heading"]))
+    # 13. 免责声明
+    story.append(Paragraph("十三、免责声明", styles["heading"]))
     story.append(
         Paragraph(
             "本方案是生涯规划的辅助参考，不构成就业承诺、录取承诺、学分认定或官方政策解释。"

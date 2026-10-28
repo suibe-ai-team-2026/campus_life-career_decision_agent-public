@@ -17,6 +17,7 @@ import {
 import type { Assessment, DirectionCard } from "@/lib/contracts/catalog";
 import type { Plan, PlanAction, PlanResult } from "@/lib/contracts/plan";
 import type { Profile, ProfileInput } from "@/lib/contracts/profile";
+import { ProfileInputSchema } from "@/lib/contracts/profile";
 import type { Citation, Run, RunSubmit } from "@/lib/contracts/run";
 import type { Source, UploadIntent } from "@/lib/contracts/source";
 
@@ -253,6 +254,66 @@ function normalizeCompetitions(value: unknown): PlanResult["competitions"] {
   }));
 }
 
+function normalizeLeads(value: unknown): PlanResult["course_leads"] {
+  if (!Array.isArray(value)) return [];
+  const validStatuses = new Set([
+    "known",
+    "official_lead",
+    "external_reference",
+    "pending_verification",
+    "data_missing"
+  ]);
+  return value
+    .filter(isRecord)
+    .map((item) => ({
+      lead_id: str(item.lead_id, str(item.title)),
+      title: str(item.title, "未命名线索"),
+      description: str(item.description),
+      why: str(item.why),
+      skill_tags: strArray(item.skill_tags),
+      verification_status: validStatuses.has(str(item.verification_status))
+        ? (str(item.verification_status) as PlanResult["course_leads"][number]["verification_status"])
+        : "pending_verification",
+      source_label: str(item.source_label, "来源待补充"),
+      source_url: strOrNull(item.source_url),
+      freshness: isRecord(item.freshness)
+        ? {
+            verification_status: validStatuses.has(str(item.freshness.verification_status))
+              ? (str(item.freshness.verification_status) as PlanResult["course_leads"][number]["verification_status"])
+              : "pending_verification",
+            last_checked_at: strOrNull(item.freshness.last_checked_at),
+            valid_until: strOrNull(item.freshness.valid_until),
+            update_frequency: str(item.freshness.update_frequency, "需要定期复核"),
+            source_url: strOrNull(item.freshness.source_url)
+          }
+        : null
+    }))
+    .filter((item) => item.lead_id.length > 0);
+}
+
+function normalizePathway(value: unknown): PlanResult["pathway"] {
+  if (!isRecord(value)) return null;
+  return {
+    primary: str(value.primary),
+    label: str(value.label, str(value.primary)),
+    rationale: strArray(value.rationale),
+    alternatives: strArray(value.alternatives),
+    excluded: strArray(value.excluded)
+  };
+}
+
+function normalizeRoadmap(value: unknown): PlanResult["roadmap"] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter(isRecord)
+    .map((item) => ({
+      stage: str(item.stage),
+      focus: str(item.focus),
+      actions: strArray(item.actions)
+    }))
+    .filter((item) => item.stage.length > 0);
+}
+
 export function normalizePlanAnalysis(raw: unknown): PlanResult["analysis"] {
   if (!isRecord(raw)) return null;
   return {
@@ -310,6 +371,11 @@ function normalizePlanResult(raw: unknown): PlanResult | null {
     evidence: normalizeCitations(raw.evidence),
     explanation: strOrNull(raw.explanation),
     analysis: normalizePlanAnalysis(raw.analysis),
+    pathway: normalizePathway(raw.pathway),
+    course_leads: normalizeLeads(raw.course_leads),
+    competition_leads: normalizeLeads(raw.competition_leads),
+    campus_resources: normalizeLeads(raw.campus_resources),
+    roadmap: normalizeRoadmap(raw.roadmap),
     warnings: strArray(raw.warnings)
   };
 }
@@ -393,6 +459,7 @@ function normalizeProfile(raw: unknown): Profile | null {
   const profileId = str(raw.profile_id);
   if (!profileId) return null;
   const preferencesRaw = recordOrEmpty(raw.preferences);
+  const parsedPreferences = ProfileInputSchema.shape.preferences.safeParse(preferencesRaw);
   return {
     profile_id: profileId,
     version: intOrNull(raw.version) ?? 1,
@@ -404,15 +471,9 @@ function normalizeProfile(raw: unknown): Profile | null {
     exploration_status: raw.exploration_status === "skipped" ? "skipped" : "completed",
     answers: recordOrEmpty(raw.answers) as Profile["answers"],
     scores: recordOrEmpty(raw.scores) as Profile["scores"],
-    preferences: {
-      ...(numOrNull(preferencesRaw.weekly_hours) !== null
-        ? { weekly_hours: numOrNull(preferencesRaw.weekly_hours) as number }
-        : {}),
-      ...(numOrNull(preferencesRaw.monthly_budget_cny) !== null
-        ? { monthly_budget_cny: numOrNull(preferencesRaw.monthly_budget_cny) as number }
-        : {}),
-      ...(strOrNull(preferencesRaw.notes) ? { notes: strOrNull(preferencesRaw.notes) as string } : {})
-    },
+    preferences: parsedPreferences.success
+      ? parsedPreferences.data
+      : ProfileInputSchema.shape.preferences.parse({}),
     created_at: str(raw.created_at),
     updated_at: str(raw.updated_at)
   };
@@ -432,8 +493,8 @@ function normalizeDirectionCard(raw: unknown): DirectionCard | null {
     applicability: str(raw.applicability),
     data_gaps: strArray(raw.data_gaps),
     coverage: {
-      exact_major_records: intOrNull(coverageRaw.exact_major_records) ?? 0,
-      official_records: intOrNull(coverageRaw.official_records) ?? 0,
+      exact_major_records: intOrNull(coverageRaw.exact_major_records),
+      official_records: intOrNull(coverageRaw.official_records),
       job_requirements: intOrNull(coverageRaw.job_requirements) ?? 0,
       label: str(coverageRaw.label)
     },
@@ -1078,7 +1139,8 @@ export function profileFingerprint(input: ProfileInput): string {
     answers.join(","),
     input.preferences.weekly_hours ?? "",
     input.preferences.monthly_budget_cny ?? "",
-    input.preferences.notes ?? ""
+    input.preferences.notes ?? "",
+    JSON.stringify(input.preferences.pathway)
   ].join("|");
   return fnv1a(payload);
 }

@@ -75,6 +75,53 @@ export const PlanAnalysisSchema = z.object({
 });
 export type PlanAnalysis = z.infer<typeof PlanAnalysisSchema>;
 
+export const VerificationLabelSchema = z.enum([
+  "known",
+  "official_lead",
+  "external_reference",
+  "pending_verification",
+  "data_missing"
+]);
+export type VerificationLabel = z.infer<typeof VerificationLabelSchema>;
+
+export const PlanPathwaySchema = z.object({
+  primary: z.string(),
+  label: z.string(),
+  rationale: z.array(z.string()).default([]),
+  alternatives: z.array(z.string()).default([]),
+  excluded: z.array(z.string()).default([])
+});
+export type PlanPathway = z.infer<typeof PlanPathwaySchema>;
+
+export const SourceFreshnessSchema = z.object({
+  verification_status: VerificationLabelSchema,
+  last_checked_at: z.string().nullable().default(null),
+  valid_until: z.string().nullable().default(null),
+  update_frequency: z.string(),
+  source_url: z.string().url().nullable().default(null)
+});
+export type SourceFreshness = z.infer<typeof SourceFreshnessSchema>;
+
+export const PlanLeadSchema = z.object({
+  lead_id: z.string(),
+  title: z.string(),
+  description: z.string(),
+  why: z.string(),
+  skill_tags: z.array(z.string()).default([]),
+  verification_status: VerificationLabelSchema,
+  source_label: z.string(),
+  source_url: z.string().url().nullable().default(null),
+  freshness: SourceFreshnessSchema.nullable().optional()
+});
+export type PlanLead = z.infer<typeof PlanLeadSchema>;
+
+export const PlanRoadmapStageSchema = z.object({
+  stage: z.string(),
+  focus: z.string(),
+  actions: z.array(z.string()).default([])
+});
+export type PlanRoadmapStage = z.infer<typeof PlanRoadmapStageSchema>;
+
 export const PlanResultSchema = z.object({
   status: PlanStatusSchema,
   rules_version: z.string(),
@@ -88,6 +135,11 @@ export const PlanResultSchema = z.object({
   evidence: z.array(CitationSchema),
   explanation: z.string().nullable(),
   analysis: PlanAnalysisSchema.nullable().optional(),
+  pathway: PlanPathwaySchema.nullable().optional(),
+  course_leads: z.array(PlanLeadSchema).default([]),
+  competition_leads: z.array(PlanLeadSchema).default([]),
+  campus_resources: z.array(PlanLeadSchema).default([]),
+  roadmap: z.array(PlanRoadmapStageSchema).default([]),
   warnings: z.array(z.string()).default([])
 });
 export type PlanResult = z.infer<typeof PlanResultSchema>;

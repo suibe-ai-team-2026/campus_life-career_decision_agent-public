@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 
+import pytest
+
 from app.config import Config
 from app.errors import ModelAuthFailed
 from app.graphs.ask import run_ask
@@ -33,8 +35,8 @@ def _profile(**overrides) -> dict:
         "version": 1,
         "school": "上海对外经贸大学",
         "major": "国际经济与贸易",
-        "enrollment_year": 2023,
-        "current_term": "2025-秋",
+        "enrollment_year": 2026,
+        "current_term": "2026-秋",
         "assessment_version": "career-light-2026-10-19",
         "answers": {"i1": 4, "i2": 5, "a1": 3},
         "scores": {"interest": 3.5, "ability": 4.0, "decision": 2.5},
@@ -73,7 +75,10 @@ def _plan_context(provider: FakeProvider, *, search_rows: list[dict] | None = No
     db.search_rows = search_rows if search_rows is not None else [_evidence_row(text="2024届毕业生去向落实率为95.0%。")]
     job = make_claim({"profile_id": PROFILE_ID, "direction_id": "trade_supply_chain", "plan_id": None}, kind="plan", owner_id=OWNER)
     emit_log = emits if emits is not None else []
-    ctx = make_context(config=config, db=db, provider=provider, job=job, rules_data=load_rules_fixture(), emits=emit_log)
+    rules_data = load_rules_fixture()
+    for row in [*rules_data.get("courses", []), *rules_data.get("credit_rules", [])]:
+        row["enrollment_year"] = 2026
+    ctx = make_context(config=config, db=db, provider=provider, job=job, rules_data=rules_data, emits=emit_log)
     return ctx, db, emit_log
 
 
@@ -110,6 +115,12 @@ def test_plan_graph_freezes_rule_facts_and_publishes_real_ids():
     assert result["explanation"] is not None and "回退" not in result["explanation"]
     assert len(result["evidence"]) == 1
     assert result["evidence"][0]["citation_no"] == 1
+    assert result["pathway"]["primary"] == "undetermined"
+    assert result["pathway"]["label"] == "仍不确定"
+    assert len(result["course_leads"]) >= 3
+    assert len(result["competition_leads"]) >= 3
+    assert len(result["campus_resources"]) >= 5
+    assert result["roadmap"][0]["stage"] == "未来 30 天"
 
     saved = db.saved_plans[0]
     assert saved["actions"] == result["actions"]
@@ -219,6 +230,40 @@ def test_plan_graph_fails_on_profile_version_mismatch():
         assert "版本" in exc.safe_message
     else:  # pragma: no cover
         raise AssertionError("画像版本不一致必须失败")
+
+
+def test_plan_graph_rejects_direction_excluded_by_hard_constraint():
+    config = make_config()
+    provider = FakeProvider(config)
+    ctx, db, _emits = _plan_context(provider)
+    db.profiles[PROFILE_ID] = _profile(
+        preferences={
+            "weekly_hours": 8,
+            "pathway": {
+                "primary": "undergraduate_employment",
+                "alternatives": [],
+                "excluded_directions": ["public_service"],
+                "excluded_sectors": ["public_sector"],
+                "target_cities": ["上海"],
+                "practice_orientation": "practice",
+                "accepts_cross_major": True,
+                "accepts_certificate": True,
+                "accepts_competition": True,
+                "accepts_long_internship": True,
+            },
+        }
+    )
+    db.directions["public_service"] = {"direction_id": "public_service", "title": "公共部门与公共服务"}
+    ctx.job = make_claim(
+        {"profile_id": PROFILE_ID, "direction_id": "public_service"},
+        kind="plan",
+        owner_id=OWNER,
+    )
+    from app.errors import UnsupportedDirection
+
+    with pytest.raises(UnsupportedDirection):
+        run_plan(ctx)
+    assert provider.chat_calls == []
 
 
 def test_ask_gate_refusal_does_not_call_chat():

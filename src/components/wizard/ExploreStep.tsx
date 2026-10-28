@@ -9,7 +9,7 @@ import {
   scoreAssessment
 } from "@/lib/assessment/scoring";
 import type { ReadinessBand } from "@/lib/assessment/scoring";
-import type { AnswerValue, Answers } from "@/lib/contracts/profile";
+import type { AnswerValue, Answers, PathwayPreference } from "@/lib/contracts/profile";
 import {
   ASSESSMENT,
   buildTermOptions,
@@ -18,6 +18,7 @@ import {
 } from "@/lib/content";
 import {
   readExplorePrefs,
+  DEFAULT_PATHWAY_PREFERENCE,
   readLocalProgress,
   updateLocalProgress,
   useLocalProgress,
@@ -54,6 +55,7 @@ type FormState = {
   currentTerm: string;
   weeklyHours: string;
   monthlyBudget: string;
+  pathway: PathwayPreference;
 };
 
 const EMPTY_FORM: FormState = {
@@ -62,8 +64,28 @@ const EMPTY_FORM: FormState = {
   enrollmentYear: null,
   currentTerm: "",
   weeklyHours: "",
-  monthlyBudget: ""
+  monthlyBudget: "",
+  pathway: DEFAULT_PATHWAY_PREFERENCE
 };
+
+const PATHWAY_OPTIONS: Array<{ value: PathwayPreference["primary"]; label: string; hint: string }> = [
+  { value: "undergraduate_employment", label: "本科就业", hint: "更早进入岗位，用实习与项目反馈校正方向" },
+  { value: "domestic_postgraduate", label: "国内升学", hint: "继续读研，准备初试、复试与专业积累" },
+  { value: "overseas_study", label: "境外升学", hint: "准备语言、项目匹配、申请材料与预算" },
+  { value: "public_exam", label: "公考 / 编制", hint: "按目标地区与岗位准备公共科目和面试" },
+  { value: "undetermined", label: "仍不确定", hint: "先比较路线，不急着替自己定型" }
+];
+
+const EXCLUSION_OPTIONS: Array<{
+  value: PathwayPreference["excluded_sectors"][number];
+  label: string;
+}> = [
+  { value: "public_sector", label: "体制内 / 政审类岗位" },
+  { value: "finance", label: "金融财会" },
+  { value: "data", label: "纯数据分析" },
+  { value: "further_study", label: "继续升学" },
+  { value: "international_business", label: "外贸 / 跨境业务" }
+];
 
 function parseOptionalInt(value: string, min: number, max: number): number | null {
   if (value.trim() === "") return null;
@@ -106,7 +128,8 @@ export function ExploreStep() {
       enrollmentYear,
       currentTerm: term,
       weeklyHours: prefs.weekly_hours !== null ? String(prefs.weekly_hours) : "",
-      monthlyBudget: prefs.monthly_budget_cny !== null ? String(prefs.monthly_budget_cny) : ""
+      monthlyBudget: prefs.monthly_budget_cny !== null ? String(prefs.monthly_budget_cny) : "",
+      pathway: prefs.pathway
     });
 
     // 题库版本变化时旧答案不可复用：清空作答并明确提示重答，不静默沿用。
@@ -162,7 +185,8 @@ export function ExploreStep() {
     });
     writeExplorePrefs({
       weekly_hours: parseOptionalInt(nextForm.weeklyHours, 1, 80),
-      monthly_budget_cny: parseOptionalInt(nextForm.monthlyBudget, 0, 10000)
+      monthly_budget_cny: parseOptionalInt(nextForm.monthlyBudget, 0, 10000),
+      pathway: nextForm.pathway
     });
     setSavedAt(new Date().toISOString());
     if (savedTimer.current !== null) window.clearTimeout(savedTimer.current);
@@ -188,6 +212,33 @@ export function ExploreStep() {
       return next;
     });
     persist(nextForm, answers);
+  }
+
+  function updatePathway(patch: Partial<PathwayPreference>) {
+    const nextForm = {
+      ...form,
+      pathway: {
+        ...form.pathway,
+        ...patch
+      }
+    };
+    setForm(nextForm);
+    persist(nextForm, answers);
+  }
+
+  function toggleAlternative(pathway: PathwayPreference["primary"]) {
+    if (pathway === form.pathway.primary || pathway === "undetermined") return;
+    const alternatives = form.pathway.alternatives.includes(pathway)
+      ? form.pathway.alternatives.filter((item) => item !== pathway)
+      : [...form.pathway.alternatives, pathway].slice(0, 3);
+    updatePathway({ alternatives });
+  }
+
+  function toggleExcludedSector(value: PathwayPreference["excluded_sectors"][number]) {
+    const excluded_sectors = form.pathway.excluded_sectors.includes(value)
+      ? form.pathway.excluded_sectors.filter((item) => item !== value)
+      : [...form.pathway.excluded_sectors, value];
+    updatePathway({ excluded_sectors });
   }
 
   function handleAnswer(questionId: string, value: AnswerValue | null) {
@@ -352,6 +403,150 @@ export function ExploreStep() {
                 ))}
               </select>
             </Field>
+            <div className="pathway-editor">
+              <div className="pathway-editor-head">
+                <div>
+                  <p className="eyebrow">路线偏好与硬约束</p>
+                  <h3>先选现实路线，再看职业方向</h3>
+                  <p className="field-hint">
+                    这些条件会先于兴趣和能力信号生效。例如排除“体制内 / 政审类岗位”后，系统不会再把公共部门作为候选方向。
+                  </p>
+                </div>
+                <Badge tone="accent">会约束后续推荐</Badge>
+              </div>
+
+              <div className="pathway-control-grid">
+                <Field label="主路线" htmlFor="explore-pathway-primary" hint="可以选择“仍不确定”，系统会先给比较顺序">
+                  <select
+                    id="explore-pathway-primary"
+                    className="select"
+                    value={form.pathway.primary}
+                    onChange={(event) =>
+                      updatePathway({
+                        primary: event.target.value as PathwayPreference["primary"],
+                        alternatives: form.pathway.alternatives.filter(
+                          (item) => item !== event.target.value
+                        )
+                      })
+                    }
+                  >
+                    {PATHWAY_OPTIONS.map((option) => (
+                      <option value={option.value} key={option.value}>
+                        {option.label} · {option.hint}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+
+                <Field label="偏实践还是偏研究" htmlFor="explore-practice-orientation">
+                  <select
+                    id="explore-practice-orientation"
+                    className="select"
+                    value={form.pathway.practice_orientation}
+                    onChange={(event) =>
+                      updatePathway({
+                        practice_orientation: event.target.value as PathwayPreference["practice_orientation"]
+                      })
+                    }
+                  >
+                    <option value="undecided">尚未决定，想同时比较</option>
+                    <option value="practice">更偏实践、实习和业务结果</option>
+                    <option value="research">更偏研究、阅读和继续学习</option>
+                  </select>
+                </Field>
+
+                <Field label="希望工作的城市" htmlFor="explore-target-cities" hint="多个城市用逗号分隔；最多 5 个">
+                  <input
+                    id="explore-target-cities"
+                    className="input"
+                    type="text"
+                    value={form.pathway.target_cities.join("，")}
+                    placeholder="例如：上海，杭州"
+                    onChange={(event) =>
+                      updatePathway({
+                        target_cities: event.target.value
+                          .split(/[,，]/)
+                          .map((item) => item.trim())
+                          .filter(Boolean)
+                          .slice(0, 5)
+                      })
+                    }
+                  />
+                </Field>
+              </div>
+
+              <div className="pathway-choice-block">
+                <span className="direction-label">可接受备选路线</span>
+                <div className="chip-row">
+                  {PATHWAY_OPTIONS.filter(
+                    (option) => option.value !== "undetermined" && option.value !== form.pathway.primary
+                  ).map((option) => {
+                    const active = form.pathway.alternatives.includes(option.value);
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        className={active ? "filter-chip is-active" : "filter-chip"}
+                        aria-pressed={active}
+                        onClick={() => toggleAlternative(option.value)}
+                      >
+                        {option.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="pathway-choice-block">
+                <span className="direction-label">明确排除</span>
+                <div className="chip-row">
+                  {EXCLUSION_OPTIONS.map((option) => {
+                    const active = form.pathway.excluded_sectors.includes(option.value);
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        className={active ? "filter-chip is-active exclusion-chip" : "filter-chip"}
+                        aria-pressed={active}
+                        onClick={() => toggleExcludedSector(option.value)}
+                      >
+                        {option.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="pathway-choice-block">
+                <span className="direction-label">我愿意考虑</span>
+                <div className="chip-row">
+                  {[
+                    ["accepts_cross_major", "跨专业能力"],
+                    ["accepts_certificate", "证书"],
+                    ["accepts_competition", "竞赛"],
+                    ["accepts_long_internship", "长期实习"]
+                  ].map(([key, label]) => {
+                    const typedKey = key as
+                      | "accepts_cross_major"
+                      | "accepts_certificate"
+                      | "accepts_competition"
+                      | "accepts_long_internship";
+                    const active = form.pathway[typedKey];
+                    return (
+                      <button
+                        key={key}
+                        type="button"
+                        className={active ? "filter-chip is-active" : "filter-chip"}
+                        aria-pressed={active}
+                        onClick={() => updatePathway({ [typedKey]: !active })}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
             <Field
               label="每周可投入时间（可选）"
               htmlFor="explore-weeklyHours"

@@ -122,7 +122,9 @@ export function directionCoverage(
 ): DirectionCoverageView {
   const hasRecords =
     cloud &&
-    (cloud.exact_major_records > 0 || cloud.official_records > 0 || cloud.job_requirements > 0);
+    ((cloud.exact_major_records ?? 0) > 0 ||
+      (cloud.official_records ?? 0) > 0 ||
+      cloud.job_requirements > 0);
   if (!cloud) {
     return {
       pending: true,

@@ -20,6 +20,8 @@ def test_defaults_are_frozen_and_correct():
     assert config.chat_provider == "deepseek"
     assert config.chat_base_url == "https://api.deepseek.com"
     assert config.chat_model == "deepseek-flash"
+    assert config.plan_reasoning_model == "deepseek-v4-pro"
+    assert config.plan_reasoning_effort == "high"
     assert config.worker_concurrency == 1
     assert config.retrieval.rrf_k == 60
     assert config.retrieval.evidence_char_budget == 7000

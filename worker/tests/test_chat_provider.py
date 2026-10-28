@@ -50,6 +50,22 @@ def test_json_mode_is_requested_and_usage_parsed():
     assert response.usage.estimated_cost is not None
 
 
+def test_explicit_plan_reasoning_effort_is_not_disabled_by_json_mode():
+    config = make_config()
+    recorder = Recorder(lambda _attempt, _body: httpx.Response(200, json=chat_payload('{"ok": true}')))
+    _client(config, recorder).chat(
+        MESSAGES,
+        operation="chat_plan_analysis",
+        model=config.plan_reasoning_model,
+        reasoning_effort=config.plan_reasoning_effort,
+    )
+    first_body = recorder.requests[0]["body"]
+    assert first_body["model"] == "deepseek-v4-pro"
+    assert first_body["response_format"] == {"type": "json_object"}
+    assert first_body["reasoning_effort"] == "high"
+    assert "thinking" not in first_body
+
+
 def test_response_format_unsupported_is_retried_without_field():
     config = make_config()
     sleeps: list[float] = []

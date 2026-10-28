@@ -7,8 +7,11 @@ import type { DirectionId } from "@/lib/contracts/common";
 import { ASSESSMENT, DIRECTIONS, getDirection } from "@/lib/content";
 import { scoreAssessment } from "@/lib/assessment/scoring";
 import { recommendDirections } from "@/lib/career/recommend";
+import { excludedDirectionReasons, isDirectionAllowed } from "@/lib/career/pathway";
 import {
+  DEFAULT_PATHWAY_PREFERENCE,
   readChoiceDetail,
+  readExplorePrefs,
   readLocalProgress,
   updateLocalProgress,
   useChoiceHistory,
@@ -43,6 +46,10 @@ function todayValue(): string {
 export function ChoiceStep() {
   const router = useRouter();
   const { progress, hydrated } = useLocalProgress();
+  const pathwayPreference = hydrated
+    ? readExplorePrefs().pathway
+    : DEFAULT_PATHWAY_PREFERENCE;
+  const excludedDirections = excludedDirectionReasons(pathwayPreference);
   const history = useChoiceHistory();
   const [initialized, setInitialized] = useState(false);
   const [selected, setSelected] = useState<DirectionId | null>(null);
@@ -73,27 +80,41 @@ export function ChoiceStep() {
 
   const favorites = useMemo(() => (progress?.favorites ?? []) as DirectionId[], [progress?.favorites]);
   const favoriteDirections = useMemo(
-    () => DIRECTIONS.filter((direction) => favorites.includes(direction.direction_id)),
-    [favorites]
+    () =>
+      DIRECTIONS.filter(
+        (direction) =>
+          favorites.includes(direction.direction_id) &&
+          isDirectionAllowed(direction.direction_id, pathwayPreference)
+      ),
+    [favorites, pathwayPreference]
   );
-  const selectableDirections = favoriteDirections.length > 0 ? favoriteDirections : DIRECTIONS;
+  const allowedDirections = useMemo(
+    () => DIRECTIONS.filter((direction) => isDirectionAllowed(direction.direction_id, pathwayPreference)),
+    [pathwayPreference]
+  );
+  const selectableDirections =
+    favoriteDirections.length > 0 ? favoriteDirections : allowedDirections;
   const backupOptions = useMemo(() => {
-    const items = favoriteDirections.filter((direction) => direction.direction_id !== selected);
-    if (backup && backup !== selected) {
+    const items = favoriteDirections.filter(
+      (direction) =>
+        direction.direction_id !== selected &&
+        isDirectionAllowed(direction.direction_id, pathwayPreference)
+    );
+    if (backup && backup !== selected && isDirectionAllowed(backup, pathwayPreference)) {
       const current = getDirection(backup);
       if (current && !items.some((direction) => direction.direction_id === backup)) {
         items.push(current);
       }
     }
     return items;
-  }, [favoriteDirections, selected, backup]);
+  }, [favoriteDirections, selected, backup, pathwayPreference]);
   const answers = progress?.profile.answers;
   const localRecommendations = useMemo(() => {
     if (!answers) return null;
     const result = scoreAssessment(ASSESSMENT, answers);
     if (!result.hasSignals) return null;
-    return recommendDirections(result);
-  }, [answers]);
+    return recommendDirections(result, { pathwayPreference });
+  }, [answers, pathwayPreference]);
   const selectedRecommendation = useMemo(
     () =>
       selected && localRecommendations
@@ -143,6 +164,13 @@ export function ChoiceStep() {
   }
 
   function handleSelect(directionId: DirectionId) {
+    if (!isDirectionAllowed(directionId, pathwayPreference)) {
+      setErrors((current) => ({
+        ...current,
+        direction: excludedDirections[directionId] ?? "该方向已被你的硬约束排除"
+      }));
+      return;
+    }
     if (directionId === selected) return;
     if (existingDirection && existingDirection !== directionId) {
       // 先弹确认框；用户取消时不能动已有的备选方向。
@@ -183,6 +211,10 @@ export function ChoiceStep() {
   function validate(): Record<string, string> {
     const next: Record<string, string> = {};
     if (!selected) next.direction = "请选择一个暂定方向";
+    else if (!isDirectionAllowed(selected, pathwayPreference)) {
+      next.direction =
+        excludedDirections[selected] ?? "当前方向与你的硬约束冲突，请重新选择";
+    }
     if (why.trim().length < 5) next.why = "请写至少 5 个字：为什么考虑这个方向";
     if (!revisitOn) next.revisit = "请选择下次复核时间";
     else if (revisitOn < todayValue()) next.revisit = "复核时间需要在今天之后（或今天）";
@@ -272,6 +304,14 @@ export function ChoiceStep() {
           这是一次「当前较合理的选择」，不是职业判决。方向可以随证据、课程体验与实习反馈调整；本产品不会因为你暂定了某个方向就认定你适合它。
         </p>
       </Callout>
+
+      {selected && !isDirectionAllowed(selected, pathwayPreference) ? (
+        <Callout tone="danger" title="当前暂定方向已被硬约束排除">
+          <p>
+            {excludedDirections[selected]}。系统不会为这个方向生成课程、竞赛或行动方案，请从下方可接受方向中重新选择。
+          </p>
+        </Callout>
+      ) : null}
 
       {existingDirection && selected && existingDirection !== selected ? (
         <Callout tone="warn" title="你正在切换暂定方向">
