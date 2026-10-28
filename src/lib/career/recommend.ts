@@ -23,12 +23,14 @@ import {
   type InterestKey
 } from "@/lib/assessment/scoring";
 import type { DirectionId } from "@/lib/contracts/common";
+import type { PathwayPreference } from "@/lib/contracts/profile";
 import { DIRECTIONS, getDirection, type SeedDirection } from "@/lib/content";
 import {
   DIRECTION_FIT_RULES,
   DIRECTION_FIT_RULES_VERSION,
   type DirectionFitRule
 } from "./direction-fit";
+import { excludedDirectionReasons, isDirectionAllowed } from "./pathway";
 
 export type DirectionConfidence = "high" | "medium" | "low";
 
@@ -52,6 +54,8 @@ export type DirectionRecommendation = {
 export type DirectionRecommendationOptions = {
   /** 默认 3；最多 6（方向总数）。 */
   limit?: number;
+  /** 用户明确的路线、行业与方向硬约束。 */
+  pathwayPreference?: PathwayPreference;
 };
 
 export type DirectionRecommendationResult = {
@@ -59,6 +63,8 @@ export type DirectionRecommendationResult = {
   /** `!result.hasSignals`：由 UI 提示补答，不返回任何方向。 */
   insufficientSignals: boolean;
   rulesVersion: string;
+  /** 被硬约束过滤、因此不参与推荐的方向。 */
+  excludedDirectionIds: DirectionId[];
 };
 
 export const DEFAULT_RECOMMENDATION_LIMIT = 3;
@@ -338,7 +344,10 @@ export function recommendDirections(
     return {
       recommendations: [],
       insufficientSignals: true,
-      rulesVersion: DIRECTION_FIT_RULES_VERSION
+      rulesVersion: DIRECTION_FIT_RULES_VERSION,
+      excludedDirectionIds: options?.pathwayPreference
+        ? (Object.keys(excludedDirectionReasons(options.pathwayPreference)) as DirectionId[])
+        : []
     };
   }
 
@@ -352,7 +361,16 @@ export function recommendDirections(
 
   const scored: { score: number; recommendation: DirectionRecommendation }[] = [];
 
+  const excludedReasons = options?.pathwayPreference
+    ? excludedDirectionReasons(options.pathwayPreference)
+    : {};
   for (const card of DIRECTIONS) {
+    if (
+      options?.pathwayPreference &&
+      !isDirectionAllowed(card.direction_id, options.pathwayPreference)
+    ) {
+      continue;
+    }
     const rule = DIRECTION_FIT_RULES[card.direction_id];
 
     const interestFit = weightedAverage(
@@ -431,7 +449,8 @@ export function recommendDirections(
   return {
     recommendations: scored.slice(0, limit).map((entry) => entry.recommendation),
     insufficientSignals: false,
-    rulesVersion: DIRECTION_FIT_RULES_VERSION
+    rulesVersion: DIRECTION_FIT_RULES_VERSION,
+    excludedDirectionIds: Object.keys(excludedReasons) as DirectionId[]
   };
 }
 

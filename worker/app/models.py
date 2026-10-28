@@ -139,6 +139,49 @@ class PlanAnalysis(ContractModel):
     boundary_note: str = Field(default="", max_length=500)
 
 
+VerificationLabel = Literal[
+    "known",
+    "official_lead",
+    "external_reference",
+    "pending_verification",
+    "data_missing",
+]
+
+
+class PlanPathway(ContractModel):
+    primary: str
+    label: str
+    rationale: list[str] = Field(default_factory=list, max_length=8)
+    alternatives: list[str] = Field(default_factory=list, max_length=4)
+    excluded: list[str] = Field(default_factory=list, max_length=8)
+
+
+class SourceFreshness(ContractModel):
+    verification_status: VerificationLabel
+    last_checked_at: str | None = None
+    valid_until: str | None = None
+    update_frequency: str
+    source_url: str | None = None
+
+
+class PlanLead(ContractModel):
+    lead_id: str
+    title: str
+    description: str
+    why: str
+    skill_tags: list[str] = Field(default_factory=list, max_length=12)
+    verification_status: VerificationLabel
+    source_label: str
+    source_url: str | None = None
+    freshness: SourceFreshness | None = None
+
+
+class PlanRoadmapStage(ContractModel):
+    stage: str
+    focus: str
+    actions: list[str] = Field(default_factory=list, max_length=12)
+
+
 class PlanResult(ContractModel):
     status: PlanStatus
     rules_version: str
@@ -152,6 +195,11 @@ class PlanResult(ContractModel):
     evidence: list[Citation] = Field(default_factory=list)
     explanation: str | None = None
     analysis: PlanAnalysis | None = None
+    pathway: PlanPathway | None = None
+    course_leads: list[PlanLead] = Field(default_factory=list)
+    competition_leads: list[PlanLead] = Field(default_factory=list)
+    campus_resources: list[PlanLead] = Field(default_factory=list)
+    roadmap: list[PlanRoadmapStage] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
 
 
@@ -258,7 +306,53 @@ def plan_result_payload(result: PlanResult) -> dict[str, Any]:
         "evidence": [citation_payload(citation) for citation in result.evidence],
         "explanation": result.explanation,
         "analysis": plan_analysis_payload(result.analysis),
+        "pathway": (
+            None
+            if result.pathway is None
+            else {
+                "primary": result.pathway.primary,
+                "label": result.pathway.label,
+                "rationale": list(result.pathway.rationale),
+                "alternatives": list(result.pathway.alternatives),
+                "excluded": list(result.pathway.excluded),
+            }
+        ),
+        "course_leads": [lead_payload(item) for item in result.course_leads],
+        "competition_leads": [lead_payload(item) for item in result.competition_leads],
+        "campus_resources": [lead_payload(item) for item in result.campus_resources],
+        "roadmap": [
+            {
+                "stage": item.stage,
+                "focus": item.focus,
+                "actions": list(item.actions),
+            }
+            for item in result.roadmap
+        ],
         "warnings": list(result.warnings),
+    }
+
+
+def lead_payload(lead: PlanLead) -> dict[str, Any]:
+    return {
+        "lead_id": lead.lead_id,
+        "title": lead.title,
+        "description": lead.description,
+        "why": lead.why,
+        "skill_tags": list(lead.skill_tags),
+        "verification_status": lead.verification_status,
+        "source_label": lead.source_label,
+        "source_url": lead.source_url,
+        "freshness": (
+            None
+            if lead.freshness is None
+            else {
+                "verification_status": lead.freshness.verification_status,
+                "last_checked_at": lead.freshness.last_checked_at,
+                "valid_until": lead.freshness.valid_until,
+                "update_frequency": lead.freshness.update_frequency,
+                "source_url": lead.freshness.source_url,
+            }
+        ),
     }
 
 
