@@ -62,21 +62,22 @@ citations: list[Any] = list(retrieval.citations)   # 在 web 分支之后
    问答判为失败；
 4. 联网开启但 0 条来源时，也把「未找到可用的实时网页证据」写入边界说明。
 
-`worker/tests/test_graphs.py` 新增 5 个回归用例：语料+参考+网页编号连续、
-无参考数据命中、联网失败降级、联网 0 来源提示、仅网页证据时编号从 1 开始。
+`worker/tests/test_graphs.py` 新增 6 个 ask 联网回归用例：语料+参考+网页编号连续、
+无参考数据命中、联网失败降级、联网 0 来源提示、仅网页证据时编号从 1 开始、
+联网关闭路径；第二轮再补 1 个 plan 联网降级用例，共 7 个。
 
-## 5. 验证
+## 5. 验证（第一轮）
 
 本地（离线、fake DB/provider，不联网）：
 
 ```
 cd worker && .venv/bin/python -m pytest -q
-# 358 passed
+# 第一轮提交 087ce10 时 358 passed；第二轮补测试后 359 passed（见 §7.4）
 ```
 
 旧代码对照：同一份新增测试在 HEAD 版 `ask.py` 上 2 failed，异常为
 `UnboundLocalError: cannot access local variable 'citations' ... ask.py:155`，
-与线上事件链一致；修复后 21 passed（test_graphs.py）。
+与线上事件链一致；修复后 `test_graphs.py` 21 passed（第一轮提交时；第二轮后 22 passed）。
 
 线上端到端（生产 https://zhitu.quest，真实 worker）：
 
@@ -132,7 +133,9 @@ DB 的 `app_reap_expired_leases` 会把 `app_runs.error_code` 写成 `lease_expi
 修复：`ERROR_CODES` 增加 `lease_expired`（HTTP 409）；`api-client.ts`
 增加「任务执行超时或中断，请重新发起」；`http/rpc.ts` 的 `mapDbError` 映射该码；
 `worker/app/errors.py` 的码表对齐；`docs/architecture/contracts.md` 同步。
-新增 `tests/unit/error-messages.test.ts` 覆盖已知/未知/取消三类文案。
+新增 `tests/unit/error-messages.test.ts` 覆盖已知/未知/取消三类文案，并锁定
+`lease_expired`=409 与 `mapDbError` 映射；`tests/unit/contracts.test.ts` 新增
+TS↔Python 错误码表一致性测试，防止 `ERROR_CODES` 两处漂移。
 
 ### 7.3 引用编号工具统一
 
@@ -142,7 +145,7 @@ DB 的 `app_reap_expired_leases` 会把 `app_runs.error_code` 写成 `lease_expi
 ### 7.4 第二轮验证
 
 - worker：`pytest -q` → **359 passed**；
-- 前端单测：`npx vitest run` → **100 passed（13 files）**；
+- 前端单测：`npx vitest run` → **103 passed（13 files）**；
 - `npm run check`（typecheck + lint + vitest + production build）→ exit 0；
 - 线上（部署第二轮代码后，真实 worker）：
   - ask + 联网补充 `851f7c81-8bbf-469b-bd89-d0f5b687a53d` → succeeded，32 条引用，编号连续，含实时网页；
