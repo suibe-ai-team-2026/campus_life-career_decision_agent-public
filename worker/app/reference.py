@@ -53,6 +53,7 @@ def load() -> dict[str, Any]:
     competitions_doc = _read_json("competitions.json", {})
     major_doc = _read_json("major-map.json", {})
     resources_doc = _read_json("resources.json", {})
+    graduate_doc = _read_json("graduate_recommendation.json", {})
     return {
         "schools": list(schools_doc.get("schools") or []),
         "facts": list(employment_doc.get("facts") or []),
@@ -64,6 +65,7 @@ def load() -> dict[str, Any]:
         "major_aliases": dict(major_doc.get("major_aliases") or {}),
         "direction_defaults": dict(major_doc.get("direction_defaults") or {}),
         "resources": list(resources_doc.get("resources") or []),
+        "graduate": graduate_doc if isinstance(graduate_doc, dict) else {},
     }
 
 
@@ -368,12 +370,39 @@ INTENT_KEYWORDS = {
     "employment": ("就业", "去向", "就业率", "升学率", "毕业生", "薪资", "招聘", "行情"),
     "course": ("课程", "培养方案", "学分", "先修", "选课", "教材", "教学计划"),
     "resource": ("校内", "官网", "入口", "资源", "平台", "学院", "教务处", "就业中心", "图书馆"),
+    "recommendation": ("推免", "保研", "推免资格", "综合成绩", "综测", "加分"),
 }
 
 
 def _intents(question: str) -> set[str]:
     text = str(question or "")
     return {intent for intent, words in INTENT_KEYWORDS.items() if any(word in text for word in words)}
+
+
+LEVEL_LABELS = {"A": "国家级", "B": "市级", "C": "校级"}
+
+
+def competition_points_hint(level: Any) -> str:
+    """推免计分参考（来自用户提供的上外贸保研制度介绍；不是官方最终认定）。"""
+    doc = load()["graduate"]
+    if not doc:
+        return ""
+    mapping = (doc.get("level_mapping") or {}).get(str(level or "").strip().upper())
+    if not mapping:
+        return ""
+    points = doc.get("competition_points") or {}
+    if mapping == "national":
+        individual = "20/15/10"
+        team = "10/7/5"
+    elif mapping == "municipal":
+        individual = "10/6/3"
+        team = "5/3/2"
+    else:
+        return "推免计分表未列校级竞赛，具体以学院当年细则为准。"
+    return (
+        f"按推免评分参考：{LEVEL_LABELS.get(str(level).upper(), mapping)}个人赛一/二/三等奖 {individual} 分，"
+        f"团体赛 {team} 分；具体以学院当年细则为准。"
+    )
 
 
 def _reference_id(prefix: str, value: Any) -> str:
@@ -452,6 +481,32 @@ def search(question: str, *, limit: int = 4) -> list[dict[str, Any]]:
                     "source_title": str(fact.get("source_title") or "就业质量报告"),
                     "locator": {"kind": "reference", "field": "employment", "locator": fact.get("locator")},
                     "canonical_url": _url(fact.get("source_url")),
+                }
+            )
+
+    if "recommendation" in intents:
+        doc = load()["graduate"]
+        if doc:
+            rank = "；".join(f"{row.get('band')} {row.get('points')} 分" for row in doc.get("academic_rank_points") or [])
+            individual = "；".join(
+                f"{row.get('grade')} 市级 {row.get('municipal')} / 国家级 {row.get('national')}"
+                for row in (doc.get("competition_points") or {}).get("individual") or []
+            )
+            hits.append(
+                {
+                    "kind": "recommendation",
+                    "title": str((doc.get("source") or {}).get("title") or "推免综合成绩构成"),
+                    "text": (
+                        "推免综合成绩由思想品德、学习成绩、科研创新能力、全面发展构成。"
+                        f"专业排名分值：{rank}。竞赛个人赛：{individual}（国际级按国家级算；团体赛减半，具体见表）。"
+                        "竞赛级别按学生处《学生竞赛奖励项目清单》认定，各学院细则不同，以当年正式文件为准。"
+                    ),
+                    "source_type": "research",
+                    "verification_status": "pending_verification",
+                    "source_id": _reference_id("recommendation", "graduate"),
+                    "source_title": str((doc.get("source") or {}).get("title") or "推免综合成绩构成"),
+                    "locator": {"kind": "reference", "field": "graduate_recommendation"},
+                    "canonical_url": None,
                 }
             )
 

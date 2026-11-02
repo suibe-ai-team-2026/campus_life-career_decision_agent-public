@@ -172,3 +172,20 @@ def test_reference_hits_become_citations():
     assert citations[0].citation_no == 5
     assert citations[0].source_scope == "reference_data"
     assert citations[0].title
+
+
+def test_graduate_recommendation_rules_are_available():
+    doc = _load("graduate_recommendation.json")
+    assert doc.get("competition_points")
+    assert len(doc.get("academic_rank_points") or []) >= 6
+    hits = reference.search("保研竞赛加分怎么算？", limit=4)
+    assert any(item["kind"] == "recommendation" for item in hits), hits
+    hint = reference.competition_points_hint("A")
+    assert "推免" in hint and "20" in hint
+
+
+def test_competition_leads_mention_recommendation_points():
+    blueprint = build_planning_blueprint(_profile("金融学"), "finance_accounting")
+    leads = list(blueprint.competition_leads)
+    assert leads
+    assert any("推免" in (lead.description or "") for lead in leads), [lead.description for lead in leads[:3]]
