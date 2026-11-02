@@ -5424,3 +5424,649 @@ a.trace-hit-title:hover {
     grid-template-columns: 1fr;
   }
 }
+
+/* ------------------------------------------------------------------ */
+/* 路线约束与决策驾驶舱 v2                                              */
+/* ------------------------------------------------------------------ */
+
+.pathway-editor {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 20px;
+  border: 1px solid var(--accent-line);
+  border-radius: var(--r-md);
+  background:
+    radial-gradient(420px 180px at 0% 0%, rgba(242, 181, 102, 0.1), transparent 72%),
+    var(--bg-1);
+}
+.pathway-editor-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.pathway-editor-head h3 {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  margin: 0 0 6px;
+}
+.pathway-editor-head .field-hint {
+  max-width: 70ch;
+}
+.pathway-control-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.pathway-choice-block {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.pathway-choice-block .chip-row {
+  align-items: center;
+}
+.exclusion-chip.is-active {
+  border-color: rgba(232, 144, 126, 0.5);
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+.direction-card.is-excluded {
+  border-color: rgba(232, 144, 126, 0.32);
+  opacity: 0.72;
+}
+.direction-card.is-excluded:hover {
+  border-color: rgba(232, 144, 126, 0.5);
+  transform: none;
+}
+.pathway-panel {
+  border-color: var(--accent-line);
+}
+.pathway-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-md);
+  background: var(--line-soft);
+}
+.pathway-leading,
+.pathway-alternatives {
+  padding: 18px;
+  background: var(--bg-1);
+}
+.pathway-leading h3 {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  margin: 2px 0 10px;
+}
+.pathway-alternative-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pathway-alternative-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-bottom: 9px;
+  border-bottom: 1px dashed var(--line-soft);
+}
+.pathway-alternative-list li:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+.pathway-alternative-list strong {
+  font-size: 13px;
+  color: var(--fg-0);
+}
+.pathway-alternative-list span {
+  color: var(--fg-3);
+  font-size: 11.5px;
+  line-height: 1.55;
+}
+.pathway-excluded-note {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  color: var(--danger);
+}
+
+.plan-decision-cockpit {
+  padding: 24px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--accent-line);
+  background:
+    radial-gradient(680px 260px at 0% 0%, rgba(242, 181, 102, 0.14), transparent 62%),
+    linear-gradient(180deg, rgba(39, 30, 23, 0.96), rgba(24, 19, 15, 0.96));
+  box-shadow: var(--shadow-md);
+}
+.plan-decision-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.plan-decision-head h2 {
+  max-width: 32ch;
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  line-height: 1.3;
+}
+.plan-route-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.65fr);
+  gap: 1px;
+  margin-top: 20px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--line-soft);
+}
+.plan-route-primary,
+.plan-route-side {
+  padding: 16px;
+  background: rgba(24, 19, 15, 0.76);
+}
+.plan-route-side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.plan-route-side p {
+  margin-top: 3px;
+  color: var(--fg-2);
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+.plan-route-label {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+.plan-priority-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: 14px;
+  margin-top: 16px;
+}
+.plan-priority-card {
+  padding: 18px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line-soft);
+  background: rgba(24, 19, 15, 0.76);
+}
+.plan-priority-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+  font-family: var(--font-serif);
+  font-size: 16px;
+}
+.plan-priority-list {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.plan-priority-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  color: var(--fg-1);
+  font-size: 12.5px;
+  line-height: 1.62;
+}
+.plan-priority-list li > span {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+.plan-priority-list.is-bulleted {
+  padding-left: 18px;
+  list-style: disc;
+}
+.plan-priority-list.is-bulleted li {
+  display: list-item;
+}
+
+.plan-detail-tabs {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  margin: 20px 0 16px;
+  padding: 6px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-lg);
+  background: var(--bg-1);
+}
+.plan-detail-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  color: var(--fg-2);
+  text-align: left;
+  transition: border-color 0.14s ease, background 0.14s ease, color 0.14s ease;
+}
+.plan-detail-tab span {
+  font-size: 12.5px;
+}
+.plan-detail-tab small {
+  overflow: hidden;
+  max-width: 100%;
+  color: var(--fg-3);
+  font-size: 9.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.plan-detail-tab:hover {
+  border-color: var(--line);
+  color: var(--fg-1);
+}
+.plan-detail-tab.is-active {
+  border-color: var(--accent-line);
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+.plan-detail-tab.is-active small {
+  color: var(--accent-strong);
+  opacity: 0.78;
+}
+.plan-detail-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-height: 360px;
+  animation: fade-in 0.18s ease;
+}
+.plan-detail-panel > .panel,
+.plan-detail-panel > section,
+.plan-detail-panel > details {
+  margin-top: 0;
+}
+
+.direction-context-card {
+  padding: 22px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-lg);
+  background: var(--bg-1);
+}
+.direction-context-card > div:first-child > p:last-child {
+  max-width: 72ch;
+  margin-top: 8px;
+  color: var(--fg-2);
+  font-size: 13px;
+  line-height: 1.72;
+}
+.direction-context-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+.direction-context-grid > div {
+  padding-top: 14px;
+  border-top: 1px dashed var(--line-soft);
+}
+.direction-context-grid h3 {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  margin-bottom: 8px;
+}
+.direction-context-grid ul {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-left: 16px;
+  list-style: disc;
+  color: var(--fg-2);
+  font-size: 12px;
+  line-height: 1.58;
+}
+.direction-context-grid p {
+  color: var(--fg-2);
+  font-size: 12px;
+  line-height: 1.62;
+}
+.direction-context-grid p + p {
+  margin-top: 7px;
+}
+
+.lead-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.lead-section .section-heading {
+  margin-bottom: 0;
+}
+.lead-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.lead-card {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-md);
+  background: var(--bg-1);
+}
+.lead-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.lead-card-head h3 {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  line-height: 1.42;
+}
+.lead-description {
+  color: var(--fg-2);
+  font-size: 12.5px;
+  line-height: 1.65;
+}
+.lead-next {
+  padding: 10px 12px;
+  border-radius: var(--r-sm);
+  background: var(--accent-soft);
+  color: var(--fg-2);
+  font-size: 11.5px;
+  line-height: 1.58;
+}
+.lead-next strong {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--accent-strong);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.07em;
+}
+.lead-tags {
+  margin-top: auto;
+}
+.lead-source {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--line-soft);
+  color: var(--fg-3);
+  font-size: 10.5px;
+  line-height: 1.5;
+}
+.lead-source span {
+  min-width: 0;
+}
+.lead-source a {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 3px;
+  color: var(--accent);
+}
+.lead-source-missing {
+  color: var(--warn) !important;
+}
+.lead-freshness {
+  color: var(--fg-3);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  line-height: 1.5;
+}
+.verified-data-panel {
+  padding: 20px;
+  border: 1px solid var(--ok-soft);
+  border-radius: var(--r-lg);
+  background: var(--bg-1);
+}
+.verified-data-group {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line-soft);
+}
+.verified-data-group h3 {
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+.verified-data-group p {
+  color: var(--fg-2);
+  font-size: 12.5px;
+  line-height: 1.65;
+}
+.verified-data-group p + p {
+  margin-top: 6px;
+}
+
+.semester-focus {
+  padding: 22px;
+  border: 1px solid var(--accent-line);
+  border-radius: var(--r-lg);
+  background: linear-gradient(135deg, var(--accent-soft), transparent 72%);
+}
+.current-stage-strip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 0 0 16px;
+  padding: 11px 13px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-sm);
+  background: var(--bg-1);
+}
+.current-stage-strip strong {
+  font-size: 12.5px;
+}
+.current-stage-strip > span:last-child {
+  margin-left: auto;
+  color: var(--fg-3);
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.roadmap-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.roadmap-stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 14px;
+  padding-bottom: 22px;
+}
+.roadmap-stage:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 16px;
+  top: 32px;
+  bottom: 0;
+  width: 1px;
+  background: var(--line);
+}
+.roadmap-marker {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 33px;
+  height: 33px;
+  border: 1px solid var(--accent-line);
+  border-radius: 50%;
+  background: var(--bg-1);
+  color: var(--accent-strong);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+.roadmap-content {
+  padding: 18px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-md);
+  background: var(--bg-1);
+}
+.roadmap-stage-name {
+  margin-bottom: 4px;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.roadmap-content h3 {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+.roadmap-content ul {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding-left: 17px;
+  list-style: disc;
+  color: var(--fg-2);
+  font-size: 12.5px;
+  line-height: 1.65;
+}
+.roadmap-timeline.is-compact .roadmap-stage {
+  padding-bottom: 0;
+}
+.roadmap-timeline.is-compact .roadmap-stage:not(:last-child)::before {
+  display: none;
+}
+
+.plan-disclosure {
+  overflow: hidden;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-md);
+  background: var(--bg-1);
+}
+.plan-disclosure > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 16px;
+  cursor: pointer;
+  color: var(--fg-1);
+  font-size: 12.5px;
+  list-style: none;
+}
+.plan-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+.plan-disclosure > summary span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.plan-disclosure[open] > summary {
+  border-bottom: 1px solid var(--line-soft);
+}
+.plan-disclosure[open] > summary .icon:last-child {
+  transform: rotate(180deg);
+}
+.plan-disclosure-body {
+  padding: 16px;
+}
+.plan-detail-panel .citation-list {
+  margin-top: 0;
+}
+
+@media (max-width: 980px) {
+  .pathway-control-grid,
+  .direction-context-grid {
+    grid-template-columns: 1fr;
+  }
+  .plan-detail-tabs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .plan-detail-tab small {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .pathway-editor {
+    padding: 16px;
+  }
+  .pathway-summary,
+  .plan-route-row,
+  .plan-priority-grid,
+  .lead-card-grid {
+    grid-template-columns: 1fr;
+  }
+  .plan-decision-cockpit {
+    padding: 18px;
+  }
+  .plan-decision-head h2 {
+    max-width: none;
+  }
+  .plan-detail-tabs {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+  }
+  .plan-detail-tab {
+    flex: 0 0 auto;
+    min-width: 126px;
+    scroll-snap-align: start;
+  }
+  .lead-source {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .roadmap-stage {
+    grid-template-columns: 30px minmax(0, 1fr);
+    gap: 10px;
+  }
+  .roadmap-marker {
+    width: 29px;
+    height: 29px;
+  }
+  .roadmap-stage:not(:last-child)::before {
+    left: 14px;
+    top: 29px;
+  }
+  .roadmap-content {
+    padding: 14px;
+  }
+  .current-stage-strip > span:last-child {
+    margin-left: 0;
+  }
+}

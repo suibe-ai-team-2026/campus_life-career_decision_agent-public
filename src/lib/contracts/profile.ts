@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { DirectionIdSchema } from "./common";
+import { DIRECTION_IDS } from "./common";
 
 export const ExplorationStatusSchema = z.enum(["completed", "skipped"]);
 export type ExplorationStatus = z.infer<typeof ExplorationStatusSchema>;
@@ -45,11 +45,72 @@ export const ProfileInputSchema = z.object({
     .object({
       weekly_hours: z.number().int().min(1).max(80).optional(),
       monthly_budget_cny: z.number().int().min(0).max(10000).optional(),
-      notes: z.string().trim().max(500).optional()
+      notes: z.string().trim().max(500).optional(),
+      pathway: z
+        .object({
+          primary: z
+            .enum([
+              "undergraduate_employment",
+              "domestic_postgraduate",
+              "overseas_study",
+              "public_exam",
+              "undetermined"
+            ])
+            .default("undetermined"),
+          alternatives: z
+            .array(
+              z.enum([
+                "undergraduate_employment",
+                "domestic_postgraduate",
+                "overseas_study",
+                "public_exam",
+                "undetermined"
+              ])
+            )
+            .max(4)
+            .default([]),
+          excluded_directions: z.array(z.enum(DIRECTION_IDS)).max(DIRECTION_IDS.length).default([]),
+          excluded_sectors: z
+            .array(z.enum(["public_sector", "finance", "data", "further_study", "international_business"]))
+            .max(8)
+            .default([]),
+          target_cities: z.array(z.string().trim().min(1).max(40)).max(5).default([]),
+          practice_orientation: z.enum(["practice", "research", "undecided"]).default("undecided"),
+          accepts_cross_major: z.boolean().default(true),
+          accepts_certificate: z.boolean().default(true),
+          accepts_competition: z.boolean().default(true),
+          accepts_long_internship: z.boolean().default(true)
+        })
+        .default({
+          primary: "undetermined",
+          alternatives: [],
+          excluded_directions: [],
+          excluded_sectors: [],
+          target_cities: [],
+          practice_orientation: "undecided",
+          accepts_cross_major: true,
+          accepts_certificate: true,
+          accepts_competition: true,
+          accepts_long_internship: true
+        })
     })
-    .default({})
+    .default({
+      pathway: {
+        primary: "undetermined",
+        alternatives: [],
+        excluded_directions: [],
+        excluded_sectors: [],
+        target_cities: [],
+        practice_orientation: "undecided",
+        accepts_cross_major: true,
+        accepts_certificate: true,
+        accepts_competition: true,
+        accepts_long_internship: true
+      }
+    })
 });
 export type ProfileInput = z.infer<typeof ProfileInputSchema>;
+export type PathwayPreference = ProfileInput["preferences"]["pathway"];
 
 export const ProfileSchema = ProfileInputSchema.extend({
   profile_id: z.string().uuid(),

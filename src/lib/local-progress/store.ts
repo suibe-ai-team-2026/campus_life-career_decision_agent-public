@@ -11,6 +11,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import type { DirectionId } from "@/lib/contracts/common";
 import type { PlanAction, PlanResult } from "@/lib/contracts/plan";
+import type { PathwayPreference } from "@/lib/contracts/profile";
 import {
   emptyProgress,
   migrateProgress,
@@ -35,7 +36,21 @@ export const STORAGE_KEYS = {
 export type ExplorePrefs = {
   weekly_hours: number | null;
   monthly_budget_cny: number | null;
+  pathway: PathwayPreference;
   updated_at: string;
+};
+
+export const DEFAULT_PATHWAY_PREFERENCE: PathwayPreference = {
+  primary: "undetermined",
+  alternatives: [],
+  excluded_directions: [],
+  excluded_sectors: [],
+  target_cities: [],
+  practice_orientation: "undecided",
+  accepts_cross_major: true,
+  accepts_certificate: true,
+  accepts_competition: true,
+  accepts_long_internship: true
 };
 
 export type ChoiceDetail = {
@@ -559,13 +574,66 @@ const explorePrefsStore = createStore<ExplorePrefs>({
     if (!isRecord(raw)) return null;
     const hours = raw.weekly_hours;
     const budget = raw.monthly_budget_cny;
+    const rawPathway = isRecord(raw.pathway) ? raw.pathway : {};
+    const primary = [
+      "undergraduate_employment",
+      "domestic_postgraduate",
+      "overseas_study",
+      "public_exam",
+      "undetermined"
+    ].includes(typeof rawPathway.primary === "string" ? rawPathway.primary : "")
+      ? (rawPathway.primary as PathwayPreference["primary"])
+      : "undetermined";
+    const excludedDirections = Array.isArray(rawPathway.excluded_directions)
+      ? rawPathway.excluded_directions.filter(
+          (item): item is PathwayPreference["excluded_directions"][number] =>
+            typeof item === "string"
+        )
+      : [];
+    const excludedSectors = Array.isArray(rawPathway.excluded_sectors)
+      ? rawPathway.excluded_sectors.filter(
+          (item): item is PathwayPreference["excluded_sectors"][number] =>
+            ["public_sector", "finance", "data", "further_study", "international_business"].includes(item)
+        )
+      : [];
+    const alternatives = Array.isArray(rawPathway.alternatives)
+      ? rawPathway.alternatives.filter(
+          (item): item is PathwayPreference["alternatives"][number] =>
+            typeof item === "string" &&
+            ["undergraduate_employment", "domestic_postgraduate", "overseas_study", "public_exam", "undetermined"].includes(item)
+        )
+      : [];
+    const targetCities = Array.isArray(rawPathway.target_cities)
+      ? rawPathway.target_cities.filter((item): item is string => typeof item === "string").slice(0, 5)
+      : [];
     return {
       weekly_hours: typeof hours === "number" && Number.isFinite(hours) ? hours : null,
       monthly_budget_cny: typeof budget === "number" && Number.isFinite(budget) ? budget : null,
+      pathway: {
+        primary,
+        alternatives,
+        excluded_directions: excludedDirections,
+        excluded_sectors: excludedSectors,
+        target_cities: targetCities,
+        practice_orientation: ["practice", "research", "undecided"].includes(
+          typeof rawPathway.practice_orientation === "string" ? rawPathway.practice_orientation : ""
+        )
+          ? (rawPathway.practice_orientation as PathwayPreference["practice_orientation"])
+          : "undecided",
+        accepts_cross_major: rawPathway.accepts_cross_major !== false,
+        accepts_certificate: rawPathway.accepts_certificate !== false,
+        accepts_competition: rawPathway.accepts_competition !== false,
+        accepts_long_internship: rawPathway.accepts_long_internship !== false
+      },
       updated_at: typeof raw.updated_at === "string" ? raw.updated_at : ""
     };
   },
-  makeDefault: () => ({ weekly_hours: null, monthly_budget_cny: null, updated_at: "" })
+  makeDefault: () => ({
+    weekly_hours: null,
+    monthly_budget_cny: null,
+    pathway: DEFAULT_PATHWAY_PREFERENCE,
+    updated_at: ""
+  })
 });
 
 export function readExplorePrefs(): ExplorePrefs {

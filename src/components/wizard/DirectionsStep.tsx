@@ -31,7 +31,15 @@ import {
 import { scoreAssessment } from "@/lib/assessment/scoring";
 import { recommendDirections, type DirectionConfidence } from "@/lib/career/recommend";
 import {
+  excludedDirectionReasons,
+  isDirectionAllowed,
+  recommendPathway,
+  type PathwayDecision
+} from "@/lib/career/pathway";
+import {
+  DEFAULT_PATHWAY_PREFERENCE,
   readLocalProgress,
+  readExplorePrefs,
   updateLocalProgress,
   useLocalProgress,
   type LocalProgressV1
@@ -59,12 +67,33 @@ const RECOMMEND_CONFIDENCE_TONES: Record<DirectionConfidence, "ok" | "accent" | 
 export function DirectionsStep() {
   const router = useRouter();
   const { progress, hydrated } = useLocalProgress();
-  const favorites = useMemo(() => (progress?.favorites ?? []) as DirectionId[], [progress?.favorites]);
+  const pathwayPreference = hydrated
+    ? readExplorePrefs().pathway
+    : DEFAULT_PATHWAY_PREFERENCE;
+  const excludedDirections = useMemo(
+    () => excludedDirectionReasons(pathwayPreference),
+    [pathwayPreference]
+  );
+  const favoriteIds = useMemo(
+    () => (progress?.favorites ?? []) as DirectionId[],
+    [progress?.favorites]
+  );
+  const favorites = useMemo(
+    () => favoriteIds.filter((directionId) => isDirectionAllowed(directionId, pathwayPreference)),
+    [favoriteIds, pathwayPreference]
+  );
+  const hiddenFavoriteCount = favoriteIds.length - favorites.length;
   const answers = progress?.profile.answers;
+  const pathwayDecision = useMemo<PathwayDecision | null>(() => {
+    if (!answers) return null;
+    return recommendPathway(scoreAssessment(ASSESSMENT, answers), pathwayPreference);
+  }, [answers, pathwayPreference]);
   const recommendationResult = useMemo(() => {
     if (!answers) return null;
-    return recommendDirections(scoreAssessment(ASSESSMENT, answers));
-  }, [answers]);
+    return recommendDirections(scoreAssessment(ASSESSMENT, answers), {
+      pathwayPreference
+    });
+  }, [answers, pathwayPreference]);
   const answersVersionStale = Boolean(
     progress?.profile.assessment_version &&
       progress.profile.assessment_version !== ASSESSMENT_VERSION
@@ -127,6 +156,13 @@ export function DirectionsStep() {
 
   function toggleFavorite(directionId: DirectionId) {
     setFavoriteError(null);
+    if (!isDirectionAllowed(directionId, pathwayPreference)) {
+      setFavoriteError(
+        excludedDirections[directionId] ??
+          "该方向已被你的硬约束排除，不能加入比较。"
+      );
+      return;
+    }
     const current = readLocalProgress() ?? ({} as LocalProgressV1);
     const currentFavorites = (current.favorites ?? []) as DirectionId[];
     if (!currentFavorites.includes(directionId) && currentFavorites.length >= 3) {
@@ -291,6 +327,65 @@ export function DirectionsStep() {
         </div>
       ) : (
         <>
+          {pathwayDecision ? (
+            <section className="panel pathway-panel" aria-labelledby="pathway-title">
+              <div className="panel-head">
+                <div>
+                  <p className="eyebrow">第一步 · 先选现实路线</p>
+                  <h2 id="pathway-title">先比较本科就业、升学与公考，再进入职业方向</h2>
+                  <p className="panel-subtitle">
+                    硬排除条件先于兴趣和能力信号生效；路线建议只用于安排准备顺序，不做录取、考试或就业承诺。
+                  </p>
+                </div>
+                <Badge tone="accent">规则版本 {pathwayDecision.rulesVersion}</Badge>
+              </div>
+              {hiddenFavoriteCount > 0 ? (
+                <Callout tone="warn" title="有收藏方向与硬约束冲突">
+                  <p>
+                    你此前收藏的 {hiddenFavoriteCount} 个方向已被当前约束排除，不再进入推荐、比较或暂定。若要重新考虑，请回自我探索修改约束。
+                  </p>
+                </Callout>
+              ) : null}
+              <div className="pathway-summary">
+                <div className="pathway-leading">
+                  <p className="direction-label">当前较优先比较</p>
+                  <h3>{pathwayDecision.leading?.label ?? "需要补充约束"}</h3>
+                  <ul className="recommend-reasons">
+                    {(pathwayDecision.leading?.reasons ?? pathwayDecision.explanation).slice(0, 3).map((reason) => (
+                      <li key={reason}>{reason}</li>
+                    ))}
+                  </ul>
+                  {pathwayDecision.leading ? (
+                    <p className="panel-note">
+                      <Icon name="clock" size={13} /> {pathwayDecision.leading.preparationCost}
+                    </p>
+                  ) : null}
+                </div>
+                <div className="pathway-alternatives">
+                  <p className="direction-label">备选路线</p>
+                  {pathwayDecision.alternatives.length > 0 ? (
+                    <ul className="pathway-alternative-list">
+                      {pathwayDecision.alternatives.map((route) => (
+                        <li key={route.pathwayId}>
+                          <strong>{route.label}</strong>
+                          <span>{route.reasons[0]}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="panel-note">当前没有其他可比较路线；请检查是否一次排除了太多选项。</p>
+                  )}
+                  {pathwayDecision.excluded.length > 0 ? (
+                    <p className="panel-note pathway-excluded-note">
+                      <Icon name="shield" size={13} /> 已按硬约束排除：
+                      {pathwayDecision.excluded.map((item) => item.reason.split("你")[1] ?? item.reason).join("；")}
+                    </p>
+                  ) : null}
+                </div>
+              </div>
+            </section>
+          ) : null}
+
           <section className="panel recommend-panel" aria-labelledby="recommend-title">
             <div className="panel-head">
               <div>
@@ -439,27 +534,47 @@ export function DirectionsStep() {
             <div className="direction-grid">
               {DIRECTIONS.map((direction) => {
                 const isFavorite = favorites.includes(direction.direction_id);
+                const exclusionReason = excludedDirections[direction.direction_id];
+                const excluded = Boolean(exclusionReason);
                 const coverageView = directionCoverage(direction, coverage[direction.direction_id] ?? null);
                 const coverageBadge = catalogState === "loading" ? "云端证据载入中" : coverageView.badgeLabel;
                 return (
-                  <article className={isFavorite ? "direction-card is-favorite" : "direction-card"} key={direction.direction_id}>
+                  <article
+                    className={
+                      excluded
+                        ? "direction-card is-excluded"
+                        : isFavorite
+                          ? "direction-card is-favorite"
+                          : "direction-card"
+                    }
+                    key={direction.direction_id}
+                  >
                     <header className="direction-card-head">
                       <div>
                         <p className="direction-kicker">{direction.short_title}</p>
                         <h3>{direction.title}</h3>
                       </div>
-                      <button
-                        type="button"
-                        className={isFavorite ? "favorite-button is-active" : "favorite-button"}
-                        onClick={() => toggleFavorite(direction.direction_id)}
-                        aria-pressed={isFavorite}
-                        aria-label={isFavorite ? `取消收藏 ${direction.title}` : `收藏 ${direction.title}`}
-                      >
-                        <Icon name="heart" size={15} />
-                        {isFavorite ? "已收藏" : "收藏"}
-                      </button>
+                      {excluded ? (
+                        <Badge tone="danger">硬约束排除</Badge>
+                      ) : (
+                        <button
+                          type="button"
+                          className={isFavorite ? "favorite-button is-active" : "favorite-button"}
+                          onClick={() => toggleFavorite(direction.direction_id)}
+                          aria-pressed={isFavorite}
+                          aria-label={isFavorite ? `取消收藏 ${direction.title}` : `收藏 ${direction.title}`}
+                        >
+                          <Icon name="heart" size={15} />
+                          {isFavorite ? "已收藏" : "收藏"}
+                        </button>
+                      )}
                     </header>
                     <p className="direction-summary">{direction.summary}</p>
+                    {excluded ? (
+                      <Callout tone="warn" title="此方向不会进入推荐或方案">
+                        <p>{exclusionReason}。如需重新比较，请回自我探索修改硬约束。</p>
+                      </Callout>
+                    ) : null}
 
                     <div className="direction-block">
                       <p className="direction-label">日常工作内容</p>

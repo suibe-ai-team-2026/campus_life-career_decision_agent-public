@@ -236,6 +236,9 @@ class Config:
     chat_api_key: str = field(default="", repr=False)
     chat_base_url: str = "https://api.deepseek.com"
     chat_model: str = "deepseek-flash"
+    # 方案权衡与跨学期规划可使用更高质量模型；未覆盖时沿用聊天模型。
+    plan_reasoning_model: str = "deepseek-v4-pro"
+    plan_reasoning_effort: str | None = "high"
     chat_temperature: float = 0.1
     chat_max_tokens: int = 1600
     chat_json_mode: str = "auto"
@@ -298,6 +301,8 @@ class Config:
             "embedding_query_template_version": self.embedding_query_template_version,
             "chat_model": self.chat_model,
             "chat_reasoning_effort": self.chat_reasoning_effort,
+            "plan_reasoning_model": self.plan_reasoning_model,
+            "plan_reasoning_effort": self.plan_reasoning_effort,
             "freestyle_vm_id": self.freestyle_vm_id,
             "idle_pause_seconds": self.idle_pause_seconds,
             "worker_concurrency": self.worker_concurrency,
@@ -366,6 +371,11 @@ class Config:
         chat_reasoning_effort = _env(env, "DEEPSEEK_REASONING_EFFORT", "low")
         if chat_reasoning_effort not in (None, "low", "high", "max"):
             raise ConfigError("DEEPSEEK_REASONING_EFFORT 只能是 low/high/max 或留空")
+        default_plan_model = "deepseek-v4-pro" if chat_provider == "deepseek" else chat_model
+        plan_reasoning_model = _env(env, "PLAN_REASONING_MODEL", default_plan_model) or default_plan_model
+        plan_reasoning_effort = _env(env, "PLAN_REASONING_EFFORT", "high")
+        if plan_reasoning_effort not in (None, "low", "high", "max"):
+            raise ConfigError("PLAN_REASONING_EFFORT 只能是 low/high/max 或留空")
         worker_concurrency = _int(env, "WORKER_CONCURRENCY", 1, minimum=1, maximum=1)
         run_max_attempts = _int(env, "RUN_MAX_ATTEMPTS", 3, minimum=1, maximum=10)
         timeout = _float(env, "MODEL_REQUEST_TIMEOUT_SECONDS", 60.0, minimum=1.0)
@@ -421,6 +431,8 @@ class Config:
             chat_api_key=chat_api_key,
             chat_base_url=chat_base_url,
             chat_model=chat_model,
+            plan_reasoning_model=plan_reasoning_model,
+            plan_reasoning_effort=plan_reasoning_effort,
             chat_temperature=_float(env, "CHAT_TEMPERATURE", _float(env, "OPENROUTER_CHAT_TEMPERATURE", 0.1, minimum=0.0), minimum=0.0),
             chat_max_tokens=_int(env, "CHAT_MAX_TOKENS", _int(env, "OPENROUTER_CHAT_MAX_TOKENS", 1600, minimum=64, maximum=8192), minimum=64, maximum=8192),
             chat_json_mode=chat_json_mode,

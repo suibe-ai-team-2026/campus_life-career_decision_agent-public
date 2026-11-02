@@ -105,7 +105,16 @@ class FakeProvider:
             request_count=1,
         )
 
-    def chat(self, messages: Sequence[dict[str, str]], *, operation: str, temperature=None, max_tokens=None) -> ChatResponse:
+    def chat(
+        self,
+        messages: Sequence[dict[str, str]],
+        *,
+        operation: str,
+        temperature=None,
+        max_tokens=None,
+        model: str | None = None,
+        reasoning_effort: str | None = None,
+    ) -> ChatResponse:
         if self.chat_error is not None:
             raise self.chat_error
         self.chat_calls.append((operation, list(messages)))
@@ -115,7 +124,7 @@ class FakeProvider:
             content=content,
             usage=ModelUsage(
                 provider=PROVIDER_NAME,
-                model=self.config.chat_model,
+                model=model or self.config.chat_model,
                 operation=operation,
                 input_tokens=100,
                 output_tokens=50,
@@ -124,7 +133,7 @@ class FakeProvider:
                 pricing_snapshot_at=datetime.now(timezone.utc),
             ),
             latency_ms=8,
-            model=self.config.chat_model,
+            model=model or self.config.chat_model,
             finish_reason="stop",
             json_mode_used=True,
         )

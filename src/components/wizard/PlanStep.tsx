@@ -8,6 +8,7 @@ import type { Plan, PlanResult } from "@/lib/contracts/plan";
 import type { ProfileInput } from "@/lib/contracts/profile";
 import type { Run } from "@/lib/contracts/run";
 import { scoreAssessment } from "@/lib/assessment/scoring";
+import { excludedDirectionReasons, isDirectionAllowed } from "@/lib/career/pathway";
 import { ASSESSMENT, ASSESSMENT_VERSION, DIRECTIONS, getDirection } from "@/lib/content";
 import {
   cloudConfigured,
@@ -126,7 +127,8 @@ function buildProfileInput(progress: LocalProgressV1): ProfileInput {
     scores: scored.scores,
     preferences: {
       ...(prefs.weekly_hours !== null ? { weekly_hours: prefs.weekly_hours } : {}),
-      ...(prefs.monthly_budget_cny !== null ? { monthly_budget_cny: prefs.monthly_budget_cny } : {})
+      ...(prefs.monthly_budget_cny !== null ? { monthly_budget_cny: prefs.monthly_budget_cny } : {}),
+      pathway: prefs.pathway
     }
   };
 }
@@ -337,6 +339,16 @@ export function PlanStep() {
         setPhase("blocked");
         return;
       }
+      const pathwayPreference = readExplorePrefs().pathway;
+      if (!isDirectionAllowed(options.directionId, pathwayPreference)) {
+        setError({
+          message:
+            excludedDirectionReasons(pathwayPreference)[options.directionId] ??
+            "当前方向已被你的硬约束排除，请回第 3 步重新选择。"
+        });
+        setPhase("error");
+        return;
+      }
 
       await createAnonymousSession(controller.signal);
 
@@ -507,6 +519,15 @@ export function PlanStep() {
     const chosen = current.provisional_direction;
     if (!chosen) {
       setPhase("blocked");
+      return;
+    }
+    if (!isDirectionAllowed(chosen, readExplorePrefs().pathway)) {
+      setError({
+        message:
+          excludedDirectionReasons(readExplorePrefs().pathway)[chosen] ??
+          "当前暂定方向已被你的硬约束排除。"
+      });
+      setPhase("error");
       return;
     }
 
@@ -871,6 +892,11 @@ export function PlanStep() {
       if (progress.profile.current_term.length < 2) missing.push("当前学期");
       if (!progress.profile.completed_at) missing.push("完成或跳过自我探索");
       if (!progress.provisional_direction) missing.push("暂定方向");
+      else if (
+        !isDirectionAllowed(progress.provisional_direction, readExplorePrefs().pathway)
+      ) {
+        missing.push("重新选择未被硬约束排除的方向");
+      }
     }
     return (
       <section className="panel blocked-panel" aria-labelledby="blocked-title">

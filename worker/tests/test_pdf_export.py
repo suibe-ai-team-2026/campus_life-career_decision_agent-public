@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 import hashlib
+import io
 import json
 from pathlib import Path
+
+from pypdf import PdfReader
 
 from app.export.pdf import render_plan_pdf
 from app.graphs.export import run_export
@@ -18,6 +21,59 @@ PROFILE_ID = "66666666-6666-6666-6666-666666666666"
 
 def _plan_result() -> dict:
     return json.loads((FIXTURES / "plan_result.json").read_text(encoding="utf-8"))
+
+
+def _plan_result_with_blueprint() -> dict:
+    result = _plan_result()
+    result.update(
+        {
+            "pathway": {
+                "primary": "undergraduate_employment",
+                "label": "本科就业",
+                "rationale": ["你明确偏实践，先通过课程项目与实习获得真实反馈。"],
+                "alternatives": ["国内升学"],
+                "excluded": ["体制内 / 政审类岗位"],
+            },
+            "course_leads": [
+                {
+                    "lead_id": "course-1",
+                    "title": "跨境电子商务",
+                    "description": "理解平台运营与履约流程。",
+                    "why": "课程属性需要在教务系统核对。",
+                    "skill_tags": ["运营"],
+                    "verification_status": "official_lead",
+                    "source_label": "学校官网入口",
+                    "source_url": "https://www.suibe.edu.cn/",
+                }
+            ],
+            "competition_leads": [],
+            "campus_resources": [],
+            "roadmap": [
+                {
+                    "stage": "未来 30 天",
+                    "focus": "核对信息并形成第一份证据",
+                    "actions": ["核对 3 门课程的学分与开课学期。"],
+                },
+                {
+                    "stage": "大一上",
+                    "focus": "完成本学期可交付成果",
+                    "actions": ["选择 1 项竞赛核对当年资格。"],
+                },
+            ],
+            "analysis": {
+                "overview": "该方向围绕跨境业务、平台运营与商业沟通。",
+                "match": "沟通与执行自评可以支撑业务协作，但数据能力仍需通过课程作业补证据。",
+                "action_rationale": [],
+                "evidence_courses": [],
+                "evidence_competitions": [],
+                "risks": ["课程与竞赛资格仍需官方核验。"],
+                "next_steps": ["先核对培养方案。"],
+                "citation_numbers": [1],
+                "boundary_note": "方向为暂定比较项。",
+            },
+        }
+    )
+    return result
 
 
 def _plan_version() -> dict:
@@ -36,8 +92,9 @@ def _plan_version() -> dict:
 
 
 def test_render_plan_pdf_returns_readable_pdf_bytes():
+    result = _plan_result_with_blueprint()
     data = render_plan_pdf(
-        plan_result=_plan_result(),
+        plan_result=result,
         plan_version=_plan_version(),
         profile={
             "school": "上海对外经贸大学",
@@ -52,6 +109,11 @@ def test_render_plan_pdf_returns_readable_pdf_bytes():
     # 中文字体通过 CID 字体嵌入：PDF 资源里应能看到 STSong-Light
     assert b"STSong-Light" in data
     assert b"%%EOF" in data
+    text = "\n".join(page.extract_text() or "" for page in PdfReader(io.BytesIO(data)).pages)
+    assert "本科就业" in text
+    assert "未来 30 天" in text
+    assert "跨境电子商务" in text
+    assert "官方线索" in text
 
 
 def test_export_graph_registers_artifact_and_returns_contract_payload(tmp_path: Path):

@@ -437,9 +437,11 @@ class OpenRouterClient:
         operation: str,
         temperature: float | None = None,
         max_tokens: int | None = None,
+        model: str | None = None,
+        reasoning_effort: str | None = None,
     ) -> ChatResponse:
         body: dict[str, Any] = {
-            "model": self.config.chat_model,
+            "model": model or self.config.chat_model,
             "messages": list(messages),
             "temperature": self.config.chat_temperature if temperature is None else temperature,
             "max_tokens": self.config.chat_max_tokens if max_tokens is None else max_tokens,
@@ -448,7 +450,13 @@ class OpenRouterClient:
         if json_mode:
             body["response_format"] = {"type": "json_object"}
         if self.config.chat_provider == "deepseek":
-            if json_mode:
+            if reasoning_effort:
+                # Plan analysis explicitly opts into a reasoning tier. Do not
+                # silently disable thinking for that call merely because the
+                # response is JSON; otherwise the configured plan model would
+                # still behave like the low-effort chat model.
+                body["reasoning_effort"] = reasoning_effort
+            elif json_mode:
                 # 思考模式会偶尔返回空 content（推理 token 抢占），JSON 提取因此失败；
                 # JSON 输出关思考更稳。
                 body["thinking"] = {"type": "disabled"}

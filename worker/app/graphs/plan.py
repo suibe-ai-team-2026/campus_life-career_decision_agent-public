@@ -35,6 +35,7 @@ from ..models import (
 )
 from ..prompts import career as prompts
 from ..prompts import validate as prompt_validate
+from ..planning import build_planning_blueprint, direction_exclusion_reason
 from ..retrieval.service import merge_user_evidence
 from .common import (
     JobContext,
@@ -42,6 +43,7 @@ from .common import (
     generate_validated_json,
     profile_summary,
     require_no_validation_reasons,
+    validate_profile_context,
 )
 from ..agent.research import run_web_research
 
@@ -82,6 +84,7 @@ def build_plan_graph(ctx: JobContext):
         profile = ctx.db.get_profile(ctx.job.owner_id, str(run_input.profile_id))
         if ctx.job.profile_version is not None and int(profile.get("version") or 0) != int(ctx.job.profile_version):
             raise WorkerError("画像版本与 run.profile_version 不一致", detail="version_conflict")
+        validate_profile_context(profile)
         return {"run_input": run_input.model_dump(), "profile": profile, "warnings": []}
 
     def retrieve_node(state: PlanState) -> PlanState:
@@ -140,8 +143,12 @@ def build_plan_graph(ctx: JobContext):
         ctx.emit("planning", 45)
         run_input = state["run_input"]
         profile = state["profile"]
+        direction_id = str(run_input["direction_id"])
+        exclusion_reason = direction_exclusion_reason(direction_id, profile)
+        if exclusion_reason:
+            raise UnsupportedDirection(exclusion_reason)
         result = ctx.rules_engine.query(
-            str(run_input["direction_id"]),
+            direction_id,
             profile,
             rules_version=ctx.config.rules_version,
         )
@@ -149,6 +156,16 @@ def build_plan_graph(ctx: JobContext):
             raise InvalidProfile("画像字段不完整，规则引擎拒绝计算")
         if result.status == "unsupported_direction":
             raise UnsupportedDirection("规则引擎不支持该方向")
+        blueprint = build_planning_blueprint(profile, direction_id)
+        result = result.model_copy(
+            update={
+                "pathway": blueprint.pathway,
+                "course_leads": list(blueprint.course_leads),
+                "competition_leads": list(blueprint.competition_leads),
+                "campus_resources": list(blueprint.campus_resources),
+                "roadmap": list(blueprint.roadmap),
+            }
+        )
         payload = plan_result_payload(result)
         ctx.trace(
             "agent_note",
@@ -304,8 +321,10 @@ def build_plan_graph(ctx: JobContext):
                 analysis_messages,
                 operation="chat_plan_analysis",
                 validator=analysis_validator,
-                max_attempts=1,
+                max_attempts=2,
                 max_tokens=2800,
+                model=ctx.config.plan_reasoning_model,
+                reasoning_effort=ctx.config.plan_reasoning_effort,
             )
             analysis = PlanAnalysis(
                 overview=parsed_analysis.overview,

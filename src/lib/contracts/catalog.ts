@@ -12,8 +12,10 @@ export const DirectionCardSchema = z.object({
   applicability: z.string(),
   data_gaps: z.array(z.string()).default([]),
   coverage: z.object({
-    exact_major_records: z.number().int().nonnegative(),
-    official_records: z.number().int().nonnegative(),
+    /** null 表示该方向的精确同专业覆盖尚未逐格计算，不展示全库数字。 */
+    exact_major_records: z.number().int().nonnegative().nullable(),
+    /** null 表示官方记录尚未按方向完成归属，不能把全库计数复制给每张卡。 */
+    official_records: z.number().int().nonnegative().nullable(),
     job_requirements: z.number().int().nonnegative(),
     label: z.string()
   }),

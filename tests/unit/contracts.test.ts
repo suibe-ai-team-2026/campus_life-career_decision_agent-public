@@ -50,6 +50,67 @@ describe("API contracts", () => {
     expect(parsed.success).toBe(true);
   });
 
+  it("accepts the pathway and career-planning blueprint fields", () => {
+    const parsed = PlanResultSchema.safeParse({
+      status: "partial",
+      rules_version: "career-rules-2026-10-28.1",
+      profile_version: 2,
+      direction_id: "cross_border_business",
+      actions: [],
+      courses: [],
+      competitions: [],
+      credits: null,
+      gaps: [],
+      evidence: [],
+      explanation: null,
+      pathway: {
+        primary: "undergraduate_employment",
+        label: "本科就业",
+        rationale: ["你明确偏实践。"],
+        alternatives: ["国内升学"],
+        excluded: ["体制内 / 政审类岗位"]
+      },
+      course_leads: [
+        {
+          lead_id: "course-1",
+          title: "跨境电子商务",
+          description: "了解平台运营。",
+          why: "需要在教务系统核对课程属性。",
+          skill_tags: ["运营"],
+          verification_status: "official_lead",
+          source_label: "学校官网",
+          source_url: "https://www.suibe.edu.cn/"
+        }
+      ],
+      competition_leads: [],
+      campus_resources: [],
+      roadmap: [
+        {
+          stage: "未来 30 天",
+          focus: "核对信息并形成第一份证据",
+          actions: ["核对培养方案。"]
+        }
+      ],
+      warnings: []
+    });
+    expect(parsed.success).toBe(true);
+  });
+
+  it("fills backward-compatible pathway defaults on profile input", () => {
+    const parsed = ProfileInputSchema.parse({
+      school: "上海对外经贸大学",
+      major: "国际经济与贸易",
+      enrollment_year: 2026,
+      current_term: "2026-秋",
+      assessment_version: "career-exploration-2026-10-25.1",
+      exploration_status: "completed",
+      answers: {},
+      scores: {}
+    });
+    expect(parsed.preferences.pathway.primary).toBe("undetermined");
+    expect(parsed.preferences.pathway.accepts_competition).toBe(true);
+  });
+
   it("accepts a compare submission without a profile", () => {
     const parsed = RunSubmitSchema.safeParse({
       kind: "compare",

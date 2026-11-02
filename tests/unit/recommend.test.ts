@@ -6,7 +6,7 @@ import {
   DIRECTION_FIT_RULES_VERSION,
   getDirectionFitRule
 } from "@/lib/career/direction-fit";
-import type { Answers } from "@/lib/contracts/profile";
+import type { Answers, PathwayPreference } from "@/lib/contracts/profile";
 import { ASSESSMENT, DIRECTIONS, DIRECTIONS_CATEGORY_VERSION, getDirection } from "@/lib/content";
 
 /** 研究/数据倾向的虚构画像（仅测试用，不对应真实学生）。 */
@@ -72,6 +72,27 @@ function recommend(answers: Answers, options?: { limit?: number }) {
 }
 
 describe("recommendDirections", () => {
+  it("filters directions that violate explicit pathway constraints", () => {
+    const pathwayPreference: PathwayPreference = {
+      primary: "undergraduate_employment",
+      alternatives: ["domestic_postgraduate"],
+      excluded_directions: [],
+      excluded_sectors: ["public_sector"],
+      target_cities: ["上海"],
+      practice_orientation: "practice",
+      accepts_cross_major: true,
+      accepts_certificate: true,
+      accepts_competition: true,
+      accepts_long_internship: true
+    };
+    const result = recommendDirections(scoreAssessment(ASSESSMENT, PEOPLE_PROFILE), {
+      pathwayPreference
+    });
+
+    expect(result.recommendations.map((item) => item.directionId)).not.toContain("public_service");
+    expect(result.excludedDirectionIds).toContain("public_service");
+  });
+
   it("returns identical output for identical input (deterministic ordering)", () => {
     const first = recommend(RESEARCH_PROFILE);
     const second = recommend(RESEARCH_PROFILE);
