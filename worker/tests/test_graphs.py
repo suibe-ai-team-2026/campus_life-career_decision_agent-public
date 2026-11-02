@@ -386,6 +386,300 @@ def test_ask_model_no_evidence_results_in_refusal():
     assert payload["refusal_reason"] == "model_no_evidence"
 
 
+def _reference_hit(*, title: str, text: str) -> dict:
+    return {
+        "kind": "competition",
+        "title": title,
+        "source_title": title,
+        "text": text,
+        "source_id": "ref-competition-1",
+        "locator": {"file": "competitions.json", "entry": title},
+        "verification_status": "external_reference",
+    }
+
+
+def _fake_web_research(ctx, *, question, site_hint=None, numbering_start=1):
+    """离线假联网调研：返回一条从 numbering_start 开始编号的网页证据。"""
+
+    from app.agent.research import WebResearchResult, WebSource, _to_citation, _to_evidence
+
+    source = WebSource(
+        url="https://www.suibe.edu.cn/notice",
+        title="竞赛奖励通知",
+        site_name="suibe.edu.cn",
+        fetched_at="2026-11-02T00:00:00Z",
+        kind="fetch",
+        snippet="获奖学生可申请素质拓展学分。",
+        content="学校竞赛奖励通知：获奖学生可申请素质拓展学分。",
+    )
+    result = WebResearchResult()
+    result.sources = [source]
+    result.citations = [_to_citation(source, numbering_start)]
+    result.evidence = [_to_evidence(source, numbering_start)]
+    result.note = "本次回答引用了 1 条实时网页（未核验）。"
+    return result
+
+
+def test_ask_web_supplement_numbers_after_corpus_and_reference(monkeypatch):
+    """回归 #28：开启联网补充时不得在分配 citations 前读取它，且编号要接在参考数据之后。"""
+
+    import app.graphs.ask as ask_module
+
+    reference_hits = [
+        _reference_hit(title="全国大学生市场调查与分析大赛", text="竞赛目录：该竞赛为 A 类竞赛。"),
+        _reference_hit(title="上海对外经贸大学竞赛奖励清单", text="竞赛获奖可申请素质拓展学分。"),
+    ]
+    monkeypatch.setattr(ask_module.reference, "search", lambda question, limit=4: reference_hits)
+    monkeypatch.setattr(ask_module, "run_web_research", _fake_web_research)
+
+    config = make_config()
+    db = FakeDb(config=config)
+    provider = FakeProvider(
+        config,
+        chat_responses={
+            "chat_ask": [
+                json.dumps(
+                    {
+                        "answer": "根据实时网页，学科竞赛获奖可按学校规定申请素质拓展学分[4]。",
+                        "citation_numbers": [4],
+                        "no_evidence": False,
+                        "boundary_note": "",
+                    },
+                    ensure_ascii=False,
+                )
+            ]
+        },
+    )
+    db.search_rows = [_evidence_row(text="2024届毕业生去向落实率为95.0%。")]
+    job = make_claim(
+        {"question": "参加学科竞赛可以认定哪些素质拓展学分？", "web_search": True},
+        kind="ask",
+        owner_id=OWNER,
+    )
+    ctx = make_context(config=config, db=db, provider=provider, job=job)
+    payload = run_ask(ctx)
+
+    assert payload["refusal"] is False
+    # 语料 1 条 + 参考数据 2 条 + 实时网页 1 条：编号连续、不重复。
+    citation_nos = [item["citation_no"] for item in payload["citations"]]
+    assert citation_nos == [1, 2, 3, 4]
+    web_citations = [item for item in payload["citations"] if item.get("source_scope") == "实时网页"]
+    assert [item["citation_no"] for item in web_citations] == [4]
+    assert "参考数据" in (payload["boundary_note"] or "")
+    assert "实时网页" in (payload["boundary_note"] or "")
+
+
+def test_ask_web_supplement_without_reference_hits_keeps_numbering(monkeypatch):
+    """没有参考数据命中时，网页证据只接在语料证据之后。"""
+
+    import app.graphs.ask as ask_module
+
+    monkeypatch.setattr(ask_module.reference, "search", lambda question, limit=4: [])
+    monkeypatch.setattr(ask_module, "run_web_research", _fake_web_research)
+
+    config = make_config()
+    db = FakeDb(config=config)
+    provider = FakeProvider(
+        config,
+        chat_responses={
+            "chat_ask": [
+                json.dumps(
+                    {
+                        "answer": "根据实时网页，竞赛获奖可按学校规定申请素质拓展学分[2]。",
+                        "citation_numbers": [2],
+                        "no_evidence": False,
+                        "boundary_note": "",
+                    },
+                    ensure_ascii=False,
+                )
+            ]
+        },
+    )
+    db.search_rows = [_evidence_row(text="2024届毕业生去向落实率为95.0%。")]
+    job = make_claim(
+        {"question": "参加学科竞赛可以认定哪些素质拓展学分？", "web_search": True},
+        kind="ask",
+        owner_id=OWNER,
+    )
+    ctx = make_context(config=config, db=db, provider=provider, job=job)
+    payload = run_ask(ctx)
+
+    assert payload["refusal"] is False
+    assert [item["citation_no"] for item in payload["citations"]] == [1, 2]
+    assert payload["citations"][-1]["source_scope"] == "实时网页"
+
+
+def test_ask_web_research_failure_degrades_to_local_evidence(monkeypatch):
+    """联网补充自身失败（超时等）时降级为本地证据，不能把整个问答判为 internal_error。"""
+
+    import app.graphs.ask as ask_module
+    from app.errors import ModelTimeout
+
+    def failing_research(ctx, *, question, site_hint=None, numbering_start=1):
+        raise ModelTimeout("web research timeout")
+
+    monkeypatch.setattr(ask_module.reference, "search", lambda question, limit=4: [])
+    monkeypatch.setattr(ask_module, "run_web_research", failing_research)
+
+    config = make_config()
+    db = FakeDb(config=config)
+    provider = FakeProvider(
+        config,
+        chat_responses={
+            "chat_ask": [
+                json.dumps(
+                    {
+                        "answer": "报告显示，2024届毕业生去向落实率为95.0%[1]。",
+                        "citation_numbers": [1],
+                        "no_evidence": False,
+                        "boundary_note": "",
+                    },
+                    ensure_ascii=False,
+                )
+            ]
+        },
+    )
+    db.search_rows = [_evidence_row(text="2024届毕业生去向落实率为95.0%。")]
+    job = make_claim(
+        {"question": "2024届毕业生去向落实率是多少？", "web_search": True},
+        kind="ask",
+        owner_id=OWNER,
+    )
+    ctx = make_context(config=config, db=db, provider=provider, job=job)
+    payload = run_ask(ctx)
+
+    assert payload["refusal"] is False
+    assert [item["citation_no"] for item in payload["citations"]] == [1]
+    assert "联网补充暂不可用" in (payload["boundary_note"] or "")
+
+
+def test_ask_web_empty_sources_reports_note(monkeypatch):
+    """联网开启但没有找到可用网页时，边界说明里要写清楚，而不是静默忽略。"""
+
+    import app.graphs.ask as ask_module
+    from app.agent.research import WebResearchResult
+
+    def empty_research(ctx, *, question, site_hint=None, numbering_start=1):
+        result = WebResearchResult()
+        result.note = "未找到可用的实时网页证据。"
+        return result
+
+    monkeypatch.setattr(ask_module.reference, "search", lambda question, limit=4: [])
+    monkeypatch.setattr(ask_module, "run_web_research", empty_research)
+
+    config = make_config()
+    db = FakeDb(config=config)
+    provider = FakeProvider(
+        config,
+        chat_responses={
+            "chat_ask": [
+                json.dumps(
+                    {
+                        "answer": "报告显示，2024届毕业生去向落实率为95.0%[1]。",
+                        "citation_numbers": [1],
+                        "no_evidence": False,
+                        "boundary_note": "",
+                    },
+                    ensure_ascii=False,
+                )
+            ]
+        },
+    )
+    db.search_rows = [_evidence_row(text="2024届毕业生去向落实率为95.0%。")]
+    job = make_claim(
+        {"question": "2024届毕业生去向落实率是多少？", "web_search": True},
+        kind="ask",
+        owner_id=OWNER,
+    )
+    ctx = make_context(config=config, db=db, provider=provider, job=job)
+    payload = run_ask(ctx)
+
+    assert payload["refusal"] is False
+    assert "未找到可用的实时网页证据" in (payload["boundary_note"] or "")
+
+
+def test_ask_web_only_evidence_numbers_from_one(monkeypatch):
+    """语料为空、只有联网证据时，引用编号仍从 1 开始且连续。"""
+
+    import app.graphs.ask as ask_module
+    from app.agent.research import WebResearchResult, WebSource, _to_citation, _to_evidence
+
+    def web_only_research(ctx, *, question, site_hint=None, numbering_start=1):
+        sources = [
+            WebSource(url="https://www.suibe.edu.cn/a", title="竞赛通知 A", content="竞赛获奖可申请素质拓展学分。"),
+            WebSource(url="https://www.suibe.edu.cn/b", title="竞赛通知 B", content="A 类竞赛获奖可申请 1 学分。"),
+        ]
+        result = WebResearchResult()
+        result.sources = sources
+        result.citations = [_to_citation(source, numbering_start + index) for index, source in enumerate(sources)]
+        result.evidence = [_to_evidence(source, numbering_start + index) for index, source in enumerate(sources)]
+        result.note = "本次回答引用了 2 条实时网页（未核验）。"
+        return result
+
+    monkeypatch.setattr(ask_module.reference, "search", lambda question, limit=4: [])
+    monkeypatch.setattr(ask_module, "run_web_research", web_only_research)
+
+    config = make_config()
+    db = FakeDb(config=config)
+    provider = FakeProvider(
+        config,
+        chat_responses={
+            "chat_ask": [
+                json.dumps(
+                    {
+                        "answer": "官方通知显示，A 类竞赛获奖可申请素质拓展学分[1][2]。",
+                        "citation_numbers": [1, 2],
+                        "no_evidence": False,
+                        "boundary_note": "",
+                    },
+                    ensure_ascii=False,
+                )
+            ]
+        },
+    )
+    db.search_rows = []
+    job = make_claim(
+        {"question": "参加学科竞赛可以认定哪些素质拓展学分？", "web_search": True},
+        kind="ask",
+        owner_id=OWNER,
+    )
+    ctx = make_context(config=config, db=db, provider=provider, job=job)
+    payload = run_ask(ctx)
+
+    assert payload["refusal"] is False
+    assert [item["citation_no"] for item in payload["citations"]] == [1, 2]
+    assert all(item["source_scope"] == "实时网页" for item in payload["citations"])
+
+
+def test_ask_without_web_search_keeps_existing_numbering():
+    """联网补充关闭时仍只用语料 + 参考数据，不调用 web 调研。"""
+
+    config = make_config()
+    db = FakeDb(config=config)
+    provider = FakeProvider(
+        config,
+        chat_responses={
+            "chat_ask": [
+                json.dumps(
+                    {
+                        "answer": "报告显示，2024届毕业生去向落实率为95.0%[1]。",
+                        "citation_numbers": [1],
+                        "no_evidence": False,
+                        "boundary_note": "",
+                    },
+                    ensure_ascii=False,
+                )
+            ]
+        },
+    )
+    db.search_rows = [_evidence_row(text="2024届毕业生去向落实率为95.0%。")]
+    job = make_claim({"question": "2024届毕业生去向落实率是多少？"}, kind="ask", owner_id=OWNER)
+    ctx = make_context(config=config, db=db, provider=provider, job=job)
+    payload = run_ask(ctx)
+    assert payload["refusal"] is False
+    assert "实时网页" not in [item.get("source_scope") for item in payload["citations"]]
+
+
 def test_assessment_graph_keeps_system_scores_and_ignores_ai_numbers():
     config = make_config()
     db = FakeDb(config=config)
