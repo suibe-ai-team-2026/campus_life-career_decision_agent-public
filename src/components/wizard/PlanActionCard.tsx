@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { Citation } from "@/lib/contracts/run";
 import type { PlanAction } from "@/lib/contracts/plan";
 import { PLAN_WINDOW_LABELS, PLAN_WINDOW_ORDER, windowLabel } from "@/lib/content";
-import { Badge, Button, Icon } from "@/components/ui/primitives";
+import { Badge, Button, Collapse, Icon } from "@/components/ui/primitives";
 
 const BASIS_LABELS: Record<PlanAction["effort"]["basis"], string> = {
   official_requirement: "官方要求",
@@ -158,15 +158,34 @@ export function ActionCard({
         </div>
       </header>
 
-      {effective.prerequisites.length > 0 ? (
-        <div className="action-prereq">
-          <span className="action-section-label">前置条件</span>
-          <ul>
-            {effective.prerequisites.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </div>
+      {effective.prerequisites.length > 0 || matchedEvidence.length > 0 ? (
+        <Collapse
+          summary={`前置条件与证据${matchedEvidence.length > 0 ? ` · ${matchedEvidence.length} 条引用` : ""}`}
+          defaultOpen={false}
+        >
+          {effective.prerequisites.length > 0 ? (
+            <div className="action-prereq">
+              <span className="action-section-label">前置条件</span>
+              <ul>
+                {effective.prerequisites.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+          {matchedEvidence.length > 0 ? (
+            <div className="action-evidence">
+              <span className="action-section-label">证据引用</span>
+              <div className="chip-row">
+                {matchedEvidence.map((citation) => (
+                  <span className="chip chip-ghost" key={`${citation.citation_no}-${citation.chunk_id}`}>
+                    [{citation.citation_no}] {citation.title}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ) : null}
+        </Collapse>
       ) : null}
 
       {hasOverrides ? (
@@ -180,19 +199,6 @@ export function ActionCard({
             {typeof overrides.note === "string" && overrides.note ? <li>备注：{overrides.note}</li> : null}
             {overrides.done !== undefined ? <li>{overrides.done ? "我的清单：已完成" : "我的清单：未完成"}</li> : null}
           </ul>
-        </div>
-      ) : null}
-
-      {matchedEvidence.length > 0 ? (
-        <div className="action-evidence">
-          <span className="action-section-label">证据引用</span>
-          <div className="chip-row">
-            {matchedEvidence.map((citation) => (
-              <span className="chip chip-ghost" key={`${citation.citation_no}-${citation.chunk_id}`}>
-                [{citation.citation_no}] {citation.title}
-              </span>
-            ))}
-          </div>
         </div>
       ) : null}
 
@@ -271,7 +277,7 @@ export function ActionCard({
             onChange={(event) => onToggleDone(event.target.checked)}
             disabled={pending}
           />
-          <span>标记完成（只影响我的清单，不修改机器字段与依据）</span>
+          <span>标记完成</span>
         </label>
         <div className="action-card-actions">
           <button
@@ -292,7 +298,7 @@ export function ActionCard({
           </Button>
         </div>
       </footer>
-      {pending ? <span className="action-pending-hint">正在提交 PATCH 调整并同步版本…</span> : null}
+      {pending ? <span className="action-pending-hint">正在同步…</span> : null}
     </article>
   );
 }

@@ -13,7 +13,7 @@ import {
   type WebSearchHit
 } from "@/lib/agent-trace";
 import { RUN_STAGE_LABELS, safeExternalUrl } from "@/lib/api-client";
-import { Icon, formatDate } from "@/components/ui/primitives";
+import { Collapse, Icon, formatDate } from "@/components/ui/primitives";
 
 export type AgentTraceProps = {
   /** Sorted trace events (see toTraceEvents in src/lib/agent-trace.ts). */
@@ -338,14 +338,7 @@ function StageRow({ event }: { event: TraceEvent }) {
     <div className="trace-stage-row">
       <span className="trace-stage-dot" aria-hidden="true" />
       <span className="trace-stage-label">{stageLabel(event.raw_type)}</span>
-      {progress !== null ? (
-        <>
-          <span className="trace-stage-meter" aria-hidden="true">
-            <span style={{ width: `${progress}%` }} />
-          </span>
-          <span className="trace-stage-value">{progress}%</span>
-        </>
-      ) : null}
+      {progress !== null ? <span className="trace-stage-value">{progress}%</span> : null}
     </div>
   );
 }
@@ -449,8 +442,17 @@ export function AgentTrace({
   const previousCountRef = useRef(0);
 
   const stats = useMemo(() => summarizeTrace(events), [events]);
-  const heading = title ?? (running ? "实时执行轨迹" : "执行轨迹");
   const statusLabel = running ? "运行中" : status ? stageLabel(status) : events.length > 0 ? "已结束" : "待开始";
+  const summaryDetail = running
+    ? events.length > 0
+      ? activityText(events)
+      : "正在唤醒执行环境"
+    : stats.steps > 0
+      ? `${stats.steps} 步`
+      : events.length > 0
+        ? `${events.length} 条活动`
+        : "暂无活动";
+  const summaryLabel = `${title ?? "运行过程"} · ${summaryDetail}`;
   const statLine = [
     stats.steps > 0 ? `${stats.steps} 个步骤` : null,
     stats.calls > 0 ? `${stats.calls} 次工具调用` : null,
@@ -479,27 +481,23 @@ export function AgentTrace({
   }
 
   return (
-    <section className={["agent-trace", running ? "is-running" : "is-finished", className ?? ""].filter(Boolean).join(" ")} aria-label={heading}>
-      <header className="agent-trace-head">
+    <Collapse
+      className={["agent-trace", className ?? ""].filter(Boolean).join(" ")}
+      summary={
         <span className="agent-trace-title">
           <span className={running ? "trace-pulse" : "trace-dot"} aria-hidden="true" />
-          <span className="agent-trace-title-text">{heading}</span>
+          <span>{summaryLabel}</span>
+          <span className={running ? "agent-trace-status is-live" : "agent-trace-status"}>{statusLabel}</span>
         </span>
-        <span className={running ? "agent-trace-status is-live" : "agent-trace-status"}>{statusLabel}</span>
-      </header>
-      {statLine ? <p className="agent-trace-stats">{statLine}</p> : null}
+      }
+      defaultOpen={false}
+    >
+      {statLine ? <p className="micro">{statLine}</p> : null}
       <div className="agent-trace-scroll" ref={scrollRef} onScroll={trackScroll} role="log" aria-live="polite" aria-relevant="additions">
         {events.length === 0 ? (
           <div className="agent-trace-empty">
             <span className={running ? "trace-pulse" : "trace-dot"} aria-hidden="true" />
             <p>{running ? emptyHint ?? "正在唤醒云端 worker，等待第一条活动…" : emptyHint ?? "本次运行没有留下可展示的活动记录。"}</p>
-            {running ? (
-              <div className="agent-trace-skeleton" aria-hidden="true">
-                <span className="skeleton-line" />
-                <span className="skeleton-line" />
-                <span className="skeleton-line skeleton-line-short" />
-              </div>
-            ) : null}
           </div>
         ) : (
           <ol className="trace-list">
@@ -515,9 +513,8 @@ export function AgentTrace({
         <footer className="agent-trace-foot">
           <span className="trace-pulse" aria-hidden="true" />
           <span>后台正在{activityText(events)}…</span>
-          <span className="agent-trace-foot-note">页面隐藏时轮询会自动退避</span>
         </footer>
       ) : null}
-    </section>
+    </Collapse>
   );
 }

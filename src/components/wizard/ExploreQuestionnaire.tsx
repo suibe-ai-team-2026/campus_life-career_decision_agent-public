@@ -4,13 +4,13 @@ import type { AssessmentQuestion, AssessmentSection } from "@/lib/contracts/cata
 import type { Answers, AnswerValue } from "@/lib/contracts/profile";
 import { ABILITY_DIMENSIONS, ABILITY_SIGNALS, ABILITY_TITLES } from "@/lib/assessment/scoring";
 import { ASSESSMENT, ASSESSMENT_SECTION_ESTIMATES, ASSESSMENT_SECTION_ORDER } from "@/lib/content";
-import { Badge } from "@/components/ui/primitives";
+import { Badge, Collapse } from "@/components/ui/primitives";
 
 /**
  * 16 项职业探索自我画像的作答区。
  *
  * 只负责渲染题目与收集作答，计分、持久化与结果解释都在上层：
- * - likert：1–5 单选（复用 `.option-row` / `.option` 样式）；
+ * - likert：1 到 5 单选（复用 `.option-row` / `.option` 样式）；
  * - rank：按点击顺序记录 string[]，再次点击取消，最多 `max_selections` 项；
  * - single：单选，`option.value` 可能是 number（准备度）或 string（工作方式）；
  * - text：可选经历补充，`{ text, tags }`，标签来自 `question.evidence_tags`。
@@ -314,14 +314,15 @@ export function ExploreQuestionnaire({ answers, onAnswer }: { answers: Answers; 
     <section className="question-section" aria-labelledby="questions-title">
       <div className="section-heading">
         <div className="section-heading-text">
-          <p className="eyebrow">职业探索自我画像 · 自编短版</p>
           <h2 id="questions-title">16 项必答，另有 1 项可选经历</h2>
-          <p className="section-description">
-            请按「目前的真实情况」作答，不需要猜测系统期待的答案。1–5 分表示程度递增；不确定的题目可以跳过，漏答会保留为「未知」，不按
-            0 分处理，也不补成中间值。
-          </p>
+          <p className="section-description">按真实情况作答；1 到 5 分表示程度递增，不确定可跳过。</p>
         </div>
       </div>
+      <Collapse summary="计分与漏答规则" tone="quiet">
+        <p className="panel-note">
+          漏答保留「未知」，不按 0 分处理，也不补成中间值；能力题是自评，有经历材料会单独标注，不把自评说成客观能力。
+        </p>
+      </Collapse>
 
       {ASSESSMENT_SECTION_ORDER.map((section) => {
         const dimension = ASSESSMENT.dimensions[section];
@@ -333,12 +334,14 @@ export function ExploreQuestionnaire({ answers, onAnswer }: { answers: Answers; 
           <fieldset className="question-group" key={section}>
             <legend>
               <span className="question-group-title">{dimension.title}</span>
-              <span className="question-group-desc">{dimension.description}</span>
               <span className="question-count">
                 已答 {answered} / {required.length}
               </span>
               <Badge tone="muted">{ASSESSMENT_SECTION_ESTIMATES[section]}</Badge>
             </legend>
+            <Collapse summary="维度说明" tone="quiet">
+              <p className="question-group-desc">{dimension.description}</p>
+            </Collapse>
             {questions.map((question) => {
               const index = REQUIRED_QUESTION_INDEX.get(question.question_id) ?? null;
               if (question.kind === "rank") {

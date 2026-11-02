@@ -22,7 +22,6 @@ import {
   pollRunUntilDone,
   profileFingerprint,
   runFailureMessage,
-  runStageLabel,
   saveProfile,
   submitRun,
   cancelRun,
@@ -48,11 +47,10 @@ import {
   type LocalProgressV1
 } from "@/lib/local-progress/store";
 import { toTraceEvents } from "@/lib/agent-trace";
-import { Badge, Button, Callout, EmptyState, Icon, formatDateTime } from "@/components/ui/primitives";
+import { Badge, Button, Callout, EmptyState, Icon, RunStatus, formatDateTime } from "@/components/ui/primitives";
 import { AgentTrace } from "@/components/run/AgentTrace";
 import { ResearchToggle } from "@/components/run/ResearchToggle";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import { StepHeader } from "./StepHeader";
 import { PlanDetail, pickCurrentVersion } from "./PlanDetail";
 import type { ActionOverrides } from "./PlanActionCard";
 
@@ -62,15 +60,14 @@ type Stage = "session" | "profile" | "submit" | "polling" | "loading";
 const PENDING_PLAN_RUN_KEY = "campus-pathway:pending-plan-run:v1";
 
 const STAGE_LABELS: Record<Stage, string> = {
-  session: "建立匿名会话",
-  profile: "保存画像快照",
-  submit: "提交规划任务",
-  polling: "等待生成",
-  loading: "加载方案详情"
+  session: "正在唤醒执行环境",
+  profile: "正在保存画像",
+  submit: "正在提交规划任务",
+  polling: "正在生成方案",
+  loading: "正在整理依据"
 };
 
-const RESEARCH_TOGGLE_DESCRIPTION =
-  "开启后，重新生成方案时会访问外部网站检索实时网页（就业报告、招聘与行业信息），结果未经核验，只作补充线索；已生成的方案与规则数字不会被改写。";
+const RESEARCH_TOGGLE_DESCRIPTION = "会检索外部网页，结果未经核验，只作补充线索。";
 
 type PendingPlanRun = { run_id: string; direction_id: DirectionId; started_at: string };
 
@@ -717,72 +714,41 @@ export function PlanStep() {
 
   function renderGenerating() {
     return (
-      <section className="panel run-panel" aria-labelledby="run-title">
-        <div className="panel-head">
-          <div>
-            <p className="eyebrow">云端生成中</p>
-            <h2 id="run-title">{STAGE_LABELS[stage]}</h2>
-          </div>
-          <Badge tone="accent">{run ? runStageLabel(run.status) : STAGE_LABELS[stage]}</Badge>
-        </div>
-        <AgentTrace
-          events={traceEvents}
-          running
-          status={run?.status ?? null}
-          emptyHint={
-            runWebSupplement
-              ? "正在建立会话并唤醒云端 worker（首次约 30–90 秒）；本次已开启联网补充调研，会检索实时网页…"
-              : "正在建立会话并唤醒云端 worker（首次约 30–90 秒），等待第一条活动…"
-          }
-        />
-        <div className="run-meta">
-          <span>
-            <Icon name="clock" size={13} /> 已等待 {elapsed} 秒
-          </span>
-          <span>
-            <Icon name="globe" size={13} /> 联网补充调研：{runWebSupplement ? "开启" : "关闭"}
-          </span>
-          <span>页面隐藏时轮询会自动退避，避免浪费资源。</span>
+      <section className="panel stack" aria-label="方案生成状态">
+        <div className="row">
+          <RunStatus state="running" label={STAGE_LABELS[stage]} detail={`${elapsed} 秒`} />
           <Button variant="ghost" size="sm" onClick={handleStopWaiting}>
             停止等待
           </Button>
         </div>
-        <p className="panel-note">
-          流程：建立匿名会话 → 保存画像快照（服务端会重新计分）→ 提交 kind=plan 任务 → 轮询 GET /api/runs/:id 与 events。
-          轨迹会保留工具调用与网页阅读记录；任务失败不会展示虚构方案。
+        <p className="micro">
+          联网补充调研：{runWebSupplement ? "开启" : "关闭"}
+          {runWebSupplement ? " · 结果未核验" : ""}
         </p>
+        <AgentTrace
+          events={traceEvents}
+          running
+          status={run?.status ?? null}
+          emptyHint="正在唤醒执行环境，首次约 30 到 90 秒…"
+        />
       </section>
     );
   }
 
   function renderFinishedTrace() {
     if (events.length === 0) return null;
-    return (
-      <details className="message-trace plan-trace-details">
-        <summary>
-          <Icon name="activity" size={13} />
-          执行轨迹
-          <span className="message-trace-meta">
-            {run ? runStageLabel(run.status) : "已结束"} · {events.length} 条活动
-          </span>
-        </summary>
-        <AgentTrace events={traceEvents} running={false} status={run?.status ?? null} />
-      </details>
-    );
+    return <AgentTrace events={traceEvents} running={false} status={run?.status ?? null} />;
   }
 
   function renderLocalMode() {
     return (
       <div className="plan-state-stack">
         <Callout tone="warn" title="本地演示模式：云端生成未启用">
-          <p>
-            当前未配置 NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY，页面不会调用云端，也不会伪造行动方案。你仍然可以完成 Step 1–3 的本地进度，并查看导出空态。
-          </p>
+          <p className="micro">可完成第 1 到 3 步并查看导出空态，不会伪造方案。</p>
         </Callout>
         <section className="panel" aria-labelledby="local-plan-title">
           <div className="panel-head">
             <div>
-              <p className="eyebrow">本地已保存内容</p>
               <h2 id="local-plan-title">本设备上的画像与暂定方向</h2>
             </div>
             <Badge tone="muted">仅本地</Badge>
@@ -826,17 +792,6 @@ export function PlanStep() {
           ) : (
             <EmptyState compact title="还没有本地进度" description="先完成第 1 步自我探索，再回到这里。" />
           )}
-          <div className="local-next-steps">
-            <p className="panel-title">
-              <Icon name="database" size={15} /> 启用云端后会做什么
-            </p>
-            <ul className="boundary-list">
-              <li>建立匿名会话（不需要注册或邮箱），只保存本次规划所需的最少资料。</li>
-              <li>服务端用同版本问卷重新计分，避免前端被篡改；不信任浏览器提交的分数。</li>
-              <li>提交 kind=plan 任务，由规则引擎与 worker 生成行动、课程、学分与证据引用。</li>
-              <li>轮询已提交的任务；失败时展示错误码与本地内容，不伪造方案。</li>
-            </ul>
-          </div>
           <div className="local-actions">
             <Button variant="secondary" size="md" onClick={() => router.push("/choice")}>
               回去修改暂定方向
@@ -854,8 +809,7 @@ export function PlanStep() {
           <section aria-labelledby="cached-plan-title">
             <div className="panel-head">
               <div>
-                <p className="eyebrow">本设备缓存</p>
-                <h2 id="cached-plan-title">上次成功加载的方案（云端不可用）</h2>
+                <h2 id="cached-plan-title">上次缓存的方案</h2>
               </div>
               <Badge tone="warn">缓存 {formatDateTime(cache.fetched_at)}</Badge>
             </div>
@@ -902,7 +856,6 @@ export function PlanStep() {
       <section className="panel blocked-panel" aria-labelledby="blocked-title">
         <div className="panel-head">
           <div>
-            <p className="eyebrow">还不能生成方案</p>
             <h2 id="blocked-title">先补齐这几项</h2>
           </div>
           <Badge tone="warn">{missing.length} 项待补</Badge>
@@ -911,7 +864,6 @@ export function PlanStep() {
           compact
           icon="flag"
           title={missing.length > 0 ? `还缺：${missing.join(" / ")}` : "正在准备…"}
-          description="行动方案需要完整的画像与暂定方向。补齐后回到本页，系统会在云端可用时自动生成。"
         />
         <div className="local-actions">
           <Button variant="primary" size="md" onClick={() => router.push("/explore")}>
@@ -932,10 +884,9 @@ export function PlanStep() {
   function renderError() {
     return (
       <div className="plan-state-stack">
-        <Callout tone="danger" title="生成没有完成，也没有伪造方案" icon="alert">
+        <Callout tone="danger" title="生成失败" icon="alert">
           <p>{error?.message ?? "未知错误"}</p>
-          {error?.code ? <p className="run-error-code">错误码：{error.code}（已转换为可读说明）</p> : null}
-          <p>你可以重试、回到暂定方向检查资料，或稍后刷新页面查看任务是否已在服务端完成。</p>
+          {error?.code ? <p className="run-error-code">错误码：{error.code}</p> : null}
         </Callout>
         {renderFinishedTrace()}
         <ResearchToggle
@@ -987,69 +938,42 @@ export function PlanStep() {
   }
 
   return (
-    <div className="step-page">
-      <StepHeader
-        index={4}
-        title="把暂定方向落成可调整的行动方案"
-        description={
-          <>
-            方案由<strong>规则与证据</strong>生成：行动按当前学期 / 下学期 / 更晚分组，课程、竞赛、学分与缺口分别展示。你可以勾选完成、修改时间与工时，这些「我的调整」会与机器字段分开显示。
-          </>
-        }
-        actions={
-          <>
-            <Button variant="ghost" size="md" onClick={() => router.push("/export")}>
-              跳过这一步
+    <div className="screen">
+      <header className="screen-head">
+        <div>
+          <h1>第 4 步 · 行动方案</h1>
+          <p className="screen-sub">按学期分组的可调整行动；勾选、改时间与工时都会留存。</p>
+        </div>
+        <div className="row">
+          <Button variant="ghost" size="md" onClick={() => router.push("/export")}>
+            跳过这一步
+          </Button>
+          {phase === "ready" && progress?.plan_id ? (
+            <Link href="/export" className="btn btn-primary btn-md">
+              <Icon name="download" size={15} />
+              去导出 PDF
+            </Link>
+          ) : (
+            <Button variant="primary" size="md" disabled title="生成方案后可导出">
+              <Icon name="download" size={15} />
+              去导出 PDF
             </Button>
-            {phase === "ready" && progress?.plan_id ? (
-              <Link href="/export" className="btn btn-primary btn-md">
-                <Icon name="download" size={15} />
-                去导出 PDF
-              </Link>
-            ) : (
-              <Button variant="primary" size="md" disabled title="生成方案后可导出">
-                <Icon name="download" size={15} />
-                去导出 PDF
-              </Button>
-            )}
-          </>
-        }
-        meta={
-          <span className="step-meta-row">
-            <span className="step-meta-item">
-              <Icon name="flag" size={13} /> {directionInfo ? `暂定：${directionInfo.short_title}` : "尚未暂定方向"}
-            </span>
-            {backupDirectionInfo ? (
-              <span className="step-meta-item">
-                <Icon name="flag" size={13} /> 备选：{backupDirectionInfo.short_title}
-              </span>
-            ) : null}
-            <span className="step-meta-item">
-              <Icon name="database" size={13} /> {cloud ? "云端生成已启用" : "本地演示模式"}
-            </span>
-            {phase === "ready" && result ? (
-              <span className="step-meta-item">
-                <Icon name="list" size={13} /> {result.actions.length} 项行动 · 规则 {result.rules_version || "未提供"}
-              </span>
-            ) : null}
-          </span>
-        }
-      />
+          )}
+        </div>
+      </header>
+
+      <p className="micro">
+        {directionInfo ? `暂定：${directionInfo.short_title}` : "尚未暂定方向"}
+        {backupDirectionInfo ? ` · 备选：${backupDirectionInfo.short_title}` : ""}
+        {` · ${cloud ? "云端生成" : "本地演示"}`}
+        {phase === "ready" && result ? ` · ${result.actions.length} 项行动` : ""}
+      </p>
 
       {notice ? <p className="inline-note">{notice}</p> : null}
 
       {phase === "boot" ? (
-        <section className="panel run-panel" aria-live="polite">
-          <div className="panel-head">
-            <div>
-              <p className="eyebrow">准备中</p>
-              <h2>正在读取本设备的进度与方案</h2>
-            </div>
-          </div>
-          <div className="skeleton-line" />
-          <div className="skeleton-line" />
-          <div className="skeleton-line skeleton-line-short" />
-          <p className="panel-note">读取完成后会显示已保存内容或云端生成状态；不会自动编造方案。</p>
+        <section className="panel" aria-live="polite">
+          <RunStatus state="running" label="正在读取本设备的进度与方案" />
         </section>
       ) : null}
       {phase === "generating" ? renderGenerating() : null}
@@ -1059,6 +983,15 @@ export function PlanStep() {
 
       {phase === "ready" && result ? (
         <div className="plan-ready">
+          <RunStatus
+            state="done"
+            label={
+              <>
+                <span aria-hidden="true">✓ </span>方案已生成
+              </>
+            }
+            detail={`${result.actions.length} 项行动 · 规则 ${result.rules_version || "未提供"}`}
+          />
           <ResearchToggle
             checked={webSupplement}
             onChange={setWebSupplement}
@@ -1069,8 +1002,8 @@ export function PlanStep() {
           />
           <div className="plan-toolbar">
             <div className="plan-toolbar-group">
-              <label className="plan-toolbar-label" htmlFor="plan-direction-switch">
-                <Icon name="compass" size={14} /> 当前方向
+              <label className="micro" htmlFor="plan-direction-switch">
+                当前方向
               </label>
               <select
                 id="plan-direction-switch"
@@ -1127,8 +1060,7 @@ export function PlanStep() {
 
           <div className="step-footer-bar">
             <div className="step-footer-note">
-              <Icon name="info" size={14} />
-              <span>方案已保存在本设备；云端生成的方案版本属于匿名会话，不会因为刷新页面而丢失。</span>
+              <span className="micro">方案已保存在本设备，刷新不会丢失。</span>
             </div>
             <div className="step-footer-actions">
               <Button variant="secondary" size="md" onClick={() => router.push("/library")}>
@@ -1146,14 +1078,14 @@ export function PlanStep() {
 
       {phase === "ready" && viewIsCached && !cloud ? (
         <Callout tone="warn" title="云端不可用">
-          <p>当前展示的是本设备缓存；勾选与调整无法提交到云端。恢复云端后可刷新方案再提交。</p>
+          <p className="micro">当前是本设备缓存，调整无法提交到云端。</p>
         </Callout>
       ) : null}
 
       <ConfirmDialog
         open={switchTarget !== null}
         title="切换方向并重新生成？"
-        description="切换后需要为新方向生成新方案。旧方向的方案版本会保留在服务端历史中并标记 stale，本设备不再把它作为当前方案。"
+        description="旧方向的方案版本会保留并标记 stale。"
         confirmLabel="切换并生成"
         tone="primary"
         onConfirm={confirmSwitchDirection}
@@ -1165,7 +1097,6 @@ export function PlanStep() {
             <p className="reset-scope-value">{directionInfo.title}</p>
             <p className="reset-scope-heading">切换到</p>
             <p className="reset-scope-value">{getDirection(switchTarget)?.title}</p>
-            <p className="panel-note">本设备会清除与旧方案关联的导出记录引用；旧版本不会删除。</p>
           </div>
         ) : null}
       </ConfirmDialog>
@@ -1173,19 +1104,15 @@ export function PlanStep() {
       <ConfirmDialog
         open={regenerateOpen}
         title="重新生成方案？"
-        description="这会提交一次新的 plan 任务并创建一个新的方案版本；旧版本会保留并标记 stale。生成会消耗云端模型与预算额度。"
+        description="会创建新版本；旧版本保留并标记 stale。"
         confirmLabel="重新生成"
         tone="primary"
         onConfirm={confirmRegenerate}
         onCancel={() => setRegenerateOpen(false)}
-      >
-        <p className="panel-note">
-          如果你只想核对已有方案，建议先点「刷新方案」；只有资料或方向变化时才需要重新生成。
-        </p>
-      </ConfirmDialog>
+      />
 
       {cacheHydrated && !cloud && cachedPlanAvailable && phase !== "local" ? (
-        <p className="panel-note">本设备存有一份缓存方案，可在「本地演示模式」区块查看。</p>
+        <p className="micro">本设备存有一份缓存方案，可在「本地演示模式」区块查看。</p>
       ) : null}
     </div>
   );

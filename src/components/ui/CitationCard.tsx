@@ -73,7 +73,7 @@ export function CitationCard({ citation, dense = false }: { citation: Citation; 
         <span className="citation-no">[{citation.citation_no}]</span>
         <div className="citation-title-block">
           <p className="citation-title">{citation.title}</p>
-          <p className="citation-meta">
+          <p className="citation-meta micro">
             {citation.source_scope ? <span>{citation.source_scope}</span> : null}
             <span>{locatorSummary(citation.locator)}</span>
           </p>
@@ -109,13 +109,8 @@ export function CitationCard({ citation, dense = false }: { citation: Citation; 
           ) : null}
         </div>
       ) : (
-        <p className="citation-empty">该引用未提供摘录，请以来源条目为准。</p>
+        <p className="citation-empty micro">未提供摘录，以来源条目为准。</p>
       )}
-      <p className="citation-footnote">
-        {webUrl
-          ? "引用编号与定位由服务端分配；实时网页引用未经核验，请以官方来源为准。"
-          : "引用编号与定位由服务端分配；内部资料引用不拼接外部链接。"}
-      </p>
     </article>
   );
 }
@@ -123,9 +118,9 @@ export function CitationCard({ citation, dense = false }: { citation: Citation; 
 export function CitationList({ citations, dense }: { citations: Citation[]; dense?: boolean }) {
   if (citations.length === 0) {
     return (
-      <div className="citation-list-empty">
+      <div className="citation-list-empty micro">
         <Icon name="info" size={16} />
-        <span>本次结果没有返回引用条目；没有证据支持的结论不会被展示为事实。</span>
+        <span>没有返回引用条目。</span>
       </div>
     );
   }
