@@ -27,6 +27,7 @@ from ..models import (
     PlanAnalysis,
     PlanEvidenceCompetitionHint,
     PlanEvidenceCourseHint,
+    PlanGap,
     PlanInput,
     PlanResult,
     citation_payload,
@@ -157,6 +158,23 @@ def build_plan_graph(ctx: JobContext):
         if result.status == "unsupported_direction":
             raise UnsupportedDirection("规则引擎不支持该方向")
         blueprint = build_planning_blueprint(profile, direction_id)
+        # 参考数据已经给出课程/竞赛/资源线索时，不再把「数据未接入」当成缺口；
+        # 改为一条明确的「参考线索待官方核验」说明，避免用户误以为没有资料。
+        gaps = list(result.gaps)
+        has_leads = bool(blueprint.course_leads or blueprint.competition_leads or blueprint.campus_resources)
+        if blueprint.course_leads:
+            gaps = [gap for gap in gaps if gap.code != "curriculum_unavailable"]
+        if blueprint.competition_leads:
+            gaps = [gap for gap in gaps if gap.code != "competitions_unavailable"]
+        if blueprint.campus_resources:
+            gaps = [gap for gap in gaps if gap.code != "direction_requirements_unavailable"]
+        if has_leads:
+            gaps.append(
+                PlanGap(
+                    code="reference_leads_pending_verification",
+                    message="课程、竞赛与校内资源为团队参考线索（培养方案/竞赛清单）；学分、先修、报名资格与加分折算以教务处、团委当年文件为准。",
+                )
+            )
         result = result.model_copy(
             update={
                 "pathway": blueprint.pathway,
@@ -165,6 +183,7 @@ def build_plan_graph(ctx: JobContext):
                 "campus_resources": list(blueprint.campus_resources),
                 "campus_facts": list(blueprint.campus_facts),
                 "roadmap": list(blueprint.roadmap),
+                "gaps": gaps,
             }
         )
         payload = plan_result_payload(result)
