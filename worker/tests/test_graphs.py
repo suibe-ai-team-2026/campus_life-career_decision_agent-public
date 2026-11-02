@@ -542,7 +542,10 @@ def test_plan_graph_without_verified_rule_data_returns_data_unavailable():
     assert result["status"] == "data_unavailable"
     assert result["credits"] is None
     codes = {gap["code"] for gap in result["gaps"]}
-    assert {"curriculum_unavailable", "credit_rules_unavailable", "competitions_unavailable"} <= codes
+    assert "credit_rules_unavailable" in codes
+    assert "reference_leads_pending_verification" in codes
+    assert "curriculum_unavailable" not in codes
+    assert "competitions_unavailable" not in codes
     assert result["courses"] == [] and result["competitions"] == []
     assert all(action["status"] == "pending_verification" for action in result["actions"])
     assert "回退" in (result["explanation"] or "")
