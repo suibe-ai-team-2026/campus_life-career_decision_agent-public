@@ -34,6 +34,11 @@ const WARNING_RULES: WarningRule[] = [
     render: () => "资料边界说明里出现了证据中没有的数字，已丢弃该说明。"
   },
   {
+    pattern: /^web_research_fallback:(.+)$/,
+    render: () =>
+      "本次联网补充调研未完成，方案仅使用已载入资料与规则事实；方案事实未改变。"
+  },
+  {
     pattern: /^plan_id_not_found_created_new$/,
     render: () => "本地记录里的旧方案已不存在，已改为新建方案版本；旧方案不会恢复。"
   },

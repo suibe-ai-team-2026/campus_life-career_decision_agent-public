@@ -21,7 +21,7 @@ from ..errors import BadRequest, ModelOutputInvalid, OutputValidationError, Work
 from ..models import AskInput, AskRunResult, Citation
 from ..prompts import career as prompts
 from ..prompts import validate as prompt_validate
-from .common import JobContext, generate_validated_json, profile_summary
+from .common import JobContext, generate_validated_json, next_citation_no, profile_summary
 from ..agent.research import run_web_research
 from .. import reference
 
@@ -83,22 +83,6 @@ def numbered_reference_hits(
             )
         )
     return evidence, citations
-
-
-def _next_citation_no(evidence: list[dict[str, Any]]) -> int:
-    """下一条证据的引用编号：已有最大编号 + 1。
-
-    语料证据通常从 1 连续编号，但参考数据/网页证据必须接在它们之后；
-    用 max+1 而不是 len+1，避免将来证据编号不连续时重复。
-    """
-
-    numbers: list[int] = []
-    for item in evidence:
-        try:
-            numbers.append(int(item.get("citation_no") or 0))
-        except (TypeError, ValueError):
-            continue
-    return max(numbers, default=0) + 1
 
 
 def build_ask_graph(ctx: JobContext):
@@ -167,7 +151,7 @@ def build_ask_graph(ctx: JobContext):
         citations: list[Any] = list(retrieval.citations)
         if reference_hits:
             reference_evidence, reference_citations = numbered_reference_hits(
-                reference_hits, start_no=_next_citation_no(evidence)
+                reference_hits, start_no=next_citation_no(evidence)
             )
             evidence.extend(reference_evidence)
             citations.extend(reference_citations)
@@ -185,7 +169,7 @@ def build_ask_graph(ctx: JobContext):
                     ctx,
                     question=question,
                     site_hint=None,
-                    numbering_start=_next_citation_no(evidence),
+                    numbering_start=next_citation_no(evidence),
                 )
             except WorkerError as exc:
                 ctx.logger.warning("web_research_failed code=%s", exc.code)

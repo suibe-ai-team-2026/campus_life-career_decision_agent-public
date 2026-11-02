@@ -77,6 +77,7 @@ const ERROR_MESSAGES: Record<ClientErrorCode, string> = {
   model_quota_exceeded: "模型额度已用尽，请稍后再试",
   model_timeout: "模型响应超时，请稍后重试",
   model_unavailable: "云端生成暂不可用，请稍后重试或查看本地已保存内容",
+  lease_expired: "任务执行超时或中断，请重新发起",
   bad_request: "请求内容不合法，请检查后重试",
   internal_error: "服务暂时不可用，请稍后重试",
   not_configured: "云端生成未启用：当前为本地演示模式",

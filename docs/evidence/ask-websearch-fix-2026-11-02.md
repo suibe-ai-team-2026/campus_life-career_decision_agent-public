@@ -107,3 +107,49 @@ cd .. && npm run check
 线上复测（匿名会话需自行创建）：`POST /api/runs` 传
 `{"kind":"ask","question":"…","web_search":true}`，轮询 `/api/runs/{id}`，
 确认 `status=succeeded` 且 `citations[].source_scope` 含「实时网页」。
+
+## 7. 相关风险修复（第二轮）
+
+第一轮修复后，同一链路上还有两处会把「可选联网增强」的失败放大成用户可见的
+通用错误/任务失败，一并修掉：
+
+### 7.1 plan 的联网调研失败会直接 fail job
+
+`worker/app/graphs/plan.py` 的 `explain_node` 直接调用 `run_web_research`，模型超时/
+配额/鉴权/预算/DB 错误不在解释生成的 try 内，会冒泡成任务失败。
+
+修复：包 `try/except WorkerError`，失败时降级为仅用本地证据，`warnings` 写入
+`web_research_fallback:<code>`，`explanation` 追加「资料边界：联网补充调研暂不可用…」；
+`src/lib/plan-display.ts` 新增该 warning 的中文翻译。即使联网 0 来源，也把
+「未找到可用的实时网页证据」写入资料边界。新增测试
+`test_plan_graph_web_research_failure_degrades`。
+
+### 7.2 DB 租约回收码 `lease_expired` 仍显示「服务暂时不可用」
+
+DB 的 `app_reap_expired_leases` 会把 `app_runs.error_code` 写成 `lease_expired`，
+但前端 `ERROR_CODES` 没有该码，`runFailureMessage` 会回退到 `internal_error` 文案。
+
+修复：`ERROR_CODES` 增加 `lease_expired`（HTTP 409）；`api-client.ts`
+增加「任务执行超时或中断，请重新发起」；`http/rpc.ts` 的 `mapDbError` 映射该码；
+`worker/app/errors.py` 的码表对齐；`docs/architecture/contracts.md` 同步。
+新增 `tests/unit/error-messages.test.ts` 覆盖已知/未知/取消三类文案。
+
+### 7.3 引用编号工具统一
+
+`next_citation_no`（`max(citation_no)+1`）从 `ask.py` 移到
+`worker/app/graphs/common.py`，ask 与 plan 共用，避免两处各自用 `len+1` 漂移。
+
+### 7.4 第二轮验证
+
+- worker：`pytest -q` → **359 passed**；
+- 前端单测：`npx vitest run` → **100 passed（13 files）**；
+- `npm run check`（typecheck + lint + vitest + production build）→ exit 0；
+- 线上（部署第二轮代码后，真实 worker）：
+  - ask + 联网补充 `851f7c81-8bbf-469b-bd89-d0f5b687a53d` → succeeded，32 条引用，编号连续，含实时网页；
+  - plan + 联网补充 `7a156978-cdce-49cf-845b-0308c539d8e7` → succeeded，38 条证据（含 28 条实时网页），
+    warnings 无 `web_research_fallback`（测试画像触发的 `data_unavailable` 是预期状态，不是失败）；
+  - 镜像重建 + 容器重建后 ask + 联网补充 `dc040b6f-0e1a-4955-9e11-0e8f293da4d0` → succeeded，29 条引用，编号连续。
+
+部署：同步 `ask.py` / `plan.py` / `common.py` 到 VM 源码目录，重建镜像并
+`docker compose up -d` 重建容器；容器内三个文件 sha256 与仓库工作区一致
+（`484baa46…` / `c3fd153f…` / `31890da2…`），容器 healthy。

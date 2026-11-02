@@ -177,6 +177,48 @@ def test_plan_graph_falls_back_when_model_unavailable():
     assert db.saved_plans
 
 
+def test_plan_graph_web_research_failure_degrades(monkeypatch):
+    """联网调研失败时方案仍发布，并写入可读 warning 与资料边界。"""
+
+    import app.graphs.plan as plan_module
+    from app.errors import ModelTimeout
+
+    def failing_research(ctx, *, question, site_hint=None, numbering_start=1):
+        raise ModelTimeout("web research timeout")
+
+    monkeypatch.setattr(plan_module, "run_web_research", failing_research)
+
+    config = make_config()
+    provider = FakeProvider(
+        config,
+        chat_responses={
+            "chat_plan_explain": [
+                json.dumps(
+                    {
+                        "explanation": "根据已核验资料补强国际贸易实务能力[1]。",
+                        "cited_action_ids": [],
+                        "citation_numbers": [1],
+                        "boundary_note": "",
+                    },
+                    ensure_ascii=False,
+                )
+            ]
+        },
+    )
+    ctx, db, _emits = _plan_context(provider)
+    ctx.job.input["web_search"] = True
+
+    payload = run_plan(ctx)
+
+    result = payload["result"]
+    assert result["status"] in {"ok", "partial"}
+    assert db.saved_plans
+    assert any(
+        warning == "web_research_fallback:model_timeout" for warning in result["warnings"]
+    )
+    assert "联网补充调研暂不可用" in (result["explanation"] or "")
+
+
 def test_plan_graph_creates_new_plan_when_requested_plan_id_is_missing():
     """本地缓存里的 plan_id 已不属于当前会话时，不应把用户卡死。"""
 

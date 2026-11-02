@@ -1,7 +1,7 @@
 # BFF / worker 契约
 
 统一响应：成功 `{ request_id, data }`；失败 `{ error: { code, message, request_id, details? } }`。
-错误码见 `src/lib/contracts/common.ts`；`authentication_required=401`、`resource_not_found=404`、`version_conflict|idempotency_conflict=409`、`upload_too_large=413`、`invalid_profile|unsupported_direction=422`、`rate_limited=429`。
+错误码见 `src/lib/contracts/common.ts`；`authentication_required=401`、`resource_not_found=404`、`version_conflict|idempotency_conflict|lease_expired=409`、`upload_too_large=413`、`invalid_profile|unsupported_direction=422`、`rate_limited=429`。`lease_expired` 只由 DB 租约回收函数写入 `app_runs.error_code`（worker 不产生），前端显示「任务执行超时或中断，请重新发起」。
 
 ## 端点
 

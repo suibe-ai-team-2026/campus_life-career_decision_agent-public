@@ -50,6 +50,12 @@ describe("formatPlanWarning", () => {
     expect(formatPlanWarning("plan_id_not_found_created_new")).toContain("已改为新建方案版本");
   });
 
+  it("联网补充调研失败时给出降级说明，不显示机器码", () => {
+    const text = formatPlanWarning("web_research_fallback:model_timeout");
+    expect(text).toContain("联网补充调研未完成");
+    expect(text).not.toContain("model_timeout");
+  });
+
   it("用户上传资料并入证据时不再原样显示机器码", () => {
     const text = formatPlanWarning("user_sources_included:1");
     expect(text).toContain("你上传的 1 条资料");
