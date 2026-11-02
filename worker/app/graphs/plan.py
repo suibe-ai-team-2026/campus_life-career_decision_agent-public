@@ -182,6 +182,7 @@ def build_plan_graph(ctx: JobContext):
                 "competition_leads": list(blueprint.competition_leads),
                 "campus_resources": list(blueprint.campus_resources),
                 "campus_facts": list(blueprint.campus_facts),
+                "industry_leads": list(blueprint.industry_leads),
                 "roadmap": list(blueprint.roadmap),
                 "gaps": gaps,
             }

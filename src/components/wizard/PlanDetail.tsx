@@ -440,6 +440,11 @@ export function PlanDetail({
             empty="当前专业尚未配置课程线索；请在教务处培养方案中检索专业与年级。"
           />
           <LeadCards
+            title="方向与行业（招聘快照）"
+            leads={result.industry_leads}
+            empty="当前方向没有招聘快照；可先看学校就业质量报告或招聘平台的最新公告。"
+          />
+          <LeadCards
             title="上经贸就业数据（口径与来源）"
             leads={result.campus_facts}
             empty="当前学校没有可展示的就业数据卡；可先看学校就业质量年度报告。"

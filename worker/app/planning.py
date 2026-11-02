@@ -462,6 +462,30 @@ def build_campus_facts(profile: Mapping[str, Any]) -> list[PlanLead]:
     return leads
 
 
+def build_industry_leads(profile: Mapping[str, Any], direction_id: str) -> list[PlanLead]:
+    leads: list[PlanLead] = []
+    for index, item in enumerate(reference.industry_leads(profile, direction_id)):
+        title = str(item.get("title") or "").strip()
+        if not title:
+            continue
+        status = str(item.get("verification") or "external_reference")
+        url = _url(item.get("source_url"))
+        leads.append(
+            PlanLead(
+                lead_id=f"industry-lead-{index + 1}",
+                title=title,
+                description=str(item.get("description") or ""),
+                why=str(item.get("why") or "招聘广告快照，不代表录用结果。"),
+                skill_tags=[],
+                verification_status=status,  # type: ignore[arg-type]
+                source_label=str(item.get("source_title") or "招聘快照"),
+                source_url=url,
+                freshness=_lead_freshness(status, url, "招聘快照按季度复核"),  # type: ignore[arg-type]
+            )
+        )
+    return leads
+
+
 def build_campus_resources(profile: Mapping[str, Any]) -> list[PlanLead]:
     leads: list[PlanLead] = []
     for index, item in enumerate(reference.resources()):
@@ -654,6 +678,7 @@ class PlanningBlueprint:
     competition_leads: tuple[PlanLead, ...]
     campus_resources: tuple[PlanLead, ...]
     campus_facts: tuple[PlanLead, ...]
+    industry_leads: tuple[PlanLead, ...]
     roadmap: tuple[PlanRoadmapStage, ...]
 
 
@@ -666,5 +691,6 @@ def build_planning_blueprint(
         competition_leads=tuple(build_competition_leads(direction_id, profile)),
         campus_resources=tuple(build_campus_resources(profile)),
         campus_facts=tuple(build_campus_facts(profile)),
+        industry_leads=tuple(build_industry_leads(profile, direction_id)),
         roadmap=tuple(build_roadmap(direction_id, profile)),
     )
