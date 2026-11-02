@@ -1,0 +1,693 @@
+{
+ "schema_version": "career-reference-major-map-v1",
+ "generated_at": "2026-11-02",
+ "majors": [
+  {
+   "major_key": "intl_econ_trade",
+   "major_name": "国际经济与贸易",
+   "aliases": [
+    "国贸",
+    "国际经济与贸易（全英语）",
+    "international trade",
+    "国际经贸"
+   ],
+   "school_id": "suibe",
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business"
+   ],
+   "competition_ids": [
+    "cn-mkt-survey",
+    "cn-business-elite",
+    "cn-pocib",
+    "cn-ocale",
+    "cn-3chuang",
+    "cn-fwwb",
+    "cn-xcb",
+    "cn-tzb",
+    "cn-cy-innovation",
+    "cn-gjcxcy",
+    "cn-zgs-career",
+    "cn-neccs",
+    "cn-uchallenge",
+    "cn-catti-cup"
+   ],
+   "note": ""
+  },
+  {
+   "major_key": "intl_business",
+   "major_name": "国际商务",
+   "aliases": [
+    "国际商务（MIB）",
+    "international business"
+   ],
+   "school_id": "suibe",
+   "direction_ids": [
+    "cross_border_business",
+    "trade_supply_chain"
+   ],
+   "competition_ids": [
+    "cn-mkt-survey",
+    "cn-business-elite",
+    "cn-pocib",
+    "cn-ocale",
+    "cn-3chuang",
+    "cn-fwwb",
+    "cn-xcb",
+    "cn-tzb",
+    "cn-cy-innovation",
+    "cn-gjcxcy",
+    "cn-zgs-career",
+    "cn-neccs",
+    "cn-uchallenge",
+    "cn-catti-cup"
+   ],
+   "note": ""
+  },
+  {
+   "major_key": "economics",
+   "major_name": "经济学",
+   "aliases": [
+    "经济学（国际投资）",
+    "economics"
+   ],
+   "school_id": "suibe",
+   "direction_ids": [
+    "finance_accounting",
+    "further_study"
+   ],
+   "competition_ids": [
+    "cn-eastmoney-finance",
+    "cn-cffex-cup",
+    "cn-audit-fst",
+    "cn-mkt-survey",
+    "cn-tjjmds",
+    "cn-business-elite",
+    "cn-3chuang",
+    "cn-tzb"
+   ],
+   "note": ""
+  },
+  {
+   "major_key": "finance",
+   "major_name": "金融学",
+   "aliases": [
+    "金融",
+    "finance",
+    "金融学（全英语）"
+   ],
+   "school_id": "suibe",
+   "direction_ids": [
+    "finance_accounting"
+   ],
+   "competition_ids": [
+    "cn-eastmoney-finance",
+    "cn-cffex-cup",
+    "cn-audit-fst",
+    "cn-mkt-survey",
+    "cn-tjjmds",
+    "cn-business-elite",
+    "cn-3chuang"
+   ],
+   "note": ""
+  },
+  {
+   "major_key": "financial_engineering",
+   "major_name": "金融工程",
+   "aliases": [
+    "金工",
+    "financial engineering"
+   ],
+   "school_id": "suibe",
+   "direction_ids": [
+    "finance_accounting",
+    "data_business"
+   ],
+   "competition_ids": [
+    "cn-eastmoney-finance",
+    "cn-cffex-cup",
+    "cn-audit-fst",
+    "cn-mkt-survey",
+    "cn-tjjmds",
+    "cn-business-elite",
+    "cn-3chuang",
+    "cn-mcm",
+    "cn-lanqiao"
+   ],
+   "note": ""
+  },
+  {
+   "major_key": "accounting",
+   "major_name": "会计学",
+   "aliases": [
+    "会计",
+    "accounting",
+    "会计学（ACCA）",
+    "会计学（国际会计）"
+   ],
+   "school_id": "suibe",
+   "direction_ids": [
+    "finance_accounting"
+   ],
+   "competition_ids": [
+    "cn-eastmoney-finance",
+    "cn-cffex-cup",
+    "cn-audit-fst",
+    "cn-mkt-survey",
+    "cn-tjjmds",
+    "cn-business-elite",
+    "cn-3chuang"
+   ],
+   "note": ""
+  },
+  {
+   "major_key": "financial_management",
+   "major_name": "财务管理",
+   "aliases": [
+    "财管",
+    "财务管理（中加合作）"
+   ],
+   "school_id": "suibe",
+   "direction_ids": [
+    "finance_accounting"
+   ],
+   "competition_ids": [
+    "cn-eastmoney-finance",
+    "cn-cffex-cup",
+    "cn-audit-fst",
+    "cn-mkt-survey",
+    "cn-tjjmds",
+    "cn-business-elite",
+    "cn-3chuang"
+   ],
+   "note": ""
+  },
+  {
+   "major_key": "auditing",
+   "major_name": "审计学",
+   "aliases": [
+    "审计",
+    "auditing"
+   ],
+   "school_id": "suibe",
+   "direction_ids": [
+    "finance_accounting"
+   ],
+   "competition_ids": [
+    "cn-eastmoney-finance",
+    "cn-cffex-cup",
+    "cn-audit-fst",
+    "cn-mkt-survey",
+    "cn-tjjmds",
+    "cn-business-elite",
+    "cn-3chuang"
+   ],
+   "note": ""
+  },
+  {
+   "major_key": "law",
+   "major_name": "法学",
+   "aliases": [
+    "法律",
+    "law",
+    "法学（国际经济法）",
+    "法学（商法）"
+   ],
+   "school_id": "suibe",
+   "direction_ids": [
+    "public_service"
+   ],
+   "competition_ids": [
+    "cn-mootcourt",
+    "cn-tzb",
+    "cn-cy-innovation",
+    "cn-gjcxcy",
+    "cn-zgs-career"
+   ],
+   "note": ""
+  },
+  {
+   "major_key": "business_english",
+   "major_name": "商务英语",
+   "aliases": [
+    "商英",
+    "商务英语（中英合作）",
+    "business english"
+   ],
+   "school_id": "suibe",
+   "direction_ids": [
+    "cross_border_business",
+    "further_study"
+   ],
+   "competition_ids": [
+    "cn-neccs",
+    "cn-uchallenge",
+    "cn-catti-cup",
+    "cn-pocib",
+    "cn-ocale",
+    "cn-3chuang",
+    "cn-business-elite",
+    "cn-zgs-career"
+   ],
+   "note": ""
+  },
+  {
+   "major_key": "english",
+   "major_name": "英语",
+   "aliases": [
+    "英语（翻译）",
+    "english",
+    "翻译"
+   ],
+   "school_id": "suibe",
+   "direction_ids": [
+    "further_study",
+    "cross_border_business"
+   ],
+   "competition_ids": [
+    "cn-neccs",
+    "cn-uchallenge",
+    "cn-catti-cup",
+    "cn-pocib",
+    "cn-ocale",
+    "cn-3chuang",
+    "cn-business-elite",
+    "cn-zgs-career"
+   ],
+   "note": ""
+  },
+  {
+   "major_key": "ecommerce",
+   "major_name": "电子商务",
+   "aliases": [
+    "电商",
+    "e-commerce",
+    "电子商务（跨境电商）"
+   ],
+   "school_id": "suibe",
+   "direction_ids": [
+    "cross_border_business",
+    "data_business"
+   ],
+   "competition_ids": [
+    "cn-mkt-survey",
+    "cn-business-elite",
+    "cn-pocib",
+    "cn-ocale",
+    "cn-3chuang",
+    "cn-fwwb",
+    "cn-xcb",
+    "cn-tzb",
+    "cn-cy-innovation",
+    "cn-gjcxcy",
+    "cn-zgs-career",
+    "cn-neccs",
+    "cn-uchallenge",
+    "cn-catti-cup",
+    "cn-jsjds",
+    "cn-lanqiao"
+   ],
+   "note": ""
+  },
+  {
+   "major_key": "business_admin",
+   "major_name": "工商管理",
+   "aliases": [
+    "工商",
+    "business administration",
+    "工商管理（中加合作）"
+   ],
+   "school_id": "suibe",
+   "direction_ids": [
+    "trade_supply_chain",
+    "finance_accounting"
+   ],
+   "competition_ids": [
+    "cn-business-elite",
+    "cn-xcb",
+    "cn-mkt-survey",
+    "cn-3chuang",
+    "cn-cy-innovation",
+    "cn-tzb",
+    "cn-gjcxcy",
+    "cn-zgs-career"
+   ],
+   "note": ""
+  },
+  {
+   "major_key": "marketing",
+   "major_name": "市场营销",
+   "aliases": [
+    "营销",
+    "marketing",
+    "市场营销（国际营销）"
+   ],
+   "school_id": "suibe",
+   "direction_ids": [
+    "cross_border_business",
+    "trade_supply_chain"
+   ],
+   "competition_ids": [
+    "cn-business-elite",
+    "cn-xcb",
+    "cn-mkt-survey",
+    "cn-3chuang",
+    "cn-cy-innovation",
+    "cn-tzb",
+    "cn-gjcxcy",
+    "cn-zgs-career"
+   ],
+   "note": ""
+  },
+  {
+   "major_key": "tourism",
+   "major_name": "旅游管理",
+   "aliases": [
+    "旅游",
+    "tourism",
+    "旅游管理（会展）"
+   ],
+   "school_id": "suibe",
+   "direction_ids": [
+    "cross_border_business",
+    "public_service"
+   ],
+   "competition_ids": [
+    "cn-business-elite",
+    "cn-xcb",
+    "cn-mkt-survey",
+    "cn-3chuang",
+    "cn-cy-innovation",
+    "cn-tzb",
+    "cn-gjcxcy",
+    "cn-zgs-career"
+   ],
+   "note": ""
+  },
+  {
+   "major_key": "data_science",
+   "major_name": "数据科学与大数据技术",
+   "aliases": [
+    "大数据",
+    "data science",
+    "数据科学"
+   ],
+   "school_id": "suibe",
+   "direction_ids": [
+    "data_business"
+   ],
+   "competition_ids": [
+    "cn-mkt-survey",
+    "cn-mcm",
+    "cn-jsjds",
+    "cn-lanqiao",
+    "cn-ccpc",
+    "cn-tjjmds",
+    "cn-fwwb",
+    "cn-cy-innovation",
+    "cn-gjcxcy",
+    "cn-tzb",
+    "cn-3chuang"
+   ],
+   "note": ""
+  },
+  {
+   "major_key": "statistics",
+   "major_name": "统计学",
+   "aliases": [
+    "统计",
+    "statistics",
+    "应用统计"
+   ],
+   "school_id": "suibe",
+   "direction_ids": [
+    "data_business",
+    "finance_accounting"
+   ],
+   "competition_ids": [
+    "cn-mkt-survey",
+    "cn-mcm",
+    "cn-jsjds",
+    "cn-lanqiao",
+    "cn-ccpc",
+    "cn-tjjmds",
+    "cn-fwwb",
+    "cn-cy-innovation",
+    "cn-gjcxcy",
+    "cn-tzb",
+    "cn-3chuang"
+   ],
+   "note": ""
+  },
+  {
+   "major_key": "computer_science",
+   "major_name": "计算机科学与技术",
+   "aliases": [
+    "计算机",
+    "computer science",
+    "计科"
+   ],
+   "school_id": "suibe",
+   "direction_ids": [
+    "data_business"
+   ],
+   "competition_ids": [
+    "cn-mkt-survey",
+    "cn-mcm",
+    "cn-jsjds",
+    "cn-lanqiao",
+    "cn-ccpc",
+    "cn-tjjmds",
+    "cn-fwwb",
+    "cn-cy-innovation",
+    "cn-gjcxcy",
+    "cn-tzb",
+    "cn-3chuang"
+   ],
+   "note": ""
+  },
+  {
+   "major_key": "info_management",
+   "major_name": "信息管理与信息系统",
+   "aliases": [
+    "信管",
+    "information management"
+   ],
+   "school_id": "suibe",
+   "direction_ids": [
+    "data_business",
+    "trade_supply_chain"
+   ],
+   "competition_ids": [
+    "cn-mkt-survey",
+    "cn-mcm",
+    "cn-jsjds",
+    "cn-lanqiao",
+    "cn-ccpc",
+    "cn-tjjmds",
+    "cn-fwwb",
+    "cn-cy-innovation",
+    "cn-gjcxcy",
+    "cn-tzb",
+    "cn-3chuang"
+   ],
+   "note": ""
+  },
+  {
+   "major_key": "public_admin",
+   "major_name": "行政管理",
+   "aliases": [
+    "行管",
+    "公共管理",
+    "public administration"
+   ],
+   "school_id": "suibe",
+   "direction_ids": [
+    "public_service"
+   ],
+   "competition_ids": [
+    "cn-tzb",
+    "cn-cy-innovation",
+    "cn-gjcxcy",
+    "cn-zgs-career",
+    "cn-cpipc-mpa"
+   ],
+   "note": ""
+  },
+  {
+   "major_key": "logistics",
+   "major_name": "物流管理",
+   "aliases": [
+    "物流",
+    "logistics",
+    "物流管理（供应链）"
+   ],
+   "school_id": "suibe",
+   "direction_ids": [
+    "trade_supply_chain"
+   ],
+   "competition_ids": [
+    "cn-mkt-survey",
+    "cn-business-elite",
+    "cn-pocib",
+    "cn-ocale",
+    "cn-3chuang",
+    "cn-fwwb",
+    "cn-xcb",
+    "cn-tzb",
+    "cn-cy-innovation",
+    "cn-gjcxcy",
+    "cn-zgs-career",
+    "cn-neccs",
+    "cn-uchallenge",
+    "cn-catti-cup"
+   ],
+   "note": ""
+  },
+  {
+   "major_key": "exhibition",
+   "major_name": "会展经济与管理",
+   "aliases": [
+    "会展",
+    "exhibition",
+    "会展经济"
+   ],
+   "school_id": "suibe",
+   "direction_ids": [
+    "cross_border_business",
+    "public_service"
+   ],
+   "competition_ids": [
+    "cn-business-elite",
+    "cn-xcb",
+    "cn-mkt-survey",
+    "cn-3chuang",
+    "cn-cy-innovation",
+    "cn-tzb",
+    "cn-gjcxcy",
+    "cn-zgs-career"
+   ],
+   "note": ""
+  }
+ ],
+ "direction_defaults": {
+  "trade_supply_chain": [
+   "cn-mkt-survey",
+   "cn-business-elite",
+   "cn-neccs",
+   "cn-negotiation",
+   "cn-xcb",
+   "suibe-x-6",
+   "cn-tzb",
+   "cn-3chuang",
+   "cn-pocib",
+   "cn-fwwb",
+   "cn-cy-innovation",
+   "cn-gjcxcy",
+   "cn-zgs-career",
+   "cn-uchallenge"
+  ],
+  "cross_border_business": [
+   "cn-business-elite",
+   "cn-negotiation",
+   "cn-fwwb",
+   "suibe-x-6",
+   "cn-tzb",
+   "cn-3chuang",
+   "suibe-x-24",
+   "suibe-x-39",
+   "cn-ocale",
+   "cn-pocib",
+   "cn-catti-cup",
+   "cn-uchallenge",
+   "cn-cy-innovation"
+  ],
+  "finance_accounting": [
+   "cn-mkt-survey",
+   "cn-xcb",
+   "cn-tjjmds",
+   "suibe-x-56",
+   "suibe-x-57",
+   "suibe-x-58",
+   "suibe-x-60",
+   "cn-eastmoney-finance",
+   "cn-cffex-cup",
+   "cn-audit-fst",
+   "cn-business-elite"
+  ],
+  "data_business": [
+   "cn-mkt-survey",
+   "cn-jsjds",
+   "cn-fwwb",
+   "cn-tjjmds",
+   "suibe-x-11",
+   "suibe-x-12",
+   "suibe-x-13",
+   "suibe-x-15",
+   "cn-mcm",
+   "cn-lanqiao",
+   "cn-ccpc",
+   "cn-3chuang",
+   "cn-cy-innovation",
+   "cn-gjcxcy"
+  ],
+  "public_service": [
+   "cn-zgs-career",
+   "suibe-x-82",
+   "suibe-x-83",
+   "suibe-x-103",
+   "suibe-x-129",
+   "suibe-x-138",
+   "suibe-x-142",
+   "suibe-x-143",
+   "cn-tzb",
+   "cn-cy-innovation",
+   "cn-gjcxcy",
+   "cn-mootcourt",
+   "cn-cpipc-mpa"
+  ],
+  "further_study": [
+   "cn-jsjds",
+   "cn-neccs",
+   "cn-zgs-career",
+   "cn-tzb",
+   "cn-uchallenge",
+   "cn-catti-cup",
+   "cn-mcm",
+   "cn-tjjmds",
+   "cn-fwwb"
+  ]
+ },
+ "major_aliases": {
+  "金融": "finance",
+  "金融学": "finance",
+  "会计": "accounting",
+  "财管": "accounting",
+  "审计": "accounting",
+  "电商": "ecommerce",
+  "法学": "law",
+  "英语": "english",
+  "商务英语": "english",
+  "统计": "statistics",
+  "大数据": "data_science",
+  "计算机": "computer_science",
+  "工商管理": "business_admin",
+  "市场营销": "marketing",
+  "旅游管理": "tourism",
+  "行政管理": "public_admin",
+  "公共事业管理": "public_admin",
+  "经济学": "economics",
+  "国际商务": "intl_business",
+  "物流管理": "logistics",
+  "国贸": "intl_econ_trade",
+  "会展": "exhibition",
+  "信息管理与信息系统": "info_management",
+  "金融工程": "financial_engineering",
+  "财务管理": "financial_management",
+  "审计学": "auditing",
+  "数据科学与大数据技术": "data_science",
+  "计算机科学与技术": "computer_science",
+  "国际经济与贸易": "intl_econ_trade",
+  "法学（国际经济法）": "law"
+ }
+}

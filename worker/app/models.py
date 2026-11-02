@@ -199,6 +199,7 @@ class PlanResult(ContractModel):
     course_leads: list[PlanLead] = Field(default_factory=list)
     competition_leads: list[PlanLead] = Field(default_factory=list)
     campus_resources: list[PlanLead] = Field(default_factory=list)
+    campus_facts: list[PlanLead] = Field(default_factory=list)
     roadmap: list[PlanRoadmapStage] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
 
@@ -320,6 +321,7 @@ def plan_result_payload(result: PlanResult) -> dict[str, Any]:
         "course_leads": [lead_payload(item) for item in result.course_leads],
         "competition_leads": [lead_payload(item) for item in result.competition_leads],
         "campus_resources": [lead_payload(item) for item in result.campus_resources],
+        "campus_facts": [lead_payload(item) for item in result.campus_facts],
         "roadmap": [
             {
                 "stage": item.stage,

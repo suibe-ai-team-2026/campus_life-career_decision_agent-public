@@ -20,6 +20,7 @@
 | 模型探针 | 已通过 | embedding：OpenRouter `qwen/qwen3-embedding-8b` 4096 维/L2；chat：DeepSeek 官方 `deepseek-flash`（V4.1-Flash，low effort） |
 | 云端部署 | 公开生产站已上线 | https://zhitu.quest （主域名，阿里云 DNS → Vercel；已实测大陆直连可访问并完成站内问答；旧地址 https://campuslife-careerdecisionagent.vercel.app 保留；Git push 自动部署） |
 | 路线优先与行动驾驶舱 | 已合并 | PR #1（2026-11-02）：路线硬约束与过滤、主/备选路线、5 页签（方向与行业/上经贸现实/本学期执行/四年路线/依据与边界）、30 天·本学期·四年行动 |
+| 参考数据层 | 已接入 | 就业事实 54 条（上经贸 18）/ 培养方案 40 专业 2004 门课 / 竞赛 225 项（含上经贸官方 A/B/C 清单）/ 校内资源 47 条；plan 与 ask 共用，见 `docs/reference-data.md` |
 | 界面 v3 | 已重构 | 中性纸感浅色（跟随系统 / 可切换深色）；单行运行状态替代进度条；运行过程、数据边界、长说明默认折叠；首页与向导壳层精简 |
 | 旧 `prototype/` | 归档参考 | 不再是产品入口；保留只读历史，避免破坏团队资产 |
 

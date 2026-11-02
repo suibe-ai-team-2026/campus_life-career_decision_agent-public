@@ -440,6 +440,11 @@ export function PlanDetail({
             empty="当前专业尚未配置课程线索；请在教务处培养方案中检索专业与年级。"
           />
           <LeadCards
+            title="上经贸就业数据（口径与来源）"
+            leads={result.campus_facts}
+            empty="当前学校没有可展示的就业数据卡；可先看学校就业质量年度报告。"
+          />
+          <LeadCards
             title="与当前方向相关的竞赛"
             leads={result.competition_leads}
             empty={result.competition_leads.length === 0 ? "你已关闭竞赛选项，或当前方向尚未配置竞赛线索。" : "暂未匹配到竞赛线索。"}

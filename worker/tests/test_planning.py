@@ -94,8 +94,9 @@ def test_planning_blueprint_is_deterministic_and_complete_for_suibe_trade_pilot(
     assert len(first.competition_leads) >= 3
     assert len(first.campus_resources) >= 5
     assert first.roadmap[0].stage == "未来 30 天"
-    assert {lead.verification_status for lead in first.course_leads} == {"official_lead"}
-    assert "上经贸第二学堂" in {lead.title for lead in first.campus_resources}
+    assert {lead.verification_status for lead in first.course_leads} <= {"official_lead", "pending_verification"}
+    resource_titles = {lead.title for lead in first.campus_resources}
+    assert resource_titles & {"教务处", "学生就业信息网", "团委"}
 
 
 def test_competing_and_long_internship_constraints_change_plan_actions():

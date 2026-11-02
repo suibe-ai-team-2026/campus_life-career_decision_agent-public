@@ -1,0 +1,476 @@
+{
+  "schema_version": "career-reference-resources-v1",
+  "generated_at": "2026-11-02",
+  "resources": [
+    {
+      "resource_id": "suibe-jwc",
+      "name": "教务处",
+      "category": "校内官方",
+      "description": "培养方案、课程、学分、选课与创新创业通知",
+      "url": "https://jwc.suibe.edu.cn/",
+      "verification_status": "official_lead",
+      "source_title": "上海对外经贸大学教务处",
+      "note": ""
+    },
+    {
+      "resource_id": "suibe-jwc-cxcy",
+      "name": "教务处·创新创业",
+      "category": "校内官方",
+      "description": "创新创业课程、项目与竞赛通知入口",
+      "url": "https://jwc.suibe.edu.cn/18805/list.htm",
+      "verification_status": "official_lead",
+      "source_title": "上海对外经贸大学教务处·创新创业栏目",
+      "note": ""
+    },
+    {
+      "resource_id": "suibe-jwc-internet-plus",
+      "name": "教务处·互联网+创新创业大赛",
+      "category": "校内官方",
+      "description": "校内“互联网+”大赛通知与报名入口",
+      "url": "https://jwc.suibe.edu.cn/18809/list.htm",
+      "verification_status": "official_lead",
+      "source_title": "上海对外经贸大学教务处·互联网+创新创业大赛栏目",
+      "note": ""
+    },
+    {
+      "resource_id": "suibe-job",
+      "name": "学生就业信息网",
+      "category": "校内官方",
+      "description": "就业指导、招聘信息与毕业生就业质量报告发布",
+      "url": "https://job.suibe.edu.cn/",
+      "verification_status": "official_lead",
+      "source_title": "上海对外经贸大学就业信息网",
+      "note": ""
+    },
+    {
+      "resource_id": "suibe-tw",
+      "name": "团委",
+      "category": "校内官方",
+      "description": "第二课堂、素拓活动与竞赛认定相关通知",
+      "url": "https://www.suibe.edu.cn/tw/",
+      "verification_status": "official_lead",
+      "source_title": "共青团上海对外经贸大学委员会",
+      "note": ""
+    },
+    {
+      "resource_id": "suibe-xsc",
+      "name": "党委学工部（学生处）",
+      "category": "校内官方",
+      "description": "学生事务、资助、评奖评优与素拓相关通知",
+      "url": "https://www.suibe.edu.cn/xsc/",
+      "verification_status": "official_lead",
+      "source_title": "上海对外经贸大学党委学工部（处）",
+      "note": ""
+    },
+    {
+      "resource_id": "suibe-lib",
+      "name": "图书馆",
+      "category": "校内官方",
+      "description": "馆藏、数据库与文献检索服务",
+      "url": "https://lib.suibe.edu.cn/",
+      "verification_status": "official_lead",
+      "source_title": "上海对外经贸大学图书馆",
+      "note": ""
+    },
+    {
+      "resource_id": "suibe-wsc",
+      "name": "外事处",
+      "category": "校内官方",
+      "description": "国际交流、交换项目与外事通知",
+      "url": "https://www.suibe.edu.cn/wsc/",
+      "verification_status": "official_lead",
+      "source_title": "上海对外经贸大学外事处",
+      "note": ""
+    },
+    {
+      "resource_id": "suibe-cyxy",
+      "name": "创业学院",
+      "category": "校内官方",
+      "description": "创业课程、创业项目与创业大赛组织",
+      "url": "https://www.suibe.edu.cn/cyxy/",
+      "verification_status": "official_lead",
+      "source_title": "上海对外经贸大学创业学院",
+      "note": ""
+    },
+    {
+      "resource_id": "suibe-jmxy",
+      "name": "国际经贸学院",
+      "category": "校内官方",
+      "description": "国际经济与贸易、国际商务等专业与学院通知",
+      "url": "https://www.suibe.edu.cn/jmxy/",
+      "verification_status": "official_lead",
+      "source_title": "上海对外经贸大学国际经贸学院",
+      "note": ""
+    },
+    {
+      "resource_id": "suibe-gsgl",
+      "name": "工商管理学院",
+      "category": "校内官方",
+      "description": "工商管理、市场营销、物流管理等专业与学院通知",
+      "url": "https://www.suibe.edu.cn/gsgl/",
+      "verification_status": "official_lead",
+      "source_title": "上海对外经贸大学工商管理学院",
+      "note": ""
+    },
+    {
+      "resource_id": "suibe-finance",
+      "name": "金融管理学院",
+      "category": "校内官方",
+      "description": "金融学、金融工程、财务管理等专业与学院通知",
+      "url": "https://www.suibe.edu.cn/finance/",
+      "verification_status": "official_lead",
+      "source_title": "上海对外经贸大学金融管理学院",
+      "note": ""
+    },
+    {
+      "resource_id": "suibe-kjxy",
+      "name": "会计学院",
+      "category": "校内官方",
+      "description": "会计学、审计学等专业与学院通知",
+      "url": "https://www.suibe.edu.cn/kjxy/",
+      "verification_status": "official_lead",
+      "source_title": "上海对外经贸大学会计学院",
+      "note": ""
+    },
+    {
+      "resource_id": "suibe-fxy",
+      "name": "法学院",
+      "category": "校内官方",
+      "description": "法学专业、模拟法庭与法务实践通知",
+      "url": "https://www.suibe.edu.cn/fxy/",
+      "verification_status": "official_lead",
+      "source_title": "上海对外经贸大学法学院",
+      "note": ""
+    },
+    {
+      "resource_id": "suibe-wyxy",
+      "name": "国际商务外语学院",
+      "category": "校内官方",
+      "description": "商务英语、英语与翻译类赛事通知",
+      "url": "https://www.suibe.edu.cn/wyxy/",
+      "verification_status": "official_lead",
+      "source_title": "上海对外经贸大学国际商务外语学院",
+      "note": ""
+    },
+    {
+      "resource_id": "suibe-tsxy",
+      "name": "统计与数据科学学院",
+      "category": "校内官方",
+      "description": "统计学、数据科学与大数据技术专业与竞赛通知",
+      "url": "https://www.suibe.edu.cn/tsxy/",
+      "verification_status": "official_lead",
+      "source_title": "上海对外经贸大学统计与数据科学学院",
+      "note": ""
+    },
+    {
+      "resource_id": "suibe-hzly",
+      "name": "会展与传播学院",
+      "category": "校内官方",
+      "description": "会展、传播与广告类赛事通知",
+      "url": "https://www.suibe.edu.cn/hzly/main.htm",
+      "verification_status": "official_lead",
+      "source_title": "上海对外经贸大学会展与传播学院",
+      "note": ""
+    },
+    {
+      "resource_id": "suibe-gjzz",
+      "name": "国际组织学院（贸易谈判学院）",
+      "category": "校内官方",
+      "description": "国际组织、贸易谈判相关项目与讲座",
+      "url": "https://www.suibe.edu.cn/gjzz/",
+      "verification_status": "official_lead",
+      "source_title": "上海对外经贸大学国际组织学院",
+      "note": ""
+    },
+    {
+      "resource_id": "xz-chsi",
+      "name": "学职平台",
+      "category": "外部平台",
+      "description": "学信网旗下学业与职业发展测评平台",
+      "url": "https://xz.chsi.com.cn/",
+      "verification_status": "external_reference",
+      "source_title": "学职平台·全国大学生学业与职业发展平台",
+      "note": "评价工具，非竞赛信息来源。"
+    },
+    {
+      "resource_id": "chsi",
+      "name": "学信网",
+      "category": "外部平台",
+      "description": "学历学籍查询与官方就业/赛事入口",
+      "url": "https://www.chsi.com.cn/",
+      "verification_status": "external_reference",
+      "source_title": "中国高等教育学生信息网（学信网）",
+      "note": ""
+    },
+    {
+      "resource_id": "cy-ncss",
+      "name": "全国大学生创业服务网",
+      "category": "外部平台",
+      "description": "中国国际大学生创新大赛报名与创业服务",
+      "url": "https://cy.ncss.cn/",
+      "verification_status": "external_reference",
+      "source_title": "全国大学生创业服务网",
+      "note": ""
+    },
+    {
+      "resource_id": "ncss-platform",
+      "name": "国家大学生就业服务平台",
+      "category": "外部平台",
+      "description": "就业岗位、招聘活动与就业服务",
+      "url": "https://cxcy.ncss.cn/",
+      "verification_status": "external_reference",
+      "source_title": "国家大学生就业服务平台",
+      "note": ""
+    },
+    {
+      "resource_id": "tzb",
+      "name": "挑战杯官网",
+      "category": "竞赛官网",
+      "description": "挑战杯两项赛事的官方通知与报名",
+      "url": "https://www.tiaozhanbei.net/",
+      "verification_status": "external_reference",
+      "source_title": "挑战杯官方网站",
+      "note": ""
+    },
+    {
+      "resource_id": "gjcxcy",
+      "name": "国家级大学生创新创业训练计划平台",
+      "category": "外部平台",
+      "description": "大创项目申报、立项与结题",
+      "url": "http://gjcxcy.bjtu.edu.cn/",
+      "verification_status": "external_reference",
+      "source_title": "国家级大学生创新训练计划平台",
+      "note": ""
+    },
+    {
+      "resource_id": "5idream",
+      "name": "到梦空间",
+      "category": "外部平台",
+      "description": "第二课堂活动与学分记录",
+      "url": "https://www.5idream.net/",
+      "verification_status": "external_reference",
+      "source_title": "到梦空间",
+      "note": ""
+    },
+    {
+      "resource_id": "cpipc",
+      "name": "中国研究生创新实践系列大赛",
+      "category": "外部平台",
+      "description": "研究生创新实践系列赛事（含公共管理案例大赛）",
+      "url": "https://cpipc.acge.org.cn/",
+      "verification_status": "external_reference",
+      "source_title": "中国研究生创新实践系列大赛管理平台",
+      "note": "面向研究生。"
+    },
+    {
+      "resource_id": "52jingsai",
+      "name": "我爱竞赛网",
+      "category": "外部平台",
+      "description": "竞赛信息聚合（非官方，需回查官网）",
+      "url": "https://www.52jingsai.com/",
+      "verification_status": "external_reference",
+      "source_title": "我爱竞赛网",
+      "note": "聚合站，只作线索，不作为认定依据。"
+    },
+    {
+      "resource_id": "c-3chuang",
+      "name": "三创赛官网",
+      "category": "竞赛官网",
+      "description": "全国大学生电子商务三创赛官方入口",
+      "url": "https://www.3chuang.net/",
+      "verification_status": "external_reference",
+      "source_title": "三创赛官网",
+      "note": ""
+    },
+    {
+      "resource_id": "c-lanqiao",
+      "name": "蓝桥杯大赛官网",
+      "category": "竞赛官网",
+      "description": "蓝桥杯报名、赛程与真题",
+      "url": "https://dasai.lanqiao.cn/",
+      "verification_status": "external_reference",
+      "source_title": "蓝桥杯大赛官网",
+      "note": ""
+    },
+    {
+      "resource_id": "c-jsjds",
+      "name": "中国大学生计算机设计大赛官网",
+      "category": "竞赛官网",
+      "description": "计算机设计大赛通知与作品提交",
+      "url": "https://jsjds.blcu.edu.cn/",
+      "verification_status": "external_reference",
+      "source_title": "中国大学生计算机设计大赛官网",
+      "note": ""
+    },
+    {
+      "resource_id": "c-mcm",
+      "name": "全国大学生数学建模竞赛官网",
+      "category": "竞赛官网",
+      "description": "数学建模竞赛通知、赛题与报名",
+      "url": "https://www.mcm.edu.cn/",
+      "verification_status": "external_reference",
+      "source_title": "全国大学生数学建模竞赛官网",
+      "note": ""
+    },
+    {
+      "resource_id": "c-neccs",
+      "name": "全国大学生英语竞赛官网",
+      "category": "竞赛官网",
+      "description": "NECCS 通知与报名",
+      "url": "https://www.chinaneccs.cn/",
+      "verification_status": "external_reference",
+      "source_title": "全国大学生英语竞赛官网",
+      "note": ""
+    },
+    {
+      "resource_id": "c-uchallenge",
+      "name": "Uchallenge 官网",
+      "category": "竞赛官网",
+      "description": "外研社·国才杯系列赛事",
+      "url": "https://uchallenge.unipus.cn/",
+      "verification_status": "external_reference",
+      "source_title": "Uchallenge 官网",
+      "note": ""
+    },
+    {
+      "resource_id": "c-catti",
+      "name": "全国翻译人才评价网",
+      "category": "竞赛官网",
+      "description": "CATTI 考试与全国翻译大赛信息",
+      "url": "http://www.catticenter.com/",
+      "verification_status": "external_reference",
+      "source_title": "全国翻译人才评价网",
+      "note": ""
+    },
+    {
+      "resource_id": "c-eastmoney",
+      "name": "东方财富杯活动官网",
+      "category": "竞赛官网",
+      "description": "东方财富杯金融素养提升活动",
+      "url": "https://young.eastmoney.com/",
+      "verification_status": "external_reference",
+      "source_title": "“东方财富杯”全国大学生金融素养提升活动",
+      "note": ""
+    },
+    {
+      "resource_id": "c-zgs",
+      "name": "全国大学生职业规划大赛平台",
+      "category": "竞赛官网",
+      "description": "职业规划大赛报名与赛程",
+      "url": "https://zgs.chsi.com.cn/",
+      "verification_status": "external_reference",
+      "source_title": "全国大学生职业规划大赛平台",
+      "note": ""
+    },
+    {
+      "resource_id": "c-ccpitcsc",
+      "name": "中国贸促会商业行业委员会",
+      "category": "竞赛官网",
+      "description": "全国高校商业精英挑战赛主办单位官网",
+      "url": "https://www.ccpitcsc.org/",
+      "verification_status": "external_reference",
+      "source_title": "中国国际贸易促进委员会商业行业委员会",
+      "note": ""
+    },
+    {
+      "resource_id": "c-ccpc",
+      "name": "CCPC 官网",
+      "category": "竞赛官网",
+      "description": "中国大学生程序设计竞赛",
+      "url": "https://ccpc.io/",
+      "verification_status": "external_reference",
+      "source_title": "中国大学生程序设计竞赛官网",
+      "note": ""
+    },
+    {
+      "resource_id": "c-sunada",
+      "name": "大广赛官网",
+      "category": "竞赛官网",
+      "description": "全国大学生广告艺术大赛",
+      "url": "https://www.sun-ada.net/",
+      "verification_status": "external_reference",
+      "source_title": "全国大学生广告艺术大赛官网",
+      "note": ""
+    },
+    {
+      "resource_id": "c-mootcourt",
+      "name": "全国大学生模拟法庭竞赛官网",
+      "category": "竞赛官网",
+      "description": "模拟法庭竞赛通知与赛题",
+      "url": "http://www.mootcourt.cn/",
+      "verification_status": "external_reference",
+      "source_title": "全国大学生模拟法庭竞赛官网",
+      "note": ""
+    },
+    {
+      "resource_id": "c-negotiation",
+      "name": "全国大学生商务谈判大赛官网",
+      "category": "竞赛官网",
+      "description": "商务谈判大赛规则与报名",
+      "url": "https://www.negotiationchina.com/",
+      "verification_status": "external_reference",
+      "source_title": "全国大学生商务谈判大赛官网",
+      "note": ""
+    },
+    {
+      "resource_id": "c-ocale",
+      "name": "OCALE 官网",
+      "category": "竞赛官网",
+      "description": "跨境电商创新创业能力大赛",
+      "url": "https://www.ocale.net/",
+      "verification_status": "external_reference",
+      "source_title": "OCALE 官网",
+      "note": ""
+    },
+    {
+      "resource_id": "c-pocib",
+      "name": "POCIB 赛事平台",
+      "category": "竞赛官网",
+      "description": "外贸从业能力大赛",
+      "url": "https://winner.pocib.com/",
+      "verification_status": "external_reference",
+      "source_title": "POCIB 全国外贸从业能力大赛平台",
+      "note": "根路径检索时 404。"
+    },
+    {
+      "resource_id": "c-cffex",
+      "name": "中国金融期货交易所",
+      "category": "竞赛官网",
+      "description": "中金所杯金融知识大赛",
+      "url": "http://www.cffex.com.cn/",
+      "verification_status": "external_reference",
+      "source_title": "中国金融期货交易所",
+      "note": ""
+    },
+    {
+      "resource_id": "c-fwwb",
+      "name": "中国大学生服务外包创新创业大赛官网",
+      "category": "竞赛官网",
+      "description": "服创大赛通知与报名",
+      "url": "https://www.fwwb.org.cn/",
+      "verification_status": "external_reference",
+      "source_title": "中国大学生服务外包创新创业大赛官网",
+      "note": "检索时 502，赛前复核。"
+    },
+    {
+      "resource_id": "c-tjjmds",
+      "name": "全国大学生统计建模大赛官网",
+      "category": "竞赛官网",
+      "description": "统计建模大赛通知",
+      "url": "http://tjjmds.ai-learning.net/",
+      "verification_status": "external_reference",
+      "source_title": "全国大学生统计建模大赛官网",
+      "note": "检索时 404，赛前复核。"
+    },
+    {
+      "resource_id": "c-xcb",
+      "name": "学创杯官网",
+      "category": "竞赛官网",
+      "description": "学创杯创业综合模拟大赛",
+      "url": "http://www.xcbds.com/",
+      "verification_status": "external_reference",
+      "source_title": "学创杯官方网站（转引）",
+      "note": "检索时不可访问，赛前复核。"
+    }
+  ]
+}

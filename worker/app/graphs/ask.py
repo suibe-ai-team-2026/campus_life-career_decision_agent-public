@@ -16,17 +16,19 @@ from typing import Any, TypedDict
 from langgraph.graph import END, START, StateGraph
 
 from ..errors import BadRequest, ModelOutputInvalid, OutputValidationError
-from ..models import AskInput, AskRunResult
+from ..models import AskInput, AskRunResult, Citation
 from ..prompts import career as prompts
 from ..prompts import validate as prompt_validate
 from .common import JobContext, generate_validated_json, profile_summary
 from ..agent.research import run_web_research
+from .. import reference
 
 
 class AskState(TypedDict, total=False):
     run_input: dict[str, Any]
     profile: dict[str, Any] | None
     retrieval: Any
+    reference_hits: list[dict[str, Any]]
     result: dict[str, Any]
 
 
@@ -51,6 +53,34 @@ def _refusal_payload(answer: str, reason: str, *, boundary_note: str = "") -> di
         refusal_reason=reason,
         boundary_note=boundary_note or None,
     ).model_dump(mode="json", exclude_none=True)
+
+
+def numbered_reference_hits(
+    hits: list[dict[str, Any]], start_no: int
+) -> tuple[list[dict[str, Any]], list[Citation]]:
+    """把参考数据命中转成带编号的证据与引用卡（source_scope=reference_data）。"""
+    evidence: list[dict[str, Any]] = []
+    citations: list[Citation] = []
+    for offset, hit in enumerate(hits, start=start_no):
+        item = dict(hit)
+        item["citation_no"] = offset
+        item["context"] = str(hit.get("text") or "")
+        evidence.append(item)
+        citations.append(
+            Citation(
+                citation_no=offset,
+                source_id=str(hit.get("source_id") or "ref-unknown"),
+                source_version_id=reference.REFERENCE_VERSION,
+                chunk_id=f"ref:{hit.get('kind') or 'other'}:{offset}",
+                record_id=None,
+                title=str(hit.get("source_title") or hit.get("title") or "参考数据"),
+                locator=dict(hit.get("locator") or {}),
+                excerpt=str(hit.get("text") or "")[:600],
+                verification_status=str(hit.get("verification_status") or "external_reference"),
+                source_scope="reference_data",
+            )
+        )
+    return evidence, citations
 
 
 def build_ask_graph(ctx: JobContext):
@@ -89,8 +119,24 @@ def build_ask_graph(ctx: JobContext):
                 "titles": [str(item.get("title") or "")[:60] for item in outcome.evidence[:6]],
             },
         )
+        try:
+            reference_hits = reference.search(question, limit=4)
+        except Exception:  # noqa: BLE001 - 参考数据缺失不应中断问答
+            ctx.logger.exception("reference_search_failed")
+            reference_hits = []
+        if reference_hits:
+            ctx.trace(
+                "tool_result",
+                {
+                    "step": 0,
+                    "tool": "reference_lookup",
+                    "ok": True,
+                    "hits": len(reference_hits),
+                    "titles": [str(item.get("title") or "")[:60] for item in reference_hits],
+                },
+            )
         ctx.emit("retrieving", 38)
-        return {"retrieval": outcome}
+        return {"retrieval": outcome, "reference_hits": reference_hits}
 
     def answer_node(state: AskState) -> AskState:
         ctx.check_cancel()
@@ -106,13 +152,20 @@ def build_ask_graph(ctx: JobContext):
                 ctx,
                 question=question,
                 site_hint=None,
-                numbering_start=len(retrieval.citations) + 1,
+                numbering_start=len(citations) + 1,
             )
         else:
             ctx.trace("agent_note", {"text": "未开启联网补充，仅使用已载入资料"})
 
+        reference_hits = list(state.get("reference_hits") or [])
         evidence = [dict(item) for item in retrieval.evidence]
         citations: list[Any] = list(retrieval.citations)
+        if reference_hits:
+            reference_evidence, reference_citations = numbered_reference_hits(
+                reference_hits, start_no=len(evidence) + 1
+            )
+            evidence.extend(reference_evidence)
+            citations.extend(reference_citations)
         if web is not None:
             evidence.extend(web.evidence)
             citations.extend(web.citations)
@@ -120,6 +173,7 @@ def build_ask_graph(ctx: JobContext):
         valid_numbers = {int(item["citation_no"]) for item in evidence}
         corpus_gate_ok = bool(retrieval.evidence and retrieval.gate.passed)
         web_ok = bool(web is not None and web.sources)
+        reference_ok = bool(reference_hits)
 
         if not evidence:
             answer = prompt_validate.build_refusal_text(
@@ -129,7 +183,7 @@ def build_ask_graph(ctx: JobContext):
             ctx.trace("validation", {"ok": False, "citations": 0, "web_citations": 0, "note": "no_evidence"})
             ctx.emit("validating", 82)
             return {"result": _refusal_payload(answer, "no_evidence", boundary_note=boundary)}
-        if not corpus_gate_ok and not web_ok:
+        if not corpus_gate_ok and not web_ok and not reference_ok:
             answer = prompt_validate.build_refusal_text(
                 question, evidence=evidence, reason="gate_failed"
             )
@@ -191,6 +245,9 @@ def build_ask_graph(ctx: JobContext):
         boundary = parsed.boundary_note or prompt_validate.build_boundary_note(
             question, gate_version=retrieval.gate.version
         )
+        if reference_hits:
+            reference_note = "参考数据来自团队整理的培养方案/竞赛清单；报名资格、时间窗与校内加分折算以官方当年文件为准"
+            boundary = f"{boundary}；{reference_note}" if boundary else reference_note
         if web is not None and web.note and web.sources:
             boundary = f"{boundary}；{web.note}" if boundary else web.note
         if parsed.no_evidence and retrieval.gate.passed and retrieval.gate.dense_top >= 0.70 and retrieval.gate.keyword_overlap >= 5 and len(retrieval.evidence) >= 3:
