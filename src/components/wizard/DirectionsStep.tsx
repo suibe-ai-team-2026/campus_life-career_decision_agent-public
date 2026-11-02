@@ -44,7 +44,7 @@ import {
   useLocalProgress,
   type LocalProgressV1
 } from "@/lib/local-progress/store";
-import { Badge, Button, Callout, Icon, ListBlock, ProgressBar, SectionHeading } from "@/components/ui/primitives";
+import { Badge, Button, Callout, Collapse, Icon, ListBlock, RunStatus, SectionHeading } from "@/components/ui/primitives";
 import { CitationList } from "@/components/ui/CitationCard";
 import { isDeterministicCompareFallback } from "@/lib/compare-display";
 import { StepHeader } from "./StepHeader";
@@ -275,15 +275,11 @@ export function DirectionsStep() {
   }, [catalogState, coverage]);
 
   return (
-    <div className="step-page">
+    <div className="screen">
       <StepHeader
         index={2}
         title="先看清六个方向的牌面"
-        description={
-          <>
-            每张方向卡都写清<strong>工作内容、已核技能、准备成本、适用范围与数据缺口</strong>。收藏 2–3 个方向，可以并排比较；这里不提供排名、通过率或薪资结论。
-          </>
-        }
+        description="含工作内容、已核技能、准备成本与数据缺口；收藏 2 到 3 个再比较。"
         actions={
           <>
             <Button variant="ghost" size="md" onClick={() => router.push("/choice")}>
@@ -315,9 +311,10 @@ export function DirectionsStep() {
         }
       />
 
-      <Callout tone="plain" icon="info" title="六个方向是产品导航分类，不是学校官方就业分类">
-        <p>{DIRECTIONS_DISCLAIMER}</p>
-      </Callout>
+      <div className="stack">
+      <Collapse summary="六个方向是什么 · 资料口径" tone="quiet">
+        <p className="panel-note">{DIRECTIONS_DISCLAIMER}</p>
+      </Collapse>
 
       {!ready ? (
         <div className="skeleton-grid" aria-hidden="true">
@@ -331,24 +328,19 @@ export function DirectionsStep() {
             <section className="panel pathway-panel" aria-labelledby="pathway-title">
               <div className="panel-head">
                 <div>
-                  <p className="eyebrow">第一步 · 先选现实路线</p>
-                  <h2 id="pathway-title">先比较本科就业、升学与公考，再进入职业方向</h2>
-                  <p className="panel-subtitle">
-                    硬排除条件先于兴趣和能力信号生效；路线建议只用于安排准备顺序，不做录取、考试或就业承诺。
-                  </p>
+                  <h2 id="pathway-title">先比较路线，再进入方向</h2>
+                  <p className="panel-subtitle">硬约束先于兴趣与能力生效，不做录取或就业承诺。</p>
                 </div>
                 <Badge tone="accent">规则版本 {pathwayDecision.rulesVersion}</Badge>
               </div>
               {hiddenFavoriteCount > 0 ? (
                 <Callout tone="warn" title="有收藏方向与硬约束冲突">
-                  <p>
-                    你此前收藏的 {hiddenFavoriteCount} 个方向已被当前约束排除，不再进入推荐、比较或暂定。若要重新考虑，请回自我探索修改约束。
-                  </p>
+                  <p>你收藏的 {hiddenFavoriteCount} 个方向已被约束排除，不再进入推荐与比较。</p>
                 </Callout>
               ) : null}
               <div className="pathway-summary">
                 <div className="pathway-leading">
-                  <p className="direction-label">当前较优先比较</p>
+                  <p className="small-note">当前较优先比较</p>
                   <h3>{pathwayDecision.leading?.label ?? "需要补充约束"}</h3>
                   <ul className="recommend-reasons">
                     {(pathwayDecision.leading?.reasons ?? pathwayDecision.explanation).slice(0, 3).map((reason) => (
@@ -389,11 +381,8 @@ export function DirectionsStep() {
           <section className="panel recommend-panel" aria-labelledby="recommend-title">
             <div className="panel-head">
               <div>
-                <p className="eyebrow">基于你的画像</p>
-                <h2 id="recommend-title">基于你的画像的待比较方向</h2>
-                <p className="panel-subtitle">
-                  由程序规则从已答信号中挑出，排序不是匹配打分；兴趣只表示当前更愿意投入，能力只表示自评，经历只表示你提供了相关经历。
-                </p>
+                <h2 id="recommend-title">基于画像的待比较方向</h2>
+                <p className="panel-subtitle">程序按已答信号挑选，不是匹配打分。</p>
               </div>
               {recommendationResult && recommendationResult.recommendations.length > 0 ? (
                 <Badge tone="accent">待比较 {recommendationResult.recommendations.length} 个</Badge>
@@ -478,18 +467,20 @@ export function DirectionsStep() {
                             </ul>
                           </div>
                         ) : null}
-                        {recommendation.matchedSignals.evidence.length > 0 ? (
-                          <p className="panel-note recommend-evidence">
-                            <Icon name="check" size={13} /> 你提供过相关经历：
-                            {recommendation.matchedSignals.evidence.join("、")}（仅表示你提供了经历，未经第三方验证）
+                        <Collapse summary="依据与边界" tone="quiet">
+                          {recommendation.matchedSignals.evidence.length > 0 ? (
+                            <p className="panel-note recommend-evidence">
+                              <Icon name="check" size={13} /> 你提供过相关经历：
+                              {recommendation.matchedSignals.evidence.join("、")}（未经第三方验证）
+                            </p>
+                          ) : null}
+                          <p className="recommend-boundary">
+                            <Icon name="info" size={13} /> {recommendation.boundaries[2]}
                           </p>
-                        ) : null}
-                        <p className="recommend-boundary">
-                          <Icon name="info" size={13} /> {recommendation.boundaries[2]}
-                        </p>
-                        <p className="recommend-boundary">
-                          <Icon name="database" size={13} /> {recommendation.boundaries[1]}
-                        </p>
+                          <p className="recommend-boundary">
+                            <Icon name="database" size={13} /> {recommendation.boundaries[1]}
+                          </p>
+                        </Collapse>
                         <div className="recommend-card-actions">
                           <Button
                             variant={isFavorite ? "ghost" : "primary"}
@@ -515,8 +506,8 @@ export function DirectionsStep() {
                   })}
                 </div>
                 <p className="coverage-footnote recommend-rule-note">
-                  <Icon name="database" size={13} /> 推荐规则版本 {recommendationResult.rulesVersion} · 方向卡分类版本{" "}
-                  {DIRECTIONS_CATEGORY_VERSION}；依据方向卡「工作内容」「已核技能」字段，不是匹配打分。
+                  <Icon name="database" size={13} /> 规则版本 {recommendationResult.rulesVersion} · 分类版本{" "}
+                  {DIRECTIONS_CATEGORY_VERSION}；依据方向卡字段，不是匹配打分。
                 </p>
               </>
             )}
@@ -524,9 +515,8 @@ export function DirectionsStep() {
 
           <section aria-labelledby="direction-cards-title">
             <SectionHeading
-              eyebrow="方向牌面"
               title={<span id="direction-cards-title">六个方向，逐张核对</span>}
-              description="点右上角收藏；收藏后可在下方并排比较。卡片不展示未核证的就业率、薪资或录取概率。"
+              description="点右上角收藏，收藏 2 到 3 个后可在下方并排比较。"
               actions={
                 favorites.length > 0 ? <Badge tone="accent">已收藏 {favorites.length} 个</Badge> : <Badge tone="muted">尚未收藏</Badge>
               }
@@ -577,16 +567,6 @@ export function DirectionsStep() {
                     ) : null}
 
                     <div className="direction-block">
-                      <p className="direction-label">日常工作内容</p>
-                      <div className="chip-row">
-                        {direction.work_content.map((item) => (
-                          <span className="chip" key={item}>
-                            {item}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="direction-block">
                       <p className="direction-label">已核技能</p>
                       <div className="chip-row">
                         {direction.verified_skills.map((item) => (
@@ -596,38 +576,36 @@ export function DirectionsStep() {
                         ))}
                       </div>
                     </div>
-                    <div className="direction-block">
-                      <p className="direction-label">准备成本</p>
-                      <p className="direction-text">{direction.preparation_cost}</p>
-                    </div>
-                    <div className="direction-block">
-                      <p className="direction-label">适用范围</p>
-                      <p className="direction-text">{direction.applicability}</p>
-                    </div>
-                    <div className="direction-block direction-block-gap">
-                      <p className="direction-label">
-                        <Icon name="alert" size={13} /> 数据缺口
-                      </p>
-                      <ul className="gap-list">
-                        {direction.data_gaps.map((gap) => (
-                          <li key={gap}>{gap}</li>
-                        ))}
-                      </ul>
-                    </div>
-                    <footer className="direction-card-foot">
+                    <p className="micro">准备成本：{direction.preparation_cost}</p>
+                    <p className="micro">数据缺口：{direction.data_gaps.join("；")}</p>
+                    <Collapse summary="工作内容、适用范围与数据覆盖" tone="quiet">
+                      <div className="direction-block">
+                        <p className="direction-label">日常工作内容</p>
+                        <div className="chip-row">
+                          {direction.work_content.map((item) => (
+                            <span className="chip" key={item}>
+                              {item}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="direction-block">
+                        <p className="direction-label">适用范围</p>
+                        <p className="direction-text">{direction.applicability}</p>
+                      </div>
                       <div className="coverage-line">
                         <Badge tone={coverageView.pending || catalogState !== "ready" ? "warn" : "ok"}>{coverageBadge}</Badge>
                         {!coverageView.pending && catalogState === "ready" ? (
                           <span className="coverage-counts">
-                            同专业精确记录 {coverageView.exactMajorRecords} · 官方记录 {coverageView.officialRecords} · 招聘要求{" "}
+                            同专业精确记录 {coverageView.exactMajorRecords}，官方记录 {coverageView.officialRecords}，招聘要求{" "}
                             {coverageView.jobRequirements}
                           </span>
                         ) : (
                           <span className="coverage-counts">不展示数字，避免把缺口误读为 0</span>
                         )}
                       </div>
-                      <span className="source-count">来源条目 {direction.source_ids.length}</span>
-                    </footer>
+                      <p className="micro">来源条目 {direction.source_ids.length}</p>
+                    </Collapse>
                   </article>
                 );
               })}
@@ -653,7 +631,6 @@ export function DirectionsStep() {
           <section className="panel favorites-panel" aria-labelledby="favorites-title">
             <div className="panel-head">
               <div>
-                <p className="eyebrow">我的收藏</p>
                 <h2 id="favorites-title">
                   已收藏 {favorites.length} / 3 个方向
                 </h2>
@@ -668,7 +645,7 @@ export function DirectionsStep() {
               </div>
             </div>
             {favorites.length === 0 ? (
-              <p className="panel-note">还没有收藏。从上面的六张卡里选 2–3 个你愿意进一步了解的方向。</p>
+              <p className="panel-note">还没有收藏。从上面的六张卡里选 2 到 3 个你愿意进一步了解的方向。</p>
             ) : (
               <div className="favorite-chip-row">
                 {favoriteDirections.map((direction) => (
@@ -686,18 +663,15 @@ export function DirectionsStep() {
                 ))}
               </div>
             )}
-            <p className="panel-note">
-              收藏只保存在本设备；之后可以随时取消或增加（上限 3 个）。收藏本身不是承诺，也不会自动生成方案。
-            </p>
+            <p className="panel-note">收藏仅存本设备，可随时增删（上限 3 个）。</p>
           </section>
 
           {favoriteDirections.length >= 2 ? (
             <section className="panel compare-panel" aria-labelledby="compare-title">
               <div className="panel-head">
                 <div>
-                  <p className="eyebrow">并排对比</p>
-                  <h2 id="compare-title">把 {favoriteDirections.length} 个收藏放在同一张桌上</h2>
-                  <p className="panel-subtitle">对比的是已归档资料中的牌面，不是预测谁更容易成功。</p>
+                  <h2 id="compare-title">并排对比 {favoriteDirections.length} 个收藏</h2>
+                  <p className="panel-subtitle">对比已归档资料，不预测成功率。</p>
                 </div>
               </div>
               <div className="compare-scroll">
@@ -786,7 +760,7 @@ export function DirectionsStep() {
                     <Icon name="sparkles" size={15} /> AI 对比解释
                   </p>
                   <p className="panel-note">
-                    AI 只解释差异，不改写资料事实。它会把 {favoriteDirections.length} 个已收藏方向提交为一次 compare 任务；引用由服务端分配编号。
+                    把已收藏方向提交为一次对比任务；AI 只解释差异，不改写事实。
                   </p>
                 </div>
                 {cloudConfigured() ? (
@@ -809,16 +783,21 @@ export function DirectionsStep() {
               {aiState === "running" ? (
                 <div className="ai-running">
                   <div className="ai-running-head">
-                    <ProgressBar value={aiRun?.progress ?? 0} label={`AI 对比 · ${runStageLabel(aiRun?.status ?? "queued")}`} />
+                    <RunStatus
+                      state="running"
+                      label={`AI 对比 · ${runStageLabel(aiRun?.status ?? "queued")}`}
+                      detail={
+                        aiRun && aiRun.progress > 0 && aiRun.progress < 100
+                          ? `${Math.round(aiRun.progress)}%`
+                          : undefined
+                      }
+                    />
                     <Button variant="ghost" size="sm" onClick={handleStopAiCompare}>
                       停止
                     </Button>
                   </div>
-                  <p className="panel-note">任务运行中。页面隐藏时轮询会自动放慢，避免浪费资源。</p>
                   {aiSlow ? (
-                    <p className="panel-note">
-                      资料检索比平时慢（偶发时可能持续几分钟）。可以继续等待，或先看上方并排对比；点「停止」不会影响已收藏的方向。
-                    </p>
+                    <p className="panel-note">检索较慢，可继续等待或先看上方并排对比。</p>
                   ) : null}
                 </div>
               ) : null}
@@ -841,9 +820,7 @@ export function DirectionsStep() {
                   </p>
                   {aiDegraded ? (
                     <Callout tone="plain" icon="info" title="本次为确定性回退说明">
-                      <p>
-                        AI 解释未通过引用/数字校验，系统已回退为资料说明；方向卡与下方引用没有改变。可以重试生成，或直接使用上方的并排对比。
-                      </p>
+                      <p>AI 解释未通过校验，已回退为资料说明；方向卡与引用未变。</p>
                       <div className="ai-error-actions">
                         <Button variant="secondary" size="sm" onClick={handleAiCompare}>
                           <Icon name="sparkles" size={14} /> 重试生成
@@ -866,13 +843,7 @@ export function DirectionsStep() {
             </section>
           ) : null}
 
-          <section className="panel boundary-panel" aria-labelledby="directions-boundary-title">
-            <div className="panel-head">
-              <div>
-                <p className="eyebrow">资料覆盖说明</p>
-                <h2 id="directions-boundary-title">哪些数字缺席，以及为什么缺席</h2>
-              </div>
-            </div>
+          <Collapse summary="哪些数字缺席，以及为什么缺席" tone="quiet">
             <div className="boundary-columns">
               <ListBlock
                 items={[
@@ -911,14 +882,15 @@ export function DirectionsStep() {
                 </ul>
               </div>
             </div>
-          </section>
+          </Collapse>
         </>
       )}
+      </div>
 
       <div className="step-footer-bar">
         <div className="step-footer-note">
           <Icon name="info" size={14} />
-          <span>已收藏 {favorites.length} 个方向；至少 2 个可以并排比较。下一步从收藏中选择 1 个暂定，随时可改。</span>
+          <span>已收藏 {favorites.length} 个；至少 2 个可并排比较；下一步从收藏中选 1 个暂定。</span>
         </div>
         <div className="step-footer-actions">
           <Button variant="ghost" size="md" onClick={() => router.push("/choice")}>

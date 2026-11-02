@@ -4,9 +4,9 @@
 > 团队：Organization `suibe-ai-team-2026`（秦翰 @turtojian520、吴迪仪 @Jade-soleil、彭烨 @cactusye79）。
 > 产品名 **知途（Campus Pathway）** 由团队 2026-10-18 确定；仓库 slug 为 `campus_life-career_decision_agent`。
 
-当前分支 `feat/career-cloud-wizard` 实现用户明确要求的**纯生涯规划版本**：五步向导（定位 → 自我探索 → 方向认知 → 暂定方向 → 行动方案 → 导出分享），复用既有研究资料，采用 Next.js/Vercel + Supabase + Freestyle worker + OpenRouter 云端架构。范围登记见 [`docs/adr/0001-career-cloud-wizard-scope.md`](docs/adr/0001-career-cloud-wizard-scope.md)。
+主分支 `main` 实现**纯生涯规划版本**：五步向导（定位 → 自我探索 → 方向认知 → 暂定方向 → 行动方案 → 导出分享），复用既有研究资料，采用 Next.js/Vercel + Supabase + Freestyle worker + OpenRouter 云端架构。范围登记见 [`docs/adr/0001-career-cloud-wizard-scope.md`](docs/adr/0001-career-cloud-wizard-scope.md)。
 
-## 当前状态（2026-10-19）
+## 当前状态（2026-11-02）
 
 | 项 | 状态 | 说明 |
 |---|---|---|
@@ -19,11 +19,14 @@
 | 数据导入 | 已 apply；corpus v2 | 319 来源 / 243 记录 / 115 要求 / 250 aliases / pilot 2+7；corpus v2（2026-10-22）把 33 份已登记 PDF 全文入库：764 + 974 = 1738 chunks/embeddings（profile `career-qwen3-embedding-8b-4096-career-qwen-v2`），详见 `docs/evidence/pdf-corpus-ingest-2026-10-22.md` |
 | 模型探针 | 已通过 | embedding：OpenRouter `qwen/qwen3-embedding-8b` 4096 维/L2；chat：DeepSeek 官方 `deepseek-flash`（V4.1-Flash，low effort） |
 | 云端部署 | 公开生产站已上线 | https://zhitu.quest （主域名，阿里云 DNS → Vercel；已实测大陆直连可访问并完成站内问答；旧地址 https://campuslife-careerdecisionagent.vercel.app 保留；Git push 自动部署） |
+| 路线优先与行动驾驶舱 | 已合并 | PR #1（2026-11-02）：路线硬约束与过滤、主/备选路线、5 页签（方向与行业/上经贸现实/本学期执行/四年路线/依据与边界）、30 天·本学期·四年行动 |
+| 界面 v3 | 已重构 | 中性纸感浅色（跟随系统 / 可切换深色）；单行运行状态替代进度条；运行过程、数据边界、长说明默认折叠；首页与向导壳层精简 |
 | 旧 `prototype/` | 归档参考 | 不再是产品入口；保留只读历史，避免破坏团队资产 |
 
 ## 界面
 
 - 支持深色 / 浅色两套主题，默认跟随操作系统（`prefers-color-scheme`），也可用页头按钮切换并记住选择；跟随系统时会随系统变化自动更新。
+- 设计基线：中性纸感 + 单一墨绿强调色；文字层级用同一无衬线族，标签不使用全大写/字距放大；颜色全部走 `:root` 令牌。
 
 ## 快速开始（本地）
 

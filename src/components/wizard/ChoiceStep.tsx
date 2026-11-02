@@ -19,7 +19,7 @@ import {
   pushStaleChoiceHistory,
   writeChoiceDetail
 } from "@/lib/local-progress/store";
-import { Badge, Button, Callout, Icon, formatDate, daysUntil } from "@/components/ui/primitives";
+import { Badge, Button, Callout, Collapse, Icon, formatDate, daysUntil } from "@/components/ui/primitives";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { StepHeader } from "./StepHeader";
 
@@ -257,15 +257,11 @@ export function ChoiceStep() {
   const revisitDays = revisitOn ? daysUntil(revisitOn) : null;
 
   return (
-    <div className="step-page">
+    <div className="screen">
       <StepHeader
         index={3}
         title="暂定一个方向，而不是一次定死"
-        description={
-          <>
-            从收藏中选 1 个<strong>主方向</strong>，必要时再留 1 个<strong>备选方向</strong>；写清为什么考虑、还有哪些未知、下次什么时候复核。你可以随时回来修改；切换时旧方案会标记 stale 并保留历史版本提示。
-          </>
-        }
+        description="选 1 个主方向，可再留 1 个备选；写清理由与复核时间。"
         actions={
           <>
             <Button variant="ghost" size="md" onClick={() => router.push("/plan")}>
@@ -299,10 +295,9 @@ export function ChoiceStep() {
         }
       />
 
+      <div className="stack">
       <Callout tone="plain" icon="compass" title="暂定 ≠ 承诺">
-        <p>
-          这是一次「当前较合理的选择」，不是职业判决。方向可以随证据、课程体验与实习反馈调整；本产品不会因为你暂定了某个方向就认定你适合它。
-        </p>
+        <p>这是可调整的当前选择，不是职业判决。</p>
       </Callout>
 
       {selected && !isDirectionAllowed(selected, pathwayPreference) ? (
@@ -326,16 +321,15 @@ export function ChoiceStep() {
         <section className="panel choice-select-panel" aria-labelledby="choice-select-title">
           <div className="panel-head">
             <div>
-              <p className="eyebrow">第 1 件事</p>
               <h2 id="choice-select-title">你要暂定哪个方向？</h2>
             </div>
             {favorites.length === 0 ? <Badge tone="warn">还没有收藏方向</Badge> : null}
           </div>
           {favorites.length === 0 ? (
             <p className="panel-note">
-              你还没有收藏方向，因此这里展示全部六个方向。更好的做法是先回
+              还没有收藏，这里展示全部六个方向；也可以先回
               <Link href="/directions" className="link-inline"> 方向认知 </Link>
-              收藏 2–3 个再比较；直接选择也可以继续。
+              收藏 2 到 3 个。
             </p>
           ) : null}
           <div className="choice-options" role="radiogroup" aria-label="暂定方向">
@@ -372,9 +366,7 @@ export function ChoiceStep() {
               <p className="panel-title">
                 <Icon name="sparkles" size={15} /> 系统给出的推荐依据
               </p>
-              <p className="panel-note">
-                来自本地程序规则（{localRecommendations?.rulesVersion}），不是匹配打分；只解释相符之处与待补足，不替你决定。
-              </p>
+              <p className="panel-note">本地规则（{localRecommendations?.rulesVersion}）生成，不是匹配打分。</p>
               <div className="direction-block">
                 <p className="direction-label">相符之处</p>
                 <ul className="recommend-reasons">
@@ -402,8 +394,7 @@ export function ChoiceStep() {
         <section className="panel choice-form-panel" aria-labelledby="choice-form-title">
           <div className="panel-head">
             <div>
-              <p className="eyebrow">第 2 件事</p>
-              <h2 id="choice-form-title">把理由、未知与复核时间写下来</h2>
+              <h2 id="choice-form-title">写下理由、未知与复核时间</h2>
             </div>
           </div>
           <div className="field">
@@ -430,7 +421,7 @@ export function ChoiceStep() {
               aria-describedby="choice-why-hint"
             />
             <p className="field-hint" id="choice-why-hint">
-              {why.length} / 1000 字。这是写给你自己看的依据，不会作为「适合度」评分。
+              {why.length} / 1000 字；只作你的依据，不参与评分。
             </p>
             {errors.why ? (
               <p className="field-error" role="alert">
@@ -455,9 +446,7 @@ export function ChoiceStep() {
                 saveDraft(selected, why, event.target.value, revisitOn);
               }}
             />
-            <p className="field-hint">
-              不确定是正常的：把未知写下来，下一步的方案会为它们留出核对任务；未载入的资料不会被编造。
-            </p>
+            <p className="field-hint">写下来，下一步会为未知留出核对任务。</p>
           </div>
 
           <div className="field">
@@ -483,8 +472,8 @@ export function ChoiceStep() {
             />
             <p className="field-hint">
               {revisitDays !== null && revisitDays >= 0
-                ? `还有 ${revisitDays} 天复核；到时建议重新看一眼方向卡与方案里的待核验项。`
-                : "建议在一个月内复核一次；方向变化时随时可以回来修改。"}
+                ? `还有 ${revisitDays} 天复核。`
+                : "建议一个月内复核一次。"}
             </p>
             {errors.revisit ? (
               <p className="field-error" role="alert">
@@ -515,7 +504,7 @@ export function ChoiceStep() {
                 <strong>{existingDirection === selected && selected ? "保持当前暂定" : "新的暂定"}</strong>
               </li>
             </ul>
-            <p className="panel-note">保存后进入第 4 步；在那里可以生成可调整的行动方案。</p>
+            <p className="panel-note">保存后进入第 4 步生成方案。</p>
           </div>
 
           <div className="choice-actions">
@@ -533,11 +522,8 @@ export function ChoiceStep() {
       <section className="panel choice-backup-panel" aria-labelledby="choice-backup-title">
         <div className="panel-head">
           <div>
-            <p className="eyebrow">第 3 件事（可选）</p>
-            <h2 id="choice-backup-title">要不要再留一个备选方向？</h2>
-            <p className="panel-subtitle">
-              备选方向必须和主方向不同；它不会自动生成方案，只作为下次复核时的比较对象。你可以随时清除。
-            </p>
+            <h2 id="choice-backup-title">要不要留一个备选方向？</h2>
+            <p className="panel-subtitle">备选必须与主方向不同；它不自动生成方案，只作复核时的比较对象。</p>
           </div>
           <Badge tone={backupDirection ? "accent" : "muted"}>
             {backupDirection ? "已设置备选" : "暂不设备选"}
@@ -545,9 +531,9 @@ export function ChoiceStep() {
         </div>
         {favorites.length === 0 ? (
           <p className="panel-note">
-            还没有收藏方向，暂时无法设置备选。可以先回
+            还没有收藏，暂时无法设置备选；先去
             <Link href="/directions" className="link-inline"> 方向认知 </Link>
-            收藏 2 个以上方向，再回来设置主方向与备选。
+            收藏 2 个以上。
           </p>
         ) : (
           <>
@@ -598,9 +584,7 @@ export function ChoiceStep() {
                 当前备选方向已不在收藏中；可以改选其他方向，或点「暂不设备选」清除。
               </p>
             ) : null}
-            <p className="panel-note">
-              主方向与备选方向都只保存在本设备；方案仍以主方向为准，备选方向用于下次复核时提醒你比较。
-            </p>
+            <p className="panel-note">主方向与备选方向保存在本设备；生成方案时会上传云端。</p>
           </>
         )}
       </section>
@@ -608,13 +592,12 @@ export function ChoiceStep() {
       <section className="panel history-panel" aria-labelledby="choice-history-title">
         <div className="panel-head">
           <div>
-            <p className="eyebrow">历史版本提示</p>
-            <h2 id="choice-history-title">切换过的暂定方向会保留记录</h2>
+            <h2 id="choice-history-title">切换过的方向会保留记录</h2>
           </div>
           <Badge tone="muted">{history.length} 条</Badge>
         </div>
         {history.length === 0 ? (
-          <p className="panel-note">还没有切换记录。第一次暂定后，如果你改了方向，旧方向会在这里显示为 stale。</p>
+          <p className="panel-note">还没有切换记录；改方向后旧方向会显示为 stale。</p>
         ) : (
           <ul className="history-list">
             {history
@@ -640,15 +623,16 @@ export function ChoiceStep() {
               })}
           </ul>
         )}
-        <p className="panel-note">
-          标记 stale 不代表记录被删除：它只表示这个版本已被新的暂定方向取代。云端方案版本由服务端保留，旧版本不会再被当作当前方案。
-        </p>
+        <Collapse summary="版本与历史如何保留" tone="quiet">
+          <p className="panel-note">stale 只表示已被新方向取代；云端旧版本保留，但不再作为当前方案。</p>
+        </Collapse>
       </section>
+      </div>
 
       <div className="step-footer-bar">
         <div className="step-footer-note">
           <Icon name="info" size={14} />
-          <span>随时可以修改暂定方向；修改后本设备会保留旧方向的历史提示。</span>
+          <span>随时可改；旧方向会保留历史提示。</span>
         </div>
         <div className="step-footer-actions">
           <Button variant="ghost" size="md" onClick={() => router.push("/plan")}>

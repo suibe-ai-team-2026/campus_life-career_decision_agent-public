@@ -5,7 +5,7 @@ import type { Plan, PlanAction, PlanLead, PlanResult, VerificationLabel } from "
 import type { Citation } from "@/lib/contracts/run";
 import type { DirectionId } from "@/lib/contracts/common";
 import { PLAN_WINDOW_LABELS, PLAN_WINDOW_ORDER, getDirection } from "@/lib/content";
-import { Badge, Button, Callout, EmptyState, Icon, formatDateTime, formatDate } from "@/components/ui/primitives";
+import { Badge, Button, Callout, Collapse, EmptyState, Icon, formatDateTime, formatDate } from "@/components/ui/primitives";
 import { CitationList } from "@/components/ui/CitationCard";
 import { formatPlanWarnings, summarizeDataGaps, summarizeEffort } from "@/lib/plan-display";
 import { SourceUploadPanel } from "@/components/tools/SourceUploadPanel";
@@ -13,12 +13,12 @@ import { ActionCard, type ActionOverrides } from "./PlanActionCard";
 
 type PlanTab = "direction" | "campus" | "semester" | "roadmap" | "sources";
 
-const PLAN_TABS: Array<{ id: PlanTab; label: string; hint: string }> = [
-  { id: "direction", label: "方向与行业", hint: "路线、方向与画像解释" },
-  { id: "campus", label: "上经贸现实", hint: "课程、竞赛与校内资源" },
-  { id: "semester", label: "本学期执行", hint: "30 天与本学期动作" },
-  { id: "roadmap", label: "四年路线", hint: "阶段里程碑与复核点" },
-  { id: "sources", label: "依据与边界", hint: "来源、缺口与版本" }
+const PLAN_TABS: Array<{ id: PlanTab; label: string }> = [
+  { id: "direction", label: "方向与行业" },
+  { id: "campus", label: "上经贸现实" },
+  { id: "semester", label: "本学期执行" },
+  { id: "roadmap", label: "四年路线" },
+  { id: "sources", label: "依据与边界" }
 ];
 
 const VERIFICATION_LABELS: Record<VerificationLabel, string> = {
@@ -97,25 +97,16 @@ function planStatusDisplay(status: PlanResult["status"]): { label: string; tone:
 }
 
 function LeadCards({
-  eyebrow,
   title,
   leads,
   empty
 }: {
-  eyebrow: string;
   title: string;
   leads: PlanLead[];
   empty: string;
 }) {
   return (
-    <section className="lead-section" aria-label={title}>
-      <div className="section-heading">
-        <div className="section-heading-text">
-          <p className="eyebrow">{eyebrow}</p>
-          <h2>{title}</h2>
-        </div>
-        <Badge tone="muted">{leads.length} 项</Badge>
-      </div>
+    <Collapse summary={`${title} · ${leads.length} 项`} defaultOpen={false}>
       {leads.length === 0 ? (
         <EmptyState compact icon="database" title="当前没有适用线索" description={empty} />
       ) : (
@@ -162,7 +153,7 @@ function LeadCards({
           })}
         </div>
       )}
-    </section>
+    </Collapse>
   );
 }
 
@@ -251,21 +242,18 @@ export function PlanDetail({
   }
 
   return (
-    <div className="plan-detail">
+    <div className="plan-detail stack">
       {isCached ? (
         <Callout tone="warn" title="这是本设备缓存的方案">
-          <p>
-            云端当前不可用，因此展示上次成功加载的版本（缓存于 {formatDateTime(cachedAt)}）。它不会被当作新生成的方案，也不会覆盖云端数据。
-          </p>
+          <p className="small-note">缓存于 {formatDateTime(cachedAt)}；不会被当作新生成的方案。</p>
         </Callout>
       ) : null}
 
       <section className="plan-decision-cockpit" aria-labelledby="plan-decision-title">
         <div className="plan-decision-head">
           <div>
-            <p className="eyebrow">决策驾驶舱</p>
             <h2 id="plan-decision-title">
-              当前主线：{result.pathway?.label ?? "路线待补充"} · 当前方向：{direction?.title ?? directionId}
+              {result.pathway?.label ?? "路线待补充"} · {direction?.title ?? directionId}
             </h2>
             <div className="plan-summary-meta">
               <Badge tone={status.tone}>{status.label}</Badge>
@@ -347,7 +335,6 @@ export function PlanDetail({
             onClick={() => setActiveTab(tab.id)}
           >
             <span>{tab.label}</span>
-            <small>{tab.hint}</small>
           </button>
         ))}
       </div>
@@ -357,41 +344,31 @@ export function PlanDetail({
           {direction ? (
             <section className="direction-context-card">
               <div>
-                <p className="eyebrow">当前职业方向</p>
                 <h2>{direction.title}</h2>
-                <p>{direction.summary}</p>
+                <p className="micro">{direction.summary}</p>
               </div>
-              <div className="direction-context-grid">
-                <div>
-                  <h3>日常工作内容</h3>
-                  <ul>{direction.work_content.slice(0, 4).map((item) => <li key={item}>{item}</li>)}</ul>
+              <Collapse summary="方向详情：工作内容、能力要求、准备成本">
+                <div className="direction-context-grid">
+                  <div>
+                    <h3>日常工作内容</h3>
+                    <ul>{direction.work_content.slice(0, 4).map((item) => <li key={item}>{item}</li>)}</ul>
+                  </div>
+                  <div>
+                    <h3>需要验证的能力</h3>
+                    <ul>{direction.verified_skills.slice(0, 4).map((item) => <li key={item}>{item}</li>)}</ul>
+                  </div>
+                  <div>
+                    <h3>准备成本与适用范围</h3>
+                    <p>{direction.preparation_cost}</p>
+                    <p>{direction.applicability}</p>
+                  </div>
                 </div>
-                <div>
-                  <h3>需要验证的能力</h3>
-                  <ul>{direction.verified_skills.slice(0, 4).map((item) => <li key={item}>{item}</li>)}</ul>
-                </div>
-                <div>
-                  <h3>准备成本与适用范围</h3>
-                  <p>{direction.preparation_cost}</p>
-                  <p>{direction.applicability}</p>
-                </div>
-              </div>
+              </Collapse>
             </section>
           ) : null}
 
           {result.analysis ? (
-            <section className="plan-analysis" aria-labelledby="plan-analysis-title">
-              <div className="section-heading">
-                <div className="section-heading-text">
-                  <p className="eyebrow">AI 方向分析</p>
-                  <h2 id="plan-analysis-title">用你的画像解释这个方向，而不是复述测试题</h2>
-                  <p className="section-description">
-                    路线约束由程序先执行，AI 只负责把画像信号、规则事实与证据组织成可读解释。
-                  </p>
-                </div>
-                <Badge tone="accent">AI 解释</Badge>
-              </div>
-
+            <Collapse summary="AI 方向分析">
               <div className="analysis-grid">
                 <article className="analysis-card">
                   <h3><Icon name="compass" size={15} /> 方向概览</h3>
@@ -437,61 +414,47 @@ export function PlanDetail({
                   <Icon name="info" size={13} /> {result.analysis.boundary_note}
                 </p>
               ) : null}
-            </section>
+            </Collapse>
           ) : (
-            <EmptyState icon="sparkles" title="方向分析暂未生成" description="确定性路线和行动仍可查看；AI 解释失败不会改动规则事实。" />
+            <EmptyState compact icon="sparkles" title="方向分析暂未生成" />
           )}
 
-          <section className="explanation-panel" aria-labelledby="plan-explanation-title">
-            <div className="panel-head">
-              <div>
-                <p className="eyebrow">方案说明</p>
-                <h2 id="plan-explanation-title">AI 不修改路线、事实与数字</h2>
-              </div>
-              <Badge tone="muted">可追溯</Badge>
-            </div>
+          <Collapse summary="方案说明">
             {result.explanation ? (
               <div className="explanation-text">{result.explanation}</div>
             ) : (
-              <EmptyState compact icon="sparkles" title="本次没有生成解释" description="行动与资料状态仍来自确定性结果。" />
+              <p className="micro">本次没有生成解释。</p>
             )}
-          </section>
+          </Collapse>
         </div>
       ) : null}
 
       {activeTab === "campus" ? (
         <div className="plan-detail-panel" id="plan-panel-campus" role="tabpanel" aria-labelledby="plan-tab-campus">
-          <Callout tone="plain" icon="shield" title="这些是待核对的学校资料线索">
-            <p>
-              课程名称、竞赛名称和校内入口用于帮助你开始核对。学分、先修、开课学期、报名资格与校内认定必须以教务处、学院或当年官方通知为准。
-            </p>
+          <Callout tone="plain" icon="shield" title="课程与竞赛均为待核对线索">
+            <p className="small-note">学分、先修、开课学期与报名资格以教务处和当年官方通知为准。</p>
           </Callout>
           <LeadCards
-            eyebrow="课程"
-            title="国贸专业可优先了解的课程"
+            title="可优先了解的课程"
             leads={result.course_leads}
             empty="当前专业尚未配置课程线索；请在教务处培养方案中检索专业与年级。"
           />
           <LeadCards
-            eyebrow="竞赛"
-            title="与当前方向相关的竞赛线索"
+            title="与当前方向相关的竞赛"
             leads={result.competition_leads}
             empty={result.competition_leads.length === 0 ? "你已关闭竞赛选项，或当前方向尚未配置竞赛线索。" : "暂未匹配到竞赛线索。"}
           />
           <LeadCards
-            eyebrow="校内资源"
-            title="课程、实习、竞赛与第二课堂从哪里找"
+            title="校内资源从哪里找"
             leads={result.campus_resources}
             empty="当前学校尚未配置校内资源卡；可先从学校官网与学院通知入口开始。"
           />
 
           {result.courses.length > 0 || result.competitions.length > 0 ? (
-            <section className="verified-data-panel">
-              <div className="section-heading-text">
-                <p className="eyebrow">已核验结构化数据</p>
-                <h2>可以直接进入规则计算的事实</h2>
-                <p className="section-description">只有来源和适用年级完成核验的课程、竞赛才进入这里。</p>
-              </div>
+            <Collapse
+              summary={`已核验数据 · ${result.courses.length + result.competitions.length} 项`}
+              defaultOpen={false}
+            >
               {result.courses.length > 0 ? (
                 <div className="verified-data-group">
                   <h3>课程</h3>
@@ -517,7 +480,7 @@ export function PlanDetail({
                   ))}
                 </div>
               ) : null}
-            </section>
+            </Collapse>
           ) : null}
         </div>
       ) : null}
@@ -527,9 +490,7 @@ export function PlanDetail({
           {topThirty ? (
             <section className="semester-focus">
               <div className="section-heading-text">
-                <p className="eyebrow">先完成这段</p>
                 <h2>{topThirty.stage}：{topThirty.focus}</h2>
-                <p className="section-description">每项都包含“核对什么、做什么、用什么证据复核”，不把核对任务伪装成已经完成的计划。</p>
               </div>
               <Roadmap stages={[topThirty]} compact />
             </section>
@@ -538,11 +499,7 @@ export function PlanDetail({
           <section className="plan-actions-section" aria-labelledby="plan-actions-title">
             <div className="section-heading">
               <div className="section-heading-text">
-                <p className="eyebrow">行动清单</p>
                 <h2 id="plan-actions-title">按当前学期 / 下学期 / 更晚分组</h2>
-                <p className="section-description">
-                  修改时间、工时、备注或勾选完成会同步到方案版本；拖动排序只保存在本设备。
-                </p>
               </div>
               <Badge tone="muted">{orderedActions.length} 项</Badge>
             </div>
@@ -609,13 +566,7 @@ export function PlanDetail({
 
       {activeTab === "roadmap" ? (
         <div className="plan-detail-panel" id="plan-panel-roadmap" role="tabpanel" aria-labelledby="plan-tab-roadmap">
-          <div className="section-heading-text">
-            <p className="eyebrow">四年路线</p>
-            <h2>把“先比较主线”拆成每一阶段的证据与复核点</h2>
-            <p className="section-description">
-              路线可以随课程、实践和实习反馈调整。每次调整后，应重新核对准备成本与硬性资格。
-            </p>
-          </div>
+          <h2>四年路线：阶段里程碑与复核点</h2>
           <Roadmap stages={result.roadmap} />
         </div>
       ) : null}
@@ -657,9 +608,7 @@ export function PlanDetail({
 
           {isDataGapState ? (
             <Callout tone="warn" title="这次主要输出的是核对清单">
-              <p>
-                当前没有足够完整的专业事实来完成课程与学分推断。下面 {gapSummary.verifyCount} 项是“去核对什么”，不是已经确定的课程要求。
-              </p>
+              <p className="micro">下面 {gapSummary.verifyCount} 项是“去核对什么”，不是已确定的课程要求。</p>
               {gapSummary.titles.length > 0 ? (
                 <ul className="callout-list">
                   {gapSummary.titles.map((title) => <li key={title}>{title}</li>)}
@@ -668,20 +617,13 @@ export function PlanDetail({
             </Callout>
           ) : result.status !== "ok" ? (
             <Callout tone={result.status === "unsupported_direction" || result.status === "invalid_profile" ? "danger" : "warn"} title="这是部分结果">
-              <p>缺失的资料不会被补成虚构数字。完成核验或上传自己的资料后，可以重新生成方案。</p>
+              <p className="micro">缺失资料不会被补成虚构数字。</p>
             </Callout>
           ) : null}
 
-          <section className="panel" aria-labelledby="plan-gaps-title">
-            <div className="panel-head">
-              <div>
-                <p className="eyebrow">数据缺口</p>
-                <h2 id="plan-gaps-title">哪些资料还没就绪</h2>
-              </div>
-              <Badge tone={result.gaps.length > 0 ? "warn" : "ok"}>{result.gaps.length} 项</Badge>
-            </div>
+          <Collapse summary={`资料缺口与待核验 · ${result.gaps.length} 项`} defaultOpen={false}>
             {result.gaps.length === 0 ? (
-              <p className="panel-note">本次没有报告数据缺口；仍应按来源与核验状态逐项确认。</p>
+              <p className="micro">本次没有报告资料缺口。</p>
             ) : (
               <ul className="gap-card-list">
                 {result.gaps.map((gap, index) => (
@@ -695,63 +637,45 @@ export function PlanDetail({
                 ))}
               </ul>
             )}
-          </section>
+          </Collapse>
 
           <SourceUploadPanel />
 
-          <details className="plan-disclosure">
-            <summary>
-              <span><Icon name="database" size={15} /> 查看证据与引用（{evidence.length} 条）</span>
-              <Icon name="chevron-down" size={15} />
-            </summary>
-            <div className="plan-disclosure-body">
-              <CitationList citations={evidence} />
-            </div>
-          </details>
+          <Collapse summary={`证据与引用 · ${evidence.length} 条`} defaultOpen={false}>
+            <CitationList citations={evidence} />
+          </Collapse>
 
           {plan && plan.versions.length > 0 ? (
-            <details className="plan-disclosure">
-              <summary>
-                <span><Icon name="refresh" size={15} /> 查看版本元数据（{plan.versions.length} 个版本）</span>
-                <Icon name="chevron-down" size={15} />
-              </summary>
-              <div className="plan-disclosure-body">
-                <p className="version-meta">
-                  规则 {result.rules_version || "未提供"} · 画像 v{result.profile_version}
-                  {version ? ` · 方案 v${version.version} · ${formatDateTime(version.created_at)}` : ""}
-                </p>
-                <ul className="version-list">
-                  {[...plan.versions]
-                    .sort((a, b) => b.version - a.version)
-                    .map((item) => (
-                      <li className={item.version_id === plan.current_version_id ? "version-item is-current" : "version-item"} key={item.version_id}>
-                        <span className="version-no">v{item.version}</span>
-                        <span className="version-status">
-                          {item.version_id === plan.current_version_id ? "当前版本" : item.status === "stale" ? "已过期" : item.status}
-                        </span>
-                        <span className="version-meta">
-                          规则 {item.rules_version || "—"} · 画像 v{item.profile_version} · {formatDate(item.created_at)}
-                        </span>
-                      </li>
-                    ))}
-                </ul>
-              </div>
-            </details>
+            <Collapse summary={`版本 · ${plan.versions.length} 个`} defaultOpen={false}>
+              <p className="version-meta">
+                规则 {result.rules_version || "未提供"} · 画像 v{result.profile_version}
+                {version ? ` · 方案 v${version.version} · ${formatDateTime(version.created_at)}` : ""}
+              </p>
+              <ul className="version-list">
+                {[...plan.versions]
+                  .sort((a, b) => b.version - a.version)
+                  .map((item) => (
+                    <li className={item.version_id === plan.current_version_id ? "version-item is-current" : "version-item"} key={item.version_id}>
+                      <span className="version-no">v{item.version}</span>
+                      <span className="version-status">
+                        {item.version_id === plan.current_version_id ? "当前版本" : item.status === "stale" ? "已过期" : item.status}
+                      </span>
+                      <span className="version-meta">
+                        规则 {item.rules_version || "—"} · 画像 v{item.profile_version} · {formatDate(item.created_at)}
+                      </span>
+                    </li>
+                  ))}
+              </ul>
+            </Collapse>
           ) : null}
 
-          <details className="plan-disclosure">
-            <summary>
-              <span><Icon name="info" size={15} /> 资料边界与责任说明</span>
-              <Icon name="chevron-down" size={15} />
-            </summary>
-            <div className="plan-disclosure-body">
-              <p className="panel-note">
-                本方案用于生涯规划辅助，不构成就业、录取、考试或学分认定承诺。规则与 AI 都不会替你做最终决定。
-                课程、学分、先修、竞赛资格、校内认定和毕业要求，一律以教务处、学院与当年官方通知为准。
-                AI 只解释已提供的画像与规则事实，不改动硬排除条件、方向排序、课程资格或数字。
-              </p>
-            </div>
-          </details>
+          <Collapse summary="数据口径与边界" defaultOpen={false}>
+            <ul>
+              <li>课程与就业数据不在同一时间轴，不能互相解释。</li>
+              <li>东华 2021 的深造率已勘误，不沿用旧值。</li>
+              <li>pending 事实只是候选记录，不等于可直接比较的数字。</li>
+            </ul>
+          </Collapse>
         </div>
       ) : null}
     </div>

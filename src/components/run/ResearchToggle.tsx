@@ -45,7 +45,7 @@ export function ResearchToggle({ checked, onChange, label, description, disabled
           <span className="research-toggle-knob" />
         </span>
       </label>
-      <p className="research-toggle-note">{description}</p>
+      <p className="research-toggle-note micro">{description}</p>
     </div>
   );
 }

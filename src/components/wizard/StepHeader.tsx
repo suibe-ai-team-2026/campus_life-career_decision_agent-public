@@ -4,8 +4,10 @@ import { WIZARD_STEPS } from "@/lib/content";
 import { Badge, Icon } from "@/components/ui/primitives";
 
 /**
- * Shared per-step chrome: back link, step number/estimate, title, description and
- * a page-specific action slot (usually "跳过这一步" + primary continue).
+ * Shared per-step chrome: compact breadcrumb, title, one-line subtitle and a
+ * page-specific action slot (usually "跳过这一步" + primary continue).
+ *
+ * 副标题只放一行短提示；长解释一律交给页面里的 <Collapse>，避免每步开头堆成 PRD 段落。
  */
 export function StepHeader({
   index,
@@ -26,21 +28,20 @@ export function StepHeader({
 }) {
   const step = WIZARD_STEPS[index - 1];
   return (
-    <header className="step-header">
-      <div className="step-header-main">
-        <div className="step-header-eyebrow">
+    <header className="screen-head">
+      <div>
+        <p className="small-note">
           <Link href={backHref} className="back-link">
             <Icon name="arrow-left" size={14} />
             {backLabel}
           </Link>
-          <span className="step-header-crumb" aria-hidden="true">/</span>
-          <span className="step-header-step">
-            第 {step.index} 步 · {step.title}
-          </span>
+          <span aria-hidden="true"> · </span>
+          第 {step.index} 步 · {step.title}
+          <span aria-hidden="true"> · </span>
           <Badge tone="muted">{step.estimate}</Badge>
-        </div>
+        </p>
         <h1>{title}</h1>
-        <div className="step-header-description">{description}</div>
+        <p className="screen-sub">{description}</p>
         {meta ? <div className="step-header-meta">{meta}</div> : null}
       </div>
       {actions ? <div className="step-header-actions">{actions}</div> : null}

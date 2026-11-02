@@ -268,34 +268,79 @@ export function EmptyState({
   );
 }
 
+/**
+ * Inline run status. Replaces progress bars: a single line with a small
+ * animated mark and the current step, in the spirit of Gemini / Claude Code /
+ * Codex. Long detail belongs in a <Collapse>, never in a bar.
+ */
+export function RunStatus({
+  label,
+  detail,
+  state = "running",
+  className
+}: {
+  label: ReactNode;
+  detail?: ReactNode;
+  state?: "running" | "done" | "error" | "idle";
+  className?: string;
+}) {
+  return (
+    <div
+      className={["run-status", `run-status-${state}`, className].filter(Boolean).join(" ")}
+      role="status"
+      aria-live="polite"
+    >
+      <span className="run-status-mark" aria-hidden="true" />
+      <span className="run-status-label">{label}</span>
+      {detail ? <span className="run-status-detail">{detail}</span> : null}
+    </div>
+  );
+}
+
+/** @deprecated Use RunStatus. Kept so older call sites render an inline line, never a bar. */
 export function ProgressBar({
   value,
-  label,
-  tone = "accent"
+  label
 }: {
   value: number;
   label?: string;
   tone?: "accent" | "ok" | "warn";
 }) {
-  const clamped = Math.max(0, Math.min(100, Math.round(value)));
+  const pct = Math.max(0, Math.min(100, Math.round(value)));
   return (
-    <div className={`progress progress-${tone}`} role="group" aria-label={label ?? "进度"}>
-      <div
-        className="progress-track"
-        role="progressbar"
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-valuenow={clamped}
-        aria-label={label}
-      >
-        <span className="progress-fill" style={{ width: `${clamped}%` }} />
-      </div>
-      {label ? (
-        <span className="progress-label">
-          {label} · {clamped}%
-        </span>
-      ) : null}
-    </div>
+    <RunStatus
+      state={pct >= 100 ? "done" : "running"}
+      label={label ?? "处理中"}
+      detail={pct > 0 && pct < 100 ? `${pct}%` : undefined}
+    />
+  );
+}
+
+/**
+ * Native disclosure used for everything the user should not have to read by
+ * default: run traces, long explanations, data boundaries, source details.
+ */
+export function Collapse({
+  summary,
+  children,
+  defaultOpen = false,
+  className,
+  tone = "plain"
+}: {
+  summary: ReactNode;
+  children: ReactNode;
+  defaultOpen?: boolean;
+  className?: string;
+  tone?: "plain" | "quiet";
+}) {
+  return (
+    <details className={["collapse", `collapse-${tone}`, className].filter(Boolean).join(" ")} open={defaultOpen}>
+      <summary className="collapse-head">
+        <Icon name="chevron-right" size={14} className="collapse-chevron" />
+        <span className="collapse-title">{summary}</span>
+      </summary>
+      <div className="collapse-body">{children}</div>
+    </details>
   );
 }
 

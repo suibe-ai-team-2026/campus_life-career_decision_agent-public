@@ -34,10 +34,11 @@ import {
   Badge,
   Button,
   Callout,
+  Collapse,
   EmptyState,
   Icon,
   ListBlock,
-  ProgressBar,
+  RunStatus,
   formatDateTime,
   formatDate
 } from "@/components/ui/primitives";
@@ -56,13 +57,6 @@ const STAGE_LABELS: Record<Stage, string> = {
   submit: "提交导出任务",
   polling: "渲染 PDF",
   download: "获取短期下载链接"
-};
-
-const STAGE_PROGRESS: Record<Stage, number> = {
-  session: 5,
-  submit: 12,
-  polling: 45,
-  download: 90
 };
 
 type CachedPlanMeta = {
@@ -387,26 +381,18 @@ export function ExportStep() {
   }
 
   function renderGenerating() {
-    const progressValue = run ? Math.max(run.progress, STAGE_PROGRESS.polling) : STAGE_PROGRESS[stage];
     return (
       <section className="panel run-panel" aria-labelledby="export-run-title" aria-live="polite">
         <div className="panel-head">
           <div>
-            <p className="eyebrow">导出中</p>
-            <h2 id="export-run-title">{STAGE_LABELS[stage]}</h2>
+            <h2 id="export-run-title">正在生成 PDF</h2>
           </div>
-          <Badge tone="accent">{run ? runStageLabel(run.status) : STAGE_LABELS[stage]}</Badge>
+          <Badge tone="accent">{STAGE_LABELS[stage]}</Badge>
         </div>
-        <ProgressBar value={progressValue} label="导出进度" />
-        <div className="run-meta">
-          <span>
-            <Icon name="clock" size={13} /> 已等待 {elapsed} 秒
-          </span>
-          <span>PDF 在服务端渲染完成后，会返回约 60 秒有效的短期签名链接。</span>
-        </div>
-        <p className="panel-note">
-          流程：确认匿名会话 → 提交 kind=export 任务 → 轮询任务状态 → 服务端验权后签发下载地址。页面不会显示或记录签名链接。
-        </p>
+        <RunStatus
+          label={run ? runStageLabel(run.status) : "正在生成 PDF"}
+          detail={`已等待 ${elapsed} 秒`}
+        />
       </section>
     );
   }
@@ -419,13 +405,10 @@ export function ExportStep() {
       <>
         <section className="panel export-hero" aria-labelledby="export-hero-title">
           <div className="export-hero-main">
-            <p className="eyebrow">第 5 步 · 导出分享</p>
             <h2 id="export-hero-title">
               {downloadUrl ? "你的方案 PDF 已准备好" : "方案已就绪，可以生成 PDF"}
             </h2>
-            <p className="panel-note">
-              这份 PDF 会带上引用编号、规则版本、资料版本与待核验项；它明确写明这是<strong>职业探索问卷与自评</strong>，不是正式测评或就业承诺。
-            </p>
+            <p className="micro">职业探索问卷与自评，不是正式测评或就业承诺。</p>
             <div className="export-actions">
               {downloadUrl ? (
                 <a
@@ -456,58 +439,60 @@ export function ExportStep() {
             {downloadUrl ? (
               <p className="export-expiry">
                 <Icon name="clock" size={13} />
-                下载链接短期有效{expiresIn ? `（约 ${expiresIn} 秒）` : ""}，过期后点「刷新下载链接」重新获取；页面不会展示链接内容或 token。
-                {urlFetchedAt ? ` 获取于 ${formatDateTime(new Date(urlFetchedAt).toISOString())}` : ""}
+                下载链接短期有效{expiresIn ? `（约 ${expiresIn} 秒）` : ""}，过期请刷新。
               </p>
-            ) : null}
-            {exportedAt ? (
-              <p className="panel-note">
-                导出完成时间：{formatDateTime(exportedAt)}
-                {artifact?.artifact
-                  ? ` · 文件大小 ${artifact.artifact.bytes !== null ? `${Math.round((artifact.artifact.bytes / 1024) * 10) / 10} KB` : "未知"}`
-                  : ""}
-              </p>
-            ) : null}
-            {artifact?.artifact?.sha256 ? (
-              <p className="panel-note mono-note">文件校验 SHA-256：{artifact.artifact.sha256.slice(0, 24)}…（完整值不在页面展示）</p>
             ) : null}
           </div>
           <div className="export-hero-side">
-            <div className="export-side-block">
-              <span className="export-side-label">方向</span>
-              <strong>{directionInfo?.title ?? meta.directionId ?? "未提供"}</strong>
-            </div>
-            <div className="export-side-block">
-              <span className="export-side-label">方案版本</span>
-              <strong>{meta.version !== null ? `v${meta.version}` : "未提供"}</strong>
-            </div>
-            <div className="export-side-block">
-              <span className="export-side-label">规则版本</span>
-              <strong>{meta.rulesVersion ?? "未提供"}</strong>
-            </div>
-            <div className="export-side-block">
-              <span className="export-side-label">资料截止日</span>
-              <strong>{cutoff ?? "未提供（以引用条目的检索时间为准）"}</strong>
-            </div>
-            <div className="export-side-block">
-              <span className="export-side-label">画像版本</span>
-              <strong>{meta.profileVersion !== null ? `v${meta.profileVersion}` : "未提供"}</strong>
-            </div>
-            <div className="export-side-block">
-              <span className="export-side-label">资料版本</span>
-              <strong>{meta.corpusVersion ?? "未提供"}</strong>
-            </div>
+            <Collapse summary="方案元数据">
+              <div className="export-side-block">
+                <span className="export-side-label">方向</span>
+                <strong>{directionInfo?.title ?? meta.directionId ?? "未提供"}</strong>
+              </div>
+              <div className="export-side-block">
+                <span className="export-side-label">方案版本</span>
+                <strong>{meta.version !== null ? `v${meta.version}` : "未提供"}</strong>
+              </div>
+              <div className="export-side-block">
+                <span className="export-side-label">规则版本</span>
+                <strong>{meta.rulesVersion ?? "未提供"}</strong>
+              </div>
+              <div className="export-side-block">
+                <span className="export-side-label">资料截止日</span>
+                <strong>{cutoff ?? "未提供"}</strong>
+              </div>
+              <div className="export-side-block">
+                <span className="export-side-label">画像版本</span>
+                <strong>{meta.profileVersion !== null ? `v${meta.profileVersion}` : "未提供"}</strong>
+              </div>
+              <div className="export-side-block">
+                <span className="export-side-label">资料版本</span>
+                <strong>{meta.corpusVersion ?? "未提供"}</strong>
+              </div>
+              {exportedAt ? (
+                <div className="export-side-block">
+                  <span className="export-side-label">导出时间</span>
+                  <strong>{formatDateTime(exportedAt)}</strong>
+                </div>
+              ) : null}
+              {urlFetchedAt ? (
+                <div className="export-side-block">
+                  <span className="export-side-label">链接获取时间</span>
+                  <strong>{formatDateTime(new Date(urlFetchedAt).toISOString())}</strong>
+                </div>
+              ) : null}
+              {artifact?.artifact?.sha256 ? (
+                <div className="export-side-block">
+                  <span className="export-side-label">文件校验 SHA-256</span>
+                  <strong className="mono-note">{artifact.artifact.sha256.slice(0, 24)}…</strong>
+                </div>
+              ) : null}
+            </Collapse>
           </div>
         </section>
 
         <div className="export-two-col">
-          <section className="panel" aria-labelledby="export-contains-title">
-            <div className="panel-head">
-              <div>
-                <p className="eyebrow">PDF 内容</p>
-                <h2 id="export-contains-title">这份 PDF 会包含</h2>
-              </div>
-            </div>
+          <Collapse summary="PDF 内容">
             <ListBlock
               items={[
                 "你的暂定方向、理由、未知与下次复核时间（来自本设备记录）",
@@ -518,14 +503,8 @@ export function ExportStep() {
                 `规则版本 ${meta.rulesVersion ?? "—"} · 资料版本 ${meta.corpusVersion ?? "—"}`
               ]}
             />
-          </section>
-          <section className="panel" aria-labelledby="export-not-title">
-            <div className="panel-head">
-              <div>
-                <p className="eyebrow">边界</p>
-                <h2 id="export-not-title">这份 PDF 不是什么</h2>
-              </div>
-            </div>
+          </Collapse>
+          <Collapse summary="数据与引用边界">
             <ListBlock
               tone="warn"
               items={[
@@ -535,17 +514,10 @@ export function ExportStep() {
                 "资料未载入处不会用看起来合理的数字补齐"
               ]}
             />
-          </section>
+          </Collapse>
         </div>
 
-        <section className="panel" aria-labelledby="export-pending-title">
-          <div className="panel-head">
-            <div>
-              <p className="eyebrow">待核验项</p>
-              <h2 id="export-pending-title">导出前请留意</h2>
-            </div>
-            <Badge tone={pendingActions.length > 0 ? "warn" : "ok"}>{pendingActions.length} 项待核验行动</Badge>
-          </div>
+        <Collapse summary={<>待核验项{pendingActions.length > 0 ? `（${pendingActions.length} 项）` : ""}</>}>
           {planResult && planResult.gaps.length > 0 ? (
             <div className="export-gaps">
               <p className="panel-title">
@@ -574,7 +546,7 @@ export function ExportStep() {
               ))}
             </ul>
           ) : (
-            <p className="panel-note">本次没有标记为待核验的行动；仍建议按引用条目逐项核对官方资料。</p>
+            <p className="panel-note">本次没有标记为待核验的行动。</p>
           )}
           {planResult && planResult.warnings.length > 0 ? (
             <ul className="callout-list">
@@ -583,12 +555,11 @@ export function ExportStep() {
               ))}
             </ul>
           ) : null}
-        </section>
+        </Collapse>
 
         <section className="panel" aria-labelledby="export-citations-title">
           <div className="panel-head">
             <div>
-              <p className="eyebrow">引用</p>
               <h2 id="export-citations-title">PDF 中引用的来源</h2>
             </div>
             <Badge tone="muted">{planResult?.evidence.length ?? 0} 条</Badge>
@@ -602,9 +573,8 @@ export function ExportStep() {
 
         <section className="export-done" aria-labelledby="export-done-title">
           <div>
-            <p className="eyebrow">接下来</p>
             <h2 id="export-done-title">带着可核对的方案继续走</h2>
-            <p>你可以回到行动方案勾选完成、修改时间，或者重新开始一次新的探索；资料库随时可以查来源。</p>
+            <p className="micro">回行动方案勾选完成，或重新开始一次探索。</p>
           </div>
           <div className="export-done-actions">
             <Link href="/plan" className="btn btn-primary btn-md">
@@ -627,40 +597,39 @@ export function ExportStep() {
     return (
       <div className="plan-state-stack">
         <Callout tone="warn" title="本地演示模式：导出空态">
-          <p>
-            当前未配置云端，因此不能生成 PDF。页面不会提供伪造的下载按钮或虚构的文件。完成 Step 1–3 的本地进度后，这里会显示导出空态说明；配置云端并生成方案后即可下载带引用的 PDF。
-          </p>
+          <p className="small-note">云端未配置，不能生成 PDF；这里只展示本设备已保存的进度。</p>
         </Callout>
         <section className="panel" aria-labelledby="export-local-title">
           <div className="panel-head">
             <div>
-              <p className="eyebrow">导出空态</p>
               <h2 id="export-local-title">本设备已保存的内容</h2>
             </div>
             <Badge tone="muted">仅本地</Badge>
           </div>
-          {progress ? (
-            <ul className="kv-list kv-list-lg">
-              <li>
-                <span>暂定方向</span>
-                <strong>{directionInfo?.title ?? "未选择"}</strong>
-              </li>
-              <li>
-                <span>行动方案</span>
-                <strong>{progress.plan_id ? "已生成（云端）" : "尚未生成"}</strong>
-              </li>
-              <li>
-                <span>上次导出</span>
-                <strong>{progress.exported_at ? formatDateTime(progress.exported_at) : "未导出"}</strong>
-              </li>
-              <li>
-                <span>PDF 状态</span>
-                <strong>云端未启用，无法渲染</strong>
-              </li>
-            </ul>
-          ) : (
-            <EmptyState compact title="还没有本地进度" description="先完成第 1 步与第 3 步，再回来查看导出空态。" />
-          )}
+          <Collapse summary="进度明细">
+            {progress ? (
+              <ul className="kv-list kv-list-lg">
+                <li>
+                  <span>暂定方向</span>
+                  <strong>{directionInfo?.title ?? "未选择"}</strong>
+                </li>
+                <li>
+                  <span>行动方案</span>
+                  <strong>{progress.plan_id ? "已生成（云端）" : "尚未生成"}</strong>
+                </li>
+                <li>
+                  <span>上次导出</span>
+                  <strong>{progress.exported_at ? formatDateTime(progress.exported_at) : "未导出"}</strong>
+                </li>
+                <li>
+                  <span>PDF 状态</span>
+                  <strong>云端未启用，无法渲染</strong>
+                </li>
+              </ul>
+            ) : (
+              <EmptyState compact title="还没有本地进度" description="先完成第 1 步与第 3 步。" />
+            )}
+          </Collapse>
           <div className="export-actions">
             <Button variant="primary" size="md" onClick={() => router.push("/explore")}>
               先做自我探索
@@ -702,7 +671,6 @@ export function ExportStep() {
       <section className="panel blocked-panel" aria-labelledby="export-blocked-title">
         <div className="panel-head">
           <div>
-            <p className="eyebrow">还不能导出</p>
             <h2 id="export-blocked-title">先完成行动方案</h2>
           </div>
           <Badge tone="warn">缺少方案</Badge>
@@ -710,7 +678,7 @@ export function ExportStep() {
         <EmptyState
           icon="download"
           title="还没有可导出的方案"
-          description="导出 PDF 需要先在第 4 步生成行动方案。没有方案时不会生成空 PDF，也不会编造内容。"
+          description="需要先在第 4 步生成行动方案。"
         />
         <div className="local-actions">
           <Button variant="primary" size="md" onClick={() => router.push("/plan")}>
@@ -731,7 +699,7 @@ export function ExportStep() {
       <div className="plan-state-stack">
         <Callout tone="danger" title="导出没有完成" icon="alert">
           <p>{error}</p>
-          <p>没有生成可下载文件，也不会展示伪造链接。你可以重试，或先回行动方案确认内容。</p>
+          <p className="micro">没有生成可下载文件。可以重试，或回行动方案确认内容。</p>
         </Callout>
         <div className="local-actions">
           <Button variant="primary" size="md" onClick={handleRetry} disabled={!cloud}>
@@ -755,7 +723,6 @@ export function ExportStep() {
       <section className="panel" aria-labelledby="export-lite-title">
         <div className="panel-head">
           <div>
-            <p className="eyebrow">本地已保存的方案内容</p>
             <h2 id="export-lite-title">导出失败，但方案内容仍在</h2>
           </div>
           <Badge tone="muted">{planResult.actions.length} 项行动</Badge>
@@ -785,9 +752,7 @@ export function ExportStep() {
         index={5}
         title="带走一份可核对的方案 PDF"
         description={
-          <>
-            PDF 会带上引用、资料版本、规则版本与待核验项，并写明这是<strong>职业探索问卷与自评</strong>，不是正式测评或就业承诺。下载链接短期有效，不会在页面显示 token。
-          </>
+          <>带引用、资料版本与待核验项；明确是职业探索问卷与自评，不是正式测评或就业承诺。</>
         }
         actions={
           <>
@@ -831,13 +796,6 @@ export function ExportStep() {
       {phase === "local" ? renderLocalMode() : null}
       {phase === "blocked" ? renderBlocked() : null}
       {phase === "error" ? renderError() : null}
-
-      {phase !== "ready" ? (
-        <p className="panel-note export-disclaimer">
-          <Icon name="info" size={13} />
-          提示：即使没有云端导出，你也可以回到行动方案查看本设备保存的内容；资料库可以查看来源与引用规则。
-        </p>
-      ) : null}
     </div>
   );
 }

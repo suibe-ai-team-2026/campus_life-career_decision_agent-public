@@ -16,7 +16,7 @@ export function CloudModeBanner() {
       <strong>本地演示模式</strong>
       <span className="mode-banner-sep" aria-hidden="true">·</span>
       <span>仅本地进度，云端生成未启用</span>
-      <span className="mode-banner-note">五步中的 Step 1–3 与导出空态可完整走通</span>
+      <span className="mode-banner-note">五步中的 Step 1 到 3 与导出空态可完整走通</span>
     </div>
   );
 }

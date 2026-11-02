@@ -1,16 +1,16 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import "./design-v3.css";
 import { CloudModeBanner } from "@/components/layout/CloudModeBanner";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 
 export const metadata: Metadata = {
   title: {
-    default: "知途 Campus Pathway · 五步生涯向导",
-    template: "%s · 知途 Campus Pathway"
+    default: "知途 Campus Pathway",
+    template: "%s · 知途"
   },
-  description:
-    "知途（Campus Pathway）是面向大一大二学生的生涯规划向导：职业探索问卷画像、六个方向的牌面与数据缺口、可调整的行动方案，以及带引用与资料版本的 PDF。",
+  description: "知途：面向大一大二学生的生涯规划向导。职业探索画像、可比较的方向、可调整的行动方案与带引用的 PDF。",
   applicationName: "知途 Campus Pathway",
   icons: {
     icon: "/favicon.svg"
@@ -25,8 +25,8 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#171310" },
-    { media: "(prefers-color-scheme: light)", color: "#fbf7f0" }
+    { media: "(prefers-color-scheme: dark)", color: "#0f1112" },
+    { media: "(prefers-color-scheme: light)", color: "#f4f3ef" }
   ]
 };
 

@@ -19,13 +19,21 @@ import {
 } from "@/lib/api-client";
 import {
   DATA_SOURCES,
-  LIBRARY_ASK_BOUNDARY,
   LIBRARY_CATEGORIES,
-  LIBRARY_DISCLAIMER,
   LIBRARY_EXAMPLE_QUESTIONS,
   RESOURCE_BOUNDARIES
 } from "@/lib/content";
-import { Badge, Button, Callout, EmptyState, Icon, ListBlock, formatDateTime } from "@/components/ui/primitives";
+import {
+  Badge,
+  Button,
+  Callout,
+  Collapse,
+  EmptyState,
+  Icon,
+  ListBlock,
+  RunStatus,
+  formatDateTime
+} from "@/components/ui/primitives";
 import { CitationList, verificationDisplay } from "@/components/ui/CitationCard";
 import { AgentTrace } from "@/components/run/AgentTrace";
 import { ResearchToggle } from "@/components/run/ResearchToggle";
@@ -257,28 +265,25 @@ export function LibraryTool() {
             <div className="library-ask-empty">
               <EmptyState
                 icon="book"
+                compact
                 title="只回答与生涯资料有关的问题"
-                description="资料问答默认只使用已载入且允许展示的生涯资料，回答必须带引用；没有证据时会明确拒答。需要实时信息时可开启「联网补充」，网页结果会单独标注未核验。它不编造来源，也不做通用办公或闲聊。"
+                description="只用已载入的生涯资料回答，必须带引用。"
               />
-              <div className="example-questions">
-                <p className="panel-title">
-                  <Icon name="sparkles" size={15} /> 可以这样问
-                </p>
-                <div className="example-question-list">
+              <Collapse summary={<>示例问题</>}>
+                <div className="prompt-chips">
                   {LIBRARY_EXAMPLE_QUESTIONS.map((example) => (
                     <button
                       type="button"
                       key={example}
-                      className="example-question"
+                      className="prompt-chip"
                       onClick={() => setQuestion(example)}
                       disabled={!cloud}
                     >
                       {example}
-                      <Icon name="chevron-right" size={13} />
                     </button>
                   ))}
                 </div>
-              </div>
+              </Collapse>
             </div>
           ) : (
             <ul className="message-list">
@@ -302,7 +307,7 @@ export function LibraryTool() {
                       <p>{message.content}</p>
                       {message.boundaryNote ? <p className="message-boundary">{message.boundaryNote}</p> : null}
                       <p className="message-boundary">
-                        可能原因：资料库中没有足够证据，或问题超出了已载入的生涯资料范围。可以换一个与培养方案、就业报告、竞赛目录、学生手册或招聘要求相关的问题。
+                        可换成与培养方案、就业报告、竞赛目录、学生手册或招聘要求相关的问题。
                       </p>
                     </div>
                   ) : (
@@ -319,17 +324,20 @@ export function LibraryTool() {
                     </div>
                   )}
                   {message.trace && message.trace.length > 0 ? (
-                    <details className="message-trace">
-                      <summary>
-                        <Icon name="activity" size={13} />
-                        执行轨迹
-                        <span className="message-trace-meta">
-                          {message.traceStatus === "succeeded" ? "已完成" : message.traceStatus === "failed" ? "失败" : "已结束"} ·{" "}
-                          {message.trace.length} 条活动
-                        </span>
-                      </summary>
+                    <Collapse
+                      summary={
+                        <>
+                          <Icon name="activity" size={13} />
+                          执行轨迹
+                          <span className="message-trace-meta">
+                            {message.traceStatus === "succeeded" ? "已完成" : message.traceStatus === "failed" ? "失败" : "已结束"} ·{" "}
+                            {message.trace.length} 条活动
+                          </span>
+                        </>
+                      }
+                    >
                       <AgentTrace events={message.trace} running={false} status={message.traceStatus ?? null} />
-                    </details>
+                    </Collapse>
                   ) : null}
                 </li>
               ))}
@@ -338,16 +346,10 @@ export function LibraryTool() {
                   <div className="message-head">
                     <span className="message-role">知途资料助手</span>
                   </div>
-                  <AgentTrace
-                    events={askTrace}
-                    running
-                    status={askRunStatus}
-                    emptyHint={
-                      webSupplement
-                        ? "正在提交问题；开启联网补充后会先检索实时网页，等待云端 worker 的第一条活动…"
-                        : "正在提交问题，等待云端 worker 的第一条活动（首次唤醒约 30–90 秒）…"
-                    }
-                  />
+                  <RunStatus label="正在生成回答" detail="首次唤醒约 30 到 90 秒" />
+                  <Collapse summary={<>执行轨迹（进行中）</>}>
+                    <AgentTrace events={askTrace} running status={askRunStatus} />
+                  </Collapse>
                 </li>
               ) : null}
             </ul>
@@ -369,50 +371,48 @@ export function LibraryTool() {
             checked={webSupplement}
             onChange={setWebSupplement}
             disabled={!cloud || asking}
-            label="联网补充（实时网页搜索）"
-            description="开启后会访问外部网站做实时网页搜索，结果未经核验，只作为补充线索；引用会单独标注「实时网页 · 未核验」。默认关闭，只用已载入资料。"
+            label="联网补充"
+            description="检索实时网页，结果未核验并单独标注；默认只用已载入资料。"
             className="composer-options"
           />
-          <textarea
-            id="library-question"
-            className="textarea composer-textarea"
-            rows={3}
-            maxLength={1000}
-            value={question}
-            placeholder={
-              cloud
-                ? "问一个与生涯资料有关的问题，例如：培养方案里有哪些相关课程？"
-                : "云端知识库未启用：当前为本地演示模式，不能发起资料问答。"
-            }
-            onChange={(event) => {
-              setQuestion(event.target.value);
-              setComposerError(null);
-            }}
-            disabled={!cloud || asking}
-            aria-describedby="library-composer-hint"
-          />
-          <div className="composer-foot">
-            <div className="composer-hint" id="library-composer-hint">
-              <span>{question.length} / 1000 字</span>
-              <span>历史最多 4 条（约 2 轮）</span>
-            </div>
+          <div className="chat-composer">
+            <textarea
+              id="library-question"
+              className="textarea"
+              rows={1}
+              maxLength={1000}
+              value={question}
+              placeholder={
+                cloud
+                  ? "问一个与生涯资料有关的问题…"
+                  : "云端知识库未启用：本地演示模式不能发起资料问答。"
+              }
+              onChange={(event) => {
+                setQuestion(event.target.value);
+                setComposerError(null);
+              }}
+              disabled={!cloud || asking}
+              aria-describedby="library-composer-hint"
+            />
             <Button variant="primary" size="md" type="submit" disabled={!cloud || asking || question.trim().length < 2}>
               <Icon name="sparkles" size={15} />
               {asking ? "回答中…" : "提问"}
             </Button>
           </div>
+          <p className="composer-hint micro" id="library-composer-hint">
+            <span>{question.length} / 1000 字</span>
+          </p>
           {composerError ? (
             <p className="field-error" role="alert">
               {composerError}
             </p>
           ) : null}
           {!cloud ? (
-            <p className="composer-disabled-note">
+            <p className="composer-disabled-note micro">
               <Icon name="database" size={13} />
-              本地演示模式：资料问答需要云端知识库与检索服务，当前不会调用 AI，也不会返回伪造引用。
+              本地演示模式：资料问答需要云端知识库与检索服务。
             </p>
           ) : null}
-          <p className="composer-disclaimer">{LIBRARY_ASK_BOUNDARY}</p>
         </form>
       </div>
     );
@@ -492,9 +492,7 @@ export function LibraryTool() {
 
         {!cloud ? (
           <Callout tone="warn" title="云端资料未载入">
-            <p>
-              本地演示模式下没有云端来源目录，因此不能展示来源条目或引用。下面是产品计划支持的生涯资料类型与当前状态；未载入不等于没有，也不代表可以用其他数字代替。
-            </p>
+            <p className="micro">本地演示模式没有云端来源目录，下列仅为产品支持的资料类型。</p>
           </Callout>
         ) : null}
 
@@ -546,12 +544,9 @@ export function LibraryTool() {
         ) : sourcesState === "ready" ? (
           <EmptyState
             icon="database"
+            compact
             title={activeFilter ? `「${activeFilter.label}」暂无已载入来源` : "来源目录为空"}
-            description={
-              cloud
-                ? "云端来源目录没有返回条目。未载入不代表资料不存在；系统不会用其他来源替代，也不会编造引用。"
-                : "本地演示模式下不展示来源条目。配置云端并完成资料导入后，这里会展示已核验的来源、版本与解析状态。"
-            }
+            description={cloud ? "云端来源目录没有返回条目。" : "本地演示模式不展示来源条目。"}
           />
         ) : null}
       </div>
@@ -562,13 +557,8 @@ export function LibraryTool() {
     <div className="library-page">
       <header className="library-header">
         <div>
-          <p className="eyebrow">
-            <Icon name="book" size={14} /> 资料库 · 生涯资料问答
-          </p>
           <h1>先把资料来源看清楚，再谈结论</h1>
-          <p className="library-lead">
-            {LIBRARY_DISCLAIMER} 这里只保留与生涯相关的资料问答、来源查看与官方报告筛选，不做通用办公、播客或视频工具。
-          </p>
+          <p className="library-lead micro">只做生涯资料问答、来源查看与官方报告筛选。</p>
         </div>
         <Badge tone={cloud ? "ok" : "warn"}>{cloud ? "云端知识库已启用" : "本地演示模式"}</Badge>
       </header>
@@ -607,29 +597,18 @@ export function LibraryTool() {
         </div>
 
         <aside className="library-aside" aria-label="资料库说明">
-          <div className="panel">
-            <p className="panel-title">
-              <Icon name="shield" size={15} /> 资料边界
-            </p>
+          <Collapse summary={<><Icon name="shield" size={15} /> 数据与引用边界</>}>
             <ul className="boundary-list">
               {RESOURCE_BOUNDARIES.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
-          </div>
-          <div className="panel">
-            <p className="panel-title">
-              <Icon name="database" size={15} /> 计划中的数据来源
-            </p>
+            <p className="micro">引用编号由服务端分配；联网补充的结果标注「未核验」。</p>
+          </Collapse>
+          <Collapse summary={<><Icon name="database" size={15} /> 计划中的数据来源</>}>
             <ListBlock items={DATA_SOURCES.slice()} />
-            <p className="panel-note">
-              未授权或未载入的资料不会进入问答；默认不联网，开启「联网补充」时才会检索实时网页并标注未核验。
-            </p>
-          </div>
-          <div className="panel">
-            <p className="panel-title">
-              <Icon name="list" size={15} /> 当前状态
-            </p>
+          </Collapse>
+          <Collapse summary={<><Icon name="list" size={15} /> 当前状态</>}>
             <ul className="kv-list">
               <li>
                 <span>知识库</span>
@@ -641,26 +620,18 @@ export function LibraryTool() {
               </li>
               <li>
                 <span>问答历史</span>
-                <strong>{messages.filter((message) => !message.isError).length} 条（最多带 4 条给模型）</strong>
+                <strong>{messages.filter((message) => !message.isError).length} 条</strong>
               </li>
               <li>
                 <span>联网补充</span>
-                <strong>{webSupplement ? "开启（本次提问会检索实时网页）" : "关闭（只用已载入资料）"}</strong>
+                <strong>{webSupplement ? "开启" : "关闭"}</strong>
               </li>
               <li>
                 <span>页面状态</span>
                 <strong>{hydrated ? "就绪" : "加载中"}</strong>
               </li>
             </ul>
-          </div>
-          <div className="panel">
-            <p className="panel-title">
-              <Icon name="alert" size={15} /> 引用与拒答
-            </p>
-            <p className="panel-note">
-              回答中的引用编号由服务端分配，对应消息下方的引用卡；开启联网补充时，网页引用会提供来源链接并标注「实时网页 · 未核验」。没有证据时会明确拒答，而不是给一个听起来合理的答案。
-            </p>
-          </div>
+          </Collapse>
         </aside>
       </div>
     </div>
