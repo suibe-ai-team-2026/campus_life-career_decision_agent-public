@@ -11,10 +11,11 @@
 | `major-map.json` | 专业别名 → 方向/竞赛映射 | 16+ 专业 | 团队整理 |
 | `resources.json` | 校内入口（教务/就业/团委/图书馆/学院…）+ 外部平台（学职平台/我爱竞赛网…） | 47 条 | official_lead / external_reference |
 | `graduate_recommendation.json` | 上外贸推免综合成绩构成：学习成绩/专业排名分值、竞赛个人&团体获奖计分、荣誉与社会服务规则 | 1 份规则 | 用户提供资料，pending（各学院细则不同） |
+| `industry.json` | BOSS 直聘实习 JD 快照（2026-10-17）聚合：4 个岗位族的方向映射、高频要求、学历/证书、广告薪资；+ 学校就业行业分布 | 5 个岗位族 / 5 条校级行业事实 | external_reference（非代表性抽样） |
 
 ## 使用方式
 
-- **plan**：`build_course_leads` 按专业取培养方案课程；`build_competition_leads` 按方向/专业/年级/经历筛选竞赛并带 A/B/C 等级；`build_campus_facts` 输出就业事实卡；`build_campus_resources` 输出校内/外部入口。
+- **plan**：`build_industry_leads` 输出方向相关的招聘快照与学校行业分布；`build_course_leads` 按专业取培养方案课程；`build_competition_leads` 按方向/专业/年级/经历筛选竞赛并带 A/B/C 等级；`build_campus_facts` 输出就业事实卡；`build_campus_resources` 输出校内/外部入口。
 - **ask**：`reference.search()` 按问题意图检索竞赛/课程/就业/资源，作为证据拼在 RAG 结果之后；RAG 无结果时仍可基于参考数据回答，引用卡来源标记为「团队参考数据」。
 
 ## 边界（写材料时必须保留）

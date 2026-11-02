@@ -376,6 +376,7 @@ function normalizePlanResult(raw: unknown): PlanResult | null {
     competition_leads: normalizeLeads(raw.competition_leads),
     campus_resources: normalizeLeads(raw.campus_resources),
     campus_facts: normalizeLeads(raw.campus_facts),
+    industry_leads: normalizeLeads(raw.industry_leads),
     roadmap: normalizeRoadmap(raw.roadmap),
     warnings: strArray(raw.warnings)
   };

@@ -1,0 +1,496 @@
+{
+ "schema_version": "career-reference-industry-v1",
+ "generated_at": "2026-11-02",
+ "source": {
+  "title": "BOSS直聘实习岗位快照（2026-10-17 采集）",
+  "publisher": "smart-campus-career/data/research/boss-market-2026-10-17（团队研究）",
+  "url": "https://www.zhipin.com/",
+  "date": "2026-10-17",
+  "note": "非代表性抽样，主要为上海实习与初级关键词；只保留规范化摘要与出处，不复制完整 JD。",
+  "limitations": [
+   "非代表性目的抽样，主要为上海实习及初级关键词；不反映完整市场规模",
+   "列表标签和JD要求分别保存，有冲突时显示双方，不自动合并",
+   "学历以上的边界按原文保留；院校偏好不等于硬性录用门槛",
+   "未提及不等于不需要；职责技能不等于入职资格",
+   "公司仅为平台展示名，未独立核验法人、真实雇主、招聘真实性或录用结果",
+   "金融检索触发环境风险后停止；没有刷新、重登、自动重试或更换通道绕过",
+   "不保存招聘者身份、联系方式、securityId、lid、Cookie或登录凭据；不投递或沟通",
+   "不在交付物复制完整JD；保留规范化摘要、出处和原文哈希"
+  ]
+ },
+ "groups": [
+  {
+   "group_id": "trade_language",
+   "major_group": "国贸 / 商务英语",
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business"
+   ],
+   "sample_size": 4,
+   "status": "sample_available",
+   "education": {
+    "大专": 3,
+    "本科": 1
+   },
+   "certificates_required": {
+    "英语四级": 3
+   },
+   "certificates_preferred": {},
+   "school_preference_mentions": 0,
+   "requirement_categories": {
+    "professional_skill": {
+     "外贸流程": 2,
+     "办公软件": 1,
+     "沟通执行": 1,
+     "英语口语流利": 1,
+     "英语书信写作": 1,
+     "沟通解决问题": 1,
+     "英语口语": 1,
+     "独立客户开发": 1
+    },
+    "work_task_skill": {
+     "客户开发": 1,
+     "订单跟进": 1,
+     "询盘管理": 1,
+     "商务邮件": 1,
+     "海外客户开发": 1,
+     "报价下单发货": 1,
+     "销售计划": 1,
+     "B2B询盘": 1
+    },
+    "certificate": {
+     "英语四级": 3
+    }
+   },
+   "top_terms": [
+    {
+     "term": "英语四级",
+     "count": 3
+    },
+    {
+     "term": "外贸流程",
+     "count": 2
+    },
+    {
+     "term": "商务邮件",
+     "count": 2
+    },
+    {
+     "term": "办公软件",
+     "count": 1
+    },
+    {
+     "term": "沟通执行",
+     "count": 1
+    },
+    {
+     "term": "英语口语流利",
+     "count": 1
+    },
+    {
+     "term": "客户开发",
+     "count": 1
+    },
+    {
+     "term": "订单跟进",
+     "count": 1
+    },
+    {
+     "term": "询盘管理",
+     "count": 1
+    },
+    {
+     "term": "英语书信写作",
+     "count": 1
+    }
+   ],
+   "salary_snapshot": [
+    "10-15K",
+    "12-20K",
+    "12-24K"
+   ],
+   "job_families": [
+    "外贸销售"
+   ],
+   "companies_anonymized": 4,
+   "note": "上海实习/初级岗位的招聘广告快照；非代表性抽样，不等于录用结果，未提及不等于不需要。"
+  },
+  {
+   "group_id": "accounting",
+   "major_group": "会计 / 审计 / 财管",
+   "direction_ids": [
+    "finance_accounting"
+   ],
+   "sample_size": 4,
+   "status": "sample_available",
+   "education": {
+    "本科": 2,
+    "大专": 1,
+    "学历不限": 1
+   },
+   "certificates_required": {},
+   "certificates_preferred": {},
+   "school_preference_mentions": 0,
+   "requirement_categories": {
+    "professional_skill": {
+     "办公软件": 2,
+     "学习能力": 2,
+     "沟通": 1,
+     "书面写作": 1,
+     "表达沟通": 1,
+     "团队协作": 1,
+     "财务审计基础": 1,
+     "沟通协作": 1
+    },
+    "work_task_skill": {
+     "审计底稿": 2,
+     "报告与资料整理": 1,
+     "会计审计准则": 1,
+     "审计流程": 1,
+     "盘点与凭证抽查": 1,
+     "底稿归档": 1,
+     "档案整理": 1,
+     "专项审计": 1
+    }
+   },
+   "top_terms": [
+    {
+     "term": "办公软件",
+     "count": 2
+    },
+    {
+     "term": "学习能力",
+     "count": 2
+    },
+    {
+     "term": "审计底稿",
+     "count": 2
+    },
+    {
+     "term": "沟通",
+     "count": 1
+    },
+    {
+     "term": "书面写作",
+     "count": 1
+    },
+    {
+     "term": "报告与资料整理",
+     "count": 1
+    },
+    {
+     "term": "表达沟通",
+     "count": 1
+    },
+    {
+     "term": "团队协作",
+     "count": 1
+    },
+    {
+     "term": "会计审计准则",
+     "count": 1
+    },
+    {
+     "term": "审计流程",
+     "count": 1
+    }
+   ],
+   "salary_snapshot": [
+    "80-120元/天",
+    "100-120元/天",
+    "100-150元/天",
+    "150-180元/天"
+   ],
+   "job_families": [
+    "外部审计",
+    "审计助理",
+    "企业内部审计"
+   ],
+   "companies_anonymized": 4,
+   "note": "上海实习/初级岗位的招聘广告快照；非代表性抽样，不等于录用结果，未提及不等于不需要。"
+  },
+  {
+   "group_id": "finance",
+   "major_group": "金融",
+   "direction_ids": [],
+   "sample_size": 0,
+   "status": "not_collected_due_to_environment_risk",
+   "education": {},
+   "certificates_required": {},
+   "certificates_preferred": {},
+   "school_preference_mentions": 0,
+   "requirement_categories": {},
+   "top_terms": [],
+   "salary_snapshot": [],
+   "job_families": [],
+   "companies_anonymized": 0,
+   "note": "上海实习/初级岗位的招聘广告快照；非代表性抽样，不等于录用结果，未提及不等于不需要。"
+  },
+  {
+   "group_id": "law",
+   "major_group": "法学",
+   "direction_ids": [
+    "public_service"
+   ],
+   "sample_size": 4,
+   "status": "sample_available",
+   "education": {
+    "学历不限": 1,
+    "本科": 3
+   },
+   "certificates_required": {},
+   "certificates_preferred": {
+    "法律职业资格考试通过": 1
+   },
+   "school_preference_mentions": 1,
+   "requirement_categories": {
+    "professional_skill": {
+     "法律检索": 2,
+     "合同审核": 1,
+     "风险识别": 1,
+     "民商法基础": 1,
+     "文书起草": 1,
+     "沟通协调": 1,
+     "企业合规基础": 1,
+     "英文法律文本阅读": 1
+    },
+    "work_task_skill": {
+     "合同台账": 1,
+     "知识产权档案": 1,
+     "劳动用工合规": 1,
+     "数据合规": 1,
+     "合规问答资料": 1,
+     "跨法域案例检索": 1,
+     "欧美法规追踪": 1,
+     "监管简报": 1
+    },
+    "certificate": {
+     "法律职业资格考试通过": 1
+    }
+   },
+   "top_terms": [
+    {
+     "term": "合同审核",
+     "count": 2
+    },
+    {
+     "term": "法律检索",
+     "count": 2
+    },
+    {
+     "term": "法律研究",
+     "count": 2
+    },
+    {
+     "term": "风险识别",
+     "count": 1
+    },
+    {
+     "term": "民商法基础",
+     "count": 1
+    },
+    {
+     "term": "文书起草",
+     "count": 1
+    },
+    {
+     "term": "沟通协调",
+     "count": 1
+    },
+    {
+     "term": "企业合规基础",
+     "count": 1
+    },
+    {
+     "term": "合同台账",
+     "count": 1
+    },
+    {
+     "term": "知识产权档案",
+     "count": 1
+    }
+   ],
+   "salary_snapshot": [
+    "150-200元/天",
+    "150-180元/天",
+    "160-180元/天",
+    "200-250元/天"
+   ],
+   "job_families": [
+    "企业法务与合规",
+    "涉外合规研究",
+    "企业法务",
+    "AI业务法务合规"
+   ],
+   "companies_anonymized": 4,
+   "note": "上海实习/初级岗位的招聘广告快照；非代表性抽样，不等于录用结果，未提及不等于不需要。"
+  },
+  {
+   "group_id": "data",
+   "major_group": "数据科学 / 数据复合方向",
+   "direction_ids": [
+    "data_business"
+   ],
+   "sample_size": 3,
+   "status": "sample_available",
+   "education": {
+    "本科": 3
+   },
+   "certificates_required": {},
+   "certificates_preferred": {},
+   "school_preference_mentions": 0,
+   "requirement_categories": {
+    "professional_skill": {
+     "Python": 1,
+     "SQL": 1,
+     "Excel透视表": 1,
+     "数理逻辑": 1,
+     "SQL基础": 1,
+     "项目推动": 1,
+     "团队协作": 1,
+     "学习能力": 1
+    },
+    "work_task_skill": {
+     "数据清洗": 1,
+     "探索分析": 1,
+     "统计验证": 1,
+     "可视化": 1,
+     "业务建议": 1,
+     "业务需求分析": 1,
+     "产品全流程跟进": 1,
+     "行业研究": 1
+    }
+   },
+   "top_terms": [
+    {
+     "term": "Python",
+     "count": 1
+    },
+    {
+     "term": "SQL",
+     "count": 1
+    },
+    {
+     "term": "Excel透视表",
+     "count": 1
+    },
+    {
+     "term": "数理逻辑",
+     "count": 1
+    },
+    {
+     "term": "数据清洗",
+     "count": 1
+    },
+    {
+     "term": "探索分析",
+     "count": 1
+    },
+    {
+     "term": "统计验证",
+     "count": 1
+    },
+    {
+     "term": "可视化",
+     "count": 1
+    },
+    {
+     "term": "业务建议",
+     "count": 1
+    },
+    {
+     "term": "SQL基础",
+     "count": 1
+    }
+   ],
+   "salary_snapshot": [
+    "250-300元/天",
+    "200-300元/天",
+    "200-230元/天",
+    "100-120元/天"
+   ],
+   "job_families": [
+    "数据分析",
+    "数据产品分析",
+    "广告数据分析"
+   ],
+   "companies_anonymized": 3,
+   "note": "上海实习/初级岗位的招聘广告快照；非代表性抽样，不等于录用结果，未提及不等于不需要。"
+  }
+ ],
+ "direction_defaults": {
+  "trade_supply_chain": [
+   "trade_language"
+  ],
+  "cross_border_business": [
+   "trade_language"
+  ],
+  "finance_accounting": [
+   "accounting"
+  ],
+  "data_business": [
+   "data"
+  ],
+  "public_service": [
+   "law"
+  ],
+  "further_study": []
+ },
+ "school_industry": [
+  {
+   "cohort": "2021届",
+   "metric": "在沪就业比例",
+   "value": 82.4,
+   "unit": "percent",
+   "quote": "在上海市就业的比例为82.40%， 较去年上升2.39%；2021 届硕士毕业生在上海市就业的比例为66.43%，三年来首次 降至70%以下。值得注意的是，2021 届有1.12%的本科毕业生、3.73%的硕士毕业生 选择广东省就业；202",
+   "source_title": "上海对外经贸大学2021届毕业生就业质量年度报告",
+   "source_url": "https://www.suibe.edu.cn/_upload/article/files/3a/5c/4b03a3394775aa0b57ba1f3eaf4d/f59606f0-5637-4a5f-9ddc-b60ceb961d70.pdf",
+   "locator": "data/research/suibe-2026-10-18/extracted/pdf-text/2021届-就业质量年度报告-提取全文.txt 第 2522–2660 行（机器提取文本，无页码）",
+   "verification_status": "pending"
+  },
+  {
+   "cohort": "2021届",
+   "metric": "就业单位性质分布",
+   "value": 39.33,
+   "unit": "percent",
+   "quote": "要流向“中小企业”（39.33%）、“三资企业”（27.98%）和 “国有企业”（21.66%）；硕士毕业生主要流向“国有企业”（32.53%）、“中小企业” （31.11%）、和“三资企业”（19.69%）。 表 1- 7 2021 届毕",
+   "source_title": "上海对外经贸大学2021届毕业生就业质量年度报告",
+   "source_url": "https://www.suibe.edu.cn/_upload/article/files/3a/5c/4b03a3394775aa0b57ba1f3eaf4d/f59606f0-5637-4a5f-9ddc-b60ceb961d70.pdf",
+   "locator": "data/research/suibe-2026-10-18/extracted/pdf-text/2021届-就业质量年度报告-提取全文.txt 第 1027–1178 行（机器提取文本，无页码）",
+   "verification_status": "pending"
+  },
+  {
+   "cohort": "2021届",
+   "metric": "主要就业行业",
+   "value": null,
+   "unit": null,
+   "quote": "，研究生 76 人。就业行业主要集中于工商贸易、银行保险证券、教 育、航运物流、互联网、会计师事务所和律师事务所等领域。 二、专业对口度 根据2021 届毕业生就业与培养调查结果显示，学校2021 届毕业生目前就职岗位 与所学专业的对口度为",
+   "source_title": "上海对外经贸大学2021届毕业生就业质量年度报告",
+   "source_url": "https://www.suibe.edu.cn/_upload/article/files/3a/5c/4b03a3394775aa0b57ba1f3eaf4d/f59606f0-5637-4a5f-9ddc-b60ceb961d70.pdf",
+   "locator": "data/research/suibe-2026-10-18/extracted/pdf-text/2021届-就业质量年度报告-提取全文.txt 第 2318–2417 行（机器提取文本，无页码）",
+   "verification_status": "pending"
+  },
+  {
+   "cohort": "2022届",
+   "metric": "在沪就业比例",
+   "value": 71.86,
+   "unit": "percent",
+   "quote": "，其中在沪就业比例为71.86%，国内其他省市就",
+   "source_title": "上海对外经贸大学2022届毕业生就业质量年度报告",
+   "source_url": "https://www.suibe.edu.cn/_upload/article/files/fa/b0/7846d16447ef8cb47e51fdd253b8/cf542e07-dd7b-43e0-9fcf-c356684bcdb1.pdf",
+   "locator": "data/research/suibe-2026-10-18/extracted/pdf-text/2022届-就业质量年度报告-提取全文.txt 第 72–167 行（机器提取文本，无页码）",
+   "verification_status": "pending"
+  },
+  {
+   "cohort": "2022届",
+   "metric": "主要就业行业",
+   "value": null,
+   "unit": null,
+   "quote": "位所属行业看，毕业生就业人数较多的行业主要包括商 务服务业、货币金融服务、其他服务业、互联网及相关服务、软件和 信息技术服务业、其他金融业、教育等（见图1-4）。 4 图1-4 2022 届毕业生就业行业分布统计（前10） 71.19%的2",
+   "source_title": "上海对外经贸大学2022届毕业生就业质量年度报告",
+   "source_url": "https://www.suibe.edu.cn/_upload/article/files/fa/b0/7846d16447ef8cb47e51fdd253b8/cf542e07-dd7b-43e0-9fcf-c356684bcdb1.pdf",
+   "locator": "data/research/suibe-2026-10-18/extracted/pdf-text/2022届-就业质量年度报告-提取全文.txt 第 168–304 行（机器提取文本，无页码）",
+   "verification_status": "pending"
+  }
+ ]
+}

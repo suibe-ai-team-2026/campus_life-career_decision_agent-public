@@ -134,7 +134,8 @@ def test_planning_never_returns_empty_leads_for_suibe_majors(major: str, directi
     assert blueprint.competition_leads, f"{major}/{direction} competition leads empty"
     assert blueprint.campus_resources, f"{major}/{direction} campus resources empty"
     assert blueprint.campus_facts, f"{major}/{direction} campus facts empty"
-    for lead in [*blueprint.course_leads, *blueprint.competition_leads, *blueprint.campus_resources, *blueprint.campus_facts]:
+    assert blueprint.industry_leads, f"{major}/{direction} industry leads empty"
+    for lead in [*blueprint.course_leads, *blueprint.competition_leads, *blueprint.campus_resources, *blueprint.campus_facts, *blueprint.industry_leads]:
         assert lead.title.strip()
         assert lead.source_label.strip()
         assert lead.verification_status in {"known", "official_lead", "external_reference", "pending_verification", "data_missing"}
@@ -189,3 +190,16 @@ def test_competition_leads_mention_recommendation_points():
     leads = list(blueprint.competition_leads)
     assert leads
     assert any("推免" in (lead.description or "") for lead in leads), [lead.description for lead in leads[:3]]
+
+
+def test_industry_snapshot_is_in_recommendations():
+    doc = _load("industry.json")
+    groups = [g for g in doc.get("groups") or [] if g.get("sample_size")]
+    assert groups, "industry snapshot empty"
+    assert any(g.get("top_terms") for g in groups)
+    blueprint = build_planning_blueprint(_profile("金融学"), "finance_accounting")
+    titles = [lead.title for lead in blueprint.industry_leads]
+    assert any("招聘快照" in title for title in titles), titles
+    assert any("就业" in title or "单位性质" in title or "行业" in title for title in titles), titles
+    hits = reference.search("金融行业招聘要求是什么？", limit=4)
+    assert any(item["kind"] == "industry" for item in hits)

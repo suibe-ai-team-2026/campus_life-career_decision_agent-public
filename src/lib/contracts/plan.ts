@@ -140,6 +140,7 @@ export const PlanResultSchema = z.object({
   competition_leads: z.array(PlanLeadSchema).default([]),
   campus_resources: z.array(PlanLeadSchema).default([]),
   campus_facts: z.array(PlanLeadSchema).default([]),
+  industry_leads: z.array(PlanLeadSchema).default([]),
   roadmap: z.array(PlanRoadmapStageSchema).default([]),
   warnings: z.array(z.string()).default([])
 });

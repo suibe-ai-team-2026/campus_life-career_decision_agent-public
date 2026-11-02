@@ -54,6 +54,7 @@ def load() -> dict[str, Any]:
     major_doc = _read_json("major-map.json", {})
     resources_doc = _read_json("resources.json", {})
     graduate_doc = _read_json("graduate_recommendation.json", {})
+    industry_doc = _read_json("industry.json", {})
     return {
         "schools": list(schools_doc.get("schools") or []),
         "facts": list(employment_doc.get("facts") or []),
@@ -66,6 +67,7 @@ def load() -> dict[str, Any]:
         "direction_defaults": dict(major_doc.get("direction_defaults") or {}),
         "resources": list(resources_doc.get("resources") or []),
         "graduate": graduate_doc if isinstance(graduate_doc, dict) else {},
+        "industry": industry_doc if isinstance(industry_doc, dict) else {},
     }
 
 
@@ -361,6 +363,72 @@ def _dedupe(items: Sequence[dict[str, Any]], key: str) -> list[dict[str, Any]]:
     return result
 
 
+def industry_groups(direction_id: str) -> list[dict[str, Any]]:
+    doc = load()["industry"]
+    mapping = doc.get("direction_defaults") or {}
+    group_ids = mapping.get(direction_id) or []
+    groups = {str(item.get("group_id")): item for item in doc.get("groups") or []}
+    return [groups[group_id] for group_id in group_ids if group_id in groups]
+
+
+def _industry_summary(group: Mapping[str, Any]) -> str:
+    terms = "、".join(f"{item.get('term')}（{item.get('count')}）" for item in (group.get("top_terms") or [])[:5])
+    education = "、".join(f"{key} {value}" for key, value in (group.get("education") or {}).items())
+    certificates = "、".join(f"{key}（{value}）" for key, value in (group.get("certificates_required") or {}).items())
+    preferred = "、".join(f"{key}（{value}）" for key, value in (group.get("certificates_preferred") or {}).items())
+    salary = "、".join((group.get("salary_snapshot") or [])[:3])
+    parts = [f"{group.get('sample_size', 0)} 份有效 JD"]
+    if terms:
+        parts.append(f"高频要求：{terms}")
+    if education:
+        parts.append(f"学历：{education}")
+    if certificates:
+        parts.append(f"明确要求证书：{certificates}")
+    if preferred:
+        parts.append(f"优先证书：{preferred}")
+    if salary:
+        parts.append(f"广告薪资：{salary}")
+    return "；".join(parts) + "。"
+
+
+def industry_leads(profile: Mapping[str, Any], direction_id: str, limit: int = 4) -> list[dict[str, Any]]:
+    """招聘快照 + 学校就业行业分布，作为方向推荐的现实依据。"""
+    doc = load()["industry"]
+    leads: list[dict[str, Any]] = []
+    for group in industry_groups(direction_id):
+        if int(group.get("sample_size") or 0) <= 0:
+            continue
+        leads.append(
+            {
+                "title": f"招聘快照 · {group.get('major_group')}",
+                "description": _industry_summary(group),
+                "why": "招聘广告快照：非代表性抽样，不代表录用结果；未提及不等于不需要；薪资为广告口径。",
+                "source_title": "BOSS直聘实习岗位快照（2026-10-17 采集，团队研究）",
+                "source_url": _url((doc.get("source") or {}).get("url")),
+                "locator": str(group.get("group_id") or ""),
+                "verification": "external_reference",
+            }
+        )
+    for item in (doc.get("school_industry") or [])[:2]:
+        value = item.get("value")
+        unit = "%" if item.get("unit") == "percent" else str(item.get("unit") or "")
+        title = f"{item.get('cohort', '')}{item.get('metric', '')}"
+        if value is not None:
+            title = f"{title} {value}{unit}"
+        leads.append(
+            {
+                "title": title,
+                "description": str(item.get("quote") or "")[:220],
+                "why": f"来源：{item.get('source_title', '')}；定位：{item.get('locator', '未提供')}。",
+                "source_title": str(item.get("source_title") or "就业质量年度报告"),
+                "source_url": _url(item.get("source_url")),
+                "locator": str(item.get("locator") or ""),
+                "verification": _verification(item.get("verification_status")),
+            }
+        )
+    return leads[:limit]
+
+
 # ---------------------------------------------------------------------------
 # 资料问答的参考检索（不依赖 Supabase）
 # ---------------------------------------------------------------------------
@@ -371,6 +439,7 @@ INTENT_KEYWORDS = {
     "course": ("课程", "培养方案", "学分", "先修", "选课", "教材", "教学计划"),
     "resource": ("校内", "官网", "入口", "资源", "平台", "学院", "教务处", "就业中心", "图书馆"),
     "recommendation": ("推免", "保研", "推免资格", "综合成绩", "综测", "加分"),
+    "industry": ("行业", "招聘", "岗位", "实习", "薪资", "求职", "工作内容", "就业市场", "JD", "职业要求"),
 }
 
 
@@ -523,6 +592,39 @@ def search(question: str, *, limit: int = 4) -> list[dict[str, Any]]:
                     "source_title": str(item.get("source_title") or item.get("name") or ""),
                     "locator": {"kind": "reference", "field": "resource"},
                     "canonical_url": _url(item.get("url")),
+                }
+            )
+
+    if "industry" in intents:
+        doc = load()["industry"]
+        groups = [item for item in doc.get("groups") or [] if int(item.get("sample_size") or 0) > 0]
+        groups.sort(key=lambda item: -int(item.get("sample_size") or 0))
+        for group in groups[:2]:
+            hits.append(
+                {
+                    "kind": "industry",
+                    "title": f"招聘快照 · {group.get('major_group')}",
+                    "text": _industry_summary(group),
+                    "source_type": "job",
+                    "verification_status": "external_reference",
+                    "source_id": _reference_id("industry", group.get("group_id")),
+                    "source_title": "BOSS直聘实习岗位快照（2026-10-17 采集，团队研究）",
+                    "locator": {"kind": "reference", "field": "industry", "group_id": group.get("group_id")},
+                    "canonical_url": _url((doc.get("source") or {}).get("url")),
+                }
+            )
+        for item in (doc.get("school_industry") or [])[:2]:
+            hits.append(
+                {
+                    "kind": "industry",
+                    "title": f"{item.get('cohort', '')}{item.get('metric', '')}",
+                    "text": str(item.get("quote") or ""),
+                    "source_type": "official",
+                    "verification_status": _verification(item.get("verification_status")),
+                    "source_id": _reference_id("industry-school", item.get("metric")),
+                    "source_title": str(item.get("source_title") or "就业质量年度报告"),
+                    "locator": {"kind": "reference", "field": "industry_school"},
+                    "canonical_url": _url(item.get("source_url")),
                 }
             )
 
