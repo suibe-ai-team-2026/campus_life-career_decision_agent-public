@@ -1,0 +1,9169 @@
+{
+ "schema_version": "career-reference-competitions-v1",
+ "generated_at": "2026-11-02",
+ "last_checked_at": "2026-11-02",
+ "competitions": [
+  {
+   "competition_id": "cn-mkt-survey",
+   "name": "全国大学生市场调查与分析大赛",
+   "organizer": "中国商业统计学会",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "数据",
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "2026 年 9 月正式启动；校赛/省赛/国赛时间以当年通知为准",
+   "official_url": "http://www.china-cssc.org/show-304-2179-1.html",
+   "skill_tags": [
+    "研究",
+    "数据",
+    "写作"
+   ],
+   "direction_ids": [
+    "data_business",
+    "trade_supply_chain",
+    "finance_accounting"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准",
+    "source_url": "",
+    "official_level": "A",
+    "official_category": "商科",
+    "official_seq": "26",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）"
+   },
+   "verification_status": "official_lead",
+   "source_title": "中国商业统计学会·关于第十七届全国大学生市场调查与分析大赛的通知（官网 200）",
+   "note": ""
+  },
+  {
+   "competition_id": "cn-business-elite",
+   "name": "全国高校商业精英挑战赛",
+   "organizer": "中国国际贸易促进委员会商业行业委员会、中国仓储与配送协会、中国商业经济学会（物流与供应链赛项）",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科",
+    "物流",
+    "跨境电商"
+   ],
+   "eligible_majors": [
+    "工商管理",
+    "物流管理",
+    "国际经济与贸易",
+    "电子商务",
+    "市场营销"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "物流与供应链赛项：2025 年 9 月至 2026 年 5 月；其他赛项以各赛项通知为准",
+   "official_url": "http://www.ccpitcsc.org/mcdt/4663.html",
+   "skill_tags": [
+    "商业分析",
+    "贸易实务",
+    "供应链",
+    "团队协作"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准",
+    "source_url": "",
+    "official_level": "B",
+    "official_category": "商科",
+    "official_seq": "183",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）"
+   },
+   "verification_status": "official_lead",
+   "source_title": "中国贸促会商业行业委员会·2026 年全国高校商业精英挑战赛物流与供应链竞赛通知（官网 200）",
+   "note": "含品牌策划、物流与供应链、创新创业等多个赛项；本条目字段取自物流与供应链赛项通知。"
+  },
+  {
+   "competition_id": "cn-mcm",
+   "name": "全国大学生数学建模竞赛",
+   "organizer": "中国工业与应用数学学会",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "数学",
+    "数据"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "每年 9 月竞赛；2026 年赛题于 9 月 10 日 18:00 发布（以当年通知为准）",
+   "official_url": "https://www.mcm.edu.cn/",
+   "skill_tags": [
+    "数学建模",
+    "编程",
+    "论文写作"
+   ],
+   "direction_ids": [
+    "data_business",
+    "further_study"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准",
+    "source_url": "",
+    "official_level": "C",
+    "official_category": "理工",
+    "official_seq": "232",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）"
+   },
+   "verification_status": "official_lead",
+   "source_title": "全国大学生数学建模竞赛官网（官网 200）",
+   "note": ""
+  },
+  {
+   "competition_id": "cn-jsjds",
+   "name": "中国大学生计算机设计大赛",
+   "organizer": "中国大学生计算机设计大赛组织委员会",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "计算机",
+    "AI",
+    "设计"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "省赛 3—5 月，国赛作品上报 5 月 30 日截止（以当年通知为准）",
+   "official_url": "https://jsjds.blcu.edu.cn/",
+   "skill_tags": [
+    "编程",
+    "交互设计",
+    "AI 应用"
+   ],
+   "direction_ids": [
+    "data_business",
+    "further_study"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准",
+    "source_url": "",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "31",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）"
+   },
+   "verification_status": "official_lead",
+   "source_title": "中国大学生计算机设计大赛官网（官网 200）",
+   "note": "参赛对象为全国高等院校在籍本科生；赛程参考北京化工大学 2026 年校赛通知。"
+  },
+  {
+   "competition_id": "cn-eastmoney-finance",
+   "name": "“东方财富杯”全国大学生金融素养提升活动（含金融挑战赛）",
+   "organizer": "中国青年创业就业基金会、东方财富信息股份有限公司",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "金融"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年通知为准（自 2014 年已举办十届）",
+   "official_url": "https://young.eastmoney.com/",
+   "skill_tags": [
+    "金融基础",
+    "投资分析",
+    "数据分析"
+   ],
+   "direction_ids": [
+    "finance_accounting"
+   ],
+   "school_recognition": {
+    "status": "pending",
+    "note": "校内加分/素拓学分认定以团委当年公布的竞赛目录与认定办法为准；本文件不转载未获授权的校内认定分数。 未在同目录 suibe-official-competition-list.tsv 中匹配到同名赛事。",
+    "source_url": ""
+   },
+   "verification_status": "external_reference",
+   "source_title": "“东方财富杯”全国大学生金融素养提升活动官网（官网 200）",
+   "note": ""
+  },
+  {
+   "competition_id": "cn-mootcourt",
+   "name": "全国大学生模拟法庭竞赛",
+   "organizer": "教育部国家级实验教学示范中心法学组联席会",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "法学"
+   ],
+   "eligible_majors": [
+    "法学"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年通知为准",
+   "official_url": "http://www.mootcourt.cn/",
+   "skill_tags": [
+    "法律检索",
+    "文书写作",
+    "庭审辩论"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "pending",
+    "note": "校内加分/素拓学分认定以团委当年公布的竞赛目录与认定办法为准；本文件不转载未获授权的校内认定分数。 同目录 suibe-official-competition-list.tsv 匹配：B 级（目录仅列“上海市大学生模拟法庭竞赛”，全国赛未单列）；该目录原始来源与发布单位待核验，未据此改 status。",
+    "source_url": ""
+   },
+   "verification_status": "external_reference",
+   "source_title": "全国大学生模拟法庭竞赛官网（官网 200）",
+   "note": "承办方为当届高校（本届为中国政法大学）。"
+  },
+  {
+   "competition_id": "cn-neccs",
+   "name": "全国大学生英语竞赛（NECCS）",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "英语"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "每年春季初赛（以当年通知为准）",
+   "official_url": "https://www.chinaneccs.cn/",
+   "skill_tags": [
+    "英语听力",
+    "英语写作",
+    "英语阅读"
+   ],
+   "direction_ids": [
+    "further_study",
+    "trade_supply_chain"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准",
+    "source_url": "",
+    "official_level": "B",
+    "official_category": "外语",
+    "official_seq": "140",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）"
+   },
+   "verification_status": "official_lead",
+   "source_title": "全国大学生英语竞赛官网（官网 200）",
+   "note": "主办单位为高等学校大学外语教学研究会等，未在官网首页核实到完整主办信息，填空白。"
+  },
+  {
+   "competition_id": "cn-catti-cup",
+   "name": "“CATTI 杯”全国翻译大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "英语",
+    "翻译"
+   ],
+   "eligible_majors": [
+    "商务英语",
+    "英语"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年通知为准",
+   "official_url": "http://www.catticenter.com/qgfyds",
+   "skill_tags": [
+    "翻译",
+    "跨文化沟通"
+   ],
+   "direction_ids": [
+    "cross_border_business",
+    "further_study"
+   ],
+   "school_recognition": {
+    "status": "pending",
+    "note": "校内加分/素拓学分认定以团委当年公布的竞赛目录与认定办法为准；本文件不转载未获授权的校内认定分数。 未在同目录 suibe-official-competition-list.tsv 中匹配到同名赛事。",
+    "source_url": ""
+   },
+   "verification_status": "external_reference",
+   "source_title": "全国翻译人才评价网·全国翻译大赛栏目（官网 200）",
+   "note": "主办/承办以当年通知为准，未在页面核实到完整机构名。"
+  },
+  {
+   "competition_id": "cn-uchallenge",
+   "name": "“外研社·国才杯”“理解当代中国”全国大学生外语能力大赛",
+   "organizer": "外语教学与研究出版社",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "英语"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年通知为准",
+   "official_url": "https://uchallenge.unipus.cn/",
+   "skill_tags": [
+    "英语演讲",
+    "英语写作",
+    "思辨"
+   ],
+   "direction_ids": [
+    "cross_border_business",
+    "further_study"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准",
+    "source_url": "",
+    "official_level": "A",
+    "official_category": "外语",
+    "official_seq": "18",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）"
+   },
+   "verification_status": "external_reference",
+   "source_title": "Uchallenge 官网（官网 200）",
+   "note": "与 suibe-x-18 为同一赛事的清单条目，已合并"
+  },
+  {
+   "competition_id": "cn-cy-innovation",
+   "name": "中国国际大学生创新大赛（原“互联网+”）",
+   "organizer": "教育部（具体以当年通知为准）",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "创新创业"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年通知为准",
+   "official_url": "https://cy.ncss.cn/",
+   "skill_tags": [
+    "创业计划",
+    "项目管理",
+    "路演"
+   ],
+   "direction_ids": [
+    "further_study",
+    "trade_supply_chain"
+   ],
+   "school_recognition": {
+    "status": "pending",
+    "note": "校内加分/素拓学分认定以团委当年公布的竞赛目录与认定办法为准；本文件不转载未获授权的校内认定分数。 同目录 suibe-official-competition-list.tsv 匹配：A 级（中国国际大学生创新大赛全国总决赛）；该目录原始来源与发布单位待核验，未据此改 status。",
+    "source_url": ""
+   },
+   "verification_status": "external_reference",
+   "source_title": "全国大学生创业服务网（官网 200）",
+   "note": "2026 年大赛动态与报名入口见官网。"
+  },
+  {
+   "competition_id": "cn-tzb",
+   "name": "“挑战杯”全国大学生课外学术科技作品竞赛 / 创业计划竞赛",
+   "organizer": "共青团中央、教育部、人力资源社会保障部、中国科协、中国科学院、中国社会科学院、中国工程院、全国学联",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "创新创业",
+    "学术科技"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "每两年一届，两个并列项目交替举办（以当年通知为准）",
+   "official_url": "https://www.tiaozhanbei.net/",
+   "skill_tags": [
+    "研究",
+    "论文写作",
+    "项目展示"
+   ],
+   "direction_ids": [
+    "further_study",
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准",
+    "source_url": "",
+    "official_level": "B",
+    "official_category": "创新",
+    "official_seq": "139",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）"
+   },
+   "verification_status": "external_reference",
+   "source_title": "挑战杯官网·主办单位（官网 200）",
+   "note": "与 suibe-x-8 为同一赛事的清单条目，已合并"
+  },
+  {
+   "competition_id": "cn-gjcxcy",
+   "name": "国家级大学生创新创业训练计划（大创）",
+   "organizer": "教育部",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "创新创业",
+    "科研训练"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "每年校内申报立项（以学校通知为准）",
+   "official_url": "http://gjcxcy.bjtu.edu.cn/",
+   "skill_tags": [
+    "研究设计",
+    "项目管理"
+   ],
+   "direction_ids": [
+    "further_study"
+   ],
+   "school_recognition": {
+    "status": "pending",
+    "note": "校内加分/素拓学分认定以团委当年公布的竞赛目录与认定办法为准；本文件不转载未获授权的校内认定分数。 未在同目录 suibe-official-competition-list.tsv 中匹配到同名赛事。",
+    "source_url": ""
+   },
+   "verification_status": "external_reference",
+   "source_title": "国家级大学生创新训练计划平台（官网 200）",
+   "note": "校级申报时间与要求由教务处/学院另行通知。"
+  },
+  {
+   "competition_id": "cn-zgs-career",
+   "name": "全国大学生职业规划大赛",
+   "organizer": "教育部、重庆市人民政府",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "职业规划",
+    "就业"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "2026 年 10 月—2027 年 1 月报名；校赛省赛 2026 年 10 月—2027 年 3 月上旬（以当年通知为准）",
+   "official_url": "https://zgs.chsi.com.cn/",
+   "skill_tags": [
+    "生涯规划",
+    "表达展示"
+   ],
+   "direction_ids": [
+    "public_service",
+    "further_study"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准",
+    "source_url": "",
+    "official_level": "B",
+    "official_category": "实践",
+    "official_seq": "131",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）"
+   },
+   "verification_status": "official_lead",
+   "source_title": "教育部·关于举办第四届全国大学生职业规划大赛的通知（moe.gov.cn，200）",
+   "note": ""
+  },
+  {
+   "competition_id": "cn-cffex-cup",
+   "name": "第十二届“中金所杯”全国大学生金融知识大赛",
+   "organizer": "中国金融期货交易所、中国证券业协会、中国期货业协会、中国证券投资基金业协会",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "金融"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "报名至 2026-10-31；初赛 2026-09-10 至 11-20；复赛 2026-12-06",
+   "official_url": "http://www.cffex.com/cn/jysdt/20260807/48440.html",
+   "skill_tags": [
+    "金融知识",
+    "投资分析"
+   ],
+   "direction_ids": [
+    "finance_accounting"
+   ],
+   "school_recognition": {
+    "status": "pending",
+    "note": "校内加分/素拓学分认定以团委当年公布的竞赛目录与认定办法为准；本文件不转载未获授权的校内认定分数。 未在同目录 suibe-official-competition-list.tsv 中匹配到同名赛事。",
+    "source_url": ""
+   },
+   "verification_status": "external_reference",
+   "source_title": "中国金融期货交易所·第十二届“中金所杯”正式启动（官网 200）",
+   "note": "指导单位：中国证监会团委。"
+  },
+  {
+   "competition_id": "cn-lanqiao",
+   "name": "蓝桥杯全国软件和信息技术专业人才大赛",
+   "organizer": "蓝桥杯全国大学生软件和信息技术大赛组委会",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "计算机",
+    "编程"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "每年一届（以当年通知为准）",
+   "official_url": "https://dasai.lanqiao.cn/",
+   "skill_tags": [
+    "算法",
+    "编程"
+   ],
+   "direction_ids": [
+    "data_business",
+    "further_study"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准",
+    "source_url": "",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "33",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）"
+   },
+   "verification_status": "external_reference",
+   "source_title": "蓝桥杯大赛官网·组织机构（官网 200）",
+   "note": "指导单位：中国软件行业协会；承办：国信蓝桥教育科技股份有限公司。；与 suibe-x-33 为同一赛事的清单条目，已合并"
+  },
+  {
+   "competition_id": "cn-sunada",
+   "name": "全国大学生广告艺术大赛（大广赛）",
+   "organizer": "全国大学生广告艺术大赛组委会",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "广告",
+    "设计",
+    "传播"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "每年一届（以当年通知为准）",
+   "official_url": "https://www.sun-ada.net/index.php/about_intrs2.html",
+   "skill_tags": [
+    "创意",
+    "设计",
+    "文案"
+   ],
+   "direction_ids": [
+    "cross_border_business"
+   ],
+   "school_recognition": {
+    "status": "pending",
+    "note": "校内加分/素拓学分认定以团委当年公布的竞赛目录与认定办法为准；本文件不转载未获授权的校内认定分数。 同目录 suibe-official-competition-list.tsv 匹配：B 级（目录仅列“全国大学生广告艺术大赛上海分赛区”）；该目录原始来源与发布单位待核验，未据此改 status。",
+    "source_url": ""
+   },
+   "verification_status": "external_reference",
+   "source_title": "大广赛官网·参赛指南（官网 200）",
+   "note": "参赛资格：全国各类高等院校在校全日制大学生、研究生等（官网参赛指南）。"
+  },
+  {
+   "competition_id": "cn-ccpc",
+   "name": "中国大学生程序设计竞赛（CCPC）",
+   "organizer": "中国大学生程序设计竞赛组委会",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "计算机",
+    "算法"
+   ],
+   "eligible_majors": [
+    "计算机科学与技术",
+    "数据科学与大数据技术",
+    "信息管理与信息系统",
+    "统计学"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年通知为准",
+   "official_url": "https://ccpc.io/",
+   "skill_tags": [
+    "算法",
+    "编程"
+   ],
+   "direction_ids": [
+    "data_business",
+    "further_study"
+   ],
+   "school_recognition": {
+    "status": "pending",
+    "note": "校内加分/素拓学分认定以团委当年公布的竞赛目录与认定办法为准；本文件不转载未获授权的校内认定分数。 未在同目录 suibe-official-competition-list.tsv 中匹配到同名赛事。",
+    "source_url": ""
+   },
+   "verification_status": "external_reference",
+   "source_title": "CCPC 官网（官网 200）",
+   "note": ""
+  },
+  {
+   "competition_id": "cn-negotiation",
+   "name": "全国大学生商务谈判大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科",
+    "谈判"
+   ],
+   "eligible_majors": [
+    "国际经济与贸易",
+    "国际商务",
+    "工商管理",
+    "市场营销",
+    "商务英语"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年通知为准",
+   "official_url": "https://www.negotiationchina.com/mobile/default.aspx",
+   "skill_tags": [
+    "谈判",
+    "沟通",
+    "商业分析"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准",
+    "source_url": "",
+    "official_level": "B",
+    "official_category": "商科",
+    "official_seq": "198",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）"
+   },
+   "verification_status": "official_lead",
+   "source_title": "全国大学生商务谈判大赛官网（官网 200）",
+   "note": "桌面版域名根路径 302，移动版页面 200；主办/承办以当年通知为准。"
+  },
+  {
+   "competition_id": "cn-ocale",
+   "name": "OCALE 全国跨境电商创新创业能力大赛",
+   "organizer": "中国国际贸易学会",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "跨境电商",
+    "商科"
+   ],
+   "eligible_majors": [
+    "国际经济与贸易",
+    "国际商务",
+    "电子商务",
+    "商务英语",
+    "市场营销"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "每年春季赛/秋季赛（以当年通知为准）",
+   "official_url": "https://www.ocale.net/",
+   "skill_tags": [
+    "跨境电商运营",
+    "数据分析",
+    "贸易实务"
+   ],
+   "direction_ids": [
+    "cross_border_business",
+    "trade_supply_chain"
+   ],
+   "school_recognition": {
+    "status": "pending",
+    "note": "校内加分/素拓学分认定以团委当年公布的竞赛目录与认定办法为准；本文件不转载未获授权的校内认定分数。 未在同目录 suibe-official-competition-list.tsv 中匹配到同名赛事。",
+    "source_url": ""
+   },
+   "verification_status": "external_reference",
+   "source_title": "OCALE 官网（官网 200）",
+   "note": "官网检索时仅首页可访问；赛程与报名入口以当年通知为准。"
+  },
+  {
+   "competition_id": "cn-cpipc-mpa",
+   "name": "中国研究生公共管理案例大赛",
+   "organizer": "教育部学位与研究生教育发展中心（中国研究生创新实践系列大赛）",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "公共管理",
+    "案例"
+   ],
+   "eligible_majors": [
+    "行政管理",
+    "公共事业管理"
+   ],
+   "eligible_years": [
+    "研一",
+    "研二"
+   ],
+   "team_size": "",
+   "timing": "以当年通知为准",
+   "official_url": "https://cpipc.acge.org.cn/cw/hp/8",
+   "skill_tags": [
+    "案例分析",
+    "调研",
+    "写作"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准",
+    "source_url": "",
+    "official_level": "A",
+    "official_category": "商科",
+    "official_seq": "2",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）"
+   },
+   "verification_status": "official_lead",
+   "source_title": "中国研究生创新实践系列大赛管理平台·公共管理案例大赛（官网 200）",
+   "note": "面向 MPA 在读研究生等，本科生不适用，仅作方向参考。"
+  },
+  {
+   "competition_id": "cn-3chuang",
+   "name": "全国大学生电子商务“创新、创意及创业”挑战赛（三创赛）",
+   "organizer": "全国大学生电子商务“创新、创意及创业”挑战赛竞赛组织委员会",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "电子商务",
+    "创新创业"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "第十六届报名 2025-10-20 至 2025-12-31；校赛 2026-03-11 至 04-10（以当年通知为准）",
+   "official_url": "https://www.3chuang.net/",
+   "skill_tags": [
+    "电商运营",
+    "商业计划",
+    "数据分析"
+   ],
+   "direction_ids": [
+    "cross_border_business",
+    "trade_supply_chain",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准",
+    "source_url": "",
+    "official_level": "B",
+    "official_category": "创新",
+    "official_seq": "116",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）"
+   },
+   "verification_status": "external_reference",
+   "source_title": "三创赛官网（官网 200）",
+   "note": "时间节点来自中央财经大学转发的第十六届三创赛校赛通知，非官网正文直接表述。；与 suibe-x-16 为同一赛事的清单条目，已合并"
+  },
+  {
+   "competition_id": "cn-xcb",
+   "name": "“学创杯”全国大学生创业综合模拟大赛",
+   "organizer": "高等学校国家级实验教学示范中心联席会经济与管理学科组",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "创业模拟",
+    "商科"
+   ],
+   "eligible_majors": [
+    "工商管理",
+    "市场营销",
+    "财务管理",
+    "会计学",
+    "国际经济与贸易",
+    "电子商务",
+    "物流管理"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "校赛报名截止 2026-05-20（以当年通知为准）",
+   "official_url": "http://www.xcbds.com",
+   "skill_tags": [
+    "企业经营",
+    "财务决策",
+    "营销"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "finance_accounting"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准",
+    "source_url": "",
+    "official_level": "B",
+    "official_category": "创新",
+    "official_seq": "125",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）"
+   },
+   "verification_status": "official_lead",
+   "source_title": "西安交通大学教务处·2026 年学创杯通知（转引学创杯官方网站 xcbds.com）",
+   "note": "官网检索时不可访问，报名入口与赛程以当年通知为准。"
+  },
+  {
+   "competition_id": "cn-pocib",
+   "name": "POCIB 全国外贸从业能力大赛",
+   "organizer": "中国国际贸易学会",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "外贸",
+    "商科"
+   ],
+   "eligible_majors": [
+    "国际经济与贸易",
+    "国际商务",
+    "商务英语",
+    "电子商务"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "每年春/秋季赛（以当年通知为准）",
+   "official_url": "https://winner.pocib.com/",
+   "skill_tags": [
+    "外贸实务",
+    "单证",
+    "英语"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business"
+   ],
+   "school_recognition": {
+    "status": "pending",
+    "note": "校内加分/素拓学分认定以团委当年公布的竞赛目录与认定办法为准；本文件不转载未获授权的校内认定分数。 未在同目录 suibe-official-competition-list.tsv 中匹配到同名赛事。",
+    "source_url": ""
+   },
+   "verification_status": "external_reference",
+   "source_title": "POCIB 赛事平台（winner.pocib.com）",
+   "note": "平台根路径检索时 404，赛事页面与 PDF 通知仍可访问；报名入口以当年通知为准。"
+  },
+  {
+   "competition_id": "cn-fwwb",
+   "name": "中国大学生服务外包创新创业大赛",
+   "organizer": "教育部、商务部、无锡市人民政府",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "计算机",
+    "AI",
+    "创新创业"
+   ],
+   "eligible_majors": [
+    "计算机科学与技术",
+    "数据科学与大数据技术",
+    "信息管理与信息系统",
+    "电子商务",
+    "统计学"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "每年一届；第十七届全国赛决赛 2026-08-20 至 22（以当年通知为准）",
+   "official_url": "https://www.fwwb.org.cn/",
+   "skill_tags": [
+    "软件开发",
+    "AI 应用",
+    "项目路演"
+   ],
+   "direction_ids": [
+    "data_business",
+    "cross_border_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准",
+    "source_url": "",
+    "official_level": "A",
+    "official_category": "创新",
+    "official_seq": "30",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）"
+   },
+   "verification_status": "official_lead",
+   "source_title": "商务部服务贸易网·第十七届服创大赛报道（官网 200）",
+   "note": "大赛官网检索时 502，信息来自商务部服务贸易网。"
+  },
+  {
+   "competition_id": "cn-tjjmds",
+   "name": "全国大学生统计建模大赛",
+   "organizer": "中国统计教育学会",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "统计",
+    "数据"
+   ],
+   "eligible_majors": [
+    "统计学",
+    "数据科学与大数据技术",
+    "金融学",
+    "会计学",
+    "国际经济与贸易",
+    "工商管理"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "2026 年 3 月正式启动（以当年通知为准）",
+   "official_url": "http://tjjmds.ai-learning.net/",
+   "skill_tags": [
+    "统计建模",
+    "数据分析",
+    "论文写作"
+   ],
+   "direction_ids": [
+    "data_business",
+    "finance_accounting"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准",
+    "source_url": "",
+    "official_level": "A",
+    "official_category": "商科",
+    "official_seq": "54",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）"
+   },
+   "verification_status": "official_lead",
+   "source_title": "哈尔滨工业大学·2026 年第十二届全国大学生统计建模大赛通知（转引官网 tjjmds.ai-learning.net）",
+   "note": "官网检索时 404，赛程来自高校转发通知。；与 suibe-x-54 为同一赛事的清单条目，已合并"
+  },
+  {
+   "competition_id": "cn-audit-fst",
+   "name": "“福思特杯”全国大学生审计精英挑战赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "审计",
+    "会计"
+   ],
+   "eligible_majors": [
+    "审计学",
+    "会计学",
+    "财务管理"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "审计实务",
+    "案例分析"
+   ],
+   "direction_ids": [
+    "finance_accounting"
+   ],
+   "school_recognition": {
+    "status": "pending",
+    "note": "校内加分/素拓学分认定以团委当年公布的竞赛目录与认定办法为准；本文件不转载未获授权的校内认定分数。 同目录 suibe-official-competition-list.tsv 匹配：B 级（目录写作“福斯特杯”）；该目录原始来源与发布单位待核验，未据此改 status。",
+    "source_url": ""
+   },
+   "verification_status": "external_reference",
+   "source_title": "未检索到稳定官网；依据高校校内报名通知整理",
+   "note": "规则引擎不应把本条目当作已确认赛事，需人工补官方通知后再启用。"
+  },
+  {
+   "competition_id": "suibe-x-1",
+   "name": "中国研究生电子设计竞赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "1",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-2",
+   "name": "中国研究生智慧城市技术与创意设计大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "2",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-3",
+   "name": "中国研究生未来飞行器创新大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "3",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-5",
+   "name": "中国研究生数学建模竞赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "5",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-9",
+   "name": "中国研究生 ACM-ICPC 国际大学生程序设计竞赛电子设计竞赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "9",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-11",
+   "name": "全国大学生电子设计竞赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "理工",
+    "official_seq": "106",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-12",
+   "name": "全国大学生机械创新设计大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "12",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-13",
+   "name": "全国大学生结构设计竞赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "13",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-15",
+   "name": "全国大学生智能汽车竞赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "15",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-19",
+   "name": "全国大学生节能减排社会实践与科技竞赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "19",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-21",
+   "name": "全国大学生工程训练综合能力竞赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "21",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-22",
+   "name": "全国大学生交通科技大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "22",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-25",
+   "name": "全国大学生机器人大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "25",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-27",
+   "name": "全国大学生先进成图技术与产品信息建模创新大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "27",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-28",
+   "name": "全国三维数字化创新设计大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "28",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-29",
+   "name": "“西门子杯”中国智能制造挑战赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "理工",
+    "official_seq": "115",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-32",
+   "name": "中国高校计算机大赛（大数据/程序天梯/移动应用/网络/AI 创意）",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "32",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-35",
+   "name": "全国大学生信息安全竞赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "35",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-37",
+   "name": "中国机器人大赛暨 robocup 机器人世界杯中国赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "37",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-38",
+   "name": "“中国软件杯”大学生软件设计大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "38",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-40",
+   "name": "睿抗机器人开发者大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "理工",
+    "official_seq": "117",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-41",
+   "name": "华为 ICT 大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "理工",
+    "official_seq": "121",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-50",
+   "name": "百度之星·程序设计大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "50",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-51",
+   "name": "全国大学生计算机系统能力大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "51",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-52",
+   "name": "全国大学生物联网设计竞赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "52",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-53",
+   "name": "全国大学生信息安全与对抗技术竞赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "53",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-59",
+   "name": "全球校园人工智能算法精英大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "59",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-61",
+   "name": "中国研究生创“芯”大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "62",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-63",
+   "name": "中国研究生人工智能创新大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "63",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-64",
+   "name": "中国研究生机器人创新设计大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "64",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-65",
+   "name": "中国研究生能源装备创新设计大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "65",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-67",
+   "name": "中国研究生网络安全创新大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "67",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-77",
+   "name": "中国研究生智能建造创新大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "77",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-89",
+   "name": "全国大学生数学竞赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "理工",
+    "official_seq": "234",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-90",
+   "name": "中国机器人及人工智能大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "理工",
+    "official_seq": "90",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-99",
+   "name": "上海市大学生网络安全大赛“磐石行动”",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "理工",
+    "official_seq": "99",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-100",
+   "name": "“上图杯”上海大学生先进成图大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "理工",
+    "official_seq": "100",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-108",
+   "name": "上海市大学生工程实践与创新能力大赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "理工",
+    "official_seq": "108",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-110",
+   "name": "上海市大学生计算机应用能力大赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "理工",
+    "official_seq": "110",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-112",
+   "name": "上海市机器人及人工智能大赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "理工",
+    "official_seq": "112",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-113",
+   "name": "RoboMaster 机甲大师高校联盟赛（上海站）",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "理工",
+    "official_seq": "113",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-120",
+   "name": "阿里云天池大学生竞赛-AI 创新赛（上海赛区）",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "理工",
+    "official_seq": "120",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-127",
+   "name": "中国大学生机械工程创新创意大赛智能制造赛上海市选拔赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "理工",
+    "official_seq": "127",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-191",
+   "name": "美国大学生数学建模竞赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "理工",
+    "official_seq": "191",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-233",
+   "name": "上海市计算机应用能力大赛校内选拔赛",
+   "organizer": "",
+   "level": "school",
+   "level_label": "校级",
+   "categories": [
+    "理工"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "数字工具",
+    "数据"
+   ],
+   "direction_ids": [
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "理工",
+    "official_seq": "233",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-6",
+   "name": "中国国际大学生创新大赛全国总决赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "创新"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "执行",
+    "沟通",
+    "数字工具"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "创新",
+    "official_seq": "6",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-24",
+   "name": "全国大学生创新创业训练计划年会展示",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "创新"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "执行",
+    "沟通",
+    "数字工具"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "创新",
+    "official_seq": "24",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-39",
+   "name": "中美青年创客大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "创新"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "执行",
+    "沟通",
+    "数字工具"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "创新",
+    "official_seq": "92",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-46",
+   "name": "ICAN 大学生创新创业大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "创新"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "执行",
+    "沟通",
+    "数字工具"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "创新",
+    "official_seq": "46",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-47",
+   "name": "“工行杯”全国大学生金融科技创新大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "创新"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "执行",
+    "沟通",
+    "数字工具"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "创新",
+    "official_seq": "97",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-79",
+   "name": "“创青春”中国青年创新创业大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "创新"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "执行",
+    "沟通",
+    "数字工具"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "创新",
+    "official_seq": "79",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-80",
+   "name": "全国退役军人创业创新大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "创新"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "执行",
+    "沟通",
+    "数字工具"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "创新",
+    "official_seq": "80",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-81",
+   "name": "“中国创翼”创业创新大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "创新"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "执行",
+    "沟通",
+    "数字工具"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "创新",
+    "official_seq": "81",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-84",
+   "name": "全国大学生创业决策仿真大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "创新"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "执行",
+    "沟通",
+    "数字工具"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "创新",
+    "official_seq": "84",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-91",
+   "name": "中国国际大学生创新大赛上海赛区",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "创新"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "执行",
+    "沟通",
+    "数字工具"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "创新",
+    "official_seq": "91",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-102",
+   "name": "上海市大学生创业决策仿真大赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "创新"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "执行",
+    "沟通",
+    "数字工具"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "创新",
+    "official_seq": "102",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-128",
+   "name": "“上证杯”“海聚英才”上海大学生创新创业大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "创新"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "执行",
+    "沟通",
+    "数字工具"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "创新",
+    "official_seq": "128",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-134",
+   "name": "全国财经院校创新创业大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "创新"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "执行",
+    "沟通",
+    "数字工具"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "创新",
+    "official_seq": "134",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-135",
+   "name": "上海市女大学生创新创业大赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "创新"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "执行",
+    "沟通",
+    "数字工具"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "创新",
+    "official_seq": "135",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-136",
+   "name": "上海社会组织公益创业大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "创新"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "执行",
+    "沟通",
+    "数字工具"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "创新",
+    "official_seq": "136",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-137",
+   "name": "“创客中国”上海市中小企业创新创业大赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "创新"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "执行",
+    "沟通",
+    "数字工具"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "创新",
+    "official_seq": "137",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-205",
+   "name": "松江大学园区创业大赛暨国创赛校赛",
+   "organizer": "",
+   "level": "school",
+   "level_label": "校级",
+   "categories": [
+    "创新"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "执行",
+    "沟通",
+    "数字工具"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "创新",
+    "official_seq": "205",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-208",
+   "name": "“挑战杯”创业计划校内赛",
+   "organizer": "",
+   "level": "school",
+   "level_label": "校级",
+   "categories": [
+    "创新"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "执行",
+    "沟通",
+    "数字工具"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "创新",
+    "official_seq": "208",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-212",
+   "name": "“思源杯”创新创业精英挑战赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "创新"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "执行",
+    "沟通",
+    "数字工具"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "创新",
+    "official_seq": "212",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-20",
+   "name": "中国 MPAcc 学生案例大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "商科",
+    "official_seq": "20",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-56",
+   "name": "全国本科院校税收风险管控案例大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "商科",
+    "official_seq": "119",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-57",
+   "name": "全国企业竞争模拟大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "商科",
+    "official_seq": "57",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-58",
+   "name": "全国高等院校数智化企业经营沙盘大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "商科",
+    "official_seq": "58",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-60",
+   "name": "“科云杯”全国大学生财会职业能力大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "商科",
+    "official_seq": "60",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-72",
+   "name": "中国研究生工程管理案例大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "商科",
+    "official_seq": "72",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-73",
+   "name": "中国研究生企业管理创新大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "商科",
+    "official_seq": "73",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-85",
+   "name": "全国供应链大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "商科",
+    "official_seq": "85",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-104",
+   "name": "“智享杯”上海市高校经管类数据分析案例大赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "商科",
+    "official_seq": "104",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-118",
+   "name": "“科云杯”上海市大学生财会职业能力大赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "商科",
+    "official_seq": "118",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-132",
+   "name": "上海市大学生行业分析大赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "实践",
+    "official_seq": "204",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-151",
+   "name": "全国商务谈判大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "商科",
+    "official_seq": "151",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-152",
+   "name": "上海市大学生网络商务创新应用大赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "商科",
+    "official_seq": "152",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-153",
+   "name": "国际商务专业学位研究生案例竞赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "商科",
+    "official_seq": "153",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-154",
+   "name": "全国 MIB 商务谈判赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "商科",
+    "official_seq": "154",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-155",
+   "name": "国际商务专业学位研究生国际贸易融资竞赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "商科",
+    "official_seq": "155",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-160",
+   "name": "CFA Institute 全球投资分析大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "商科",
+    "official_seq": "160",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-161",
+   "name": "上证杯全国高校 ETF 菁英选拔赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "商科",
+    "official_seq": "161",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-162",
+   "name": "“上海保险杯”上海市大学生风险管理与保险创新创意比赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "商科",
+    "official_seq": "162",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-163",
+   "name": "中国未来金融分析师大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "商科",
+    "official_seq": "163",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-175",
+   "name": "“尖烽时刻”全国商业模拟大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "商科",
+    "official_seq": "175",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-177",
+   "name": "CMAU 全国大学生市场研究与商业策划大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "商科",
+    "official_seq": "177",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-178",
+   "name": "全国管理案例精英赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "商科",
+    "official_seq": "178",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-179",
+   "name": "全国大学生商科综合能力大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "商科",
+    "official_seq": "179",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-181",
+   "name": "“福斯特杯”全国大学生审计精英挑战赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "商科",
+    "official_seq": "181",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-184",
+   "name": "上海市大学生企业经营模拟沙盘大赛暨金融智能工程应用创新大赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "商科",
+    "official_seq": "184",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-187",
+   "name": "中国大学生旅游管理虚拟仿真大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "商科",
+    "official_seq": "187",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-188",
+   "name": "远华杯全国大学生会展+创意大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "商科",
+    "official_seq": "188",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-189",
+   "name": "“未来理财师”大学生财智大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "商科",
+    "official_seq": "189",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-210",
+   "name": "经韬贸易商业实战大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "商科",
+    "official_seq": "210",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-215",
+   "name": "上经贸大金融案例分析大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "商科",
+    "official_seq": "215",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-216",
+   "name": "上经贸大金融模拟投资大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "商科",
+    "official_seq": "216",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-217",
+   "name": "研究生金融论坛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "商科",
+    "official_seq": "217",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-218",
+   "name": "金融学院研究生文献综述大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "商科",
+    "official_seq": "218",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-224",
+   "name": "商业精英挑战赛会计案例校内赛",
+   "organizer": "",
+   "level": "school",
+   "level_label": "校级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "商科",
+    "official_seq": "224",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-225",
+   "name": "企业经营模拟沙盘校内选拔赛",
+   "organizer": "",
+   "level": "school",
+   "level_label": "校级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "商科",
+    "official_seq": "225",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-226",
+   "name": "旅游线路设计大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "商科",
+    "official_seq": "226",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-227",
+   "name": "“三新”会展活动策划大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "商科"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行",
+    "数据"
+   ],
+   "direction_ids": [
+    "trade_supply_chain",
+    "cross_border_business",
+    "finance_accounting",
+    "data_business"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "商科",
+    "official_seq": "227",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-66",
+   "name": "中国研究生乡村振兴科技兴农+创新大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "实践",
+    "official_seq": "66",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-68",
+   "name": "中国研究生“双碳”创新与创意大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "实践",
+    "official_seq": "68",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-69",
+   "name": "中国研究生金融科技创新大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "实践",
+    "official_seq": "69",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-74",
+   "name": "中国研究生操作系统开源创新大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "实践",
+    "official_seq": "74",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-76",
+   "name": "中国研究生国际中文教育案例大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "实践",
+    "official_seq": "76",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-82",
+   "name": "全国大中专学生志愿者暑期“三下乡”社会实践活动",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "实践",
+    "official_seq": "82",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-83",
+   "name": "中国青年志愿服务项目大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "实践",
+    "official_seq": "83",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-103",
+   "name": "上海市大学生中华文化国际传播大赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "实践",
+    "official_seq": "103",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-129",
+   "name": "语料数据智能创意大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "实践",
+    "official_seq": "129",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-133",
+   "name": "全国大学生创新体验竞赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "实践",
+    "official_seq": "206",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-138",
+   "name": "“挑战杯”课外学术科技作品上海市赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "实践",
+    "official_seq": "138",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-142",
+   "name": "“梦想杯”上海市大学生辩论赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "实践",
+    "official_seq": "142",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-143",
+   "name": "“上汽教育杯”上海高校科创作品评优",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "实践",
+    "official_seq": "143",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-144",
+   "name": "“知行杯”上海市大学生社会实践大赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "实践",
+    "official_seq": "144",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-145",
+   "name": "上海学校共青团主题微团课大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "实践",
+    "official_seq": "145",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-146",
+   "name": "上海共青团新媒体影响力大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "实践",
+    "official_seq": "146",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-147",
+   "name": "上海市大学生国际人道问题辩论赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "实践",
+    "official_seq": "147",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-148",
+   "name": "“奉献杯”上海青年志愿服务项目大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "实践",
+    "official_seq": "148",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-149",
+   "name": "“搜知杯”全国财经高校大学生信息素养大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "实践",
+    "official_seq": "149",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-150",
+   "name": "上海市高校应急救护比赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "实践",
+    "official_seq": "150",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-174",
+   "name": "SODA 开放数据创新应用大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "实践",
+    "official_seq": "174",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-176",
+   "name": "中国 MBA 创业大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "实践",
+    "official_seq": "176",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-185",
+   "name": "全国大学生红色旅游创意大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "实践",
+    "official_seq": "185",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-194",
+   "name": "长三角“新时代·中国说”大学生讲师邀请赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "实践",
+    "official_seq": "194",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-195",
+   "name": "上海高校大学生讲思政课公开课",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "实践",
+    "official_seq": "195",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-207",
+   "name": "“挑战杯”课外学术作品校内赛",
+   "organizer": "",
+   "level": "school",
+   "level_label": "校级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "实践",
+    "official_seq": "207",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-209",
+   "name": "“知网杯”上海高校信息资源发现大赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "实践",
+    "official_seq": "209",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-211",
+   "name": "经贸论文大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "实践",
+    "official_seq": "211",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-222",
+   "name": "全国校园新媒体营销创新大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "实践",
+    "official_seq": "222",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-223",
+   "name": "ACCA 全国就业力大比拼华东赛区赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "实践",
+    "official_seq": "223",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-235",
+   "name": "大学生讲思政课公开课校内选拔赛",
+   "organizer": "",
+   "level": "school",
+   "level_label": "校级",
+   "categories": [
+    "实践"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "执行"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "实践",
+    "official_seq": "235",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-45",
+   "name": "“21 世纪杯”全国英语演讲比赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "外语"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "写作"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "外语",
+    "official_seq": "45",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-49",
+   "name": "“外教社杯”全国高校学生跨文化能力大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "外语"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "写作"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "外语",
+    "official_seq": "101",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-130",
+   "name": "“外研社·国才杯”上海市比赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "外语"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "写作"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "外语",
+    "official_seq": "130",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-156",
+   "name": "“高教社杯”全国商务英语实践大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "外语"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "写作"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "外语",
+    "official_seq": "156",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-157",
+   "name": "韩素音国际翻译大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "外语"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "写作"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "外语",
+    "official_seq": "157",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-158",
+   "name": "“高教社杯”商业英语辩论大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "外语"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "写作"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "外语",
+    "official_seq": "158",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-159",
+   "name": "用英语讲中国故事大会",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "外语"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "写作"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "外语",
+    "official_seq": "214",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-199",
+   "name": "全国大学生区域国别演讲大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "外语"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "写作"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "外语",
+    "official_seq": "199",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-201",
+   "name": "国际中文教育教学技能大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "外语"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "写作"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "外语",
+    "official_seq": "201",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-202",
+   "name": "“汉教英雄会”国际中文教学技能交流活动",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "外语"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "写作"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "外语",
+    "official_seq": "202",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-213",
+   "name": "“高教社杯”商务英语实践大赛上海市比赛（校内）",
+   "organizer": "",
+   "level": "school",
+   "level_label": "校级",
+   "categories": [
+    "外语"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通",
+    "写作"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "外语",
+    "official_seq": "213",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-7",
+   "name": "挑战杯全国大学生课外学术科技作品竞赛（文创艺术方向）",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "艺术"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "艺术",
+    "official_seq": "7",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-23",
+   "name": "两岸新锐设计竞赛·华灿奖",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "艺术"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "艺术",
+    "official_seq": "23",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-34",
+   "name": "米兰设计周-中国高校设计学科师生优秀作品展",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "艺术"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "艺术",
+    "official_seq": "34",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-36",
+   "name": "未来设计师·全国高校数字艺术设计大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "艺术"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "艺术",
+    "official_seq": "36",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-44",
+   "name": "中国好创意暨全国高校数字艺术设计大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "艺术"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "艺术",
+    "official_seq": "44",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-48",
+   "name": "中华经典诵写讲大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "艺术"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": null,
+    "official_category": "文艺",
+    "official_seq": "0",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-55",
+   "name": "全国大学生数字媒体科技作品及创意竞赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "艺术"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "艺术",
+    "official_seq": "55",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-70",
+   "name": "中国研究生“美丽中国”创新设计大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "艺术"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "艺术",
+    "official_seq": "71",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-75",
+   "name": "中国研究生“文化中国”两创大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "艺术"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "艺术",
+    "official_seq": "75",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-94",
+   "name": "“米兰设计周”上海赛区",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "艺术"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "艺术",
+    "official_seq": "94",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-95",
+   "name": "中国好创意上海高校赛区",
+   "organizer": "",
+   "level": "school",
+   "level_label": "校级",
+   "categories": [
+    "艺术"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "艺术",
+    "official_seq": "95",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-96",
+   "name": "上海市大学生原创文学大赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "艺术"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "艺术",
+    "official_seq": "96",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-109",
+   "name": "全国大学生广告艺术大赛上海分赛区",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "艺术"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "艺术",
+    "official_seq": "109",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-111",
+   "name": "未来设计师大赛上海赛区",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "艺术"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "艺术",
+    "official_seq": "111",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-126",
+   "name": "海峡两岸高校短视频与新闻可视化大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "艺术"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "艺术",
+    "official_seq": "126",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-141",
+   "name": "“汇创青春”上海文创展示",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "艺术"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "艺术",
+    "official_seq": "141",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-186",
+   "name": "中国数据新闻大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "艺术"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "艺术",
+    "official_seq": "230",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-190",
+   "name": "上海国际大学生广告节",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "艺术"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "艺术",
+    "official_seq": "190",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-228",
+   "name": "“绘影青春”短视频大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "艺术"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "艺术",
+    "official_seq": "228",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-229",
+   "name": "大广赛校内选拔赛",
+   "organizer": "",
+   "level": "school",
+   "level_label": "校级",
+   "categories": [
+    "艺术"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "艺术",
+    "official_seq": "229",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-231",
+   "name": "上经贸大诗词大会",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "艺术"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "艺术",
+    "official_seq": "231",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-236",
+   "name": "“我心中的思政课”微电影校内选拔赛",
+   "organizer": "",
+   "level": "school",
+   "level_label": "校级",
+   "categories": [
+    "艺术"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "艺术",
+    "official_seq": "236",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-86",
+   "name": "JESSUP 国际模拟法庭",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "法学"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "研究",
+    "沟通"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "法学",
+    "official_seq": "86",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-87",
+   "name": "“贸仲杯”国际商事仲裁模拟仲裁庭辩论赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "法学"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "研究",
+    "沟通"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "法学",
+    "official_seq": "87",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-88",
+   "name": "国际刑事法院模拟法庭比赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "法学"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "研究",
+    "沟通"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "A",
+    "official_category": "法学",
+    "official_seq": "88",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-122",
+   "name": "上海市高校大学生涉外法治论文创新大赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "法学"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "研究",
+    "沟通"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "法学",
+    "official_seq": "122",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-123",
+   "name": "上海市大学生模拟法庭竞赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "法学"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "研究",
+    "沟通"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "法学",
+    "official_seq": "123",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-124",
+   "name": "MootShanghai 国际模拟商事仲裁庭上海邀请赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "法学"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "研究",
+    "沟通"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "法学",
+    "official_seq": "124",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-164",
+   "name": "内地与港澳全国大学生模拟法庭（仲裁庭）大赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "法学"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "研究",
+    "沟通"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "法学",
+    "official_seq": "164",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-165",
+   "name": "国际航空法模拟法庭竞赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "法学"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "研究",
+    "沟通"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "法学",
+    "official_seq": "165",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-167",
+   "name": "罗森堡国际商事仲裁竞赛中文组",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "法学"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "研究",
+    "沟通"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "法学",
+    "official_seq": "167",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-168",
+   "name": "曼弗雷德·拉克斯国际空间法模拟法庭竞赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "法学"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "研究",
+    "沟通"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "法学",
+    "official_seq": "168",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-169",
+   "name": "（中国）国际海洋法模拟法庭竞赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "法学"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "研究",
+    "沟通"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "法学",
+    "official_seq": "169",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-170",
+   "name": "法兰克福国际投资模拟仲裁庭竞赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "法学"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "研究",
+    "沟通"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "法学",
+    "official_seq": "170",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-171",
+   "name": "红十字国际人道法模拟法庭竞赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "法学"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "研究",
+    "沟通"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "法学",
+    "official_seq": "171",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-172",
+   "name": "中华商标协会全国高校知识产权（商标）热点问题辩论赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "法学"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "研究",
+    "沟通"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "法学",
+    "official_seq": "172",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-173",
+   "name": "长三角大学生知识产权知识竞赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "法学"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "研究",
+    "沟通"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "法学",
+    "official_seq": "173",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-197",
+   "name": "中国 WTO 模拟法庭竞赛",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "法学"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "研究",
+    "沟通"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "法学",
+    "official_seq": "197",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-200",
+   "name": "国际投资模拟仲裁庭竞赛（FDI Moot）",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "法学"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "研究",
+    "沟通"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "B",
+    "official_category": "法学",
+    "official_seq": "200",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-219",
+   "name": "上海市高校大学生法治辩论赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "法学"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "研究",
+    "沟通"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "法学",
+    "official_seq": "219",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-220",
+   "name": "上海市大学生法律案例分析大赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "法学"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "研究",
+    "沟通"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "法学",
+    "official_seq": "220",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-221",
+   "name": "上海高校商事调解辩论赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "法学"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "写作",
+    "研究",
+    "沟通"
+   ],
+   "direction_ids": [
+    "public_service"
+   ],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": "C",
+    "official_category": "法学",
+    "official_seq": "221",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-x",
+   "name": "（文艺活动，未标注等级）全国第七届大学生艺术展演上海市活动",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "文艺"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": null,
+    "official_category": "文艺",
+    "official_seq": "0",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-21-2",
+   "name": "（文艺活动，未标注等级）第21届上海市大学生话剧节",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "文艺"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": null,
+    "official_category": "文艺",
+    "official_seq": "0",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-x-2",
+   "name": "（文艺活动，未标注等级）上海市大学生弘扬中华优秀传统文化创意大赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "文艺"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": null,
+    "official_category": "文艺",
+    "official_seq": "0",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-x-2-2",
+   "name": "（文艺活动，未标注等级）上海市学生合唱节",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "文艺"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": null,
+    "official_category": "文艺",
+    "official_seq": "0",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-x-2-3",
+   "name": "（文艺活动，未标注等级）“合唱之心”上海国际合唱比赛暨合唱文化周",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "文艺"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": null,
+    "official_category": "文艺",
+    "official_seq": "0",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-x-2-4",
+   "name": "（文艺活动，未标注等级）大学生创意节",
+   "organizer": "",
+   "level": "national",
+   "level_label": "国家级",
+   "categories": [
+    "文艺"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": null,
+    "official_category": "文艺",
+    "official_seq": "0",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-x-2-5",
+   "name": "（文艺活动，未标注等级）“博看杯”上海市诵读大赛",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "文艺"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": null,
+    "official_category": "文艺",
+    "official_seq": "0",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  },
+  {
+   "competition_id": "suibe-x-x-2-6",
+   "name": "（文艺活动，未标注等级）松江片区校园短剧展演活动",
+   "organizer": "",
+   "level": "provincial",
+   "level_label": "省市级",
+   "categories": [
+    "文艺"
+   ],
+   "eligible_majors": [
+    "all"
+   ],
+   "eligible_years": [
+    "大一",
+    "大二",
+    "大三",
+    "大四"
+   ],
+   "team_size": "",
+   "timing": "以当年官方通知为准",
+   "official_url": "",
+   "skill_tags": [
+    "沟通"
+   ],
+   "direction_ids": [],
+   "school_recognition": {
+    "status": "official_lead",
+    "official_level": null,
+    "official_category": "文艺",
+    "official_seq": "0",
+    "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+    "source_url": "",
+    "note": "学校奖励清单等级；具体加分/素拓折算以学工、团委当年文件为准"
+   },
+   "verification_status": "official_lead",
+   "source_title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+   "note": ""
+  }
+ ],
+ "official_list_source": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）"
+}

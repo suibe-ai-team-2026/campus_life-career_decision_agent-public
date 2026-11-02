@@ -51,3 +51,7 @@ Thumbs.db
 # Supabase CLI local state
 supabase/.temp/
 .vercel
+
+# iCloud Drive sync duplicates ("name 2.ext")
+* 2.*
+* 3.*

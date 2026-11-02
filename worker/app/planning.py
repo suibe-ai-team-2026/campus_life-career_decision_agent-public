@@ -11,6 +11,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Mapping
 
+from . import reference
 from .models import PlanLead, PlanPathway, PlanRoadmapStage, SourceFreshness
 
 PATHWAY_LABELS = {
@@ -295,36 +296,71 @@ def build_pathway(profile: Mapping[str, Any]) -> PlanPathway:
     )
 
 
+def _url(value: Any) -> str | None:
+    text = str(value or "").strip()
+    return text if text.startswith("http://") or text.startswith("https://") else None
+
+
+def _lead_freshness(status: str, url: str | None, note: str) -> SourceFreshness:
+    return SourceFreshness(
+        verification_status=status,  # type: ignore[arg-type]
+        update_frequency=note,
+        source_url=url,
+    )
+
+
 def build_course_leads(direction_id: str, profile: Mapping[str, Any]) -> list[PlanLead]:
-    school = str(profile.get("school") or "")
-    major = str(profile.get("major") or "")
-    try:
-        enrollment_year = int(profile.get("enrollment_year"))
-    except (TypeError, ValueError):
-        enrollment_year = 0
-    if (
-        "上海对外经贸大学" not in school
-        or "国际经济与贸易" not in major
-        or enrollment_year != SUPPORTED_ENROLLMENT_YEAR
-    ):
-        return []
-    leads = []
+    leads: list[PlanLead] = []
+    for index, item in enumerate(reference.course_leads(profile, direction_id)):
+        title = str(item.get("title") or "").strip()
+        if not title:
+            continue
+        credits = item.get("credits")
+        terms = [str(term) for term in item.get("terms") or [] if str(term).strip()]
+        facts = []
+        if isinstance(credits, (int, float)):
+            facts.append(f"{credits:g} 学分")
+        if terms:
+            facts.append("开课：" + "/".join(terms))
+        description = str(item.get("description") or "").strip()
+        if facts:
+            description = f"{description}（{'，'.join(facts)}）" if description else "，".join(facts)
+        status = str(item.get("verification") or "pending_verification")
+        source_source = str(item.get("source_title") or "培养方案")
+        locator = str(item.get("locator") or "").strip()
+        source_label = f"{source_source}{(' · ' + locator) if locator else ''}"
+        if item.get("major_name"):
+            source_label = f"{source_label}（{item.get('major_name')}培养方案）"
+        leads.append(
+            PlanLead(
+                lead_id=f"course-lead-{direction_id}-{index + 1}",
+                title=title,
+                description=description or "本专业培养方案中的课程线索。",
+                why="课程名与学分来自培养方案文本（机器提取，未逐条人工复核）；先修、开课学期与选课资格以教务处当年方案为准。"
+                if status != "pending_verification"
+                else "方向通用课程线索；具体课程以你所在专业的培养方案为准。",
+                skill_tags=[str(tag) for tag in item.get("skills") or []][:8],
+                verification_status=status,  # type: ignore[arg-type]
+                source_label=source_label,
+                source_url=_url(item.get("source_url")) or SCHOOL_HOME,
+                freshness=_lead_freshness(status, _url(item.get("source_url")) or SCHOOL_HOME, "每学期选课前复核"),  # type: ignore[arg-type]
+            )
+        )
+    if leads:
+        return leads
+    # 兜底：没有参考数据时用方向通用线索，避免方案里课程为空。
     for index, (title, description, tags) in enumerate(COURSE_LEADS.get(direction_id, ())):
         leads.append(
             PlanLead(
                 lead_id=f"course-lead-{direction_id}-{index + 1}",
                 title=title,
                 description=description,
-                why="课程名称来自产品整理的国贸专业线索；学分、先修、开课学期与选课资格尚未完成官方结构化核验。",
+                why="方向通用课程线索；学分、先修与开课学期以教务处当年培养方案为准。",
                 skill_tags=list(tags),
-                verification_status="official_lead",
-                source_label="上海对外经贸大学官网入口；培养方案待教务部门核验",
+                verification_status="pending_verification",
+                source_label="知途方向课程线索（团队整理）",
                 source_url=SCHOOL_HOME,
-                freshness=SourceFreshness(
-                    verification_status="official_lead",
-                    update_frequency="每学期选课前复核",
-                    source_url=SCHOOL_HOME,
-                ),
+                freshness=_lead_freshness("pending_verification", SCHOOL_HOME, "每学期选课前复核"),
             )
         )
     return leads
@@ -334,7 +370,38 @@ def build_competition_leads(direction_id: str, profile: Mapping[str, Any]) -> li
     preferences = _pathway_preferences(profile)
     if preferences.get("accepts_competition") is False:
         return []
-    leads = []
+    leads: list[PlanLead] = []
+    for index, item in enumerate(reference.competition_candidates(profile, direction_id)):
+        name = str(item.get("name") or "").strip()
+        if not name:
+            continue
+        recognition = item.get("school_recognition") or {}
+        official_level = str(recognition.get("official_level") or "").strip()
+        level_label = f"学校奖励清单 {official_level} 级" if official_level else "学校奖励清单等级待核对"
+        status = str(item.get("verification_status") or "external_reference")
+        source_title = str(recognition.get("source_title") or item.get("source_title") or "竞赛目录")
+        timing = str(item.get("timing") or "以当年官方通知为准")
+        organizer = str(item.get("organizer") or "")
+        description = f"{organizer}；{timing}。{level_label}。"
+        source_url = _url(item.get("official_url")) or _url(recognition.get("source_url")) or EXTERNAL_COMPETITION_HUB
+        leads.append(
+            PlanLead(
+                lead_id=f"competition-lead-{direction_id}-{index + 1}",
+                title=name,
+                description=description,
+                why="先核对当年报名资格、组队要求、时间窗与校内加分/素拓折算；未核对前只作为了解清单。"
+                if status != "official_lead"
+                else "该赛事在《上海对外经贸大学竞赛奖励项目清单》中；具体加分/素拓折算以学工、团委当年文件为准。",
+                skill_tags=[str(tag) for tag in item.get("skill_tags") or []][:8],
+                verification_status=status,  # type: ignore[arg-type]
+                source_label=source_title,
+                source_url=source_url,
+                freshness=_lead_freshness(status, source_url, "每年通知发布后复核"),  # type: ignore[arg-type]
+            )
+        )
+    if leads:
+        return leads
+    # 兜底：方向通用赛事清单
     for index, (title, description, tags) in enumerate(COMPETITION_LEADS.get(direction_id, ())):
         leads.append(
             PlanLead(
@@ -346,20 +413,77 @@ def build_competition_leads(direction_id: str, profile: Mapping[str, Any]) -> li
                 verification_status="external_reference",
                 source_label="我爱竞赛网与学校竞赛通知；官方页面待逐年核验",
                 source_url=EXTERNAL_COMPETITION_HUB,
-                freshness=SourceFreshness(
-                    verification_status="external_reference",
-                    update_frequency="赛事公告发布后复核",
-                    source_url=EXTERNAL_COMPETITION_HUB,
-                ),
+                freshness=_lead_freshness("external_reference", EXTERNAL_COMPETITION_HUB, "赛事公告发布后复核"),
+            )
+        )
+    return leads
+
+
+def build_campus_facts(profile: Mapping[str, Any]) -> list[PlanLead]:
+    """SUIBE employment facts shown as sourced reference cards (never unsourced numbers)."""
+    school = str(profile.get("school") or "")
+    if "上海对外经贸大学" not in school:
+        return []
+    leads: list[PlanLead] = []
+    for index, fact in enumerate(reference.employment_facts()):
+        metric = str(fact.get("metric_name") or "").strip()
+        if metric.endswith("共"):
+            metric = "毕业生总数"
+        value = fact.get("value")
+        if isinstance(value, float) and value.is_integer():
+            value = int(value)
+        raw_unit = str(fact.get("unit") or "")
+        if fact.get("unit") == "percent":
+            unit = "%"
+        elif raw_unit in {"person", "人"}:
+            unit = " 人"
+        else:
+            unit = raw_unit
+        if not metric or value is None:
+            continue
+        cohort = str(fact.get("cohort") or "")
+        quote = str(fact.get("quote") or "").strip()
+        status = str(fact.get("verification_status") or "pending")
+        status = "pending_verification" if status == "pending" else status
+        leads.append(
+            PlanLead(
+                lead_id=f"campus-fact-{index + 1}",
+                title=f"{cohort} {metric} {value}{unit}".strip(),
+                description=(quote or "口径与原文以来源报告为准。")[:220],
+                why=f"口径：{fact.get('scope') or '本科'}；定义：{fact.get('definition') or '以来源报告为准'}；定位：{fact.get('locator') or '未提供'}。",
+                skill_tags=[],
+                verification_status=status,  # type: ignore[arg-type]
+                source_label=str(fact.get("source_title") or "就业质量报告"),
+                source_url=_url(fact.get("source_url")),
+                freshness=_lead_freshness(status, _url(fact.get("source_url")), "每年报告发布后复核"),  # type: ignore[arg-type]
             )
         )
     return leads
 
 
 def build_campus_resources(profile: Mapping[str, Any]) -> list[PlanLead]:
-    school = str(profile.get("school") or "")
-    if "上海对外经贸大学" not in school:
-        return []
+    leads: list[PlanLead] = []
+    for index, item in enumerate(reference.resources()):
+        name = str(item.get("name") or "").strip()
+        if not name:
+            continue
+        url = _url(item.get("url"))
+        status = str(item.get("verification_status") or "official_lead")
+        leads.append(
+            PlanLead(
+                lead_id=f"campus-resource-{index + 1}",
+                title=name,
+                description=str(item.get("description") or "").strip(),
+                why=str(item.get("note") or "使用前核对栏目与开放时间。"),
+                skill_tags=[],
+                verification_status=status,  # type: ignore[arg-type]
+                source_label=str(item.get("source_title") or name),
+                source_url=url,
+                freshness=_lead_freshness(status, url, "使用前复核栏目入口"),  # type: ignore[arg-type]
+            )
+        )
+    if leads:
+        return leads
     official_resources = [
         PlanLead(
             lead_id=f"campus-resource-{index + 1}",
@@ -370,11 +494,7 @@ def build_campus_resources(profile: Mapping[str, Any]) -> list[PlanLead]:
             verification_status="official_lead",
             source_label="上海对外经贸大学官网入口；具体栏目与开放时间需复核",
             source_url=SCHOOL_HOME,
-            freshness=SourceFreshness(
-                verification_status="official_lead",
-                update_frequency="使用前复核栏目入口",
-                source_url=SCHOOL_HOME,
-            ),
+            freshness=_lead_freshness("official_lead", SCHOOL_HOME, "使用前复核栏目入口"),
         )
         for index, (title, description, stage) in enumerate(RESOURCE_ROWS)
     ]
@@ -392,11 +512,7 @@ def build_campus_resources(profile: Mapping[str, Any]) -> list[PlanLead]:
                 else "外部平台；暂无可验证的直达链接，请在校内入口或公众号中搜索准确名称"
             ),
             source_url=source_url,
-            freshness=SourceFreshness(
-                verification_status="external_reference",
-                update_frequency="使用前查看平台最新公告",
-                source_url=source_url,
-            ),
+            freshness=_lead_freshness("external_reference", source_url, "使用前查看平台最新公告"),
         )
         for index, (title, description, stage, source_url) in enumerate(EXTERNAL_RESOURCE_ROWS)
     ]
@@ -441,6 +557,15 @@ def build_roadmap(
             first_month_actions.append(
                 f"围绕目标城市「{cities}」筛选岗位与实习，记录发布机构、岗位要求、更新时间和信息来源。"
             )
+    facts = reference.employment_facts(limit=2) if "上海对外经贸大学" in str(profile.get("school") or "") else []
+    if facts:
+        fact = facts[0]
+        unit = "%" if fact.get("unit") == "percent" else str(fact.get("unit") or "")
+        first_month_actions.append(
+            f"先核对学校就业质量报告：{fact.get('cohort', '')}{fact.get('metric_name', '')} "
+            f"{fact.get('value', '')}{unit}（来源：{fact.get('source_title', '')}；定位：{fact.get('locator', '未提供')}）。"
+            "把届别、口径和分母记下来，再与暂定方向对照。"
+        )
     weekly_hours = _preferences(profile).get("weekly_hours")
     if isinstance(weekly_hours, (int, float)) and weekly_hours > 0:
         first_month_actions.append(
@@ -527,6 +652,7 @@ class PlanningBlueprint:
     course_leads: tuple[PlanLead, ...]
     competition_leads: tuple[PlanLead, ...]
     campus_resources: tuple[PlanLead, ...]
+    campus_facts: tuple[PlanLead, ...]
     roadmap: tuple[PlanRoadmapStage, ...]
 
 
@@ -538,5 +664,6 @@ def build_planning_blueprint(
         course_leads=tuple(build_course_leads(direction_id, profile)),
         competition_leads=tuple(build_competition_leads(direction_id, profile)),
         campus_resources=tuple(build_campus_resources(profile)),
+        campus_facts=tuple(build_campus_facts(profile)),
         roadmap=tuple(build_roadmap(direction_id, profile)),
     )

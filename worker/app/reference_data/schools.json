@@ -1,0 +1,69 @@
+{
+ "schema_version": "career-reference-schools-v1",
+ "generated_at": "2026-11-02",
+ "schools": [
+  {
+   "school_id": "suibe",
+   "name": "上海对外经贸大学",
+   "city": "上海",
+   "type": "财经类本科",
+   "official_site": "https://www.suibe.edu.cn/",
+   "employment_report_url": "https://www.suibe.edu.cn/_upload/article/images/a8/95/01aa08fe4d22be489af32c58d97c/27187c53-7f48-44e9-8573-3929ac2372c2.jpg",
+   "note": "用于同等院校对照，不用于跨校排名或加减。"
+  },
+  {
+   "school_id": "dhu",
+   "name": "东华大学",
+   "city": "上海",
+   "type": "综合类本科（211）",
+   "official_site": "https://www.dhu.edu.cn/",
+   "employment_report_url": "http://xxgk.dhu.edu.cn/_upload/article/files/cc/6b/75012b1c4b23b090e08f3b4f7095/25fc9305-6b34-4c6f-a82a-b66c1e667265.pdf",
+   "note": "用于同等院校对照，不用于跨校排名或加减。"
+  },
+  {
+   "school_id": "ecupl",
+   "name": "华东政法大学",
+   "city": "上海",
+   "type": "政法类本科",
+   "official_site": "https://www.ecupl.edu.cn/",
+   "employment_report_url": "https://xxgk.ecupl.edu.cn/_upload/article/images/ce/2d/45df40c847f3a5665298beb51589/8b73adb6-7c4c-4289-91c7-a751a6ab6f60.jpg",
+   "note": "用于同等院校对照，不用于跨校排名或加减。"
+  },
+  {
+   "school_id": "shisu",
+   "name": "上海外国语大学",
+   "city": "上海",
+   "type": "语言类本科（211）",
+   "official_site": "https://www.shisu.edu.cn/",
+   "employment_report_url": "https://info.shisu.edu.cn/_upload/article/files/f7/62/810faf014228bbfc0780fcd84285/b3900e1a-28d0-4277-81e5-89eba7388022.pdf",
+   "note": "用于同等院校对照，不用于跨校排名或加减。"
+  },
+  {
+   "school_id": "lixin",
+   "name": "上海立信会计金融学院",
+   "city": "上海",
+   "type": "财经类本科",
+   "official_site": "https://www.lixin.edu.cn/",
+   "employment_report_url": "https://www.lixin.edu.cn/wcm.files/upload/CMSnewjr/202607/202607061106019.pdf",
+   "note": "用于同等院校对照，不用于跨校排名或加减。"
+  },
+  {
+   "school_id": "sues",
+   "name": "上海工程技术大学",
+   "city": "上海",
+   "type": "应用型本科",
+   "official_site": "https://www.sues.edu.cn/",
+   "employment_report_url": "https://career.sues.edu.cn/upload/20260309/a9dfcde2c0ad4540845f76bc1ac6ead2.pdf",
+   "note": "用于同等院校对照，不用于跨校排名或加减。"
+  },
+  {
+   "school_id": "shvarts",
+   "name": "上海视觉艺术学院",
+   "city": "上海",
+   "type": "艺术类本科",
+   "official_site": "https://www.siva.edu.cn/",
+   "employment_report_url": null,
+   "note": "覆盖登记中的第 7 所学校；本轮未取得就业质量报告事实，仅登记学校信息用于对照占位。"
+  }
+ ]
+}

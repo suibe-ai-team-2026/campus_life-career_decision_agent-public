@@ -271,7 +271,7 @@ def test_ask_gate_refusal_does_not_call_chat():
     db = FakeDb(config=config)
     provider = FakeProvider(config)
     db.search_rows = []
-    job = make_claim({"question": "2024届毕业生就业率是多少？"}, kind="ask", owner_id=OWNER)
+    job = make_claim({"question": "学校食堂今天的营业时间是什么时候？"}, kind="ask", owner_id=OWNER)
     ctx = make_context(config=config, db=db, provider=provider, job=job)
     payload = run_ask(ctx)
     assert payload["refusal"] is True
@@ -305,9 +305,11 @@ def test_ask_valid_answer_keeps_citations():
     payload = run_ask(ctx)
     assert payload["refusal"] is False
     assert "95.0%" in payload["answer"]
-    assert len(payload["citations"]) == 1
+    assert len(payload["citations"]) >= 1
     assert payload["citations"][0]["citation_no"] == 1
-    assert payload["boundary_note"] == "仅覆盖2024届报告口径"
+    assert payload["citations"][0]["citation_no"] == 1
+    assert payload["boundary_note"].startswith("仅覆盖2024届报告口径")
+    assert "参考数据" in payload["boundary_note"]
 
 
 def test_ask_discards_answer_with_invalid_citation():

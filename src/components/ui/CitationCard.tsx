@@ -74,7 +74,7 @@ export function CitationCard({ citation, dense = false }: { citation: Citation; 
         <div className="citation-title-block">
           <p className="citation-title">{citation.title}</p>
           <p className="citation-meta micro">
-            {citation.source_scope ? <span>{citation.source_scope}</span> : null}
+            {citation.source_scope ? <span>{citation.source_scope === "reference_data" ? "团队参考数据" : citation.source_scope}</span> : null}
             <span>{locatorSummary(citation.locator)}</span>
           </p>
         </div>
