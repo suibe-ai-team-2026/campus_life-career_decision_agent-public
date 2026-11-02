@@ -382,7 +382,8 @@ def build_competition_leads(direction_id: str, profile: Mapping[str, Any]) -> li
         source_title = str(recognition.get("source_title") or item.get("source_title") or "竞赛目录")
         timing = str(item.get("timing") or "以当年官方通知为准")
         organizer = str(item.get("organizer") or "")
-        description = f"{organizer}；{timing}。{level_label}。"
+        points_hint = reference.competition_points_hint(official_level) if official_level else ""
+        description = f"{organizer}；{timing}。{level_label}。{points_hint}"
         source_url = _url(item.get("official_url")) or _url(recognition.get("source_url")) or EXTERNAL_COMPETITION_HUB
         leads.append(
             PlanLead(

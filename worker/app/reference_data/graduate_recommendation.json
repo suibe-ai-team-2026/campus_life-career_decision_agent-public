@@ -1,0 +1,63 @@
+{
+ "schema_version": "career-reference-graduate-recommendation-v1",
+ "generated_at": "2026-11-02",
+ "source": {
+  "title": "上外贸保研制度介绍｜保研综合成绩构成（用户提供的公众号文章与截图）",
+  "publisher": "SUIBE 学工/校园公众号（用户转发）",
+  "url": "",
+  "note": "各学院推免评价细则不同；具体分值、占比与认定范围以当年学校及学院正式文件为准。"
+ },
+ "components": [
+  {"name": "思想品德", "note": "推免工作小组根据申请表、个人陈述与在校表现评价；不合格不予推荐。"},
+  {"name": "学习成绩", "note": "前六学期平均成绩（所有课程加权分）+ 专业内排名。"},
+  {"name": "科研创新能力", "note": "特殊学术专长、北大核心论文、一般刊物论文、科研项目等。"},
+  {"name": "全面发展", "note": "竞赛与荣誉类 + 社会服务与实践活动，分别按标准评分。"}
+ ],
+ "academic_rank_points": [
+  {"band": "前1%", "points": 100},
+  {"band": "前3%", "points": 90},
+  {"band": "前5%", "points": 80},
+  {"band": "前10%", "points": 70},
+  {"band": "前15%", "points": 60},
+  {"band": "前15%以后", "points": 40}
+ ],
+ "competition_points": {
+  "individual": [
+   {"grade": "一等奖", "municipal": 10, "national": 20},
+   {"grade": "二等奖", "municipal": 6, "national": 15},
+   {"grade": "三等奖", "municipal": 3, "national": 10}
+  ],
+  "team": [
+   {"grade": "一等奖", "municipal": 5, "national": 10},
+   {"grade": "二等奖", "municipal": 3, "national": 7},
+   {"grade": "三等奖", "municipal": 2, "national": 5}
+  ],
+  "note": "国际级竞赛得分与国家级相同；竞赛级别按学生处《学生竞赛奖励项目清单》认定；不在清单内的竞赛由推免遴选工作小组讨论认定。"
+ },
+ "honors": [
+  {"name": "校优秀学生", "repeatable": true},
+  {"name": "优秀学生干部", "repeatable": true},
+  {"name": "优秀团员", "repeatable": true},
+  {"name": "优秀团干部", "repeatable": true},
+  {"name": "年度人物", "repeatable": false},
+  {"name": "自强之星", "repeatable": false},
+  {"name": "创新先锋", "repeatable": false},
+  {"name": "实践先锋", "repeatable": false},
+  {"name": "文艺先锋", "repeatable": false},
+  {"name": "优秀志愿者", "repeatable": true},
+  {"name": "思源之星", "repeatable": false}
+ ],
+ "service_rules": [
+  {"item": "志愿服务（国家级）", "points": 10, "note": "每项 10 分"},
+  {"item": "志愿服务（市级）", "points": 5, "note": "每项 5 分，最高 20 分"},
+  {"item": "国际组织实习", "points": 10, "note": "每项 10 分，最高 20 分"},
+  {"item": "暑期社会实践获奖", "points": null, "note": "参照竞赛获奖标准计分，不能重复计分"},
+  {"item": "献血", "points": 5, "note": "每次 5 分，最高 10 分"}
+ ],
+ "level_mapping": {
+  "A": "national",
+  "B": "municipal",
+  "C": "school",
+  "note": "A/B/C 与国家级/市级/校级的对应为按清单等级的推断；最终以学生处认定为准，C 级（校级）未出现在推免计分表。"
+ }
+}
