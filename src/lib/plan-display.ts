@@ -1,4 +1,4 @@
-import type { PlanAction } from "@/lib/contracts/plan";
+import type { PlanAction, PlanAnalysis, PlanResult } from "@/lib/contracts/plan";
 
 /**
  * 把 worker 写入的机器可读 warning 翻成用户能看懂的一句中文。
@@ -95,6 +95,79 @@ export function formatPlanWarnings(warnings: readonly string[]): string[] {
     formatted.push(text);
   }
   return formatted;
+}
+
+type FallbackDirection = {
+  title: string;
+  summary: string;
+  work_content: string[];
+  verified_skills: string[];
+  preparation_cost: string;
+  applicability: string;
+};
+
+const INLINE_WINDOW_LABELS: Record<PlanAction["window"], string> = {
+  current_term: "当前学期",
+  next_term: "下学期",
+  later: "更晚阶段"
+};
+
+function compactText(value: string | null | undefined, maxLength: number): string {
+  const text = (value ?? "").replace(/\s+/g, " ").trim();
+  if (text.length <= maxLength) return text;
+  return `${text.slice(0, maxLength).replace(/[，；、。\s]+$/, "")}…`;
+}
+
+/**
+ * When the worker cannot safely return its richer AI analysis, keep the panel
+ * useful with facts the plan already contains. This is deliberately labelled
+ * as a rules fallback and never invents a profile match.
+ */
+export function buildRuleFallbackAnalysis(
+  direction: FallbackDirection,
+  result: Pick<PlanResult, "actions" | "gaps" | "explanation" | "roadmap">
+): PlanAnalysis {
+  const actions = result.actions.slice(0, 6);
+  const overviewParts = [
+    `当前方向是“${direction.title}”。`,
+    direction.summary,
+    direction.work_content.length > 0 ? `常见工作包括：${direction.work_content.slice(0, 4).join("、")}。` : "",
+    direction.verified_skills.length > 0
+      ? `可以先验证的能力：${direction.verified_skills.slice(0, 4).join("、")}。`
+      : ""
+  ];
+  const ruleExplanation = compactText(result.explanation, 420);
+  const gapRisks = result.gaps.map((gap) => gap.message).filter(Boolean).slice(0, 4);
+  const topActions = result.roadmap.find((stage) => stage.stage === "未来 30 天")?.actions ?? [];
+  const nextSteps = (topActions.length > 0 ? topActions : actions.map((action) => action.title))
+    .filter(Boolean)
+    .slice(0, 4);
+
+  return {
+    overview: overviewParts.filter(Boolean).join(" "),
+    match:
+      ruleExplanation ||
+      `当前方案已按你的暂定方向“${direction.title}”生成可执行路线。本次没有可安全展示的画像匹配文本，因此不补写推断结论；请先通过下方行动收集自己的真实反馈。`,
+    action_rationale: actions.map((action) => {
+      const prerequisites =
+        action.prerequisites.length > 0
+          ? ` 开始前先核对：${action.prerequisites.slice(0, 2).join("；")}。`
+          : "";
+      return `“${action.title}”安排在${INLINE_WINDOW_LABELS[action.window]}；${prerequisites || "执行后保留课程作业、项目记录或反馈作为复核依据。"}`;
+    }),
+    evidence_courses: [],
+    evidence_competitions: [],
+    risks:
+      gapRisks.length > 0
+        ? gapRisks
+        : ["本次结构化资料有限，课程、报名资格与时间安排仍需以学校和官方最新通知核对。"],
+    next_steps: nextSteps,
+    citation_numbers: [],
+    boundary_note: `以上为方向“${direction.title}”的规则化摘要，不是 AI 画像匹配结论；准备成本与适用范围：${compactText(
+      direction.preparation_cost || direction.applicability,
+      180
+    )}`
+  };
 }
 
 /** 规则引擎在"资料缺口"时生成的核对行动；它们不是课程，也不带工时。 */

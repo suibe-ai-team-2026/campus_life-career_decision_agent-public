@@ -7,7 +7,13 @@ import type { DirectionId } from "@/lib/contracts/common";
 import { PLAN_WINDOW_LABELS, PLAN_WINDOW_ORDER, getDirection } from "@/lib/content";
 import { Badge, Button, Callout, Collapse, EmptyState, Icon, formatDateTime, formatDate } from "@/components/ui/primitives";
 import { CitationList } from "@/components/ui/CitationCard";
-import { formatPlanWarning, formatPlanWarnings, summarizeDataGaps, summarizeEffort } from "@/lib/plan-display";
+import {
+  buildRuleFallbackAnalysis,
+  formatPlanWarning,
+  formatPlanWarnings,
+  summarizeDataGaps,
+  summarizeEffort
+} from "@/lib/plan-display";
 import { SourceUploadPanel } from "@/components/tools/SourceUploadPanel";
 import { ActionCard, type ActionOverrides } from "./PlanActionCard";
 
@@ -230,6 +236,9 @@ export function PlanDetail({
   const analysisFallbackWarning = result.warnings.find((warning) =>
     warning.startsWith("plan_analysis_fallback:")
   );
+  const displayedAnalysis =
+    result.analysis ?? (direction ? buildRuleFallbackAnalysis(direction, result) : null);
+  const analysisIsFallback = !result.analysis && Boolean(displayedAnalysis);
   const isDataGapState = result.status === "data_unavailable";
   const topThirty = result.roadmap.find((stage) => stage.stage === "未来 30 天") ?? null;
   const currentStage = result.roadmap.find((stage) => stage.stage !== "未来 30 天") ?? null;
@@ -370,66 +379,66 @@ export function PlanDetail({
             </section>
           ) : null}
 
-          {result.analysis ? (
-            <Collapse summary="AI 方向分析">
+          {analysisIsFallback ? (
+            <Callout tone="warn" title="AI 分析已回退为规则摘要">
+              <p className="small-note">
+                {analysisFallbackWarning
+                  ? formatPlanWarning(analysisFallbackWarning)
+                  : "本次没有取得可校验的 AI 分析，以下内容仅依据方向卡与规则事实生成。"}
+                {" "}不会补写未经核验的画像匹配结论。
+              </p>
+            </Callout>
+          ) : null}
+
+          {displayedAnalysis ? (
+            <Collapse summary={analysisIsFallback ? "方向分析（规则摘要）" : "AI 方向分析"} defaultOpen={analysisIsFallback}>
               <div className="analysis-grid">
                 <article className="analysis-card">
                   <h3><Icon name="compass" size={15} /> 方向概览</h3>
-                  <p className="analysis-body">{result.analysis.overview}</p>
+                  <p className="analysis-body">{displayedAnalysis.overview}</p>
                 </article>
                 <article className="analysis-card">
                   <h3><Icon name="activity" size={15} /> 画像匹配</h3>
-                  <p className="analysis-body">{result.analysis.match}</p>
+                  <p className="analysis-body">{displayedAnalysis.match}</p>
                 </article>
               </div>
 
-              {result.analysis.action_rationale.length > 0 ? (
+              {displayedAnalysis.action_rationale.length > 0 ? (
                 <div className="analysis-block">
                   <h3><Icon name="list" size={15} /> 每条行动的依据与做法</h3>
                   <ol className="analysis-list">
-                    {result.analysis.action_rationale.map((line, index) => <li key={index}>{line}</li>)}
+                    {displayedAnalysis.action_rationale.map((line, index) => <li key={index}>{line}</li>)}
                   </ol>
                 </div>
               ) : null}
 
-              {result.analysis.risks.length > 0 ? (
+              {displayedAnalysis.risks.length > 0 ? (
                 <div className="analysis-block">
                   <h3><Icon name="alert" size={15} /> 风险与未知</h3>
                   <ul className="analysis-list">
-                    {result.analysis.risks.map((line, index) => <li key={index}>{line}</li>)}
+                    {displayedAnalysis.risks.map((line, index) => <li key={index}>{line}</li>)}
                   </ul>
                 </div>
               ) : null}
 
-              {result.analysis.next_steps.length > 0 ? (
+              {displayedAnalysis.next_steps.length > 0 ? (
                 <div className="analysis-block">
                   <h3><Icon name="arrow-right" size={15} /> 建议的下一步</h3>
                   <ol className="analysis-steps">
-                    {result.analysis.next_steps.map((line, index) => (
+                    {displayedAnalysis.next_steps.map((line, index) => (
                       <li key={index}><span className="analysis-step-no">{index + 1}</span>{line}</li>
                     ))}
                   </ol>
                 </div>
               ) : null}
 
-              {result.analysis.boundary_note ? (
+              {displayedAnalysis.boundary_note ? (
                 <p className="panel-note plan-analysis-boundary">
-                  <Icon name="info" size={13} /> {result.analysis.boundary_note}
+                  <Icon name="info" size={13} /> {displayedAnalysis.boundary_note}
                 </p>
               ) : null}
             </Collapse>
-          ) : (
-            <EmptyState
-              compact
-              icon="sparkles"
-              title="方向分析暂未生成"
-              description={
-                analysisFallbackWarning
-                  ? `${formatPlanWarning(analysisFallbackWarning)} 确定性路线、行动、课程与竞赛线索仍可查看。`
-                  : "确定性路线和行动仍可查看；AI 解释失败不会改动规则事实。"
-              }
-            />
-          )}
+          ) : null}
 
           <Collapse summary="方案说明">
             {result.explanation ? (
