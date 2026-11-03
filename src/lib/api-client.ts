@@ -1145,6 +1145,7 @@ export function profileFingerprint(input: ProfileInput): string {
     input.preferences.weekly_hours ?? "",
     input.preferences.monthly_budget_cny ?? "",
     input.preferences.notes ?? "",
+    input.preferences.decision_reason ?? "",
     JSON.stringify(input.preferences.pathway)
   ].join("|");
   return fnv1a(payload);

@@ -97,6 +97,21 @@ export function formatPlanWarnings(warnings: readonly string[]): string[] {
   return formatted;
 }
 
+/**
+ * Worker 的路线焦点应使用路线标签，但旧结果会把“仍不确定”直接嵌入
+ * “完成申请或求职证据链”的句式，读起来像已经确定了兑现方式。
+ */
+export function formatRoadmapFocus(focus: string): string {
+  const text = focus.trim();
+  if (
+    text === "围绕「仍不确定」完成申请或求职证据链" ||
+    text === "围绕「undetermined」完成申请或求职证据链"
+  ) {
+    return "先比较路线，再准备申请或求职证据";
+  }
+  return text;
+}
+
 type FallbackDirection = {
   title: string;
   summary: string;

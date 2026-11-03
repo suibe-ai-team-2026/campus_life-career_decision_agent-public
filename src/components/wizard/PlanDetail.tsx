@@ -11,6 +11,7 @@ import {
   buildRuleFallbackAnalysis,
   formatPlanWarning,
   formatPlanWarnings,
+  formatRoadmapFocus,
   summarizeDataGaps,
   summarizeEffort
 } from "@/lib/plan-display";
@@ -163,6 +164,96 @@ function LeadCards({
   );
 }
 
+function SemesterLeadShortlist({
+  result,
+  onViewAll
+}: {
+  result: PlanResult;
+  onViewAll: () => void;
+}) {
+  const lanes = [
+    {
+      label: "先选 1 门课",
+      hint: "核对开课学期、先修与学分认定",
+      leads: result.course_leads.slice(0, 3),
+      empty: "当前方向暂无课程线索"
+    },
+    {
+      label: "先核对 1 项竞赛",
+      hint: "确认年级资格、报名窗口与加分规则",
+      leads: result.competition_leads.slice(0, 2),
+      empty: "当前没有可用的竞赛线索"
+    },
+    {
+      label: "先关注 2 个入口",
+      hint: "把通知来源固定下来，减少漏信息",
+      leads: result.campus_resources.slice(0, 2),
+      empty: "当前学校暂无校内入口线索"
+    }
+  ];
+  const total = result.course_leads.length + result.competition_leads.length + result.campus_resources.length;
+  if (total === 0) return null;
+
+  return (
+    <section className="semester-shortlist" aria-labelledby="semester-shortlist-title">
+      <div className="semester-shortlist-head">
+        <div>
+          <p className="eyebrow">不用先看完所有资料</p>
+          <h2 id="semester-shortlist-title">这学期先从 {total} 条线索里选 3 步</h2>
+          <p className="micro">
+            下面都是待核对线索，不是已确认可选课程；选定后再回到下方行动里完成核验。
+          </p>
+        </div>
+        <Button variant="secondary" size="sm" onClick={onViewAll}>
+          查看全部线索
+          <Icon name="arrow-right" size={13} />
+        </Button>
+      </div>
+
+      <div className="semester-lead-grid">
+        {lanes.map((lane) => (
+          <article className="semester-lead-lane" key={lane.label}>
+            <header>
+              <div>
+                <h3>{lane.label}</h3>
+                <p>{lane.hint}</p>
+              </div>
+              <Badge tone="muted">{lane.leads.length} 条</Badge>
+            </header>
+            {lane.leads.length === 0 ? (
+              <p className="panel-note">{lane.empty}</p>
+            ) : (
+              <ol className="semester-lead-list">
+                {lane.leads.map((lead, index) => (
+                  <li className="semester-lead-item" key={lead.lead_id}>
+                    <span className="semester-lead-index">{index + 1}</span>
+                    <div>
+                      <h4>{lead.title}</h4>
+                      <p>{lead.why}</p>
+                      <div className="semester-lead-meta">
+                        <Badge tone={VERIFICATION_TONES[lead.verification_status]}>
+                          {VERIFICATION_LABELS[lead.verification_status]}
+                        </Badge>
+                        {lead.source_url ? (
+                          <a href={lead.source_url} target="_blank" rel="noopener noreferrer">
+                            打开来源 <Icon name="external" size={11} />
+                          </a>
+                        ) : (
+                          <span>{lead.source_label}</span>
+                        )}
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function Roadmap({ stages, compact = false }: { stages: PlanResult["roadmap"]; compact?: boolean }) {
   if (stages.length === 0) {
     return <EmptyState compact icon="map" title="路线蓝图未生成" description="当前结果没有返回分阶段行动，请补充画像或重新生成方案。" />;
@@ -174,7 +265,7 @@ function Roadmap({ stages, compact = false }: { stages: PlanResult["roadmap"]; c
           <div className="roadmap-marker">{stageIndex + 1}</div>
           <div className="roadmap-content">
             <p className="roadmap-stage-name">{stage.stage}</p>
-            <h3>{stage.focus}</h3>
+            <h3>{formatRoadmapFocus(stage.focus)}</h3>
             <ul>
               {stage.actions.map((action, actionIndex) => (
                 <li key={`${stage.stage}-${actionIndex}`}>{action}</li>
@@ -195,6 +286,7 @@ export function PlanDetail({
   evidence,
   isCached = false,
   cachedAt = null,
+  decisionReason = "",
   patchingActionId,
   actionErrors,
   onMoveOrder,
@@ -209,6 +301,7 @@ export function PlanDetail({
   evidence: Citation[];
   isCached?: boolean;
   cachedAt?: string | null;
+  decisionReason?: string;
   patchingActionId: string | null;
   actionErrors: Record<string, string>;
   onMoveOrder: (nextOrder: string[]) => void;
@@ -304,6 +397,13 @@ export function PlanDetail({
           </div>
         ) : null}
 
+        {decisionReason.trim() ? (
+          <div className="plan-user-reason">
+            <span className="plan-route-label">你写下的判断依据与未知</span>
+            <p>{decisionReason.trim()}</p>
+          </div>
+        ) : null}
+
         <div className="plan-priority-grid">
           <div className="plan-priority-card">
             <div className="plan-priority-head">
@@ -323,7 +423,9 @@ export function PlanDetail({
           <div className="plan-priority-card">
             <div className="plan-priority-head">
               <span>{currentStage?.stage ?? "本学期"}</span>
-              <Badge tone="muted">{currentStage?.focus ?? "形成第一份证据"}</Badge>
+              <Badge tone="muted">
+                {currentStage ? formatRoadmapFocus(currentStage.focus) : "形成第一份证据"}
+              </Badge>
             </div>
             <ul className="plan-priority-list is-bulleted">
               {(currentStage?.actions ?? orderedActions.slice(0, 3).map((action) => action.title)).slice(0, 3).map((item, index) => (
@@ -518,10 +620,12 @@ export function PlanDetail({
 
       {activeTab === "semester" ? (
         <div className="plan-detail-panel" id="plan-panel-semester" role="tabpanel" aria-labelledby="plan-tab-semester">
+          <SemesterLeadShortlist result={result} onViewAll={() => setActiveTab("campus")} />
+
           {topThirty ? (
             <section className="semester-focus">
               <div className="section-heading-text">
-                <h2>{topThirty.stage}：{topThirty.focus}</h2>
+                <h2>{topThirty.stage}：{formatRoadmapFocus(topThirty.focus)}</h2>
               </div>
               <Roadmap stages={[topThirty]} compact />
             </section>
@@ -538,7 +642,7 @@ export function PlanDetail({
             {currentStage ? (
               <div className="current-stage-strip">
                 <Badge tone="accent">{currentStage.stage}</Badge>
-                <strong>{currentStage.focus}</strong>
+                <strong>{formatRoadmapFocus(currentStage.focus)}</strong>
                 <span>{currentStage.actions.length} 个关键动作</span>
               </div>
             ) : null}

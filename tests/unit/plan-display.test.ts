@@ -3,6 +3,7 @@ import {
   buildRuleFallbackAnalysis,
   formatPlanWarning,
   formatPlanWarnings,
+  formatRoadmapFocus,
   isVerifyDataAction,
   summarizeDataGaps,
   summarizeEffort
@@ -73,6 +74,23 @@ describe("formatPlanWarnings", () => {
     ]);
     expect(result).toHaveLength(2);
     expect(result[1]).toBe("规则版本：v1");
+  });
+});
+
+describe("formatRoadmapFocus", () => {
+  it("不把仍不确定写成已经确定的路线兑现方式", () => {
+    expect(formatRoadmapFocus("围绕「仍不确定」完成申请或求职证据链")).toBe(
+      "先比较路线，再准备申请或求职证据"
+    );
+    expect(formatRoadmapFocus("围绕「undetermined」完成申请或求职证据链")).toBe(
+      "先比较路线，再准备申请或求职证据"
+    );
+  });
+
+  it("保留已经明确的路线文案", () => {
+    expect(formatRoadmapFocus("围绕「本科就业」完成申请或求职证据链")).toBe(
+      "围绕「本科就业」完成申请或求职证据链"
+    );
   });
 });
 

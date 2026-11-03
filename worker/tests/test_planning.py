@@ -37,6 +37,7 @@ def _profile(**overrides):
             "ability_data": 0.25,
         },
         "preferences": {
+            "decision_reason": "担心只是专业对口跟风，也不确定本校有没有稳定实习渠道。",
             "pathway": {
                 "primary": "undergraduate_employment",
                 "alternatives": ["domestic_postgraduate"],
@@ -64,6 +65,8 @@ def test_profile_summary_keeps_signals_and_experience_tags():
     assert summary["profile_signals"]["abilities_ranked"][0]["key"] == "communication"
     assert summary["profile_signals"]["abilities_ranked"][0]["evidence"] == "supported"
     assert summary["profile_signals"]["experience"]["tags"] == ["ability_communication"]
+    assert summary["decision_reason"] == "担心只是专业对口跟风，也不确定本校有没有稳定实习渠道。"
+    assert summary["profile_signals"]["decision_reason"] == summary["decision_reason"]
 
 
 def test_completed_questionnaire_without_dimension_scores_is_rejected():
@@ -132,3 +135,17 @@ def test_roadmap_uses_grade_and_weakest_ability():
     assert first_30_days.stage == "未来 30 天"
     assert any("沟通协作" in action for action in first_30_days.actions)
     assert any("数据理解与分析" in action for action in first_30_days.actions)
+
+
+def test_roadmap_does_not_present_undetermined_as_a_committed_pathway():
+    profile = _profile()
+    prefs = dict(profile["preferences"])
+    pathway = dict(prefs["pathway"])
+    pathway["primary"] = "undetermined"
+    prefs["pathway"] = pathway
+    profile["preferences"] = prefs
+
+    stages = build_roadmap("trade_supply_chain", profile)
+    final_stage = stages[-1]
+    assert final_stage.focus == "先比较路线，再准备申请或求职证据"
+    assert "仍不确定" not in final_stage.focus

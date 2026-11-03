@@ -67,7 +67,7 @@ const STAGE_LABELS: Record<Stage, string> = {
   loading: "正在整理依据"
 };
 
-const RESEARCH_TOGGLE_DESCRIPTION = "会检索外部网页，结果未经核验，只作补充线索。";
+const RESEARCH_TOGGLE_DESCRIPTION = "默认关闭；开启后会检索外部网页，结果未经核验，只作补充线索。";
 
 type PendingPlanRun = { run_id: string; direction_id: DirectionId; started_at: string };
 
@@ -125,6 +125,7 @@ function buildProfileInput(progress: LocalProgressV1): ProfileInput {
     preferences: {
       ...(prefs.weekly_hours !== null ? { weekly_hours: prefs.weekly_hours } : {}),
       ...(prefs.monthly_budget_cny !== null ? { monthly_budget_cny: prefs.monthly_budget_cny } : {}),
+      ...(progress.reason_summary.trim() ? { decision_reason: progress.reason_summary.trim() } : {}),
       pathway: prefs.pathway
     }
   };
@@ -199,8 +200,8 @@ export function PlanStep() {
   const [stage, setStage] = useState<Stage>("session");
   const [run, setRun] = useState<Run | null>(null);
   const [events, setEvents] = useState<RunEvent[]>([]);
-  const [webSupplement, setWebSupplement] = useState(true);
-  const [runWebSupplement, setRunWebSupplement] = useState(true);
+  const [webSupplement, setWebSupplement] = useState(false);
+  const [runWebSupplement, setRunWebSupplement] = useState(false);
   const [plan, setPlan] = useState<Plan | null>(null);
   const [result, setResult] = useState<PlanResult | null>(null);
   const [viewIsCached, setViewIsCached] = useState(false);
@@ -821,6 +822,7 @@ export function PlanStep() {
               evidence={cache.result.evidence}
               isCached
               cachedAt={cache.fetched_at}
+              decisionReason={progress?.reason_summary ?? ""}
               patchingActionId={null}
               actionErrors={{}}
               onMoveOrder={(nextOrder) => {
@@ -924,6 +926,7 @@ export function PlanStep() {
             evidence={cache.result.evidence}
             isCached
             cachedAt={cache.fetched_at}
+            decisionReason={progress?.reason_summary ?? ""}
             patchingActionId={null}
             actionErrors={{}}
             onMoveOrder={(nextOrder) => {
@@ -1050,6 +1053,7 @@ export function PlanStep() {
             evidence={result.evidence}
             isCached={viewIsCached}
             cachedAt={cachedAt}
+            decisionReason={progress?.reason_summary ?? ""}
             patchingActionId={patchingActionId}
             actionErrors={actionErrors}
             onMoveOrder={handleMoveOrder}

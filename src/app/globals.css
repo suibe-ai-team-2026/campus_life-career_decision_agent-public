@@ -5869,6 +5869,130 @@ a.trace-hit-title:hover {
   margin-top: 6px;
 }
 
+.plan-user-reason {
+  padding: 13px 15px;
+  border: 1px dashed var(--line);
+  border-radius: var(--r-sm);
+  background: color-mix(in srgb, var(--bg-1) 82%, var(--accent-soft));
+}
+.plan-user-reason p {
+  margin-top: 5px;
+  color: var(--fg-2);
+  font-size: 12px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+}
+
+.semester-shortlist {
+  padding: 22px;
+  border: 1px solid var(--accent-line);
+  border-radius: var(--r-lg);
+  background:
+    radial-gradient(circle at 92% 8%, var(--accent-soft), transparent 34%),
+    var(--bg-1);
+}
+.semester-shortlist-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+.semester-shortlist-head h2 {
+  margin-top: 3px;
+  font-family: var(--font-serif);
+  font-size: 21px;
+  line-height: 1.35;
+}
+.semester-shortlist-head .micro {
+  max-width: 720px;
+  margin-top: 6px;
+}
+.semester-shortlist-head .btn {
+  flex: none;
+}
+.semester-lead-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+.semester-lead-lane {
+  min-width: 0;
+  padding: 15px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--bg-1) 90%, transparent);
+}
+.semester-lead-lane > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--line-soft);
+}
+.semester-lead-lane > header h3 {
+  font-family: var(--font-serif);
+  font-size: 14px;
+}
+.semester-lead-lane > header p {
+  margin-top: 3px;
+  color: var(--fg-3);
+  font-size: 10.5px;
+  line-height: 1.5;
+}
+.semester-lead-list {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-top: 11px;
+  padding: 0;
+  list-style: none;
+}
+.semester-lead-item {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: 8px;
+}
+.semester-lead-index {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-family: var(--font-mono);
+  font-size: 9px;
+}
+.semester-lead-item h4 {
+  color: var(--fg-1);
+  font-size: 12px;
+  line-height: 1.45;
+}
+.semester-lead-item p {
+  margin-top: 3px;
+  color: var(--fg-2);
+  font-size: 10.5px;
+  line-height: 1.55;
+}
+.semester-lead-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 7px;
+  color: var(--fg-3);
+  font-size: 9.5px;
+}
+.semester-lead-meta a {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--accent);
+  font-size: 9.5px;
+}
+
 .semester-focus {
   padding: 22px;
   border: 1px solid var(--accent-line);
@@ -6028,8 +6152,12 @@ a.trace-hit-title:hover {
   .pathway-summary,
   .plan-route-row,
   .plan-priority-grid,
-  .lead-card-grid {
+  .lead-card-grid,
+  .semester-lead-grid {
     grid-template-columns: 1fr;
+  }
+  .semester-shortlist-head {
+    flex-direction: column;
   }
   .plan-decision-cockpit {
     padding: 18px;

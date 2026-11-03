@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { PlanResultSchema } from "@/lib/contracts/plan";
 import { RunSubmitSchema } from "@/lib/contracts/run";
 import { AnswersSchema, ProfileInputSchema } from "@/lib/contracts/profile";
-import { normalizePlanAnalysis } from "@/lib/api-client";
+import { normalizePlanAnalysis, profileFingerprint } from "@/lib/api-client";
 
 const uuid = "3f1f9c3a-6d1e-4d4e-9a4e-2b2a7c9e1a11";
 
@@ -118,6 +118,30 @@ describe("API contracts", () => {
     });
     expect(parsed.preferences.pathway.primary).toBe("undetermined");
     expect(parsed.preferences.pathway.accepts_competition).toBe(true);
+  });
+
+  it("carries the user's decision reason inside the existing preferences payload", () => {
+    const input = ProfileInputSchema.parse({
+      school: "上海对外经贸大学",
+      major: "国际经济与贸易",
+      enrollment_year: 2025,
+      current_term: "2026-秋",
+      assessment_version: "career-exploration-2026-10-25.1",
+      exploration_status: "completed",
+      answers: {},
+      scores: {},
+      preferences: {
+        decision_reason: "  担心只是专业对口跟风，也不确定本校有没有稳定实习渠道。  ",
+        pathway: { primary: "undetermined" }
+      }
+    });
+
+    expect(input.preferences.decision_reason).toBe(
+      "担心只是专业对口跟风，也不确定本校有没有稳定实习渠道。"
+    );
+    expect(profileFingerprint(input)).not.toBe(
+      profileFingerprint({ ...input, preferences: { ...input.preferences, decision_reason: "另一条理由" } })
+    );
   });
 
   it("accepts a compare submission without a profile", () => {

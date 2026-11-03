@@ -113,7 +113,7 @@ export function LibraryTool() {
       });
     return () => controller.abort();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTab, cloud]);
+  }, [activeTab, cloud, sourcesState]);
 
   useEffect(() => {
     if (!asking) return;
@@ -143,6 +143,20 @@ export function LibraryTool() {
   }, [sources]);
 
   const askTrace = useMemo(() => toTraceEvents(askEvents), [askEvents]);
+  const sourceCatalogStatus = !cloud
+    ? "云端未配置"
+    : sourcesState === "loading"
+      ? "加载中…"
+      : sourcesState === "error"
+        ? "加载失败"
+        : sourcesState === "ready" && sources
+          ? `已连接 · ${sources.length} 条`
+          : "打开来源页后加载";
+  const knowledgeBaseStatus = !cloud
+    ? "本地演示模式"
+    : sourcesState === "error"
+      ? "云端知识库连接异常"
+      : "云端知识库已配置";
 
   async function handleAsk(preset?: string) {
     const text = (preset ?? question).trim();
@@ -519,7 +533,13 @@ export function LibraryTool() {
                 <div className="report-card-head">
                   <h3>{category.label}</h3>
                   <Badge tone={categoryCounts[category.id] > 0 ? "ok" : "muted"}>
-                    {categoryCounts[category.id] > 0 ? `${categoryCounts[category.id]} 条来源` : "待载入"}
+                    {categoryCounts[category.id] > 0
+                      ? `${categoryCounts[category.id]} 条来源`
+                      : sourcesState === "error"
+                        ? "加载失败"
+                        : sourcesState === "ready"
+                          ? "暂无来源"
+                          : "加载中"}
                   </Badge>
                 </div>
                 <p>{category.description}</p>
@@ -546,7 +566,11 @@ export function LibraryTool() {
             icon="database"
             compact
             title={activeFilter ? `「${activeFilter.label}」暂无已载入来源` : "来源目录为空"}
-            description={cloud ? "云端来源目录没有返回条目。" : "本地演示模式不展示来源条目。"}
+            description={
+              cloud
+                ? "知识库已连接，但来源目录暂未返回条目；资料问答仍可使用。"
+                : "本地演示模式不展示来源条目。"
+            }
           />
         ) : null}
       </div>
@@ -560,7 +584,7 @@ export function LibraryTool() {
           <h1>先把资料来源看清楚，再谈结论</h1>
           <p className="library-lead micro">只做生涯资料问答、来源查看与官方报告筛选。</p>
         </div>
-        <Badge tone={cloud ? "ok" : "warn"}>{cloud ? "云端知识库已启用" : "本地演示模式"}</Badge>
+        <Badge tone={cloud && sourcesState !== "error" ? "ok" : "warn"}>{knowledgeBaseStatus}</Badge>
       </header>
 
       <div className="library-layout">
@@ -616,7 +640,7 @@ export function LibraryTool() {
               </li>
               <li>
                 <span>来源条目</span>
-                <strong>{sources ? `${sources.length} 条` : cloud ? "尚未加载" : "云端未载入"}</strong>
+                <strong>{sourceCatalogStatus}</strong>
               </li>
               <li>
                 <span>问答历史</span>
