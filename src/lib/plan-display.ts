@@ -17,6 +17,16 @@ const EXPLANATION_FALLBACK_TEXT: Record<string, string> = {
   internal_error: "生成解释时发生未预期的异常，已回退为确定性说明。方案事实未改变。"
 };
 
+const ANALYSIS_FALLBACK_TEXT: Record<string, string> = {
+  validation: "AI 方向分析未通过引用/数字校验，已跳过该部分；路线、行动和资料线索未改变。",
+  model_unavailable: "生成方向分析时模型暂时不可用，已跳过该部分；确定性方案未改变。",
+  model_timeout: "生成方向分析时模型超时，已跳过该部分；确定性方案未改变。",
+  model_auth_failed: "模型凭证不可用，本次跳过方向分析；确定性方案未改变。",
+  model_quota_exceeded: "模型额度已用尽，本次跳过方向分析；确定性方案未改变。",
+  budget_exceeded: "本次运行预算已用尽，已跳过方向分析；确定性方案未改变。",
+  internal_error: "生成方向分析时发生未预期的异常，已跳过该部分；确定性方案未改变。"
+};
+
 type WarningRule = {
   pattern: RegExp;
   render: (match: RegExpMatchArray) => string;
@@ -28,6 +38,12 @@ const WARNING_RULES: WarningRule[] = [
     render: (match) =>
       EXPLANATION_FALLBACK_TEXT[match[1] ?? ""] ??
       `生成解释失败（${match[1]}），已回退为确定性说明。方案事实未改变。`
+  },
+  {
+    pattern: /^plan_analysis_fallback:(.+)$/,
+    render: (match) =>
+      ANALYSIS_FALLBACK_TEXT[match[1] ?? ""] ??
+      `生成方向分析失败（${match[1]}），已跳过该部分。确定性方案未改变。`
   },
   {
     pattern: /^boundary_note_dropped_number_mismatch$/,

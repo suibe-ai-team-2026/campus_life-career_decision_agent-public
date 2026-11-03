@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { PlanResultSchema } from "@/lib/contracts/plan";
 import { RunSubmitSchema } from "@/lib/contracts/run";
 import { AnswersSchema, ProfileInputSchema } from "@/lib/contracts/profile";
+import { normalizePlanAnalysis } from "@/lib/api-client";
 
 const uuid = "3f1f9c3a-6d1e-4d4e-9a4e-2b2a7c9e1a11";
 
@@ -94,6 +95,14 @@ describe("API contracts", () => {
       warnings: []
     });
     expect(parsed.success).toBe(true);
+  });
+
+  it("treats an empty analysis object as unavailable", () => {
+    expect(normalizePlanAnalysis({})).toBeNull();
+    expect(normalizePlanAnalysis({ overview: "方向概览", match: "画像匹配" })).toMatchObject({
+      overview: "方向概览",
+      match: "画像匹配"
+    });
   });
 
   it("fills backward-compatible pathway defaults on profile input", () => {

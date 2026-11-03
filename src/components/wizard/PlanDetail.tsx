@@ -7,7 +7,7 @@ import type { DirectionId } from "@/lib/contracts/common";
 import { PLAN_WINDOW_LABELS, PLAN_WINDOW_ORDER, getDirection } from "@/lib/content";
 import { Badge, Button, Callout, Collapse, EmptyState, Icon, formatDateTime, formatDate } from "@/components/ui/primitives";
 import { CitationList } from "@/components/ui/CitationCard";
-import { formatPlanWarnings, summarizeDataGaps, summarizeEffort } from "@/lib/plan-display";
+import { formatPlanWarning, formatPlanWarnings, summarizeDataGaps, summarizeEffort } from "@/lib/plan-display";
 import { SourceUploadPanel } from "@/components/tools/SourceUploadPanel";
 import { ActionCard, type ActionOverrides } from "./PlanActionCard";
 
@@ -227,6 +227,9 @@ export function PlanDetail({
   const effort = summarizeEffort(result.actions);
   const gapSummary = summarizeDataGaps(result.actions);
   const displayWarnings = formatPlanWarnings(result.warnings);
+  const analysisFallbackWarning = result.warnings.find((warning) =>
+    warning.startsWith("plan_analysis_fallback:")
+  );
   const isDataGapState = result.status === "data_unavailable";
   const topThirty = result.roadmap.find((stage) => stage.stage === "未来 30 天") ?? null;
   const currentStage = result.roadmap.find((stage) => stage.stage !== "未来 30 天") ?? null;
@@ -416,7 +419,16 @@ export function PlanDetail({
               ) : null}
             </Collapse>
           ) : (
-            <EmptyState compact icon="sparkles" title="方向分析暂未生成" />
+            <EmptyState
+              compact
+              icon="sparkles"
+              title="方向分析暂未生成"
+              description={
+                analysisFallbackWarning
+                  ? `${formatPlanWarning(analysisFallbackWarning)} 确定性路线、行动、课程与竞赛线索仍可查看。`
+                  : "确定性路线和行动仍可查看；AI 解释失败不会改动规则事实。"
+              }
+            />
           )}
 
           <Collapse summary="方案说明">

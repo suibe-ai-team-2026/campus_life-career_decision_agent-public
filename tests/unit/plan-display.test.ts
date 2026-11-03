@@ -34,6 +34,7 @@ describe("formatPlanWarning", () => {
   it("区分模型不可用与校验失败", () => {
     expect(formatPlanWarning("plan_explanation_fallback:model_unavailable")).toContain("模型暂时不可用");
     expect(formatPlanWarning("plan_explanation_fallback:validation")).toContain("回退为确定性说明");
+    expect(formatPlanWarning("plan_analysis_fallback:validation")).toContain("方向分析未通过");
   });
 
   it("未知回退码保留原码，方便排查", () => {
