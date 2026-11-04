@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "./design-v3.css";
 import "./ui-fixes.css";
+import "./graph.css";
 import { CloudModeBanner } from "@/components/layout/CloudModeBanner";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";

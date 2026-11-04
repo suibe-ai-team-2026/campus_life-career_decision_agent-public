@@ -8,7 +8,8 @@ import { ThemeToggle } from "./ThemeToggle";
 
 const NAV_ITEMS = [
   { href: "/", label: "首页" },
-  { href: "/library", label: "资料库" }
+  { href: "/library", label: "资料库" },
+  { href: "/graph", label: "图谱" }
 ] as const;
 
 export function SiteHeader() {
