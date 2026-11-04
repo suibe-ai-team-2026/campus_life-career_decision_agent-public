@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import type { Citation } from "@/lib/contracts/run";
 import type { Source } from "@/lib/contracts/source";
@@ -89,48 +89,62 @@ export function LibraryTool() {
   const [sources, setSources] = useState<Source[] | null>(null);
   const [sourcesState, setSourcesState] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const [sourcesError, setSourcesError] = useState<string | null>(null);
-  const [sourcesReloadToken, setSourcesReloadToken] = useState(0);
   const [filterId, setFilterId] = useState<string>("all");
   const abortRef = useRef<AbortController | null>(null);
+  const sourcesRequestRef = useRef<AbortController | null>(null);
   const messageEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(
     () => () => {
       abortRef.current?.abort();
+      sourcesRequestRef.current?.abort();
     },
     []
   );
 
+  // Source catalog loading is deliberately NOT cancelled when the user switches
+  // tabs. It used to be: switching away aborted the in-flight request but left
+  // sourcesState at "loading", and the guard below then refused to ever fetch
+  // again, so the 来源查看 tab showed its skeleton forever (no error, no retry).
+  const loadSources = useCallback(async () => {
+    if (sourcesRequestRef.current) return;
+    const controller = new AbortController();
+    sourcesRequestRef.current = controller;
+    setSourcesState("loading");
+    setSourcesError(null);
+    try {
+      // /api/sources requires an authenticated identity (anonymous counts).
+      // The ask flow creates one before submitting; this tab must do the same,
+      // otherwise a first-time or expired-session visitor only ever sees
+      // authentication_required and the retry button can never succeed.
+      await createAnonymousSession(controller.signal);
+      const next = await fetchSources(controller.signal);
+      if (controller.signal.aborted) return;
+      setSources(next);
+      setSourcesState("ready");
+    } catch (error) {
+      if (controller.signal.aborted) return;
+      if ((error as { code?: string })?.code === "aborted") return;
+      setSourcesError(friendlyErrorMessage(error));
+      setSourcesState("error");
+    } finally {
+      if (sourcesRequestRef.current === controller) sourcesRequestRef.current = null;
+    }
+  }, []);
+
   useEffect(() => {
-    if (activeTab === "ask") return;
-    if (sources !== null || sourcesState === "loading") return;
     if (!cloud) {
       setSourcesState("ready");
       return;
     }
-    const controller = new AbortController();
-    setSourcesState("loading");
-    setSourcesError(null);
-    fetchSources(controller.signal)
-      .then((next) => {
-        if (controller.signal.aborted) return;
-        setSources(next);
-        setSourcesState("ready");
-      })
-      .catch((error) => {
-        if (controller.signal.aborted) return;
-        setSourcesError(friendlyErrorMessage(error));
-        setSourcesState("error");
-      });
-    return () => controller.abort();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTab, cloud, sourcesReloadToken]);
+    // Start only from a clean "idle": "error" waits for the explicit retry.
+    if (activeTab === "ask" || sourcesState !== "idle") return;
+    void loadSources();
+  }, [activeTab, cloud, sourcesState, loadSources]);
 
   function reloadSources() {
-    setSources(null);
     setSourcesError(null);
     setSourcesState("idle");
-    setSourcesReloadToken((token) => token + 1);
   }
 
   useEffect(() => {
