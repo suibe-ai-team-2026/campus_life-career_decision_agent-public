@@ -81,6 +81,7 @@ class FakeProvider:
         self.chat_responses = {key: list(value) for key, value in (chat_responses or {}).items()}
         self.embed_calls: list[tuple[str, list[str]]] = []
         self.chat_calls: list[tuple[str, list[dict[str, str]]]] = []
+        self.chat_kwargs: list[dict[str, object]] = []
         self.embed_error: Exception | None = None
         self.chat_error: Exception | None = None
 
@@ -118,6 +119,14 @@ class FakeProvider:
         if self.chat_error is not None:
             raise self.chat_error
         self.chat_calls.append((operation, list(messages)))
+        self.chat_kwargs.append(
+            {
+                "operation": operation,
+                "model": model,
+                "reasoning_effort": reasoning_effort,
+                "max_tokens": max_tokens,
+            }
+        )
         queue = self.chat_responses.get(operation) or []
         content = queue.pop(0) if queue else '{"answer":"资料不足","citation_numbers":[],"no_evidence":true,"boundary_note":""}'
         return ChatResponse(
