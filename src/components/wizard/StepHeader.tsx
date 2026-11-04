@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { WIZARD_STEPS } from "@/lib/content";
-import { Badge, Icon } from "@/components/ui/primitives";
+import { Icon } from "@/components/ui/primitives";
 
 /**
  * Shared per-step chrome: compact breadcrumb, title, one-line subtitle and a
@@ -37,8 +37,6 @@ export function StepHeader({
           </Link>
           <span aria-hidden="true"> · </span>
           第 {step.index} 步 · {step.title}
-          <span aria-hidden="true"> · </span>
-          <Badge tone="muted">{step.estimate}</Badge>
         </p>
         <h1>{title}</h1>
         <p className="screen-sub">{description}</p>

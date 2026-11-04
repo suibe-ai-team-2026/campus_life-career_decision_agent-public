@@ -10,7 +10,7 @@
  */
 import { useEffect, useState, useSyncExternalStore } from "react";
 import type { DirectionId } from "@/lib/contracts/common";
-import type { PlanAction, PlanResult } from "@/lib/contracts/plan";
+import { PlanResultSchema, type PlanAction, type PlanResult } from "@/lib/contracts/plan";
 import type { PathwayPreference } from "@/lib/contracts/profile";
 import {
   emptyProgress,
@@ -497,8 +497,13 @@ export function useChoiceHistory(): ChoiceHistoryEntry[] {
 function parseCachedPlan(raw: unknown): CachedPlan | null {
   if (!isRecord(raw)) return null;
   if (typeof raw.plan_id !== "string" || !isRecord(raw.result)) return null;
-  const result = raw.result as unknown as PlanResult;
-  if (!Array.isArray(result.actions) || typeof result.rules_version !== "string") return null;
+  // A cache written by an older deployment may miss fields that the current
+  // PlanDetail reads directly. Normalise through the schema (which supplies
+  // array defaults) and drop the cache when it cannot be normalised, so a
+  // stale cache shows the "regenerate" state instead of crashing the page.
+  const parsedResult = PlanResultSchema.safeParse(raw.result);
+  if (!parsedResult.success) return null;
+  const result: PlanResult = parsedResult.data;
   if (!Array.isArray(raw.actions)) return null;
   const userOverrides: Record<string, Record<string, unknown>> = {};
   if (isRecord(raw.user_overrides)) {
@@ -506,7 +511,7 @@ function parseCachedPlan(raw: unknown): CachedPlan | null {
       if (isRecord(value)) userOverrides[actionId] = value;
     }
   }
-  return { ...(raw as unknown as CachedPlan), user_overrides: userOverrides };
+  return { ...(raw as unknown as CachedPlan), result, user_overrides: userOverrides };
 }
 
 const planCacheStore = createStore<CachedPlan | null>({

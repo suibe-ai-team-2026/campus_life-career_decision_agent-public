@@ -145,7 +145,7 @@ export function ChoiceStep() {
         return draft;
       });
     }
-    setSavedNote("草稿已保存到本设备");
+    setSavedNote("草稿已保存");
     window.setTimeout(() => setSavedNote(null), 2200);
   }
 
@@ -224,7 +224,19 @@ export function ChoiceStep() {
   function handleContinue() {
     const nextErrors = validate();
     setErrors(nextErrors);
-    if (Object.keys(nextErrors).length > 0) return;
+    if (Object.keys(nextErrors).length > 0) {
+      const firstKey = Object.keys(nextErrors)[0];
+      const target =
+        firstKey === "direction"
+          ? (document.querySelector<HTMLInputElement>(
+              'input[name="provisional-direction"]:checked'
+            ) ??
+            document.querySelector<HTMLInputElement>('input[name="provisional-direction"]') ??
+            document.getElementById("choice-direction-group"))
+          : document.getElementById(firstKey === "why" ? "choice-why" : "choice-revisit");
+      target?.focus();
+      return;
+    }
     if (!selected) return;
     const previous = readLocalProgress();
     if (previous?.provisional_direction && previous.provisional_direction !== selected) {
@@ -261,7 +273,7 @@ export function ChoiceStep() {
       <StepHeader
         index={3}
         title="暂定一个方向，而不是一次定死"
-        description="选 1 个主方向，可再留 1 个备选；写清理由与复核时间。"
+        description="选 1 个主方向，可再留 1 个备选。"
         actions={
           <>
             <Button variant="ghost" size="md" onClick={() => router.push("/plan")}>
@@ -296,14 +308,10 @@ export function ChoiceStep() {
       />
 
       <div className="stack">
-      <Callout tone="plain" icon="compass" title="暂定 ≠ 承诺">
-        <p>这是可调整的当前选择，不是职业判决。</p>
-      </Callout>
-
       {selected && !isDirectionAllowed(selected, pathwayPreference) ? (
         <Callout tone="danger" title="当前暂定方向已被硬约束排除">
           <p>
-            {excludedDirections[selected]}。系统不会为这个方向生成课程、竞赛或行动方案，请从下方可接受方向中重新选择。
+            {excludedDirections[selected]}。请从下方可接受方向中重新选择。
           </p>
         </Callout>
       ) : null}
@@ -311,8 +319,8 @@ export function ChoiceStep() {
       {existingDirection && selected && existingDirection !== selected ? (
         <Callout tone="warn" title="你正在切换暂定方向">
           <p>
-            保存后，原方向「{existingDirectionInfo?.title}」会被标记为 <Badge tone="muted">stale</Badge>
-            ，原方案（如果已生成）在本设备不再作为当前方案；历史版本提示会保留在下方。
+            保存后，原方向「{existingDirectionInfo?.title}」会被标记为 <Badge tone="muted">已过期</Badge>
+            ，原方案保留为历史。
           </p>
         </Callout>
       ) : null}
@@ -332,7 +340,14 @@ export function ChoiceStep() {
               收藏 2 到 3 个。
             </p>
           ) : null}
-          <div className="choice-options" role="radiogroup" aria-label="暂定方向">
+          <div
+            className="choice-options"
+            id="choice-direction-group"
+            role="radiogroup"
+            aria-label="暂定方向"
+            aria-describedby={errors.direction ? "choice-direction-error" : undefined}
+            tabIndex={-1}
+          >
             {selectableDirections.map((direction) => {
               const checked = selected === direction.direction_id;
               return (
@@ -356,25 +371,22 @@ export function ChoiceStep() {
             })}
           </div>
           {errors.direction ? (
-            <p className="field-error" role="alert">
+            <p className="field-error" id="choice-direction-error" role="alert">
               {errors.direction}
             </p>
           ) : null}
 
           {selected && selectedRecommendation ? (
-            <div className="choice-recommend-basis">
-              <p className="panel-title">
-                <Icon name="sparkles" size={15} /> 系统给出的推荐依据
-              </p>
-              <p className="panel-note">本地规则（{localRecommendations?.rulesVersion}）生成，不是匹配打分。</p>
-              <div className="direction-block">
-                <p className="direction-label">相符之处</p>
-                <ul className="recommend-reasons">
-                  {selectedRecommendation.reasons.slice(0, 2).map((reason) => (
-                    <li key={reason}>{reason}</li>
-                  ))}
-                </ul>
-              </div>
+            <Collapse summary="推荐依据" tone="quiet">
+              {selectedRecommendation.reasons.length > 0 ? (
+                <div className="direction-block">
+                  <ul className="recommend-reasons">
+                    {selectedRecommendation.reasons.slice(0, 2).map((reason) => (
+                      <li key={reason}>{reason}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
               {selectedRecommendation.gaps.length > 0 ? (
                 <div className="direction-block">
                   <p className="direction-label">
@@ -387,7 +399,7 @@ export function ChoiceStep() {
                   </ul>
                 </div>
               ) : null}
-            </div>
+            </Collapse>
           ) : null}
         </section>
 
@@ -418,13 +430,13 @@ export function ChoiceStep() {
                 saveDraft(selected, event.target.value, unknowns, revisitOn);
               }}
               aria-invalid={Boolean(errors.why)}
-              aria-describedby="choice-why-hint"
+              aria-describedby={errors.why ? "choice-why-hint choice-why-error" : "choice-why-hint"}
             />
             <p className="field-hint" id="choice-why-hint">
-              {why.length} / 1000 字；只作你的依据，不参与评分。
+              {why.length} / 1000 字
             </p>
             {errors.why ? (
-              <p className="field-error" role="alert">
+              <p className="field-error" id="choice-why-error" role="alert">
                 {errors.why}
               </p>
             ) : null}
@@ -446,7 +458,6 @@ export function ChoiceStep() {
                 saveDraft(selected, why, event.target.value, revisitOn);
               }}
             />
-            <p className="field-hint">写下来，下一步会为未知留出核对任务。</p>
           </div>
 
           <div className="field">
@@ -469,6 +480,7 @@ export function ChoiceStep() {
                 saveDraft(selected, why, unknowns, event.target.value);
               }}
               aria-invalid={Boolean(errors.revisit)}
+              aria-describedby={errors.revisit ? "choice-revisit-error" : undefined}
             />
             <p className="field-hint">
               {revisitDays !== null && revisitDays >= 0
@@ -476,7 +488,7 @@ export function ChoiceStep() {
                 : "建议一个月内复核一次。"}
             </p>
             {errors.revisit ? (
-              <p className="field-error" role="alert">
+              <p className="field-error" id="choice-revisit-error" role="alert">
                 {errors.revisit}
               </p>
             ) : null}
@@ -504,7 +516,6 @@ export function ChoiceStep() {
                 <strong>{existingDirection === selected && selected ? "保持当前暂定" : "新的暂定"}</strong>
               </li>
             </ul>
-            <p className="panel-note">保存后进入第 4 步生成方案。</p>
           </div>
 
           <div className="choice-actions">
@@ -523,7 +534,7 @@ export function ChoiceStep() {
         <div className="panel-head">
           <div>
             <h2 id="choice-backup-title">要不要留一个备选方向？</h2>
-            <p className="panel-subtitle">备选必须与主方向不同；它不自动生成方案，只作复核时的比较对象。</p>
+            <p className="panel-subtitle">备选只作复核时的比较对象，不会生成方案。</p>
           </div>
           <Badge tone={backupDirection ? "accent" : "muted"}>
             {backupDirection ? "已设置备选" : "暂不设备选"}
@@ -577,14 +588,13 @@ export function ChoiceStep() {
               })}
             </div>
             {selected ? null : (
-              <p className="panel-note">先在上方选择主方向后，备选选项会自动排除主方向。</p>
+              <p className="panel-note">先在上方选择主方向。</p>
             )}
             {backup && !favorites.includes(backup) ? (
               <p className="panel-note">
-                当前备选方向已不在收藏中；可以改选其他方向，或点「暂不设备选」清除。
+                当前备选方向已不在收藏中，可以改选其他方向或清除。
               </p>
             ) : null}
-            <p className="panel-note">主方向与备选方向保存在本设备；生成方案时会上传云端。</p>
           </>
         )}
       </section>
@@ -597,7 +607,7 @@ export function ChoiceStep() {
           <Badge tone="muted">{history.length} 条</Badge>
         </div>
         {history.length === 0 ? (
-          <p className="panel-note">还没有切换记录；改方向后旧方向会显示为 stale。</p>
+          <p className="panel-note">还没有切换记录；改方向后旧方向会显示为「已过期」。</p>
         ) : (
           <ul className="history-list">
             {history
@@ -609,23 +619,19 @@ export function ChoiceStep() {
                   <li className="history-item" key={`${entry.direction_id}-${entry.created_at}`}>
                     <div className="history-head">
                       <span className="history-direction">{direction?.title ?? entry.direction_id}</span>
-                      <Badge tone={entry.stale_at ? "muted" : "accent"}>{entry.stale_at ? "stale" : "当前"}</Badge>
+                      <Badge tone={entry.stale_at ? "muted" : "accent"}>{entry.stale_at ? "已过期" : "当前"}</Badge>
                       <span className="history-date">{formatDate(entry.created_at)}</span>
                     </div>
                     {entry.why ? <p className="history-why">{entry.why}</p> : null}
                     {entry.unknowns ? <p className="history-unknowns">未知：{entry.unknowns}</p> : null}
                     <p className="history-meta">
                       复核时间：{entry.revisit_on ? formatDate(entry.revisit_on) : "未设置"}
-                      {entry.plan_id ? ` · 旧方案引用：${entry.plan_id.slice(0, 8)}…（本设备不再作为当前方案）` : " · 未生成方案"}
                     </p>
                   </li>
                 );
               })}
           </ul>
         )}
-        <Collapse summary="版本与历史如何保留" tone="quiet">
-          <p className="panel-note">stale 只表示已被新方向取代；云端旧版本保留，但不再作为当前方案。</p>
-        </Collapse>
       </section>
       </div>
 
@@ -648,22 +654,16 @@ export function ChoiceStep() {
       <ConfirmDialog
         open={switchTarget !== null}
         title="切换暂定方向？"
-        description="保存新方向会把旧方向标记为 stale，并保留它的理由、未知与复核时间作为历史版本提示。"
+        description="旧方向会标记为「已过期」，并保留为历史记录。"
         confirmLabel="确认切换"
         tone="primary"
         onConfirm={confirmSwitch}
         onCancel={() => setSwitchTarget(null)}
       >
         {existingDirectionInfo && switchTarget ? (
-          <div className="reset-scope">
-            <p className="reset-scope-heading">从</p>
-            <p className="reset-scope-value">{existingDirectionInfo.title}</p>
-            <p className="reset-scope-heading">切换到</p>
-            <p className="reset-scope-value">{getDirection(switchTarget)?.title}</p>
-            <p className="panel-note">
-              旧方向已生成的方案版本会保留在服务端历史中（如已生成），本设备不再将它作为当前方案；重新生成方案前需要先完成第 4 步。
-            </p>
-          </div>
+          <p className="panel-note">
+            从「{existingDirectionInfo.title}」切换到「{getDirection(switchTarget)?.title}」。
+          </p>
         ) : null}
       </ConfirmDialog>
     </div>

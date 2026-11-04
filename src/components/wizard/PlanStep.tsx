@@ -47,7 +47,7 @@ import {
   type LocalProgressV1
 } from "@/lib/local-progress/store";
 import { toTraceEvents } from "@/lib/agent-trace";
-import { Badge, Button, Callout, EmptyState, Icon, RunStatus, formatDateTime } from "@/components/ui/primitives";
+import { Badge, Button, Callout, Collapse, EmptyState, Icon, RunStatus, formatDateTime } from "@/components/ui/primitives";
 import { AgentTrace } from "@/components/run/AgentTrace";
 import { ResearchToggle } from "@/components/run/ResearchToggle";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
@@ -440,7 +440,7 @@ export function PlanStep() {
       }
       setNotice((previous) =>
         previous ??
-        (options.existingPlanId ? "已生成新版本；旧版本会保留并标记 stale。" : null)
+        (options.existingPlanId ? "已生成新版本；旧版本会保留并标记为已过期。" : null)
       );
     } catch (caught) {
       writePendingPlanRun(null);
@@ -549,7 +549,7 @@ export function PlanStep() {
       } catch (caught) {
         const code = errorCodeOf(caught);
         if (cacheMatches && cache) {
-          showCachedPlan(`云端方案暂时无法加载（${friendlyErrorMessage(caught)}）。已展示本设备缓存。`);
+          showCachedPlan("云端暂不可用，已展示本设备缓存。");
           return;
         }
         setError({ message: friendlyErrorMessage(caught), code });
@@ -715,24 +715,29 @@ export function PlanStep() {
 
   function renderGenerating() {
     return (
-      <section className="panel stack" aria-label="方案生成状态">
+      <div className="stack" aria-label="方案生成状态">
         <div className="row">
-          <RunStatus state="running" label={STAGE_LABELS[stage]} detail={`${elapsed} 秒`} />
+          <RunStatus state="running" label={STAGE_LABELS[stage]} detail={`${elapsed} 秒`} announceDetail={false} />
           <Button variant="ghost" size="sm" onClick={handleStopWaiting}>
-            停止等待
+            停止
           </Button>
         </div>
-        <p className="micro">
-          联网补充调研：{runWebSupplement ? "开启" : "关闭"}
-          {runWebSupplement ? " · 结果未核验" : ""}
-        </p>
         <AgentTrace
           events={traceEvents}
           running
           status={run?.status ?? null}
-          emptyHint="正在唤醒执行环境，首次约 30 到 90 秒…"
+          emptyHint="正在准备…"
         />
-      </section>
+        <Collapse summary="选项" tone="quiet">
+          <ResearchToggle
+            checked={webSupplement}
+            onChange={setWebSupplement}
+            disabled={!cloud}
+            label="联网补充"
+            description={RESEARCH_TOGGLE_DESCRIPTION}
+          />
+        </Collapse>
+      </div>
     );
   }
 
@@ -888,34 +893,15 @@ export function PlanStep() {
       <div className="plan-state-stack">
         <Callout tone="danger" title="生成失败" icon="alert">
           <p>{error?.message ?? "未知错误"}</p>
-          {error?.code ? <p className="run-error-code">错误码：{error.code}</p> : null}
         </Callout>
         {renderFinishedTrace()}
-        <ResearchToggle
-          checked={webSupplement}
-          onChange={setWebSupplement}
-          disabled={!cloud}
-          label="联网补充调研"
-          description={RESEARCH_TOGGLE_DESCRIPTION}
-          className="plan-research-toggle"
-        />
         <div className="local-actions">
           <Button variant="primary" size="md" onClick={handleRetry}>
-            <Icon name="refresh" size={14} /> 重试生成
+            <Icon name="refresh" size={14} /> 重试
           </Button>
-          {progress?.plan_id ? (
-            <Button variant="secondary" size="md" onClick={refreshPlan} disabled={refreshing}>
-              {refreshing ? "刷新中…" : "刷新已有方案"}
-            </Button>
-          ) : null}
           <Button variant="ghost" size="md" onClick={() => router.push("/choice")}>
             回到暂定方向
           </Button>
-          {cachedPlanAvailable && cache ? (
-            <Button variant="ghost" size="md" onClick={() => setShowCached((value) => !value)}>
-              {showCached ? "收起本设备缓存" : "查看本设备缓存"}
-            </Button>
-          ) : null}
         </div>
         {showCached && cache ? (
           <PlanDetail
@@ -945,7 +931,7 @@ export function PlanStep() {
       <header className="screen-head">
         <div>
           <h1>第 4 步 · 行动方案</h1>
-          <p className="screen-sub">按学期分组的可调整行动；勾选、改时间与工时都会留存。</p>
+          <p className="screen-sub">按学期安排，可随时调整。</p>
         </div>
         <div className="row">
           <Button variant="ghost" size="md" onClick={() => router.push("/export")}>
@@ -965,13 +951,6 @@ export function PlanStep() {
         </div>
       </header>
 
-      <p className="micro">
-        {directionInfo ? `暂定：${directionInfo.short_title}` : "尚未暂定方向"}
-        {backupDirectionInfo ? ` · 备选：${backupDirectionInfo.short_title}` : ""}
-        {` · ${cloud ? "云端生成" : "本地演示"}`}
-        {phase === "ready" && result ? ` · ${result.actions.length} 项行动` : ""}
-      </p>
-
       {notice ? <p className="inline-note">{notice}</p> : null}
 
       {phase === "boot" ? (
@@ -986,30 +965,11 @@ export function PlanStep() {
 
       {phase === "ready" && result ? (
         <div className="plan-ready">
-          <RunStatus
-            state="done"
-            label={
-              <>
-                <span aria-hidden="true">✓ </span>方案已生成
-              </>
-            }
-            detail={`${result.actions.length} 项行动 · 规则 ${result.rules_version || "未提供"}`}
-          />
-          <ResearchToggle
-            checked={webSupplement}
-            onChange={setWebSupplement}
-            disabled={cloudRunActive || !cloud}
-            label="联网补充调研"
-            description={RESEARCH_TOGGLE_DESCRIPTION}
-            className="plan-research-toggle"
-          />
           <div className="plan-toolbar">
             <div className="plan-toolbar-group">
-              <label className="micro" htmlFor="plan-direction-switch">
-                当前方向
-              </label>
               <select
                 id="plan-direction-switch"
+                aria-label="当前方向"
                 className="select select-sm"
                 value={effectiveDirection ?? ""}
                 onChange={(event) => {
@@ -1038,9 +998,6 @@ export function PlanStep() {
                 修改暂定方向
               </Button>
             </div>
-            <Badge tone={result.status === "ok" ? "ok" : "warn"}>
-              {plan ? `方案 v${pickCurrentVersion(plan)?.version ?? "?"}` : "本次生成结果"}
-            </Badge>
           </div>
 
           {renderFinishedTrace()}
@@ -1062,10 +1019,7 @@ export function PlanStep() {
             regenerating={cloudRunActive}
           />
 
-          <div className="step-footer-bar">
-            <div className="step-footer-note">
-              <span className="micro">方案已保存在本设备，刷新不会丢失。</span>
-            </div>
+          <div className="step-footer-bar step-footer-bar-plain">
             <div className="step-footer-actions">
               <Button variant="secondary" size="md" onClick={() => router.push("/library")}>
                 <Icon name="book" size={14} />
@@ -1080,16 +1034,10 @@ export function PlanStep() {
         </div>
       ) : null}
 
-      {phase === "ready" && viewIsCached && !cloud ? (
-        <Callout tone="warn" title="云端不可用">
-          <p className="micro">当前是本设备缓存，调整无法提交到云端。</p>
-        </Callout>
-      ) : null}
-
       <ConfirmDialog
         open={switchTarget !== null}
         title="切换方向并重新生成？"
-        description="旧方向的方案版本会保留并标记 stale。"
+        description="旧方向的方案版本会保留并标记为「已过期」。"
         confirmLabel="切换并生成"
         tone="primary"
         onConfirm={confirmSwitchDirection}
@@ -1108,16 +1056,13 @@ export function PlanStep() {
       <ConfirmDialog
         open={regenerateOpen}
         title="重新生成方案？"
-        description="会创建新版本；旧版本保留并标记 stale。"
+        description="会创建新版本；旧版本保留并标记为「已过期」。"
         confirmLabel="重新生成"
         tone="primary"
         onConfirm={confirmRegenerate}
         onCancel={() => setRegenerateOpen(false)}
       />
 
-      {cacheHydrated && !cloud && cachedPlanAvailable && phase !== "local" ? (
-        <p className="micro">本设备存有一份缓存方案，可在「本地演示模式」区块查看。</p>
-      ) : null}
     </div>
   );
 }

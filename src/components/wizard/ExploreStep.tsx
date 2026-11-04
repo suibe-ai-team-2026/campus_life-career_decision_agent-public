@@ -24,7 +24,7 @@ import {
   useLocalProgress,
   writeExplorePrefs
 } from "@/lib/local-progress/store";
-import { Badge, Button, Callout, Collapse, Field, Icon } from "@/components/ui/primitives";
+import { Badge, Button, Callout, Field, Icon } from "@/components/ui/primitives";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { StepHeader } from "./StepHeader";
 import { ExploreQuestionnaire } from "./ExploreQuestionnaire";
@@ -290,7 +290,7 @@ export function ExploreStep() {
       <StepHeader
         index={1}
         title="先把你自己的牌面摊开"
-        description="16 项 / 约 4 分钟；未答保持「未知」，不按 0 分处理。"
+        description="按真实情况作答，随时可以跳过。"
         actions={
           <>
             <Button variant="ghost" size="md" onClick={() => setSkipDialogOpen(true)}>
@@ -306,12 +306,12 @@ export function ExploreStep() {
           <span className="autosave-note">
             <Icon name="clock" size={13} />
             {savedAt
-              ? `已保存到本设备 · ${new Date(savedAt).toLocaleTimeString("zh-CN", {
+              ? `已保存 · ${new Date(savedAt).toLocaleTimeString("zh-CN", {
                   hour: "2-digit",
                   minute: "2-digit",
                   timeZone: "Asia/Shanghai"
                 })}`
-              : "自动保存到本设备"}
+              : "自动保存"}
           </span>
         }
       />
@@ -319,13 +319,13 @@ export function ExploreStep() {
       <div className="stack">
       {versionResetNotice ? (
         <Callout tone="warn" title="题库已更新，请重新作答" icon="refresh">
-          <p>旧版作答已清除；学校专业与时间预算偏好保留，请按新题重答。</p>
+          <p>旧作答已清除，请按新题重答。</p>
         </Callout>
       ) : null}
 
       {skippedBefore ? (
         <Callout tone="warn" title="你之前跳过了这一步">
-          <p>可随时补答；补完点「完成探索」即可取消跳过标记。</p>
+          <p>可随时补答。</p>
         </Callout>
       ) : null}
 
@@ -376,7 +376,7 @@ export function ExploreStep() {
                 ))}
               </select>
             </Field>
-            <Field label="当前学期" htmlFor="explore-currentTerm" required error={errors.currentTerm} hint="用于判断行动落在当前学期还是下学期">
+            <Field label="当前学期" htmlFor="explore-currentTerm" required error={errors.currentTerm}>
               <select
                 id="explore-currentTerm"
                 className={errors.currentTerm ? "select input-error" : "select"}
@@ -396,13 +396,12 @@ export function ExploreStep() {
               <div className="pathway-editor-head">
                 <div>
                   <h3>先选现实路线，再看职业方向</h3>
-                  <p className="field-hint">硬约束先于兴趣与能力生效；排除后不会再被推荐。</p>
                 </div>
                 <Badge tone="accent">会约束推荐</Badge>
               </div>
 
               <div className="pathway-control-grid">
-                <Field label="主路线" htmlFor="explore-pathway-primary" hint="可以选择“仍不确定”，系统会先给比较顺序">
+                <Field label="主路线" htmlFor="explore-pathway-primary">
                   <select
                     id="explore-pathway-primary"
                     className="select"
@@ -537,7 +536,6 @@ export function ExploreStep() {
               label="每周可投入时间（可选）"
               htmlFor="explore-weeklyHours"
               error={errors.weeklyHours}
-              hint="只用于方案里的时间估计参考，可随时修改"
             >
               <div className="input-suffix-wrap">
                 <input
@@ -559,7 +557,6 @@ export function ExploreStep() {
               label="每月预算（可选）"
               htmlFor="explore-monthlyBudget"
               error={errors.monthlyBudget}
-              hint="例如证书、培训、语言考试等自费预算；按人民币填"
             >
               <div className="input-suffix-wrap">
                 <input
@@ -578,16 +575,6 @@ export function ExploreStep() {
               </div>
             </Field>
           </div>
-          <p className="panel-note">
-            <Icon name="shield" size={13} />
-            作答会用于生成方案，进度保存在本设备。
-          </p>
-          <Collapse summary="数据如何保存" tone="quiet">
-            <p className="panel-note">
-              画像与方案会上传到云端服务用于生成与保存；本设备保留一份进度，刷新可恢复。
-            </p>
-            <p className="panel-note">不需要上传成绩单、学号或身份证件；经历里也不必填写真实姓名或联系方式。</p>
-          </Collapse>
         </section>
 
         <ExploreResultPanel result={result} progress={progress} experienceAnswered={experienceAnswered} />
@@ -601,8 +588,8 @@ export function ExploreStep() {
           <Icon name="info" size={14} />
           <span>
             {complete
-              ? "16 项已完成，可以进入下一步。"
-              : `还差 ${remaining} 项必答，未答保持「未知」。`}
+              ? "可以进入下一步。"
+              : `还差 ${remaining} 项必答。`}
           </span>
         </div>
         <div className="step-footer-actions">
@@ -619,34 +606,13 @@ export function ExploreStep() {
       <ConfirmDialog
         open={skipDialogOpen}
         title="跳过自我探索？"
-        description="跳过不会生成画像；要生成方案仍需先补齐。"
+        description="跳过不会生成画像，之后可以回来补答。"
         confirmLabel="跳过这一步"
         cancelLabel="继续作答"
         tone="primary"
         onConfirm={handleSkipStep}
         onCancel={() => setSkipDialogOpen(false)}
-      >
-        <div className="reset-scope">
-          <p className="reset-scope-heading">跳过会保存</p>
-          <ul className="reset-scope-list reset-scope-list-keep">
-            <li>
-              <Icon name="check" size={13} />
-              <span>当前已填的学校、专业等基础资料（不会填写的内容不会编造）</span>
-            </li>
-            <li>
-              <Icon name="check" size={13} />
-              <span>已作答的题目会保留，未作答维度保持未知</span>
-            </li>
-          </ul>
-          <p className="reset-scope-heading">之后可以</p>
-          <ul className="reset-scope-list">
-            <li>
-              <Icon name="refresh" size={13} />
-              <span>回到本页补答：再次点「完成探索」会取消跳过标记</span>
-            </li>
-          </ul>
-        </div>
-      </ConfirmDialog>
+      />
 
       <p className="step-back-strip">
         <Link href="/library" className="link-inline">

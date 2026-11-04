@@ -66,6 +66,24 @@ WORK_STYLE_LABELS = {
 EXPECTED_REQUIRED_ANSWERS = 16
 
 
+def next_citation_no(items: Sequence[Any]) -> int:
+    """下一条证据的引用编号：已有最大编号 + 1。
+
+    语料证据通常从 1 连续编号；参考数据/网页证据必须接在它们之后。
+    用 max+1 而不是 len+1，避免证据编号不连续或重排时重复。
+    同时接受 ``dict`` 证据与带 ``citation_no`` 属性的对象（``Citation``）。
+    """
+
+    numbers: list[int] = []
+    for item in items:
+        value = item.get("citation_no") if isinstance(item, dict) else getattr(item, "citation_no", None)
+        try:
+            numbers.append(int(value or 0))
+        except (TypeError, ValueError):
+            continue
+    return max(numbers, default=0) + 1
+
+
 @dataclass
 class JobContext:
     """一次 job 的运行上下文；由 runtime 组装，图节点只通过它访问外部。"""

@@ -1,5 +1,6 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { cloneElement, isValidElement } from "react";
+import type { ReactElement, ReactNode } from "react";
 
 export type IconName =
   | "arrow-right"
@@ -276,11 +277,15 @@ export function EmptyState({
 export function RunStatus({
   label,
   detail,
+  announceDetail = true,
   state = "running",
   className
 }: {
   label: ReactNode;
   detail?: ReactNode;
+  /** Set false when the detail is a ticking timer; live regions should not
+      announce the same sentence every second. The visible text stays. */
+  announceDetail?: boolean;
   state?: "running" | "done" | "error" | "idle";
   className?: string;
 }) {
@@ -292,29 +297,15 @@ export function RunStatus({
     >
       <span className="run-status-mark" aria-hidden="true" />
       <span className="run-status-label">{label}</span>
-      {detail ? <span className="run-status-detail">{detail}</span> : null}
+      {detail ? (
+        <span className="run-status-detail" aria-live={announceDetail ? undefined : "off"}>
+          {detail}
+        </span>
+      ) : null}
     </div>
   );
 }
 
-/** @deprecated Use RunStatus. Kept so older call sites render an inline line, never a bar. */
-export function ProgressBar({
-  value,
-  label
-}: {
-  value: number;
-  label?: string;
-  tone?: "accent" | "ok" | "warn";
-}) {
-  const pct = Math.max(0, Math.min(100, Math.round(value)));
-  return (
-    <RunStatus
-      state={pct >= 100 ? "done" : "running"}
-      label={label ?? "处理中"}
-      detail={pct > 0 && pct < 100 ? `${pct}%` : undefined}
-    />
-  );
-}
 
 /**
  * Native disclosure used for everything the user should not have to read by
@@ -387,19 +378,49 @@ export function Field({
   children: ReactNode;
   className?: string;
 }) {
+  const errorId = error && htmlFor ? `${htmlFor}-error` : undefined;
+  const hintId = hint && htmlFor ? `${htmlFor}-hint` : undefined;
+  const describedBy = [errorId, hintId].filter(Boolean).join(" ") || undefined;
+
+  // Wire the helper text to the control itself so assistive tech reads the
+  // field's own error/hint and the required state, instead of leaving a label
+  // that only looks associated.
+  let control = children;
+  if (isValidElement(children) && describedBy) {
+    const element = children as ReactElement<{
+      "aria-describedby"?: string;
+      "aria-required"?: boolean;
+      required?: boolean;
+    }>;
+    const tag = typeof element.type === "string" ? element.type : "";
+    const isFieldControl = tag === "input" || tag === "select" || tag === "textarea";
+    control = cloneElement(element, {
+      "aria-describedby": [element.props["aria-describedby"], describedBy].filter(Boolean).join(" "),
+      ...(isFieldControl && required ? { "aria-required": true, required: true } : {})
+    });
+  }
+
   return (
     <div className={["field", className].filter(Boolean).join(" ")}>
       <label className="field-label" htmlFor={htmlFor}>
         {label}
-        {required ? <span className="field-required" aria-hidden="true"> *</span> : null}
+        {required ? (
+          <span className="field-required" aria-hidden="true">
+            {" "}
+            *
+          </span>
+        ) : null}
       </label>
-      {children}
+      {control}
+      {hint ? (
+        <p className="field-hint" id={hintId}>
+          {hint}
+        </p>
+      ) : null}
       {error ? (
-        <p className="field-error" role="alert">
+        <p className="field-error" id={errorId} role="alert">
           {error}
         </p>
-      ) : hint ? (
-        <p className="field-hint">{hint}</p>
       ) : null}
     </div>
   );

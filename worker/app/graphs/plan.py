@@ -43,6 +43,7 @@ from .common import (
     JobContext,
     direction_title,
     generate_validated_json,
+    next_citation_no,
     profile_summary,
     require_no_validation_reasons,
     validate_profile_context,
@@ -229,7 +230,9 @@ def build_plan_graph(ctx: JobContext):
         fallback_reason: str | None = None
 
         # 可选：联网补充调研。结果接在本地证据之后，复用同一套引用/校验。
+        # 联网只是可选增强：调研失败时降级为仅用本地证据，不阻塞确定性方案发布。
         web = None
+        web_note = ""
         if run_input.get("web_search") and ctx.config.web_search_enabled:
             ctx.trace("agent_note", {"text": "已开启联网补充调研，检索实时就业/培养方案信息"})
             direction = str(run_input["direction_id"])
@@ -244,12 +247,19 @@ def build_plan_graph(ctx: JobContext):
                 )
                 if part
             )
-            web = run_web_research(
-                ctx,
-                question=research_question,
-                site_hint=None,
-                numbering_start=len(retrieval.citations) + 1,
-            )
+            try:
+                web = run_web_research(
+                    ctx,
+                    question=research_question,
+                    site_hint=None,
+                    numbering_start=next_citation_no(retrieval.citations),
+                )
+            except WorkerError as exc:
+                ctx.logger.warning("plan_web_research_failed code=%s", exc.code)
+                ctx.trace("agent_note", {"text": "联网补充调研暂不可用，已降级为仅使用已载入资料"})
+                web = None
+                web_note = "联网补充调研暂不可用，本次方案仅使用已载入资料与规则事实"
+                warnings.append(f"web_research_fallback:{exc.code}")
 
         evidence: list[dict[str, Any]] = [dict(item) for item in retrieval.evidence]
         citations: list[Any] = list(retrieval.citations)
@@ -416,7 +426,10 @@ def build_plan_graph(ctx: JobContext):
             warnings.append("plan_analysis_fallback:internal_error")
             ctx.logger.exception("plan_analysis_failed type=%s", type(exc).__name__)
 
-        if web is not None and web.note and web.sources:
+        # 即使联网补充没找到可用来源，也把说明写进资料边界，避免用户误以为走了联网。
+        if web_note:
+            explanation = f"{explanation}\n资料边界：{web_note}"
+        if web is not None and web.note:
             explanation = f"{explanation}\n资料边界：{web.note}"
         ctx.trace("validation", {"ok": True, "citations": len(citations), "web_citations": len(web.citations) if web else 0})
         ctx.emit("planning", 76)

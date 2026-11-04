@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
 import { PlanResultSchema } from "@/lib/contracts/plan";
 import { RunSubmitSchema } from "@/lib/contracts/run";
 import { AnswersSchema, ProfileInputSchema } from "@/lib/contracts/profile";
+import { ERROR_CODES } from "@/lib/contracts/common";
 import { normalizePlanAnalysis, profileFingerprint } from "@/lib/api-client";
 
 const uuid = "3f1f9c3a-6d1e-4d4e-9a4e-2b2a7c9e1a11";
@@ -199,5 +201,15 @@ describe("API contracts", () => {
       scores: {}
     });
     expect(parsed.success).toBe(false);
+  });
+});
+
+describe("worker 错误码对齐", () => {
+  it("worker/app/errors.py 的 ERROR_CODES 与共享契约完全一致", () => {
+    const source = readFileSync(new URL("../../worker/app/errors.py", import.meta.url), "utf8");
+    const block = source.match(/ERROR_CODES = frozenset\(\s*\{([\s\S]*?)\}\s*\)/);
+    expect(block).not.toBeNull();
+    const workerCodes = [...(block?.[1] ?? "").matchAll(/"([a-z_]+)"/g)].map((match) => match[1]);
+    expect(new Set(workerCodes)).toEqual(new Set(ERROR_CODES));
   });
 });

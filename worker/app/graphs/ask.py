@@ -4,7 +4,9 @@
 - 检索闸门不通过：不调用 chat，直接返回说明缺哪类/哪届资料的拒答文案；
 - 模型输出越界（引用编号不存在、数字与证据不一致、出现证据外 URL）：
   丢弃解释，回退为确定性拒答/边界说明；
-- 模型网络/鉴权/限流错误：向上抛，由 worker_fail_job 决定是否重试。
+- 生成模型网络/鉴权/限流错误：向上抛，由 worker_fail_job 决定是否重试；
+- 可选「联网补充」自身失败（超时/鉴权/配额/预算/数据库）：降级为仅用语料与参考数据，
+  并在边界说明中标注，不把整个问答判为失败。
 """
 
 from __future__ import annotations
@@ -15,11 +17,11 @@ from typing import Any, TypedDict
 
 from langgraph.graph import END, START, StateGraph
 
-from ..errors import BadRequest, ModelOutputInvalid, OutputValidationError
+from ..errors import BadRequest, ModelOutputInvalid, OutputValidationError, WorkerError
 from ..models import AskInput, AskRunResult, Citation
 from ..prompts import career as prompts
 from ..prompts import validate as prompt_validate
-from .common import JobContext, generate_validated_json, profile_summary
+from .common import JobContext, generate_validated_json, next_citation_no, profile_summary
 from ..agent.research import run_web_research
 from .. import reference
 
@@ -144,31 +146,46 @@ def build_ask_graph(ctx: JobContext):
         retrieval = state["retrieval"]
         question = str(run_input["question"])
 
-        # 0) 可选：联网补充。结果转成 citation_no 接在本地证据之后。
-        web = None
-        if run_input.get("web_search") and ctx.config.web_search_enabled:
-            ctx.trace("agent_note", {"text": "已开启联网补充，开始实时网页调研"})
-            web = run_web_research(
-                ctx,
-                question=question,
-                site_hint=None,
-                numbering_start=len(citations) + 1,
-            )
-        else:
-            ctx.trace("agent_note", {"text": "未开启联网补充，仅使用已载入资料"})
-
         reference_hits = list(state.get("reference_hits") or [])
         evidence = [dict(item) for item in retrieval.evidence]
         citations: list[Any] = list(retrieval.citations)
         if reference_hits:
             reference_evidence, reference_citations = numbered_reference_hits(
-                reference_hits, start_no=len(evidence) + 1
+                reference_hits, start_no=next_citation_no(evidence)
             )
             evidence.extend(reference_evidence)
             citations.extend(reference_citations)
-        if web is not None:
-            evidence.extend(web.evidence)
-            citations.extend(web.citations)
+
+        # 0) 可选：联网补充。网页证据必须接在语料/参考证据之后编号；
+        # 起始编号要等本地证据（语料 + 参考数据）都排好后再算，否则会撞号。
+        # 联网调研只是可选增强：它自身失败时降级为仅用本地证据，
+        # 不能把整个问答判失败（否则用户只会看到“服务暂时不可用”）。
+        web = None
+        web_note = ""
+        if run_input.get("web_search") and ctx.config.web_search_enabled:
+            ctx.trace("agent_note", {"text": "已开启联网补充，开始实时网页调研"})
+            try:
+                web = run_web_research(
+                    ctx,
+                    question=question,
+                    site_hint=None,
+                    numbering_start=next_citation_no(evidence),
+                )
+            except WorkerError as exc:
+                ctx.logger.warning("web_research_failed code=%s", exc.code)
+                ctx.trace("agent_note", {"text": "联网补充暂不可用，已降级为仅使用已载入资料"})
+                web = None
+                web_note = "联网补充暂不可用，本次回答仅使用已载入的语料与参考数据"
+            if web is not None:
+                evidence.extend(web.evidence)
+                citations.extend(web.citations)
+        else:
+            ctx.trace("agent_note", {"text": "未开启联网补充，仅使用已载入资料"})
+
+        def with_web_note(text: str) -> str:
+            if web_note and text:
+                return f"{text}；{web_note}"
+            return text or web_note
 
         valid_numbers = {int(item["citation_no"]) for item in evidence}
         corpus_gate_ok = bool(retrieval.evidence and retrieval.gate.passed)
@@ -179,7 +196,9 @@ def build_ask_graph(ctx: JobContext):
             answer = prompt_validate.build_refusal_text(
                 question, evidence=evidence, reason="no_candidates"
             )
-            boundary = prompt_validate.build_boundary_note(question, gate_version=retrieval.gate.version)
+            boundary = with_web_note(
+                prompt_validate.build_boundary_note(question, gate_version=retrieval.gate.version)
+            )
             ctx.trace("validation", {"ok": False, "citations": 0, "web_citations": 0, "note": "no_evidence"})
             ctx.emit("validating", 82)
             return {"result": _refusal_payload(answer, "no_evidence", boundary_note=boundary)}
@@ -187,7 +206,9 @@ def build_ask_graph(ctx: JobContext):
             answer = prompt_validate.build_refusal_text(
                 question, evidence=evidence, reason="gate_failed"
             )
-            boundary = prompt_validate.build_boundary_note(question, gate_version=retrieval.gate.version)
+            boundary = with_web_note(
+                prompt_validate.build_boundary_note(question, gate_version=retrieval.gate.version)
+            )
             ctx.trace("validation", {"ok": False, "citations": len(citations), "web_citations": len(web.citations) if web else 0, "note": "gate_failed"})
             ctx.emit("validating", 82)
             return {"result": _refusal_payload(answer, "gate_failed", boundary_note=boundary)}
@@ -229,7 +250,9 @@ def build_ask_graph(ctx: JobContext):
                 answer = prompt_validate.build_refusal_text(
                     question, evidence=evidence, reason="invalid_model_output"
                 )
-                boundary = prompt_validate.build_boundary_note(question, gate_version=retrieval.gate.version)
+                boundary = with_web_note(
+                    prompt_validate.build_boundary_note(question, gate_version=retrieval.gate.version)
+                )
                 ctx.trace("validation", {"ok": False, "citations": len(citations), "web_citations": len(web.citations) if web else 0, "note": "invalid_model_output"})
                 ctx.emit("validating", 82)
                 return {"result": _refusal_payload(answer, "explanation_discarded", boundary_note=boundary)}
@@ -237,7 +260,9 @@ def build_ask_graph(ctx: JobContext):
             soft_note = "校验提示：个别数字或引用标注未与证据逐字一致，请以引用卡原文为准。"
         except ModelOutputInvalid:
             answer = prompt_validate.build_refusal_text(question, evidence=evidence, reason="invalid_model_output")
-            boundary = prompt_validate.build_boundary_note(question, gate_version=retrieval.gate.version)
+            boundary = with_web_note(
+                prompt_validate.build_boundary_note(question, gate_version=retrieval.gate.version)
+            )
             ctx.trace("validation", {"ok": False, "citations": len(citations), "web_citations": len(web.citations) if web else 0, "note": "invalid_model_output"})
             ctx.emit("validating", 82)
             return {"result": _refusal_payload(answer, "explanation_discarded", boundary_note=boundary)}
@@ -248,7 +273,10 @@ def build_ask_graph(ctx: JobContext):
         if reference_hits:
             reference_note = "参考数据来自团队整理的培养方案/竞赛清单；报名资格、时间窗与校内加分折算以官方当年文件为准"
             boundary = f"{boundary}；{reference_note}" if boundary else reference_note
-        if web is not None and web.note and web.sources:
+        if web_note:
+            boundary = f"{boundary}；{web_note}" if boundary else web_note
+        # 即使联网补充没找到可用来源，也把 web.note 的说明展示出来，避免用户误以为走了联网。
+        if web is not None and web.note:
             boundary = f"{boundary}；{web.note}" if boundary else web.note
         if parsed.no_evidence and retrieval.gate.passed and retrieval.gate.dense_top >= 0.70 and retrieval.gate.keyword_overlap >= 5 and len(retrieval.evidence) >= 3:
             retry_messages = [

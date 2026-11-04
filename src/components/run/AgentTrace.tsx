@@ -509,12 +509,6 @@ export function AgentTrace({
           </ol>
         )}
       </div>
-      {running ? (
-        <footer className="agent-trace-foot">
-          <span className="trace-pulse" aria-hidden="true" />
-          <span>后台正在{activityText(events)}…</span>
-        </footer>
-      ) : null}
     </Collapse>
   );
 }

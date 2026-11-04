@@ -25,6 +25,8 @@ ERROR_CODES = frozenset(
         "model_quota_exceeded",
         "model_timeout",
         "model_unavailable",
+        # 由 DB 的 app_reap_expired_leases 写入 app_runs.error_code，worker 不主动产生。
+        "lease_expired",
         "bad_request",
         "internal_error",
     }

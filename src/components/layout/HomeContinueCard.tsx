@@ -8,7 +8,6 @@ import {
   progressStepDone,
   useLocalProgress
 } from "@/lib/local-progress/store";
-import { formatDateTime } from "@/components/ui/primitives";
 import { RestartProgress } from "./RestartProgress";
 
 /** Home page "continue" row; hidden until meaningful local progress exists. */
@@ -27,10 +26,10 @@ export function HomeContinueCard() {
           继续：第 {next.index} 步 · {next.title}
         </h2>
         <p className="continue-sub">
-          {doneCount}/5 已完成
-          {direction ? ` · ${direction.short_title}` : ""} · 保存于 {formatDateTime(progress.updated_at)}
+          {doneCount} / 5 已完成
+          {direction ? ` · ${direction.short_title}` : ""}
         </p>
-        {resetNotice ? <p className="inline-note inline-note-warn">本设备进度版本已更新，请重新开始。</p> : null}
+        {resetNotice ? <p className="inline-note inline-note-warn">进度版本已更新，请重新开始。</p> : null}
       </div>
       <div className="continue-actions">
         <Link href={next.href} className="btn btn-primary btn-sm">

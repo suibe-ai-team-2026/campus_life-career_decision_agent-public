@@ -18,6 +18,10 @@ export function mapDbError(error: PostgrestError | null): { code: ErrorCode; mes
   if (raw.includes("resource_not_found")) {
     return { code: "resource_not_found", message: "资源不存在或无权访问" };
   }
+  // 由 DB 的租约回收函数写入 app_runs.error_code，不是模型/网络错误。
+  if (raw.includes("lease_expired")) {
+    return { code: "lease_expired", message: "任务执行超时或中断，请重新发起" };
+  }
   if (raw.includes("stale_lease")) {
     return { code: "version_conflict", message: "任务已被新的 worker 接管" };
   }

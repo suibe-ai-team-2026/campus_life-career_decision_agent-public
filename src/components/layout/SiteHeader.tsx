@@ -29,7 +29,7 @@ export function SiteHeader() {
           <span className="brand-mark" aria-hidden="true">途</span>
           <span className="brand-text">
             <strong>知途</strong>
-            <small>Campus Pathway</small>
+            <small lang="en">Campus Pathway</small>
           </span>
         </Link>
 
@@ -55,17 +55,8 @@ export function SiteHeader() {
         <div className="site-header-actions">
           <ThemeToggle />
           <Link href={next ? next.href : "/explore"} className="header-cta">
-            {next ? (
-              <>
-                <span className="header-cta-step">第 {next.index} 步</span>
-                <Icon name="arrow-right" size={14} />
-              </>
-            ) : (
-              <>
-                开始
-                <Icon name="arrow-right" size={14} />
-              </>
-            )}
+            {next ? "继续" : "开始"}
+            <Icon name="arrow-right" size={14} />
           </Link>
         </div>
       </div>

@@ -72,6 +72,7 @@ export const ERROR_CODES = [
   "model_quota_exceeded",
   "model_timeout",
   "model_unavailable",
+  "lease_expired",
   "bad_request",
   "internal_error"
 ] as const;
@@ -92,6 +93,7 @@ export const HTTP_STATUS_BY_ERROR: Record<ErrorCode, number> = {
   model_quota_exceeded: 502,
   model_timeout: 504,
   model_unavailable: 503,
+  lease_expired: 409,
   bad_request: 400,
   internal_error: 500
 };
