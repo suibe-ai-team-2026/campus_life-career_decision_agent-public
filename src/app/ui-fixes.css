@@ -1459,3 +1459,20 @@ body {
     flex: 1 1 auto;
   }
 }
+
+/* User reasoning inside the cockpit: plain quoted line, not a dashed box. */
+.plan-user-reason {
+  margin-top: 18px;
+  padding: 0 0 0 14px;
+  border: 0;
+  border-left: 2px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+}
+
+.plan-user-reason p {
+  margin-top: 4px;
+  color: var(--fg-1);
+  font-size: 13.5px;
+  line-height: 1.7;
+}
