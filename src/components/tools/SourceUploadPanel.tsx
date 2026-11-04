@@ -9,6 +9,7 @@ import {
   putSourceFile,
   requestSourceUpload
 } from "@/lib/api-client";
+import { parsingRunStatusLabel } from "@/lib/source-labels";
 import {
   UPLOAD_ACCEPT_ATTR,
   UPLOAD_KIND_HINTS,
@@ -78,7 +79,7 @@ export function SourceUploadPanel({
     <section className="section-heading" aria-labelledby="source-upload-title">
       <div className="section-heading-text">
         <h2 id="source-upload-title">上传培养方案等文件</h2>
-        <p className="micro">支持 PDF、DOCX、TXT、Markdown，单个不超过 20MB；文件进入你的个人知识库。</p>
+        <p className="micro">支持 PDF、DOCX、TXT、Markdown，单个不超过 20MB。</p>
         <Collapse summary="上传说明与格式">
           <p className="micro">
             上传的文件只保存在你自己的账号下，会成为<strong>个人知识库</strong>的一部分，问答与方案生成时作为检索来源被引用。
@@ -96,14 +97,26 @@ export function SourceUploadPanel({
         <div>
           <input
             ref={inputRef}
+            className="sr-only"
             type="file"
             accept={UPLOAD_ACCEPT_ATTR}
             disabled={busy}
             aria-label="选择要上传的资料文件"
             onChange={(event) => void handleFile(event.target.files?.[0])}
           />
-          <div className="panel-note micro">
-            {busy && step ? `正在${UPLOAD_STEP_LABELS[step]}…` : "选择文件后自动上传。"}
+          <div className="row">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => inputRef.current?.click()}
+              disabled={busy}
+            >
+              <Icon name="plus" size={13} />
+              选择文件
+            </Button>
+            <span className="micro">
+              {busy && step ? `正在${UPLOAD_STEP_LABELS[step]}…` : "选择后自动上传"}
+            </span>
           </div>
           {busy ? (
             <Button variant="secondary" size="sm" disabled>
@@ -127,7 +140,7 @@ export function SourceUploadPanel({
       {result ? (
         <Callout tone="ok" title="已加入你的知识库">
           <p className="micro">
-            来源 <code>{result.sourceId}</code> 已入库，解析任务 <code>{result.runId}</code>（{result.status}）。
+            来源已入库，解析任务已提交（{parsingRunStatusLabel(result.status)}）。
             解析完成后，问答与方案会将它作为检索来源引用。
           </p>
           <p>

@@ -1,0 +1,1461 @@
+/* ==========================================================================
+   知途 · UI fixes on top of design-v3
+   ==========================================================================
+   This layer does NOT introduce a new visual language: design-v3.css
+   (neutral paper + one moss accent, sans headings, compact surfaces) remains
+   the design. The rules below only fix observed defects:
+
+   1. ≤900px header leaked its wrapped nav over the page (overlap).
+   2. The plan cockpit / export hero / legacy action cards kept hard-coded dark
+      fills in the light theme, producing dark-on-dark text.
+   3. Focus was invisible or low-contrast on several controls; some focus rings
+      were clipped by overflow rows; the error border turned accent on focus.
+   4. Chinese labels still used mono + uppercase + wide tracking at 8.5–10.5px.
+   5. Small helper copy used the decorative gray token, below WCAG AA.
+   6. Run/trace chrome, dialogs and secondary panels were heavier than v3's
+      compact language.
+   7. Inline citation chips (new; replaces long trailing citation cards).
+   ========================================================================== */
+
+:root {
+  --focus-ring: #314f71;
+  --cite-bg: var(--bg-2);
+  --cite-border: var(--line);
+}
+
+/* v3's decorative gray was also used for 9.5–13px helper copy. Keep the same
+   neutral hue but move both muted levels into AA range; hierarchy is preserved
+   (fg-2 darker than fg-3, fg-3 still quieter than body text).
+   The muted overrides are gated on the resolved theme so "follow system" with
+   a dark OS keeps v3's dark tokens (a bare `:root` rule here would win over
+   design-v3's dark media block because this file loads last). */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --fg-2: #565a60;
+    --fg-3: #666a70;
+  }
+}
+
+:root[data-theme="light"] {
+  --fg-2: #565a60;
+  --fg-3: #666a70;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --focus-ring: #9db8d8;
+    --fg-3: #858d8b;
+  }
+}
+
+:root[data-theme="dark"] {
+  --focus-ring: #9db8d8;
+  --fg-3: #858d8b;
+}
+
+/* --------------------------------------------------------------------------
+   1. Header: auto height when the nav wraps (was: fixed 60px + overflow)
+   -------------------------------------------------------------------------- */
+.site-header-inner {
+  height: auto;
+  min-height: 60px;
+}
+
+@media (max-width: 900px) {
+  .site-header-inner {
+    height: auto;
+    min-height: 60px;
+    padding: 8px 16px 0;
+    row-gap: 2px;
+    align-content: center;
+  }
+  .site-nav {
+    order: 3;
+    width: 100%;
+    padding: 0 0 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+  }
+  .site-nav::-webkit-scrollbar {
+    display: none;
+  }
+  .site-nav-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .site-header-actions {
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 720px) {
+  /* Keep a real text label in the header CTA instead of an icon-only link. */
+  .header-cta span {
+    display: inline;
+  }
+  .header-cta {
+    gap: 5px;
+    padding: 7px 10px;
+    font-size: 12.5px;
+  }
+  .brand-text strong {
+    font-size: 16px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. Surfaces that were still the old dark recipe (hard-coded fills)
+   -------------------------------------------------------------------------- */
+.plan-decision-cockpit {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--bg-1);
+  background-image: none;
+  box-shadow: none;
+  color: var(--fg-0);
+  padding: 20px;
+}
+
+.plan-decision-head h2 {
+  color: var(--fg-0);
+}
+
+.plan-summary-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  color: var(--fg-2);
+  font-size: 12px;
+}
+
+.plan-route-row {
+  border-color: var(--line);
+  background: var(--line-soft);
+}
+
+.plan-route-primary,
+.plan-route-side {
+  background: var(--bg-2);
+}
+
+.plan-route-side p,
+.plan-route-primary li,
+.recommend-reasons li {
+  color: var(--fg-1);
+}
+
+.plan-route-label {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--fg-2);
+}
+
+.recommend-reasons li::before {
+  background: var(--accent);
+}
+
+.plan-priority-card {
+  border: 1px solid var(--line);
+  background: var(--bg-2);
+}
+
+.plan-priority-head {
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--fg-0);
+}
+
+.plan-priority-list li {
+  color: var(--fg-1);
+}
+
+.plan-priority-list li > span {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  color: var(--fg-1);
+  font-family: var(--font-sans);
+}
+
+.action-card {
+  border: 1px solid var(--line);
+  background: var(--bg-1);
+  background-image: none;
+}
+
+.export-hero,
+.export-done {
+  border: 1px solid var(--line);
+  background: var(--bg-1);
+  background-image: none;
+}
+
+/* The downloadable file no longer exposes build/version metadata. */
+.export-hero {
+  grid-template-columns: 1fr;
+}
+
+.compare-table tbody th {
+  background: var(--bg-2);
+  color: var(--fg-2);
+}
+
+/* --------------------------------------------------------------------------
+   3. Focus and form states
+   -------------------------------------------------------------------------- */
+:root
+  :is(
+    a,
+    button,
+    summary,
+    [tabindex],
+    input,
+    select,
+    textarea,
+    .btn,
+    .header-cta,
+    .site-nav-link,
+    .wp-step a,
+    .tab-button,
+    .plan-detail-tab,
+    .collapse-head,
+    .prompt-chip,
+    .favorite-button,
+    .filter-chip,
+    .theme-toggle
+  ):focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: inherit;
+}
+
+/* Rings inside horizontal scroll strips must be drawn inset. */
+:root .site-nav :focus-visible,
+:root .wp-step a:focus-visible,
+:root .tab-button:focus-visible,
+:root .plan-detail-tab:focus-visible {
+  outline-offset: -2px !important;
+}
+
+:root .chat-composer textarea:focus-visible,
+:root .chat-composer textarea:focus {
+  outline: none;
+}
+
+.chat-composer:focus-within {
+  border-color: var(--focus-ring);
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px;
+}
+
+:root .input:focus-visible,
+:root .select:focus-visible,
+:root .textarea:focus-visible,
+:root textarea:focus-visible,
+:root input:focus-visible {
+  border-color: var(--focus-ring);
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px !important;
+}
+
+:root .input.input-error:focus-visible,
+:root .select.input-error:focus-visible,
+:root .textarea.input-error:focus-visible {
+  border-color: var(--danger);
+  outline-color: var(--danger);
+}
+
+:root .option:focus-within,
+:root .choice-option:focus-within {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* Disabled primary keeps an AA-readable label. */
+.btn-primary:disabled {
+  background: var(--bg-3);
+  border-color: var(--bg-3);
+  color: var(--fg-2);
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   4. CJK labels: no mono / uppercase / wide tracking, 11.5px minimum
+   -------------------------------------------------------------------------- */
+.action-edit-label,
+.reset-scope-heading,
+.action-section-label,
+.action-machine,
+.action-machine-tag,
+.action-group-count,
+.plan-fact-label,
+.plan-route-label,
+.export-side-label,
+.message-role,
+.compare-table tbody th,
+.agent-trace-title-text,
+.agent-trace-status,
+.option-value,
+.question-count,
+.direction-kicker,
+.direction-label,
+.step-meta-item,
+.panel-title,
+.question-group-title,
+.lead-card-head h3,
+.roadmap-content h3,
+.analysis-card h3,
+.direction-context-grid h3 {
+  font-family: var(--font-sans);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.action-edit-label,
+.reset-scope-heading,
+.action-section-label,
+.action-machine,
+.action-group-count,
+.plan-fact-label,
+.plan-route-label,
+.export-side-label,
+.message-role,
+.compare-table tbody th,
+.agent-trace-title-text,
+.agent-trace-status,
+.option-value,
+.question-count,
+.step-meta-item,
+.panel-title,
+.question-group-title {
+  font-size: 11.5px;
+  color: var(--fg-2);
+}
+
+.action-machine-tag {
+  border: 1px solid var(--line);
+  border-radius: var(--r-xs);
+  background: var(--bg-2);
+  font-size: 11px;
+  color: var(--fg-2);
+}
+
+/* --------------------------------------------------------------------------
+   5. Passive/secondary copy above the decorative gray token (AA)
+   -------------------------------------------------------------------------- */
+.hero-meta,
+.home-hero-note,
+.home-step-num,
+.home-step-est,
+.continue-sub,
+.screen-sub,
+.step-meta-item,
+.panel-note,
+.micro,
+.small-note,
+.field-hint,
+.wp-label,
+.back-link,
+.footer-copy,
+.footer-note,
+.run-status-detail,
+.plan-summary-meta,
+.source-meta,
+.message-trace-meta,
+.library-lead,
+.roadmap-stage-name,
+.autosave-note,
+.agent-trace-stats,
+.trace-meta,
+.coverage-footnote,
+.plan-fact-note,
+.export-side-label,
+.option-label,
+.question-hint {
+  color: var(--fg-2);
+}
+
+/* --------------------------------------------------------------------------
+   6. Run status / trace: a line, not a panel; no bars anywhere
+   -------------------------------------------------------------------------- */
+.run-status {
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--fg-1);
+}
+
+.run-status-mark {
+  width: 7px;
+  height: 7px;
+}
+
+.run-status-label {
+  font-weight: 500;
+}
+
+.run-status-detail {
+  font-size: 11.5px;
+}
+
+.agent-trace {
+  border: 0;
+  background: transparent;
+  margin: 0;
+}
+
+.agent-trace > .collapse-body {
+  border-top: 1px solid var(--line-soft);
+  padding: 8px 0 0;
+}
+
+.agent-trace-head {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.agent-trace-title-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--fg-1);
+}
+
+.agent-trace-stats,
+.agent-trace-foot {
+  padding-left: 0;
+  padding-right: 0;
+  font-size: 11px;
+}
+
+.agent-trace-scroll {
+  max-height: 260px;
+  padding: 8px 0 0;
+}
+
+.trace-list {
+  gap: 2px;
+}
+
+.trace-item {
+  padding: 0;
+}
+
+.trace-card,
+.trace-thought,
+.trace-page-excerpt,
+.trace-hit,
+.trace-call,
+.trace-prompt,
+.trace-validation {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 2px 0;
+}
+
+.trace-card-title,
+.trace-stage-name,
+.trace-step-name {
+  font-size: 12px;
+  color: var(--fg-1);
+}
+
+.trace-badge,
+.trace-unverified-tag,
+.trace-chips li {
+  border-radius: var(--r-xs);
+  font-size: 10.5px;
+}
+
+/* Legacy/dead progress bars are never rendered by the run flows any more. */
+.progress-track,
+.progress-fill {
+  display: none !important;
+}
+
+/* Research toggle: one quiet row, note only when the row is expanded */
+.research-toggle {
+  padding: 8px 10px;
+  border-color: var(--line-soft);
+  border-radius: var(--r-sm);
+  background: transparent;
+}
+
+.research-toggle.is-on {
+  background: transparent;
+  background-image: none;
+  border-color: var(--line);
+}
+
+.research-toggle-title {
+  font-size: 12px;
+  color: var(--fg-1);
+}
+
+.research-toggle-state {
+  font-family: var(--font-sans);
+  font-size: 10.5px;
+  letter-spacing: 0;
+  text-transform: none;
+  padding: 0 6px;
+}
+
+.research-toggle-note {
+  margin-top: 4px;
+  font-size: 11px;
+}
+
+/* --------------------------------------------------------------------------
+   7. Dialog: compact, scrolls its content instead of the page
+   -------------------------------------------------------------------------- */
+.dialog {
+  max-height: min(80vh, 640px);
+  overflow: auto;
+  border-radius: var(--r-md);
+}
+
+.dialog-title {
+  font-size: 18px;
+}
+
+.dialog-description,
+.dialog-content {
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.dialog-content {
+  max-height: min(52vh, 380px);
+  overflow: auto;
+}
+
+.dialog-actions {
+  padding-top: 12px;
+}
+
+.reset-scope-list,
+.reset-scope-block {
+  padding: 8px 10px;
+  border-radius: var(--r-sm);
+}
+
+.reset-scope-list li,
+.reset-scope-block p {
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* --------------------------------------------------------------------------
+   8. Inline citations: small gray number, hover/focus reveals the source
+   -------------------------------------------------------------------------- */
+.cite-wrap {
+  position: relative;
+  display: inline-block;
+  vertical-align: baseline;
+}
+
+.cite-ref {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 17px;
+  margin: 0 2px;
+  padding: 0 5px;
+  border: 1px solid var(--cite-border);
+  border-radius: 5px;
+  background: var(--cite-bg);
+  color: var(--fg-2);
+  font-size: 10.5px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+  vertical-align: 1px;
+  cursor: help;
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.cite-ref:hover,
+.cite-ref:focus-visible,
+.cite-ref[aria-expanded="true"] {
+  border-color: var(--accent-line);
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  outline: none;
+}
+
+.cite-wrap:hover .cite-ref,
+.cite-wrap:focus-within .cite-ref {
+  border-color: var(--accent-line);
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.cite-pop {
+  display: block;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 95;
+  width: min(340px, 84vw);
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--bg-1);
+  box-shadow: var(--shadow-lg);
+  text-align: left;
+  white-space: normal;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--fg-1);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+.cite-wrap:hover .cite-pop,
+.cite-wrap:focus-within .cite-pop,
+.cite-ref[aria-expanded="true"] + .cite-pop,
+.cite-pop.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.cite-pop-title {
+  display: block;
+  font-weight: 600;
+  color: var(--fg-0);
+  margin-bottom: 2px;
+}
+
+.cite-pop-meta {
+  display: block;
+  color: var(--fg-2);
+  font-size: 11px;
+  margin-bottom: 6px;
+}
+
+.cite-pop-excerpt {
+  display: block;
+  padding-top: 6px;
+  border-top: 1px solid var(--line-soft);
+  color: var(--fg-1);
+  font-size: 11.5px;
+}
+
+.cite-pop-ref {
+  display: block;
+  margin-top: 6px;
+  color: var(--fg-2);
+  font-size: 11px;
+}
+
+/* Answer body: comfortable line height, chips inside the text */
+.message-answer {
+  line-height: 1.75;
+}
+
+.message-answer p + p {
+  margin-top: 8px;
+}
+
+/* --------------------------------------------------------------------------
+   9. Small utilities
+   -------------------------------------------------------------------------- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+#main {
+  scroll-margin-top: 84px;
+}
+
+/* A cache/offline notice should read as quiet metadata, not a banner. */
+.inline-note {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--fg-2);
+  font-size: 11.5px;
+}
+
+/* One-row plan footer: actions only, no "saved locally" narration. */
+.step-footer-bar-plain {
+  justify-content: flex-end;
+}
+
+.plan-toolbar {
+  padding: 8px 10px;
+  gap: 8px;
+}
+
+.plan-toolbar .select-sm {
+  min-height: 32px;
+}
+
+/* Plan ready view starts at the plan itself, not a second status banner. */
+.plan-ready {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Mobile: one horizontal tab row instead of three stacked full-width rows. */
+@media (max-width: 720px) {
+  .tab-list {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 4px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+  }
+  .tab-list::-webkit-scrollbar {
+    display: none;
+  }
+  .tab-button {
+    flex: 0 0 auto;
+    width: auto;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    border-radius: var(--r-sm);
+  }
+  .tab-button small {
+    display: none;
+  }
+}
+
+@media (pointer: coarse), (max-width: 720px) {
+  .btn-md,
+  .btn-lg {
+    min-height: 44px;
+  }
+  .btn-sm {
+    min-height: 36px;
+  }
+  .icon-button {
+    min-width: 34px;
+    min-height: 34px;
+  }
+  .checkbox-row,
+  .check-field {
+    min-height: 44px;
+  }
+  .favorite-button {
+    min-height: 38px;
+  }
+}
+
+/* ==========================================================================
+   10. Refinement pass — typographic scale, hierarchy and calmer surfaces
+   ==========================================================================
+   Goal: remove the "unfinished blocks" feel. Text sits on one surface level at
+   a time, sections are separated by hairlines instead of stacked grey boxes,
+   and every page follows the same type scale. This keeps v3's neutral paper +
+   moss identity; it does not introduce a new palette. */
+
+:root {
+  --type-display: clamp(26px, 3vw, 32px);
+  --type-section: 21px;
+  --type-card-title: 16px;
+  --type-body: 15px;
+  --type-small: 13px;
+  --type-label: 12px;
+  --type-line-body: 1.72;
+  --section-gap: 32px;
+  --block-gap: 20px;
+  --card-pad: 24px;
+  --card-radius: 12px;
+}
+
+body {
+  font-size: var(--type-body);
+  line-height: var(--type-line-body);
+}
+
+/* Page and section headings: one clear scale, no ad-hoc sizes. */
+.screen-head h1,
+.library-header h1,
+.home-hero h1,
+.page-title {
+  font-size: var(--type-display);
+  line-height: 1.22;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.screen-head .screen-sub,
+.library-lead,
+.home-hero .home-hero-lead {
+  margin-top: 8px;
+  max-width: 46em;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.panel-head h2,
+.section-heading h2,
+.section-heading-text h2,
+.plan-detail-panel h2 {
+  font-size: var(--type-section);
+  line-height: 1.32;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.question-group-head h3,
+.question-group-title,
+.panel-title,
+.plan-priority-head,
+.lead-card-head h3,
+.roadmap-content h3,
+.analysis-card h3,
+.direction-context-grid h3 {
+  font-size: var(--type-card-title);
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--fg-0);
+}
+
+.plan-decision-head h2 {
+  font-size: clamp(22px, 2.4vw, 26px);
+  line-height: 1.28;
+  letter-spacing: -0.01em;
+}
+
+/* Small labels are labels, not badges everywhere. */
+.direction-label,
+.plan-route-label,
+.export-side-label,
+.message-role,
+.question-count,
+.micro,
+.small-note,
+.field-hint,
+.plan-summary-meta,
+.source-meta {
+  font-size: var(--type-label);
+  line-height: 1.55;
+  color: var(--fg-2);
+  letter-spacing: 0;
+}
+
+.direction-text,
+.analysis-body,
+.explanation-text,
+.message-answer,
+.direction-context-card > div:first-child > p:last-child {
+  font-size: var(--type-body);
+  line-height: var(--type-line-body);
+  color: var(--fg-1);
+}
+
+.direction-summary {
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--fg-2);
+}
+
+/* One surface level: cards are 12px, nested blocks never re-draw a card. */
+.panel,
+.direction-card,
+.action-card,
+.analysis-card,
+.lead-card,
+.direction-context-card,
+.roadmap-content,
+.citation-card,
+.continue-card,
+.step-footer-bar,
+.plan-toolbar,
+.export-done,
+.empty-state,
+.question-group {
+  border-radius: var(--card-radius);
+  border-color: var(--line);
+  box-shadow: none;
+}
+
+.panel,
+.direction-card,
+.analysis-card,
+.lead-card,
+.direction-context-card,
+.roadmap-content,
+.export-done {
+  padding: var(--card-pad);
+}
+
+/* Full-width grey bands are the main "raw block" tell. */
+.collapse-head,
+.collapse-quiet > .collapse-head,
+.agent-trace > .collapse-head {
+  background: transparent;
+  border-radius: var(--card-radius);
+}
+
+.collapse-head:hover {
+  background: var(--bg-2);
+}
+
+.collapse {
+  border-radius: var(--card-radius);
+  background: var(--bg-1);
+}
+
+.collapse-quiet {
+  background: transparent;
+}
+
+.collapse-quiet > .collapse-head {
+  border-radius: 0;
+}
+
+/* Tabs are text with a baseline rule, not a white tray. */
+.tab-list,
+.plan-detail-tabs {
+  gap: 24px;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
+}
+
+.tab-button,
+.plan-detail-tab {
+  flex: 0 0 auto;
+  padding: 10px 2px 12px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--fg-2);
+  box-shadow: none;
+}
+
+.tab-button span,
+.plan-detail-tab span {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.tab-button:hover,
+.plan-detail-tab:hover {
+  background: transparent;
+  color: var(--fg-0);
+}
+
+.tab-button.is-active,
+.plan-detail-tab.is-active {
+  color: var(--fg-0);
+  background: transparent;
+  border: 0;
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+.tab-button.is-active span,
+.plan-detail-tab.is-active span {
+  font-weight: 600;
+}
+
+/* Empty states read as a paragraph, not a large empty card. */
+.empty-state {
+  border: 0;
+  background: transparent;
+  padding: 20px 0;
+  border-radius: 0;
+}
+
+.library-ask-empty .empty-state {
+  padding: 8px 0 12px;
+}
+
+/* Library: one column, no PRD sidebar, one composer surface. */
+.library-layout {
+  display: block;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.library-panel {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.library-composer,
+.library-composer .composer-panel,
+.composer-panel {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+.chat-composer {
+  border-radius: var(--card-radius);
+  border: 1px solid var(--line);
+  background: var(--bg-1);
+  padding: 10px 12px;
+}
+
+.research-toggle,
+.research-toggle.is-on {
+  border: 0;
+  border-top: 1px solid var(--line-soft);
+  border-radius: 0;
+  background: transparent;
+  padding: 10px 0;
+}
+
+/* Plan page: actions are one quiet row; cockpit is one card with rules. */
+.plan-toolbar {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin-bottom: 6px;
+  align-items: center;
+  gap: 8px 16px;
+}
+
+.plan-toolbar .select-sm {
+  min-width: 220px;
+}
+
+.plan-decision-cockpit {
+  padding: var(--card-pad);
+}
+
+.plan-route-row {
+  margin-top: 18px;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
+  gap: 28px;
+}
+
+.plan-route-primary,
+.plan-route-side {
+  background: transparent;
+  padding: 18px 0 0;
+}
+
+.plan-route-side {
+  border-left: 1px solid var(--line);
+  padding-left: 28px;
+}
+
+.plan-priority-grid {
+  margin-top: 20px;
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+  gap: 28px;
+}
+
+.plan-priority-card {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.plan-priority-card + .plan-priority-card {
+  border-left: 1px solid var(--line);
+  padding-left: 28px;
+}
+
+@media (max-width: 720px) {
+  .plan-route-side,
+  .plan-priority-card + .plan-priority-card {
+    border-left: 0;
+    padding-left: 0;
+  }
+  .plan-priority-card + .plan-priority-card {
+    border-top: 1px solid var(--line);
+    padding-top: 16px;
+  }
+}
+
+/* Action cards are rows with hairline separation, not stacked mini-cards. */
+.action-card {
+  padding: 16px 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+}
+
+.action-card:last-child {
+  padding-bottom: 0;
+}
+
+/* Questionnaire sections: one continuous card, header inside the surface. */
+.question-group {
+  padding: 24px var(--card-pad) 8px;
+  border: 1px solid var(--line);
+  background: var(--bg-1);
+}
+
+.question-group-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.question-group-head h3 {
+  margin: 0;
+}
+
+.question-group-head .question-count {
+  font-variant-numeric: tabular-nums;
+}
+
+.question {
+  padding: 18px 0;
+  border-top: 1px solid var(--line-soft);
+}
+
+.question:first-of-type {
+  border-top: 0;
+}
+
+.option {
+  border-radius: 10px;
+  padding: 12px 12px;
+}
+
+.option-row {
+  gap: 8px;
+}
+
+/* Sources: one filename per line. */
+.source-line-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.source-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 40px;
+  padding: 8px 0;
+  border-top: 1px solid var(--line-soft);
+  font-size: 13px;
+  color: var(--fg-1);
+}
+
+.source-line:first-child {
+  border-top: 0;
+}
+
+.source-line-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.source-line-meta {
+  flex: none;
+  font-size: 11px;
+  color: var(--fg-2);
+}
+
+/* Citation "full sources" is a filename list, one line each. */
+.citation-file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+}
+
+.citation-file-list li {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  padding: 7px 0;
+  border-top: 1px solid var(--line-soft);
+  font-size: 12.5px;
+  color: var(--fg-1);
+  min-width: 0;
+}
+
+.citation-file-list li:first-child {
+  border-top: 0;
+}
+
+.citation-file-no {
+  flex: none;
+  color: var(--fg-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.citation-file-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Footer: one line, no heavy band. */
+.site-footer {
+  margin-top: 48px;
+  padding: 20px 24px 24px;
+  border-top: 1px solid var(--line);
+  background: transparent;
+}
+
+.footer-note {
+  font-size: 12px;
+  color: var(--fg-2);
+}
+
+/* Section rhythm */
+.screen > .stack,
+.plan-ready,
+.plan-state-stack {
+  gap: var(--block-gap);
+}
+
+.screen {
+  padding-top: 32px;
+}
+
+@media (max-width: 720px) {
+  :root {
+    --card-pad: 18px;
+    --section-gap: 24px;
+  }
+  .screen {
+    padding-top: 22px;
+  }
+  .tab-list,
+  .plan-detail-tabs {
+    gap: 18px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tab-list::-webkit-scrollbar,
+  .plan-detail-tabs::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Inner form groups use a hairline, never a second card surface. */
+.pathway-editor {
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  padding: 20px 0 0;
+  margin-top: 8px;
+}
+
+.pathway-editor-head h3 {
+  font-size: var(--type-card-title);
+}
+
+.library-ask-empty .collapse {
+  border: 0;
+  background: transparent;
+}
+
+.library-ask-empty .collapse-head {
+  padding: 8px 0;
+  border-radius: 0;
+  color: var(--fg-2);
+}
+
+.library-ask-empty .collapse-body {
+  border-top: 0;
+  padding: 4px 0 0;
+}
+
+/* Compact filter chips row on the sources tab. */
+.filter-row {
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.filter-chip {
+  border-radius: 8px;
+  background: transparent;
+}
+
+.filter-chip.is-active {
+  background: var(--accent-soft);
+  border-color: var(--accent-line);
+}
+
+/* Message bubbles: assistant text on one calm surface. */
+.message-answer {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.message.is-assistant .message-content {
+  border-left: 2px solid var(--line);
+  padding-left: 14px;
+}
+
+.message.is-user .message-answer {
+  background: var(--bg-2);
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+
+/* Override the light-theme legacy card recipe for empty states and remove the
+   reserved 300px conversation height when there are no messages yet. */
+:root .empty-state {
+  background: transparent !important;
+  border: 0 !important;
+  padding: 16px 0;
+}
+
+:root .empty-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  color: var(--fg-2);
+}
+
+:root .library-conversation {
+  min-height: 0;
+  padding: 0;
+}
+
+.plan-toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.plan-toolbar-group > .micro {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.plan-toolbar-group > .select-sm {
+  min-height: 34px;
+}
+
+.library-page {
+  max-width: 820px;
+  margin: 0 auto;
+  padding-top: 36px;
+}
+
+.library-header {
+  padding-bottom: 20px;
+  margin-bottom: 18px;
+}
+
+@media (max-width: 900px) {
+  .library-page {
+    padding-top: 24px;
+  }
+}
+
+/* Plan tab body: cards on the page, disclosures as hairline rows. */
+.plan-detail-panel > .collapse {
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+}
+
+.plan-detail-panel > .collapse:last-child {
+  border-bottom: 0;
+}
+
+.plan-detail-panel > .collapse > .collapse-head {
+  padding: 14px 2px;
+}
+
+.plan-detail-panel > .collapse + .panel,
+.plan-detail-panel > .panel + .collapse {
+  margin-top: 8px;
+}
+
+.step-footer-bar-plain {
+  border: 0;
+  background: transparent;
+  padding: 8px 0 0;
+  margin-top: 12px;
+}
+
+/* Plan source tab: filename list is already compact; keep the panel calm. */
+.plan-detail-panel .citation-file-list {
+  margin-top: 2px;
+}
+
+/* The legacy light-theme patch re-paints .step-footer-bar as a card; keep the
+   plan footer as a bare action row in both themes. */
+:root:not([data-theme="dark"]) .step-footer-bar-plain,
+:root[data-theme="dark"] .step-footer-bar-plain,
+:root[data-theme="light"] .step-footer-bar-plain {
+  border: 0;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 8px 0 0;
+  margin-top: 12px;
+}
+
+/* Same legacy light-theme card rule targeted .plan-toolbar; keep it a bare row. */
+:root:not([data-theme="dark"]) .plan-toolbar,
+:root[data-theme="dark"] .plan-toolbar,
+:root[data-theme="light"] .plan-toolbar {
+  border: 0;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+}
+
+@media (max-width: 720px) {
+  .plan-toolbar {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .plan-toolbar-group {
+    flex: 1 1 100%;
+  }
+  .plan-toolbar-group .select-sm {
+    flex: 1 1 auto;
+  }
+}

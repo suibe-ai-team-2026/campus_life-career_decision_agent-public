@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { DirectionCard } from "@/lib/contracts/catalog";
 import type { DirectionId } from "@/lib/contracts/common";
 import type { Run } from "@/lib/contracts/run";
 import {
@@ -23,9 +22,6 @@ import {
   ASSESSMENT,
   ASSESSMENT_VERSION,
   DIRECTIONS,
-  DIRECTIONS_CATEGORY_VERSION,
-  DIRECTIONS_DISCLAIMER,
-  directionCoverage,
   getDirection
 } from "@/lib/content";
 import { scoreAssessment } from "@/lib/assessment/scoring";
@@ -44,12 +40,10 @@ import {
   useLocalProgress,
   type LocalProgressV1
 } from "@/lib/local-progress/store";
-import { Badge, Button, Callout, Collapse, Icon, ListBlock, RunStatus, SectionHeading } from "@/components/ui/primitives";
-import { CitationList } from "@/components/ui/CitationCard";
+import { Badge, Button, Callout, Collapse, Icon, RunStatus, SectionHeading } from "@/components/ui/primitives";
+import { CitationFileList, CitationText, hasCitationMarkers } from "@/components/ui/CitationCard";
 import { isDeterministicCompareFallback } from "@/lib/compare-display";
 import { StepHeader } from "./StepHeader";
-
-type CoverageMap = Partial<Record<DirectionId, DirectionCard["coverage"]>>;
 
 /** 置信度标签描述「已答信号是否集中」，不是适配程度或概率。 */
 const RECOMMEND_CONFIDENCE_LABELS: Record<DirectionConfidence, string> = {
@@ -100,11 +94,6 @@ export function DirectionsStep() {
   );
   const [favoriteError, setFavoriteError] = useState<string | null>(null);
   const [continueError, setContinueError] = useState<string | null>(null);
-  const [coverage, setCoverage] = useState<CoverageMap>({});
-  const [catalogMode, setCatalogMode] = useState<"seed" | "database" | null>(null);
-  const [catalogState, setCatalogState] = useState<"idle" | "loading" | "ready" | "error">(
-    cloudConfigured() ? "loading" : "idle"
-  );
   const [aiState, setAiState] = useState<"idle" | "running" | "done" | "error">("idle");
   const [aiRun, setAiRun] = useState<Run | null>(null);
   const [aiResult, setAiResult] = useState<CompareOutcome | null>(null);
@@ -113,27 +102,6 @@ export function DirectionsStep() {
   const [aiSlow, setAiSlow] = useState(false);
   const [aiDegraded, setAiDegraded] = useState(false);
   const aiAbort = useRef<AbortController | null>(null);
-
-  useEffect(() => {
-    if (!cloudConfigured()) return;
-    const controller = new AbortController();
-    setCatalogState("loading");
-    import("@/lib/api-client")
-      .then(({ fetchDirections }) => fetchDirections(controller.signal))
-      .then((catalog) => {
-        if (controller.signal.aborted) return;
-        const next: CoverageMap = {};
-        for (const card of catalog.directions) next[card.direction_id] = card.coverage;
-        setCoverage(next);
-        setCatalogMode(catalog.mode === "seed" ? "seed" : "database");
-        setCatalogState("ready");
-      })
-      .catch(() => {
-        if (controller.signal.aborted) return;
-        setCatalogState("error");
-      });
-    return () => controller.abort();
-  }, []);
 
   useEffect(
     () => () => {
@@ -265,56 +233,33 @@ export function DirectionsStep() {
   }
 
   const ready = hydrated && progress !== null;
-  // The long data-boundary sentence returned by the catalog is identical for
-  // every card. Render it once below the grid so it never stretches a nowrap
-  // badge (which used to force the whole page into horizontal scroll).
-  const coverageFootnote = useMemo(() => {
-    if (catalogState !== "ready") return null;
-    const first = DIRECTIONS.map((direction) => coverage[direction.direction_id]).find(Boolean);
-    return first?.label ?? null;
-  }, [catalogState, coverage]);
 
   return (
     <div className="screen">
       <StepHeader
         index={2}
         title="先看清六个方向的牌面"
-        description="含工作内容、已核技能、准备成本与数据缺口；收藏 2 到 3 个再比较。"
+        description="收藏 2 到 3 个方向做并排对比。"
         actions={
           <>
             <Button variant="ghost" size="md" onClick={() => router.push("/choice")}>
               跳过这一步
             </Button>
-            <Button variant="primary" size="md" onClick={handleContinue}>
+            <Button
+              variant="primary"
+              size="md"
+              onClick={handleContinue}
+              disabled={favorites.length < 2}
+              title={favorites.length < 2 ? "至少收藏 2 个方向后才能进入暂定方向" : undefined}
+            >
               进入暂定方向
               <Icon name="arrow-right" size={15} />
             </Button>
           </>
         }
-        meta={
-          <span className="step-meta-row">
-            <span className="step-meta-item">
-              <Icon name="list" size={13} /> 分类版本 {DIRECTIONS_CATEGORY_VERSION}
-            </span>
-            <span className="step-meta-item">
-              <Icon name="database" size={13} />
-              {catalogState === "ready" && catalogMode
-                ? `云端目录已载入（${catalogMode === "seed" ? "seed 回退" : "database"}）`
-                : catalogState === "loading"
-                  ? "正在载入云端目录…"
-                  : "云端证据未载入"}
-            </span>
-            <span className="step-meta-item">
-              <Icon name="heart" size={13} /> 已收藏 {favorites.length} / 3
-            </span>
-          </span>
-        }
       />
 
       <div className="stack">
-      <Collapse summary="六个方向是什么 · 资料口径" tone="quiet">
-        <p className="panel-note">{DIRECTIONS_DISCLAIMER}</p>
-      </Collapse>
 
       {!ready ? (
         <div className="skeleton-grid" aria-hidden="true">
@@ -329,9 +274,7 @@ export function DirectionsStep() {
               <div className="panel-head">
                 <div>
                   <h2 id="pathway-title">先比较路线，再进入方向</h2>
-                  <p className="panel-subtitle">硬约束先于兴趣与能力生效，不做录取或就业承诺。</p>
                 </div>
-                <Badge tone="accent">规则版本 {pathwayDecision.rulesVersion}</Badge>
               </div>
               {hiddenFavoriteCount > 0 ? (
                 <Callout tone="warn" title="有收藏方向与硬约束冲突">
@@ -343,7 +286,7 @@ export function DirectionsStep() {
                   <p className="small-note">当前较优先比较</p>
                   <h3>{pathwayDecision.leading?.label ?? "需要补充约束"}</h3>
                   <ul className="recommend-reasons">
-                    {(pathwayDecision.leading?.reasons ?? pathwayDecision.explanation).slice(0, 3).map((reason) => (
+                    {(pathwayDecision.leading?.reasons ?? pathwayDecision.explanation).slice(0, 1).map((reason) => (
                       <li key={reason}>{reason}</li>
                     ))}
                   </ul>
@@ -382,7 +325,6 @@ export function DirectionsStep() {
             <div className="panel-head">
               <div>
                 <h2 id="recommend-title">基于画像的待比较方向</h2>
-                <p className="panel-subtitle">程序按已答信号挑选，不是匹配打分。</p>
               </div>
               {recommendationResult && recommendationResult.recommendations.length > 0 ? (
                 <Badge tone="accent">待比较 {recommendationResult.recommendations.length} 个</Badge>
@@ -391,7 +333,7 @@ export function DirectionsStep() {
 
             {answersVersionStale ? (
               <Callout tone="warn" icon="refresh" title="问卷版本已更新">
-                <p>你保存的画像来自旧版问卷，旧答案不再参与方向推荐。先回第 1 步确认画像，再回来比较方向。</p>
+                <p>旧答案不再参与方向推荐，先回第 1 步确认画像。</p>
                 <div className="recommend-empty-actions">
                   <Button variant="secondary" size="sm" href="/explore">
                     去重新确认画像
@@ -401,9 +343,7 @@ export function DirectionsStep() {
               </Callout>
             ) : !recommendationResult || recommendationResult.insufficientSignals ? (
               <Callout tone="plain" icon="compass" title="画像信号还不够">
-                <p>
-                  方向推荐至少需要 3 个兴趣或 3 个能力信号。先回第 1 步补答几道题；也可以直接浏览下方完整目录，自己收藏方向。
-                </p>
+                <p>先回第 1 步补答几道题，也可以直接浏览下方目录收藏方向。</p>
                 <div className="recommend-empty-actions">
                   <Button variant="secondary" size="sm" href="/explore">
                     去补答
@@ -413,9 +353,7 @@ export function DirectionsStep() {
               </Callout>
             ) : recommendationResult.recommendations.length === 0 ? (
               <Callout tone="plain" icon="compass" title="当前画像还不足以给出待比较方向">
-                <p>
-                  已答信号与方向卡的工作内容对应不够明确。可以先浏览下方完整目录，或回第 1 步补充能力自评与经历后再比较。
-                </p>
+                <p>可以先浏览下方完整目录，或回第 1 步补充能力自评与经历。</p>
                 <div className="recommend-empty-actions">
                   <Button variant="secondary" size="sm" href="/explore">
                     回第 1 步补画像
@@ -426,9 +364,7 @@ export function DirectionsStep() {
             ) : (
               <>
                 {favorites.length >= 3 ? (
-                  <p className="panel-note">
-                    比较位已满（3 / 3）：先移除一个已收藏方向，再加入新的推荐方向。已收藏的方向不会因为换推荐而消失。
-                  </p>
+                  <p className="panel-note">比较位已满：先移除一个已收藏方向，再添加新的。</p>
                 ) : null}
                 <div className="recommend-grid">
                   {recommendationResult.recommendations.map((recommendation) => {
@@ -450,7 +386,7 @@ export function DirectionsStep() {
                         <div className="direction-block">
                           <p className="direction-label">相符之处</p>
                           <ul className="recommend-reasons">
-                            {recommendation.reasons.slice(0, 3).map((reason) => (
+                            {recommendation.reasons.slice(0, 1).map((reason) => (
                               <li key={reason}>{reason}</li>
                             ))}
                           </ul>
@@ -461,26 +397,12 @@ export function DirectionsStep() {
                               <Icon name="alert" size={13} /> 待补足
                             </p>
                             <ul className="gap-list recommend-gaps">
-                              {recommendation.gaps.map((gap) => (
+                              {recommendation.gaps.slice(0, 1).map((gap) => (
                                 <li key={gap}>{gap}</li>
                               ))}
                             </ul>
                           </div>
                         ) : null}
-                        <Collapse summary="依据与边界" tone="quiet">
-                          {recommendation.matchedSignals.evidence.length > 0 ? (
-                            <p className="panel-note recommend-evidence">
-                              <Icon name="check" size={13} /> 你提供过相关经历：
-                              {recommendation.matchedSignals.evidence.join("、")}（未经第三方验证）
-                            </p>
-                          ) : null}
-                          <p className="recommend-boundary">
-                            <Icon name="info" size={13} /> {recommendation.boundaries[2]}
-                          </p>
-                          <p className="recommend-boundary">
-                            <Icon name="database" size={13} /> {recommendation.boundaries[1]}
-                          </p>
-                        </Collapse>
                         <div className="recommend-card-actions">
                           <Button
                             variant={isFavorite ? "ghost" : "primary"}
@@ -505,10 +427,6 @@ export function DirectionsStep() {
                     );
                   })}
                 </div>
-                <p className="coverage-footnote recommend-rule-note">
-                  <Icon name="database" size={13} /> 规则版本 {recommendationResult.rulesVersion} · 分类版本{" "}
-                  {DIRECTIONS_CATEGORY_VERSION}；依据方向卡字段，不是匹配打分。
-                </p>
               </>
             )}
           </section>
@@ -526,8 +444,6 @@ export function DirectionsStep() {
                 const isFavorite = favorites.includes(direction.direction_id);
                 const exclusionReason = excludedDirections[direction.direction_id];
                 const excluded = Boolean(exclusionReason);
-                const coverageView = directionCoverage(direction, coverage[direction.direction_id] ?? null);
-                const coverageBadge = catalogState === "loading" ? "云端证据载入中" : coverageView.badgeLabel;
                 return (
                   <article
                     className={
@@ -577,8 +493,7 @@ export function DirectionsStep() {
                       </div>
                     </div>
                     <p className="micro">准备成本：{direction.preparation_cost}</p>
-                    <p className="micro">数据缺口：{direction.data_gaps.join("；")}</p>
-                    <Collapse summary="工作内容、适用范围与数据覆盖" tone="quiet">
+                    <Collapse summary="工作内容与适用范围" tone="quiet">
                       <div className="direction-block">
                         <p className="direction-label">日常工作内容</p>
                         <div className="chip-row">
@@ -593,37 +508,20 @@ export function DirectionsStep() {
                         <p className="direction-label">适用范围</p>
                         <p className="direction-text">{direction.applicability}</p>
                       </div>
-                      <div className="coverage-line">
-                        <Badge tone={coverageView.pending || catalogState !== "ready" ? "warn" : "ok"}>{coverageBadge}</Badge>
-                        {!coverageView.pending && catalogState === "ready" ? (
-                          <span className="coverage-counts">
-                            同专业精确记录 {coverageView.exactMajorRecords}，官方记录 {coverageView.officialRecords}，招聘要求{" "}
-                            {coverageView.jobRequirements}
-                          </span>
-                        ) : (
-                          <span className="coverage-counts">不展示数字，避免把缺口误读为 0</span>
-                        )}
-                      </div>
-                      <p className="micro">来源条目 {direction.source_ids.length}</p>
                     </Collapse>
                   </article>
                 );
               })}
             </div>
-            {coverageFootnote ? (
-              <p className="coverage-footnote">
-                <Icon name="database" size={13} /> 数据覆盖口径：{coverageFootnote}
-              </p>
-            ) : null}
           </section>
 
           {favoriteError ? (
-            <Callout tone="warn" title="收藏数量已达上限">
+            <Callout tone="warn" title="无法收藏这个方向">
               <p>{favoriteError}</p>
             </Callout>
           ) : null}
           {continueError ? (
-            <Callout tone="warn" title="还差一点">
+            <Callout tone="danger" title="还差一点">
               <p>{continueError}</p>
             </Callout>
           ) : null}
@@ -636,7 +534,13 @@ export function DirectionsStep() {
                 </h2>
               </div>
               <div className="favorites-actions">
-                <Button variant="primary" size="sm" onClick={handleContinue} disabled={favorites.length < 2}>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={handleContinue}
+                  disabled={favorites.length < 2}
+                  title={favorites.length < 2 ? "至少收藏 2 个方向后才能进入暂定方向" : undefined}
+                >
                   进入暂定方向
                 </Button>
                 <Button variant="ghost" size="sm" onClick={() => router.push("/choice")}>
@@ -663,7 +567,7 @@ export function DirectionsStep() {
                 ))}
               </div>
             )}
-            <p className="panel-note">收藏仅存本设备，可随时增删（上限 3 个）。</p>
+            <p className="panel-note">最多收藏 3 个，可随时增删。</p>
           </section>
 
           {favoriteDirections.length >= 2 ? (
@@ -671,7 +575,6 @@ export function DirectionsStep() {
               <div className="panel-head">
                 <div>
                   <h2 id="compare-title">并排对比 {favoriteDirections.length} 个收藏</h2>
-                  <p className="panel-subtitle">对比已归档资料，不预测成功率。</p>
                 </div>
               </div>
               <div className="compare-scroll">
@@ -727,29 +630,6 @@ export function DirectionsStep() {
                         <td key={direction.direction_id}>{direction.applicability}</td>
                       ))}
                     </tr>
-                    <tr>
-                      <th scope="row">数据缺口</th>
-                      {favoriteDirections.map((direction) => (
-                        <td key={direction.direction_id}>
-                          <ul className="compare-list compare-list-warn">
-                            {direction.data_gaps.map((item) => (
-                              <li key={item}>{item}</li>
-                            ))}
-                          </ul>
-                        </td>
-                      ))}
-                    </tr>
-                    <tr>
-                      <th scope="row">数据覆盖</th>
-                      {favoriteDirections.map((direction) => {
-                        const view = directionCoverage(direction, coverage[direction.direction_id] ?? null);
-                        return (
-                          <td key={direction.direction_id}>
-                            <Badge tone={view.pending ? "warn" : "ok"}>{catalogState === "loading" ? "载入中" : view.badgeLabel}</Badge>
-                          </td>
-                        );
-                      })}
-                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -758,9 +638,6 @@ export function DirectionsStep() {
                 <div className="ai-compare-copy">
                   <p className="panel-title">
                     <Icon name="sparkles" size={15} /> AI 对比解释
-                  </p>
-                  <p className="panel-note">
-                    把已收藏方向提交为一次对比任务；AI 只解释差异，不改写事实。
                   </p>
                 </div>
                 {cloudConfigured() ? (
@@ -773,9 +650,7 @@ export function DirectionsStep() {
                     <Button variant="secondary" size="md" disabled title="云端生成未启用">
                       <Icon name="sparkles" size={15} /> AI 对比解释
                     </Button>
-                    <p className="panel-note">
-                      云端生成未启用：本地演示模式下不调用 AI。上方资料并排对比可以完整使用。
-                    </p>
+                    <p className="panel-note">云端生成未启用，上方资料对比可正常使用。</p>
                   </div>
                 )}
               </div>
@@ -804,8 +679,7 @@ export function DirectionsStep() {
               {aiState === "error" && aiError ? (
                 <Callout tone="warn" title="AI 对比暂不可用">
                   <p>{aiError}</p>
-                  <p>可以继续使用上方的资料并排对比；它不依赖云端。</p>
-                  {aiRequestId ? <p className="panel-note">问题编号：{aiRequestId}（反馈时附上可帮助定位）</p> : null}
+                  {aiRequestId ? <p className="panel-note">问题编号：{aiRequestId}</p> : null}
                   <div className="ai-error-actions">
                     <Button variant="secondary" size="sm" onClick={handleAiCompare}>
                       <Icon name="sparkles" size={14} /> 重试生成
@@ -828,61 +702,18 @@ export function DirectionsStep() {
                       </div>
                     </Callout>
                   ) : null}
-                  <div className="explanation-text">{aiResult.comparison}</div>
-                  {aiResult.directionIds.length > 0 ? (
-                    <p className="panel-note">
-                      本次对比方向：
-                      {aiResult.directionIds
-                        .map((id) => DIRECTIONS.find((direction) => direction.direction_id === id)?.title ?? id)
-                        .join(" / ")}
-                    </p>
+                  <div className="explanation-text">
+                    <CitationText text={aiResult.comparison} citations={aiResult.citations} />
+                  </div>
+                  {aiResult.citations.length > 0 && !hasCitationMarkers(aiResult.comparison, aiResult.citations) ? (
+                    <Collapse summary={`来源 · ${aiResult.citations.length} 条`} tone="quiet">
+                      <CitationFileList citations={aiResult.citations} />
+                    </Collapse>
                   ) : null}
-                  <CitationList citations={aiResult.citations} dense />
                 </div>
               ) : null}
             </section>
           ) : null}
-
-          <Collapse summary="哪些数字缺席，以及为什么缺席" tone="quiet">
-            <div className="boundary-columns">
-              <ListBlock
-                items={[
-                  "方向卡展示的是产品导航分类下的岗位族，不是官方就业分类。",
-                  "数据覆盖数字只在云端返回已核验记录时显示；否则显示「未载入 / 待载入」。",
-                  "不展示就业率、薪资、录取概率、报考资格结论或院校排名。",
-                  "工作内容与技能来自已归档资料；具体企业招聘偏好仍需你按招聘快照核对。"
-                ]}
-                tone="warn"
-              />
-              <div className="boundary-note">
-                <p className="panel-title">
-                  <Icon name="database" size={15} /> 当前数据状态
-                </p>
-                <ul className="kv-list">
-                  <li>
-                    <span>分类版本</span>
-                    <strong>{DIRECTIONS_CATEGORY_VERSION}</strong>
-                  </li>
-                  <li>
-                    <span>本地牌面</span>
-                    <strong>已载入 seed 快照</strong>
-                  </li>
-                  <li>
-                    <span>云端覆盖</span>
-                    <strong>
-                      {catalogState === "ready"
-                        ? catalogMode === "seed"
-                          ? "云端返回 seed 回退"
-                          : "云端数据库目录"
-                        : catalogState === "loading"
-                          ? "载入中"
-                          : "未载入"}
-                    </strong>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </Collapse>
         </>
       )}
       </div>
@@ -890,13 +721,19 @@ export function DirectionsStep() {
       <div className="step-footer-bar">
         <div className="step-footer-note">
           <Icon name="info" size={14} />
-          <span>已收藏 {favorites.length} 个；至少 2 个可并排比较；下一步从收藏中选 1 个暂定。</span>
+          <span>已收藏 {favorites.length} 个 · 至少 2 个可比较</span>
         </div>
         <div className="step-footer-actions">
           <Button variant="ghost" size="md" onClick={() => router.push("/choice")}>
             跳过这一步
           </Button>
-          <Button variant="primary" size="md" onClick={handleContinue}>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={handleContinue}
+            disabled={favorites.length < 2}
+            title={favorites.length < 2 ? "至少收藏 2 个方向后才能进入暂定方向" : undefined}
+          >
             进入暂定方向
             <Icon name="arrow-right" size={15} />
           </Button>

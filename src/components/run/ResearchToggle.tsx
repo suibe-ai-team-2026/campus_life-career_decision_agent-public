@@ -8,8 +8,8 @@ export type ResearchToggleProps = {
   onChange: (next: boolean) => void;
   /** Short switch label, e.g. 「联网补充」. */
   label: string;
-  /** One-line explanation shown under the switch. Must mention external sites + unverified results. */
-  description: string;
+  /** Optional one-line explanation shown under the switch. */
+  description?: string;
   disabled?: boolean;
   className?: string;
 };
@@ -45,7 +45,7 @@ export function ResearchToggle({ checked, onChange, label, description, disabled
           <span className="research-toggle-knob" />
         </span>
       </label>
-      <p className="research-toggle-note micro">{description}</p>
+      {description ? <p className="research-toggle-note micro">{description}</p> : null}
     </div>
   );
 }

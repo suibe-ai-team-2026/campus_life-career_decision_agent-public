@@ -1,25 +1,24 @@
 import Link from "next/link";
-import { Icon } from "@/components/ui/primitives";
-import { RESOURCE_BOUNDARIES } from "@/lib/content";
 
 export function SiteFooter() {
   return (
     <footer className="site-footer">
       <div className="site-footer-inner">
         <div className="footer-row">
-          <span className="footer-brand">知途 Campus Pathway</span>
+          <span className="footer-brand">
+            知途 <span lang="en">Campus Pathway</span>
+          </span>
           <nav className="footer-links" aria-label="页脚导航">
             <Link href="/">首页</Link>
             <Link href="/explore">开始探索</Link>
             <Link href="/library">资料库</Link>
             <Link href="/plan">行动方案</Link>
           </nav>
-          <span className="footer-copy">© {new Date().getFullYear()} 比赛 MVP</span>
+          <span className="footer-copy">
+            © {new Date().getFullYear()} 知途 · 比赛作品
+          </span>
         </div>
-        <p className="footer-note">
-          <Icon name="shield" size={13} />
-          {RESOURCE_BOUNDARIES[0]}；不构成正式测评、就业承诺或报考资格结论
-        </p>
+        <p className="footer-note">结果仅供参考，不构成测评、就业或报考结论。</p>
       </div>
     </footer>
   );

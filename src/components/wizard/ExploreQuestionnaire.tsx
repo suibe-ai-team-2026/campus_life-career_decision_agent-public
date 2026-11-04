@@ -3,8 +3,8 @@
 import type { AssessmentQuestion, AssessmentSection } from "@/lib/contracts/catalog";
 import type { Answers, AnswerValue } from "@/lib/contracts/profile";
 import { ABILITY_DIMENSIONS, ABILITY_SIGNALS, ABILITY_TITLES } from "@/lib/assessment/scoring";
-import { ASSESSMENT, ASSESSMENT_SECTION_ESTIMATES, ASSESSMENT_SECTION_ORDER } from "@/lib/content";
-import { Badge, Collapse } from "@/components/ui/primitives";
+import { ASSESSMENT, ASSESSMENT_SECTION_ORDER } from "@/lib/content";
+import { Badge } from "@/components/ui/primitives";
 
 /**
  * 16 项职业探索自我画像的作答区。
@@ -155,7 +155,6 @@ function SingleQuestion({ question, index, answers, onAnswer }: QuestionProps) {
         hasAnswer={selected !== null}
         onClear={() => onAnswer(question.question_id, null)}
       />
-      {question.hint ? <p className="field-hint">{question.hint}</p> : null}
       <div className="option-row option-row-single" role="radiogroup" aria-label={question.prompt}>
         {question.options.map((option) => {
           const isSelected = selected !== null && String(selected) === String(option.value);
@@ -207,8 +206,8 @@ function RankQuestion({ question, index, answers, onAnswer }: QuestionProps) {
         onClear={() => onAnswer(question.question_id, null)}
       />
       <p className="field-hint">
-        {question.hint ?? "选择顺序即重要程度；再次点击可取消。"} 已选 {selected.length} / {maxSelections}
-        {limitReached ? "，已选满；再次点击已选项可取消。" : "。"}
+        已选 {selected.length} / {maxSelections}
+        {limitReached ? "，再次点击已选项可取消" : ""}
       </p>
       <div className="dimension-list rank-list" role="group" aria-label={question.prompt}>
         {question.options.map((option) => {
@@ -280,7 +279,6 @@ function TextQuestion({ question, index, answers, onAnswer }: QuestionProps) {
         />
         <div className="chip-row text-answer-meta">
           <span className="question-count">{experience.text.length} / 300 字</span>
-          <span className="question-count">不填写也可以跳过</span>
         </div>
       </div>
       {tagOptions.length > 0 ? (
@@ -304,7 +302,6 @@ function TextQuestion({ question, index, answers, onAnswer }: QuestionProps) {
           </div>
         </div>
       ) : null}
-      {question.hint ? <p className="field-hint">{question.hint}</p> : null}
     </div>
   );
 }
@@ -314,15 +311,10 @@ export function ExploreQuestionnaire({ answers, onAnswer }: { answers: Answers; 
     <section className="question-section" aria-labelledby="questions-title">
       <div className="section-heading">
         <div className="section-heading-text">
-          <h2 id="questions-title">16 项必答，另有 1 项可选经历</h2>
-          <p className="section-description">按真实情况作答；1 到 5 分表示程度递增，不确定可跳过。</p>
+          <h2 id="questions-title">按真实情况作答</h2>
+          <p className="section-description">1 到 5 分表示程度递增，不确定可跳过。</p>
         </div>
       </div>
-      <Collapse summary="计分与漏答规则" tone="quiet">
-        <p className="panel-note">
-          漏答保留「未知」，不按 0 分处理，也不补成中间值；能力题是自评，有经历材料会单独标注，不把自评说成客观能力。
-        </p>
-      </Collapse>
 
       {ASSESSMENT_SECTION_ORDER.map((section) => {
         const dimension = ASSESSMENT.dimensions[section];
@@ -331,17 +323,13 @@ export function ExploreQuestionnaire({ answers, onAnswer }: { answers: Answers; 
         const required = questions.filter((question) => !question.optional);
         const answered = required.filter((question) => answers[question.question_id] !== undefined).length;
         return (
-          <fieldset className="question-group" key={section}>
-            <legend>
-              <span className="question-group-title">{dimension.title}</span>
+          <section className="question-group" key={section} aria-labelledby={`question-group-${section}`}>
+            <div className="question-group-head">
+              <h3 id={`question-group-${section}`}>{dimension.title}</h3>
               <span className="question-count">
-                已答 {answered} / {required.length}
+                {answered} / {required.length}
               </span>
-              <Badge tone="muted">{ASSESSMENT_SECTION_ESTIMATES[section]}</Badge>
-            </legend>
-            <Collapse summary="维度说明" tone="quiet">
-              <p className="question-group-desc">{dimension.description}</p>
-            </Collapse>
+            </div>
             {questions.map((question) => {
               const index = REQUIRED_QUESTION_INDEX.get(question.question_id) ?? null;
               if (question.kind === "rank") {
@@ -387,7 +375,7 @@ export function ExploreQuestionnaire({ answers, onAnswer }: { answers: Answers; 
                 />
               );
             })}
-          </fieldset>
+          </section>
         );
       })}
     </section>

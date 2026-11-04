@@ -2,19 +2,13 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import {
-  RESET_KEEPS,
-  RESET_SCOPE,
-  resetAllLocalProgress,
-  useLocalProgress
-} from "@/lib/local-progress/store";
+import { resetAllLocalProgress } from "@/lib/local-progress/store";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { Icon } from "@/components/ui/primitives";
 
 /**
- * "重新开始" with an explicit reset scope and confirmation. Clears only this
- * app's local keys; cloud plans already generated under the anonymous session
- * are not deleted from the server.
+ * "重新开始" clears only this app's local keys; cloud plans already generated
+ * under the anonymous session are not deleted from the server.
  */
 export function RestartProgress({
   label = "重新开始",
@@ -28,7 +22,6 @@ export function RestartProgress({
   const [open, setOpen] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const router = useRouter();
-  const { progress } = useLocalProgress();
 
   function handleConfirm() {
     resetAllLocalProgress();
@@ -59,39 +52,11 @@ export function RestartProgress({
       <ConfirmDialog
         open={open}
         title="重新开始五步向导？"
-        description="这会清除下列保存在本设备的数据，且无法撤销。"
+        description="会清除本设备保存的进度与作答，且无法撤销；已生成的方案保留在云端。"
         confirmLabel="确认清除并重新开始"
         onConfirm={handleConfirm}
         onCancel={() => setOpen(false)}
-      >
-        <div className="reset-scope">
-          <p className="reset-scope-heading">将清除</p>
-          <ul className="reset-scope-list">
-            {RESET_SCOPE.map((item) => (
-              <li key={item}>
-                <Icon name="cross" size={13} />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-          <p className="reset-scope-heading">会保留</p>
-          <ul className="reset-scope-list reset-scope-list-keep">
-            {RESET_KEEPS.map((item) => (
-              <li key={item}>
-                <Icon name="check" size={13} />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-          {progress ? (
-            <p className="reset-current">
-              当前已有进度：{progress.profile.school || "未填学校"} · 收藏 {progress.favorites.length} 个方向
-              {progress.provisional_direction ? " · 已暂定方向" : ""}
-              {progress.exported_at ? " · 已导出过 PDF" : ""}
-            </p>
-          ) : null}
-        </div>
-      </ConfirmDialog>
+      />
     </>
   );
 }

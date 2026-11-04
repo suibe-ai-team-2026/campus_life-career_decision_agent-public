@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import type { Citation } from "@/lib/contracts/run";
 import type { Source } from "@/lib/contracts/source";
 import { toTraceEvents, type TraceEvent } from "@/lib/agent-trace";
+import { extractionStatusLabel, sourceScopeLabel } from "@/lib/source-labels";
 import {
   cloudConfigured,
   createAnonymousSession,
@@ -17,12 +19,7 @@ import {
   submitRun,
   type RunEvent
 } from "@/lib/api-client";
-import {
-  DATA_SOURCES,
-  LIBRARY_CATEGORIES,
-  LIBRARY_EXAMPLE_QUESTIONS,
-  RESOURCE_BOUNDARIES
-} from "@/lib/content";
+import { LIBRARY_CATEGORIES, LIBRARY_EXAMPLE_QUESTIONS } from "@/lib/content";
 import {
   Badge,
   Button,
@@ -30,11 +27,10 @@ import {
   Collapse,
   EmptyState,
   Icon,
-  ListBlock,
   RunStatus,
   formatDateTime
 } from "@/components/ui/primitives";
-import { CitationList, verificationDisplay } from "@/components/ui/CitationCard";
+import { CitationText, verificationDisplay } from "@/components/ui/CitationCard";
 import { AgentTrace } from "@/components/run/AgentTrace";
 import { ResearchToggle } from "@/components/run/ResearchToggle";
 import { useHydrated } from "@/lib/local-progress/store";
@@ -59,16 +55,30 @@ function messageId(): string {
   return `msg-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-const TAB_ITEMS: { id: TabId; label: string; hint: string }[] = [
-  { id: "ask", label: "资料问答", hint: "只用已载入的生涯资料回答，必须带引用" },
-  { id: "sources", label: "来源查看", hint: "查看来源元数据、核验状态与版本" },
-  { id: "reports", label: "官方报告筛选", hint: "按资料类型筛选已载入的官方材料" }
+const TAB_ITEMS: { id: TabId; label: string }[] = [
+  { id: "ask", label: "资料问答" },
+  { id: "sources", label: "来源查看" },
+  { id: "reports", label: "官方报告筛选" }
 ];
 
 export function LibraryTool() {
   const cloud = cloudConfigured();
   const hydrated = useHydrated();
   const [activeTab, setActiveTab] = useState<TabId>("ask");
+
+  function handleTabKey(event: ReactKeyboardEvent<HTMLButtonElement>, index: number) {
+    const last = TAB_ITEMS.length - 1;
+    let next: number | null = null;
+    if (event.key === "ArrowRight") next = index === last ? 0 : index + 1;
+    else if (event.key === "ArrowLeft") next = index === 0 ? last : index - 1;
+    else if (event.key === "Home") next = 0;
+    else if (event.key === "End") next = last;
+    if (next === null) return;
+    event.preventDefault();
+    const tab = TAB_ITEMS[next];
+    setActiveTab(tab.id);
+    window.requestAnimationFrame(() => document.getElementById(`library-tab-${tab.id}`)?.focus());
+  }
   const [messages, setMessages] = useState<AskMessage[]>([]);
   const [question, setQuestion] = useState("");
   const [composerError, setComposerError] = useState<string | null>(null);
@@ -79,6 +89,7 @@ export function LibraryTool() {
   const [sources, setSources] = useState<Source[] | null>(null);
   const [sourcesState, setSourcesState] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const [sourcesError, setSourcesError] = useState<string | null>(null);
+  const [sourcesReloadToken, setSourcesReloadToken] = useState(0);
   const [filterId, setFilterId] = useState<string>("all");
   const abortRef = useRef<AbortController | null>(null);
   const messageEndRef = useRef<HTMLDivElement | null>(null);
@@ -113,7 +124,14 @@ export function LibraryTool() {
       });
     return () => controller.abort();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTab, cloud]);
+  }, [activeTab, cloud, sourcesReloadToken]);
+
+  function reloadSources() {
+    setSources(null);
+    setSourcesError(null);
+    setSourcesState("idle");
+    setSourcesReloadToken((token) => token + 1);
+  }
 
   useEffect(() => {
     if (!asking) return;
@@ -263,13 +281,8 @@ export function LibraryTool() {
         <div className="library-conversation" aria-live="polite">
           {messages.length === 0 ? (
             <div className="library-ask-empty">
-              <EmptyState
-                icon="book"
-                compact
-                title="只回答与生涯资料有关的问题"
-                description="只用已载入的生涯资料回答，必须带引用。"
-              />
-              <Collapse summary={<>示例问题</>}>
+              <EmptyState icon="book" compact title="问一个与生涯资料有关的问题" />
+              <Collapse summary="示例问题" tone="quiet">
                 <div className="prompt-chips">
                   {LIBRARY_EXAMPLE_QUESTIONS.map((example) => (
                     <button
@@ -312,32 +325,13 @@ export function LibraryTool() {
                     </div>
                   ) : (
                     <div className="message-content">
-                      <div className="message-answer">{message.content}</div>
-                      {message.citations && message.citations.length > 0 ? (
-                        <div className="message-citations">
-                          <p className="panel-title">
-                            <Icon name="list" size={14} /> 引用（{message.citations.length} 条）
-                          </p>
-                          <CitationList citations={message.citations} dense />
-                        </div>
-                      ) : null}
+                      <div className="message-answer">
+                        <CitationText text={message.content} citations={message.citations} />
+                      </div>
                     </div>
                   )}
                   {message.trace && message.trace.length > 0 ? (
-                    <Collapse
-                      summary={
-                        <>
-                          <Icon name="activity" size={13} />
-                          执行轨迹
-                          <span className="message-trace-meta">
-                            {message.traceStatus === "succeeded" ? "已完成" : message.traceStatus === "failed" ? "失败" : "已结束"} ·{" "}
-                            {message.trace.length} 条活动
-                          </span>
-                        </>
-                      }
-                    >
-                      <AgentTrace events={message.trace} running={false} status={message.traceStatus ?? null} />
-                    </Collapse>
+                    <AgentTrace events={message.trace} running={false} status={message.traceStatus ?? null} />
                   ) : null}
                 </li>
               ))}
@@ -347,9 +341,7 @@ export function LibraryTool() {
                     <span className="message-role">知途资料助手</span>
                   </div>
                   <RunStatus label="正在生成回答" detail="首次唤醒约 30 到 90 秒" />
-                  <Collapse summary={<>执行轨迹（进行中）</>}>
-                    <AgentTrace events={askTrace} running status={askRunStatus} />
-                  </Collapse>
+                  <AgentTrace events={askTrace} running status={askRunStatus} />
                 </li>
               ) : null}
             </ul>
@@ -372,7 +364,6 @@ export function LibraryTool() {
             onChange={setWebSupplement}
             disabled={!cloud || asking}
             label="联网补充"
-            description="检索实时网页，结果未核验并单独标注；默认只用已载入资料。"
             className="composer-options"
           />
           <div className="chat-composer">
@@ -418,49 +409,22 @@ export function LibraryTool() {
     );
   }
 
-  function sourceCard(source: Source) {
+  function sourceLine(source: Source) {
     const verification = verificationDisplay(source.verification_status);
     const officialUrl = safeExternalUrl(source.canonical_url);
     return (
-      <article className="source-card" key={source.source_id}>
-        <header className="source-head">
-          <div>
-            <h3>{source.title}</h3>
-            <p className="source-meta">
-              {source.publisher ? <span>{source.publisher}</span> : null}
-              {source.source_scope ? <span>{source.source_scope}</span> : null}
-              <span>{source.source_id}</span>
-            </p>
-          </div>
-          <div className="source-badges">
-            <Badge tone={source.visibility === "approved_reference" ? "ok" : "muted"}>
-              {source.visibility === "approved_reference" ? "共享参考" : "私有来源"}
-            </Badge>
-            <Badge tone={verification.tone}>{verification.label}</Badge>
-          </div>
-        </header>
-        {source.versions.length > 0 ? (
-          <ul className="source-versions">
-            {source.versions.map((version) => (
-              <li key={version.source_version_id}>
-                <span className="source-version-id">{version.source_version_id.slice(0, 8)}…</span>
-                <span>解析状态：{version.extraction_status}</span>
-                <span>检索：{version.retrieved_at ? formatDateTime(version.retrieved_at) : "未提供"}</span>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="panel-note">该来源暂无版本元数据。</p>
-        )}
-        {officialUrl ? (
-          <a className="link-inline" href={officialUrl} target="_blank" rel="noopener noreferrer">
-            官方链接（由服务端返回）
-            <Icon name="external" size={13} />
-          </a>
-        ) : (
-          <p className="panel-note">服务端未提供可安全展示的官方链接；本页面不会拼接 URL。</p>
-        )}
-      </article>
+      <li className="source-line" key={source.source_id}>
+        <span className="source-line-title" title={source.title}>
+          {officialUrl ? (
+            <a href={officialUrl} target="_blank" rel="noopener noreferrer">
+              {source.title}
+            </a>
+          ) : (
+            source.title
+          )}
+        </span>
+        <span className="source-line-meta">{verification.label}</span>
+      </li>
     );
   }
 
@@ -506,7 +470,7 @@ export function LibraryTool() {
         {cloud && sourcesState === "error" ? (
           <Callout tone="danger" title="来源目录加载失败">
             <p>{sourcesError ?? "请稍后重试。"}</p>
-            <Button variant="secondary" size="sm" onClick={() => setSourcesState("idle")}>
+            <Button variant="secondary" size="sm" onClick={reloadSources}>
               重新加载
             </Button>
           </Callout>
@@ -540,7 +504,7 @@ export function LibraryTool() {
         ) : null}
 
         {filteredSources.length > 0 ? (
-          <div className="source-list">{filteredSources.map(sourceCard)}</div>
+          <ul className="source-line-list">{filteredSources.map(sourceLine)}</ul>
         ) : sourcesState === "ready" ? (
           <EmptyState
             icon="database"
@@ -557,8 +521,7 @@ export function LibraryTool() {
     <div className="library-page">
       <header className="library-header">
         <div>
-          <h1>先把资料来源看清楚，再谈结论</h1>
-          <p className="library-lead micro">只做生涯资料问答、来源查看与官方报告筛选。</p>
+          <h1>资料库</h1>
         </div>
         <Badge tone={cloud ? "ok" : "warn"}>{cloud ? "云端知识库已启用" : "本地演示模式"}</Badge>
       </header>
@@ -566,19 +529,20 @@ export function LibraryTool() {
       <div className="library-layout">
         <div className="library-main">
           <div className="tab-list" role="tablist" aria-label="资料库功能">
-            {TAB_ITEMS.map((tab) => (
+            {TAB_ITEMS.map((tab, index) => (
               <button
                 key={tab.id}
                 type="button"
                 role="tab"
                 id={`library-tab-${tab.id}`}
                 aria-selected={activeTab === tab.id}
-                aria-controls={`library-panel-${tab.id}`}
+                aria-controls={activeTab === tab.id ? `library-panel-${tab.id}` : undefined}
+                tabIndex={activeTab === tab.id ? 0 : -1}
                 className={activeTab === tab.id ? "tab-button is-active" : "tab-button"}
                 onClick={() => setActiveTab(tab.id)}
+                onKeyDown={(event) => handleTabKey(event, index)}
               >
                 <span>{tab.label}</span>
-                <small>{tab.hint}</small>
               </button>
             ))}
           </div>
@@ -596,43 +560,6 @@ export function LibraryTool() {
           </section>
         </div>
 
-        <aside className="library-aside" aria-label="资料库说明">
-          <Collapse summary={<><Icon name="shield" size={15} /> 数据与引用边界</>}>
-            <ul className="boundary-list">
-              {RESOURCE_BOUNDARIES.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-            <p className="micro">引用编号由服务端分配；联网补充的结果标注「未核验」。</p>
-          </Collapse>
-          <Collapse summary={<><Icon name="database" size={15} /> 计划中的数据来源</>}>
-            <ListBlock items={DATA_SOURCES.slice()} />
-          </Collapse>
-          <Collapse summary={<><Icon name="list" size={15} /> 当前状态</>}>
-            <ul className="kv-list">
-              <li>
-                <span>知识库</span>
-                <strong>{cloud ? "云端已配置" : "本地演示模式"}</strong>
-              </li>
-              <li>
-                <span>来源条目</span>
-                <strong>{sources ? `${sources.length} 条` : cloud ? "尚未加载" : "云端未载入"}</strong>
-              </li>
-              <li>
-                <span>问答历史</span>
-                <strong>{messages.filter((message) => !message.isError).length} 条</strong>
-              </li>
-              <li>
-                <span>联网补充</span>
-                <strong>{webSupplement ? "开启" : "关闭"}</strong>
-              </li>
-              <li>
-                <span>页面状态</span>
-                <strong>{hydrated ? "就绪" : "加载中"}</strong>
-              </li>
-            </ul>
-          </Collapse>
-        </aside>
       </div>
     </div>
   );

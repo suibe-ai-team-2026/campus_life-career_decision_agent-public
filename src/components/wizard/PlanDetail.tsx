@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import type { Plan, PlanAction, PlanLead, PlanResult, VerificationLabel } from "@/lib/contracts/plan";
 import type { Citation } from "@/lib/contracts/run";
 import type { DirectionId } from "@/lib/contracts/common";
 import { PLAN_WINDOW_LABELS, PLAN_WINDOW_ORDER, getDirection } from "@/lib/content";
 import { Badge, Button, Callout, Collapse, EmptyState, Icon, formatDateTime, formatDate } from "@/components/ui/primitives";
-import { CitationList } from "@/components/ui/CitationCard";
-import { formatPlanWarnings, summarizeDataGaps, summarizeEffort } from "@/lib/plan-display";
+import { CitationFileList, CitationText } from "@/components/ui/CitationCard";
 import { SourceUploadPanel } from "@/components/tools/SourceUploadPanel";
 import { ActionCard, type ActionOverrides } from "./PlanActionCard";
 
@@ -18,7 +18,7 @@ const PLAN_TABS: Array<{ id: PlanTab; label: string }> = [
   { id: "campus", label: "上经贸现实" },
   { id: "semester", label: "本学期执行" },
   { id: "roadmap", label: "四年路线" },
-  { id: "sources", label: "依据与边界" }
+  { id: "sources", label: "依据" }
 ];
 
 const VERIFICATION_LABELS: Record<VerificationLabel, string> = {
@@ -211,6 +211,20 @@ export function PlanDetail({
   regenerating?: boolean;
 }) {
   const [activeTab, setActiveTab] = useState<PlanTab>("direction");
+
+  function handleTabKey(event: ReactKeyboardEvent<HTMLButtonElement>, index: number) {
+    const last = PLAN_TABS.length - 1;
+    let next: number | null = null;
+    if (event.key === "ArrowRight") next = index === last ? 0 : index + 1;
+    else if (event.key === "ArrowLeft") next = index === 0 ? last : index - 1;
+    else if (event.key === "Home") next = 0;
+    else if (event.key === "End") next = last;
+    if (next === null) return;
+    event.preventDefault();
+    const tab = PLAN_TABS[next];
+    setActiveTab(tab.id);
+    window.requestAnimationFrame(() => document.getElementById(`plan-tab-${tab.id}`)?.focus());
+  }
   const version = pickCurrentVersion(plan);
   const overridesMap = (version?.user_overrides ?? {}) as Record<string, Record<string, unknown>>;
   const baselineById = new Map(result.actions.map((action) => [action.action_id, action]));
@@ -224,10 +238,6 @@ export function PlanDetail({
   })).filter((group) => group.actions.length > 0);
 
   const pendingVerification = result.actions.filter((action) => action.status === "pending_verification");
-  const effort = summarizeEffort(result.actions);
-  const gapSummary = summarizeDataGaps(result.actions);
-  const displayWarnings = formatPlanWarnings(result.warnings);
-  const isDataGapState = result.status === "data_unavailable";
   const topThirty = result.roadmap.find((stage) => stage.stage === "未来 30 天") ?? null;
   const currentStage = result.roadmap.find((stage) => stage.stage !== "未来 30 天") ?? null;
   const priorityItems = topThirty?.actions.slice(0, 3) ?? orderedActions.slice(0, 3).map((action) => action.title);
@@ -243,23 +253,12 @@ export function PlanDetail({
 
   return (
     <div className="plan-detail stack">
-      {isCached ? (
-        <Callout tone="warn" title="这是本设备缓存的方案">
-          <p className="small-note">缓存于 {formatDateTime(cachedAt)}；不会被当作新生成的方案。</p>
-        </Callout>
-      ) : null}
-
       <section className="plan-decision-cockpit" aria-labelledby="plan-decision-title">
         <div className="plan-decision-head">
           <div>
             <h2 id="plan-decision-title">
               {result.pathway?.label ?? "路线待补充"} · {direction?.title ?? directionId}
             </h2>
-            <div className="plan-summary-meta">
-              <Badge tone={status.tone}>{status.label}</Badge>
-              <span>未来 30 天优先做 {priorityItems.length} 件事</span>
-              <span>{pendingVerification.length + result.gaps.length} 项资料或资格待核验</span>
-            </div>
           </div>
           {onRegenerate ? (
             <Button variant="secondary" size="md" onClick={onRegenerate} disabled={regenerating}>
@@ -323,16 +322,18 @@ export function PlanDetail({
       </section>
 
       <div className="plan-detail-tabs" role="tablist" aria-label="方案内容">
-        {PLAN_TABS.map((tab) => (
+        {PLAN_TABS.map((tab, index) => (
           <button
             key={tab.id}
             id={`plan-tab-${tab.id}`}
             type="button"
             role="tab"
             aria-selected={activeTab === tab.id}
-            aria-controls={`plan-panel-${tab.id}`}
+            aria-controls={activeTab === tab.id ? `plan-panel-${tab.id}` : undefined}
+            tabIndex={activeTab === tab.id ? 0 : -1}
             className={activeTab === tab.id ? "plan-detail-tab is-active" : "plan-detail-tab"}
             onClick={() => setActiveTab(tab.id)}
+            onKeyDown={(event) => handleTabKey(event, index)}
           >
             <span>{tab.label}</span>
           </button>
@@ -372,11 +373,11 @@ export function PlanDetail({
               <div className="analysis-grid">
                 <article className="analysis-card">
                   <h3><Icon name="compass" size={15} /> 方向概览</h3>
-                  <p className="analysis-body">{result.analysis.overview}</p>
+                  <div className="analysis-body"><CitationText text={result.analysis.overview} citations={evidence} /></div>
                 </article>
                 <article className="analysis-card">
                   <h3><Icon name="activity" size={15} /> 画像匹配</h3>
-                  <p className="analysis-body">{result.analysis.match}</p>
+                  <div className="analysis-body"><CitationText text={result.analysis.match} citations={evidence} /></div>
                 </article>
               </div>
 
@@ -384,7 +385,9 @@ export function PlanDetail({
                 <div className="analysis-block">
                   <h3><Icon name="list" size={15} /> 每条行动的依据与做法</h3>
                   <ol className="analysis-list">
-                    {result.analysis.action_rationale.map((line, index) => <li key={index}>{line}</li>)}
+                    {result.analysis.action_rationale.map((line, index) => (
+                      <li key={index}><CitationText text={line} citations={evidence} /></li>
+                    ))}
                   </ol>
                 </div>
               ) : null}
@@ -393,7 +396,9 @@ export function PlanDetail({
                 <div className="analysis-block">
                   <h3><Icon name="alert" size={15} /> 风险与未知</h3>
                   <ul className="analysis-list">
-                    {result.analysis.risks.map((line, index) => <li key={index}>{line}</li>)}
+                    {result.analysis.risks.map((line, index) => (
+                      <li key={index}><CitationText text={line} citations={evidence} /></li>
+                    ))}
                   </ul>
                 </div>
               ) : null}
@@ -403,16 +408,10 @@ export function PlanDetail({
                   <h3><Icon name="arrow-right" size={15} /> 建议的下一步</h3>
                   <ol className="analysis-steps">
                     {result.analysis.next_steps.map((line, index) => (
-                      <li key={index}><span className="analysis-step-no">{index + 1}</span>{line}</li>
+                      <li key={index}><span className="analysis-step-no">{index + 1}</span><CitationText text={line} citations={evidence} /></li>
                     ))}
                   </ol>
                 </div>
-              ) : null}
-
-              {result.analysis.boundary_note ? (
-                <p className="panel-note plan-analysis-boundary">
-                  <Icon name="info" size={13} /> {result.analysis.boundary_note}
-                </p>
               ) : null}
             </Collapse>
           ) : (
@@ -421,7 +420,7 @@ export function PlanDetail({
 
           <Collapse summary="方案说明">
             {result.explanation ? (
-              <div className="explanation-text">{result.explanation}</div>
+              <div className="explanation-text"><CitationText text={result.explanation} citations={evidence} /></div>
             ) : (
               <p className="micro">本次没有生成解释。</p>
             )}
@@ -431,9 +430,6 @@ export function PlanDetail({
 
       {activeTab === "campus" ? (
         <div className="plan-detail-panel" id="plan-panel-campus" role="tabpanel" aria-labelledby="plan-tab-campus">
-          <Callout tone="plain" icon="shield" title="课程与竞赛均为待核对线索">
-            <p className="small-note">学分、先修、开课学期与报名资格以教务处和当年官方通知为准。</p>
-          </Callout>
           <LeadCards
             title="可优先了解的课程"
             leads={result.course_leads}
@@ -445,7 +441,7 @@ export function PlanDetail({
             empty="当前方向没有招聘快照；可先看学校就业质量报告或招聘平台的最新公告。"
           />
           <LeadCards
-            title="上经贸就业数据（口径与来源）"
+            title="上经贸就业数据"
             leads={result.campus_facts}
             empty="当前学校没有可展示的就业数据卡；可先看学校就业质量年度报告。"
           />
@@ -569,7 +565,6 @@ export function PlanDetail({
                 </div>
               ))
             )}
-            <p className="panel-note">排序为本设备本地记录；行动调整与完成状态会同步到当前方案版本。</p>
           </section>
         </div>
       ) : null}
@@ -583,58 +578,20 @@ export function PlanDetail({
 
       {activeTab === "sources" ? (
         <div className="plan-detail-panel" id="plan-panel-sources" role="tabpanel" aria-labelledby="plan-tab-sources">
-          <section className="plan-facts" aria-label="方案资料状态">
-            <div className="plan-fact">
-              <span className="plan-fact-label">学分</span>
-              <span className={result.credits === null ? "plan-fact-value is-missing" : "plan-fact-value"}>
-                {result.credits === null ? "资料未就绪" : `${result.credits} 学分`}
-              </span>
-              <span className="plan-fact-note">{result.credits === null ? "缺失不写成 0" : "仅来自已核验规则"}</span>
+          <section aria-label="证据引用">
+            <div className="section-heading">
+              <div className="section-heading-text">
+                <h2>证据引用</h2>
+              </div>
+              <Badge tone="muted">{evidence.length} 条</Badge>
             </div>
-            <div className="plan-fact">
-              <span className="plan-fact-label">预计投入</span>
-              <span className={effort.value === "未估算" ? "plan-fact-value is-missing" : "plan-fact-value"}>{effort.value}</span>
-              <span className="plan-fact-note">{effort.note}</span>
-            </div>
-            <div className="plan-fact">
-              <span className="plan-fact-label">待核验</span>
-              <span className="plan-fact-value">{pendingVerification.length + result.gaps.length} 项</span>
-              <span className="plan-fact-note">含行动资格与资料缺口</span>
-            </div>
-            <div className="plan-fact">
-              <span className="plan-fact-label">证据引用</span>
-              <span className="plan-fact-value">{evidence.length} 条</span>
-              <span className="plan-fact-note">编号由服务端分配</span>
-            </div>
+            <CitationFileList citations={evidence} />
           </section>
 
-          {displayWarnings.length > 0 ? (
-            <Callout tone="warn" title="生成时提示">
-              <ul className="callout-list">
-                {displayWarnings.map((warning) => <li key={warning}>{warning}</li>)}
-              </ul>
-            </Callout>
-          ) : null}
+          <SourceUploadPanel />
 
-          {isDataGapState ? (
-            <Callout tone="warn" title="这次主要输出的是核对清单">
-              <p className="micro">下面 {gapSummary.verifyCount} 项是“去核对什么”，不是已确定的课程要求。</p>
-              {gapSummary.titles.length > 0 ? (
-                <ul className="callout-list">
-                  {gapSummary.titles.map((title) => <li key={title}>{title}</li>)}
-                </ul>
-              ) : null}
-            </Callout>
-          ) : result.status !== "ok" ? (
-            <Callout tone={result.status === "unsupported_direction" || result.status === "invalid_profile" ? "danger" : "warn"} title="这是部分结果">
-              <p className="micro">缺失资料不会被补成虚构数字。</p>
-            </Callout>
-          ) : null}
-
-          <Collapse summary={`资料缺口与待核验 · ${result.gaps.length} 项`} defaultOpen={false}>
-            {result.gaps.length === 0 ? (
-              <p className="micro">本次没有报告资料缺口。</p>
-            ) : (
+          {result.gaps.length > 0 ? (
+            <Collapse summary={`待核验资料 · ${result.gaps.length} 项`} defaultOpen={false}>
               <ul className="gap-card-list">
                 {result.gaps.map((gap, index) => (
                   <li className="gap-card" key={`${gap.code}-${index}`}>
@@ -646,46 +603,8 @@ export function PlanDetail({
                   </li>
                 ))}
               </ul>
-            )}
-          </Collapse>
-
-          <SourceUploadPanel />
-
-          <Collapse summary={`证据与引用 · ${evidence.length} 条`} defaultOpen={false}>
-            <CitationList citations={evidence} />
-          </Collapse>
-
-          {plan && plan.versions.length > 0 ? (
-            <Collapse summary={`版本 · ${plan.versions.length} 个`} defaultOpen={false}>
-              <p className="version-meta">
-                规则 {result.rules_version || "未提供"} · 画像 v{result.profile_version}
-                {version ? ` · 方案 v${version.version} · ${formatDateTime(version.created_at)}` : ""}
-              </p>
-              <ul className="version-list">
-                {[...plan.versions]
-                  .sort((a, b) => b.version - a.version)
-                  .map((item) => (
-                    <li className={item.version_id === plan.current_version_id ? "version-item is-current" : "version-item"} key={item.version_id}>
-                      <span className="version-no">v{item.version}</span>
-                      <span className="version-status">
-                        {item.version_id === plan.current_version_id ? "当前版本" : item.status === "stale" ? "已过期" : item.status}
-                      </span>
-                      <span className="version-meta">
-                        规则 {item.rules_version || "—"} · 画像 v{item.profile_version} · {formatDate(item.created_at)}
-                      </span>
-                    </li>
-                  ))}
-              </ul>
             </Collapse>
           ) : null}
-
-          <Collapse summary="数据口径与边界" defaultOpen={false}>
-            <ul>
-              <li>课程与就业数据不在同一时间轴，不能互相解释。</li>
-              <li>东华 2021 的深造率已勘误，不沿用旧值。</li>
-              <li>pending 事实只是候选记录，不等于可直接比较的数字。</li>
-            </ul>
-          </Collapse>
         </div>
       ) : null}
     </div>
