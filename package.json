@@ -18,6 +18,7 @@
     "worker:test": "cd worker && uv run pytest -q",
     "db:types": "supabase gen types typescript --linked > src/lib/supabase/database.types.ts",
     "db:dry-run": "supabase db push --dry-run",
+    "graph:build": "tsx scripts/build-graph.ts",
     "db:push": "supabase db push",
     "import:dry-run": "tsx scripts/import-research.ts --dry-run",
     "import:apply": "tsx scripts/import-research.ts --apply",

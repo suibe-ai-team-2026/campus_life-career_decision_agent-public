@@ -1,0 +1,3299 @@
+{
+  "version": "graph-2026-11-04.1",
+  "built_at": "2026-11-04T13:15:51.281Z",
+  "profile": {
+    "label": "上经贸 · 国际经济与贸易 · 大一",
+    "note": "演示画像：写作 / 数据分析 / 英语。正式实现读取 16 题问卷与本地进度。"
+  },
+  "citations": [
+    {
+      "id": "curriculum-2024",
+      "no": 1,
+      "title": "国际经济与贸易专业人才培养方案（2024级）",
+      "url": "https://jwc.suibe.edu.cn/_upload/article/files/80/19/e245b09a43809cd8f3f08ccdace1/9cd617a5-a436-47e7-94e8-22693f9214cf.pdf",
+      "locator": "PDF 第 6 页「八、教学计划表」",
+      "status": "official_lead"
+    },
+    {
+      "id": "direction-card",
+      "no": 2,
+      "title": "方向卡（团队整理）",
+      "url": null,
+      "locator": "data/import/seed/directions.json",
+      "status": "partial"
+    },
+    {
+      "id": "competition-list",
+      "no": 3,
+      "title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+      "url": "https://www.suibe.edu.cn/xsc/",
+      "locator": "A/B/C 学校奖励等级；具体加分与素拓折算以当年学院、团委文件为准",
+      "status": "official_lead"
+    },
+    {
+      "id": "industry-snapshot",
+      "no": 4,
+      "title": "BOSS直聘实习岗位快照（2026-10-17 采集）",
+      "url": "https://www.zhipin.com/",
+      "locator": "采集 2026-10-17；非代表性抽样，主要为上海实习与初级关键词；只保留规范化摘要与出处，不复制完整 JD。",
+      "status": "external_reference"
+    },
+    {
+      "id": "employment-2021",
+      "no": 5,
+      "title": "上海对外经贸大学2021 届毕业生就业质量年度报告",
+      "url": "https://www.suibe.edu.cn/_upload/article/files/3a/5c/4b03a3394775aa0b57ba1f3eaf4d/f59606f0-5637-4a5f-9ddc-b60ceb961d70.pdf",
+      "locator": "第 11 页（机器提取文本）",
+      "status": "pending"
+    },
+    {
+      "id": "employment-2022",
+      "no": 6,
+      "title": "上海对外经贸大学2022届毕业生就业质量年度报告",
+      "url": "https://www.suibe.edu.cn/_upload/article/files/fa/b0/7846d16447ef8cb47e51fdd253b8/cf542e07-dd7b-43e0-9fcf-c356684bcdb1.pdf",
+      "locator": "第 2 页（机器提取文本）",
+      "status": "pending"
+    },
+    {
+      "id": "competition-cn-negotiation",
+      "no": 7,
+      "title": "全国大学生商务谈判大赛官网（官网 200）",
+      "url": "https://www.negotiationchina.com/mobile/default.aspx",
+      "locator": "官方赛事页面 / 通知",
+      "status": "official_lead"
+    },
+    {
+      "id": "competition-suibe-x-154",
+      "no": 8,
+      "title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+      "url": null,
+      "locator": "官方赛事页面 / 通知",
+      "status": "official_lead"
+    },
+    {
+      "id": "competition-cn-3chuang",
+      "no": 9,
+      "title": "三创赛官网（官网 200）",
+      "url": "https://www.3chuang.net/",
+      "locator": "官方赛事页面 / 通知",
+      "status": "official_lead"
+    },
+    {
+      "id": "competition-cn-ocale",
+      "no": 10,
+      "title": "OCALE 官网（官网 200）",
+      "url": "https://www.ocale.net/",
+      "locator": "官方赛事页面 / 通知",
+      "status": "official_lead"
+    },
+    {
+      "id": "competition-suibe-x-216",
+      "no": 11,
+      "title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+      "url": null,
+      "locator": "官方赛事页面 / 通知",
+      "status": "official_lead"
+    },
+    {
+      "id": "competition-cn-eastmoney-finance",
+      "no": 12,
+      "title": "“东方财富杯”全国大学生金融素养提升活动官网（官网 200）",
+      "url": "https://young.eastmoney.com/",
+      "locator": "官方赛事页面 / 通知",
+      "status": "official_lead"
+    },
+    {
+      "id": "competition-cn-tjjmds",
+      "no": 13,
+      "title": "哈尔滨工业大学·2026 年第十二届全国大学生统计建模大赛通知（转引官网 tjjmds.ai-learning.net）",
+      "url": "http://tjjmds.ai-learning.net/",
+      "locator": "官方赛事页面 / 通知",
+      "status": "official_lead"
+    },
+    {
+      "id": "competition-cn-mkt-survey",
+      "no": 14,
+      "title": "中国商业统计学会·关于第十七届全国大学生市场调查与分析大赛的通知（官网 200）",
+      "url": "http://www.china-cssc.org/show-304-2179-1.html",
+      "locator": "官方赛事页面 / 通知",
+      "status": "official_lead"
+    },
+    {
+      "id": "competition-suibe-x-87",
+      "no": 15,
+      "title": "上海对外经贸大学竞赛奖励项目清单（SUIBE学工在线）",
+      "url": null,
+      "locator": "官方赛事页面 / 通知",
+      "status": "official_lead"
+    },
+    {
+      "id": "competition-cn-mootcourt",
+      "no": 16,
+      "title": "全国大学生模拟法庭竞赛官网（官网 200）",
+      "url": "http://www.mootcourt.cn/",
+      "locator": "官方赛事页面 / 通知",
+      "status": "official_lead"
+    },
+    {
+      "id": "resource-suibe-jwc",
+      "no": 17,
+      "title": "上海对外经贸大学教务处",
+      "url": "https://jwc.suibe.edu.cn/",
+      "locator": "培养方案、课程、学分、选课与创新创业通知",
+      "status": "official_lead"
+    },
+    {
+      "id": "resource-suibe-job",
+      "no": 18,
+      "title": "上海对外经贸大学就业信息网",
+      "url": "https://job.suibe.edu.cn/",
+      "locator": "就业指导、招聘信息与毕业生就业质量报告发布",
+      "status": "official_lead"
+    },
+    {
+      "id": "resource-suibe-tw",
+      "no": 19,
+      "title": "共青团上海对外经贸大学委员会",
+      "url": "https://www.suibe.edu.cn/tw/",
+      "locator": "第二课堂、素拓活动与竞赛认定相关通知",
+      "status": "official_lead"
+    },
+    {
+      "id": "resource-suibe-lib",
+      "no": 20,
+      "title": "上海对外经贸大学图书馆",
+      "url": "https://lib.suibe.edu.cn/",
+      "locator": "馆藏、数据库与文献检索服务",
+      "status": "official_lead"
+    },
+    {
+      "id": "resource-xz-chsi",
+      "no": 21,
+      "title": "学职平台·全国大学生学业与职业发展平台",
+      "url": "https://xz.chsi.com.cn/",
+      "locator": "学信网旗下学业与职业发展测评平台",
+      "status": "official_lead"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "me",
+      "type": "me",
+      "title": "你（国贸 · 大一）",
+      "sub": "上经贸 · 国际经济与贸易",
+      "status": "verified",
+      "why": "图谱的起点：画像来自 16 题问卷与本地进度（快照里用摘要代替）。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "你的画像",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "上经贸 · 国际经济与贸易 · 大一；优势是写作、数据分析与英语；待补足的是外贸实操、客户沟通经历与一个可展示的成果。正式实现会读取问卷与本地进度，这里以摘要代替。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "怎么用这张图",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "点击任一节点打开它的 Wiki 页：先看「本校口径」，再看「数据缺口」与「去哪查」；缺口节点只给入口，不给结论。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "教务处 · 培养方案",
+            "url": "https://jwc.suibe.edu.cn/",
+            "look": "本专业教学计划表：课程与学分",
+            "cadence": "每年 5–7 月更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "学职平台",
+            "url": "https://xz.chsi.com.cn/",
+            "look": "职业兴趣与能力测评参考（非本校口径）",
+            "cadence": "随时可用",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "trade_supply_chain",
+      "type": "direction",
+      "title": "国际贸易与供应链",
+      "sub": "外贸 · 供应链",
+      "status": "partial",
+      "why": "方向卡来自团队整理；相关课程与竞赛取自本校培养方案与竞赛清单，去向数据只覆盖 2021/2022 届。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "这是什么",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "围绕进出口业务、国际采购、物流与关务的岗位族，常见于外贸企业、制造企业供应链部门和货代物流公司。",
+                "citations": [
+                  "direction-card"
+                ]
+              },
+              {
+                "tag": "inference",
+                "text": "核心能力：国际贸易实务、英语读写与商务沟通、单证与流程意识、Excel 数据处理。适用专业：国际经济与贸易、商务英语、物流管理等相关专业；其他专业可通过课程与实习补足。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "本校口径",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "2021 届毕业生毕业去向落实率 91.29%（本科口径见报告）；本科在沪就业比例 82.4%。",
+                "citations": [
+                  "employment-2021"
+                ]
+              },
+              {
+                "tag": "evidence",
+                "text": "2022 届毕业去向落实率 91.74%。",
+                "citations": [
+                  "employment-2022"
+                ]
+              },
+              {
+                "tag": "gap",
+                "text": "2023–2025 届就业质量报告尚未收进语料，不能据此推断趋势，也不做跨届相减。",
+                "citations": []
+              },
+              {
+                "tag": "evidence",
+                "text": "BOSS 直聘实习岗位快照（2026-10-17）中「国贸 / 商务英语」岗位族有 4 条样本；高频要求：英语四级（3 次）、外贸流程（2 次）、商务邮件（2 次）、办公软件（1 次）；广告薪资：10-15K / 12-20K / 12-24K。该样本为非代表性目的抽样，未提及不等于不需要。",
+                "citations": [
+                  "industry-snapshot"
+                ]
+              }
+            ]
+          },
+          {
+            "heading": "门槛与投入",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "培养方案（2024 级）中与本方向相关的课程：《国际贸易实务》（3 学分）、《国际服务贸易》（2 学分）、《跨境电商实务与模拟》（? 学分）、《国际商务谈判》（2 学分）、《会计学》（3 学分）、《货币银行学（英）》（3 学分）、《Python 数据采集与挖掘》（2 学分）、《计量经济学（A）》（3 学分）、《国际贸易政治经济学》（2 学分）、《国际商法》（2 学分）、《国际经贸论文写作》（2 学分）。",
+                "citations": [
+                  "curriculum-2024"
+                ]
+              },
+              {
+                "tag": "evidence",
+                "text": "校内竞赛奖励清单中与本方向相关的赛事：全国大学生商务谈判大赛（B 级）、全国 MIB 商务谈判赛（B 级）、全国大学生电子商务“创新、创意及创业”挑战赛（三创赛）（B 级）、OCALE 全国跨境电商创新创业能力大赛（等级待核 级）、上经贸大金融模拟投资大赛（C 级）、全国大学生市场调查与分析大赛（A 级）。A/B/C 为学校奖励等级，具体加分/素拓折算以当年学院与团委文件为准。",
+                "citations": [
+                  "competition-list"
+                ]
+              },
+              {
+                "tag": "inference",
+                "text": "准备方式：以课程与实习为主；证书与行业软件因岗位而异，未逐项核验前不写成硬门槛。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "与你的画像",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "以「国贸 · 大一」画像为例：写作、数据分析与英语是优势；需要补足的是对应方向的实操经历与一个能展示的成果。正式实现会读取问卷分数。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "行动清单",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "本学期：选一门方向课（如 国际贸易实务），报名一个校内可认定的赛事；30 天：到「去哪查」的官方入口核对课程与竞赛口径，并把核对日期记录下来。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "数据缺口",
+            "paragraphs": [
+              {
+                "tag": "gap",
+                "text": "本校同专业分方向去向未逐格检索；具体企业招聘偏好未核验；岗位薪资与通过率不展示。这些缺口不会用推测填充，页面只展示已有证据。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "学生就业信息网 · 就业质量报告",
+            "url": "https://job.suibe.edu.cn/",
+            "look": "毕业去向落实率、主要就业行业、在沪就业比例",
+            "cadence": "每年 12 月前后发布上一届报告",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "教务处 · 培养方案与教学计划",
+            "url": "https://jwc.suibe.edu.cn/",
+            "look": "课程、学分、开课学期与选课资格",
+            "cadence": "每年 5–7 月更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "党委学工部 · 竞赛奖励清单",
+            "url": "https://www.suibe.edu.cn/xsc/",
+            "look": "《竞赛奖励项目清单》A/B/C 等级与加分口径",
+            "cadence": "每学年更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "cross_border_business",
+      "type": "direction",
+      "title": "跨境电商与国际业务",
+      "sub": "跨境电商",
+      "status": "partial",
+      "why": "方向卡来自团队整理；相关课程与竞赛取自本校培养方案与竞赛清单，去向数据只覆盖 2021/2022 届。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "这是什么",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "面向跨境平台运营、海外市场拓展、国际业务支持等岗位，强调平台规则、内容与数据反馈的复合能力。",
+                "citations": [
+                  "direction-card"
+                ]
+              },
+              {
+                "tag": "inference",
+                "text": "核心能力：平台规则理解、英文产品文案、数据分析基础、跨部门沟通。适用专业：经贸、外语、电商、市场营销等专业；需要一定英语与数据敏感度。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "本校口径",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "2021 届毕业生毕业去向落实率 91.29%（本科口径见报告）；本科在沪就业比例 82.4%。",
+                "citations": [
+                  "employment-2021"
+                ]
+              },
+              {
+                "tag": "evidence",
+                "text": "2022 届毕业去向落实率 91.74%。",
+                "citations": [
+                  "employment-2022"
+                ]
+              },
+              {
+                "tag": "gap",
+                "text": "2023–2025 届就业质量报告尚未收进语料，不能据此推断趋势，也不做跨届相减。",
+                "citations": []
+              },
+              {
+                "tag": "evidence",
+                "text": "BOSS 直聘实习岗位快照（2026-10-17）中「国贸 / 商务英语」岗位族有 4 条样本；高频要求：英语四级（3 次）、外贸流程（2 次）、商务邮件（2 次）、办公软件（1 次）；广告薪资：10-15K / 12-20K / 12-24K。该样本为非代表性目的抽样，未提及不等于不需要。",
+                "citations": [
+                  "industry-snapshot"
+                ]
+              }
+            ]
+          },
+          {
+            "heading": "门槛与投入",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "培养方案（2024 级）中与本方向相关的课程：《国际贸易实务》（3 学分）、《国际服务贸易》（2 学分）、《跨境电商实务与模拟》（? 学分）、《国际商务谈判》（2 学分）、《会计学》（3 学分）、《货币银行学（英）》（3 学分）、《Python 数据采集与挖掘》（2 学分）、《计量经济学（A）》（3 学分）、《国际贸易政治经济学》（2 学分）、《国际商法》（2 学分）、《国际经贸论文写作》（2 学分）。",
+                "citations": [
+                  "curriculum-2024"
+                ]
+              },
+              {
+                "tag": "evidence",
+                "text": "校内竞赛奖励清单中与本方向相关的赛事：全国大学生商务谈判大赛（B 级）、全国 MIB 商务谈判赛（B 级）、全国大学生电子商务“创新、创意及创业”挑战赛（三创赛）（B 级）、OCALE 全国跨境电商创新创业能力大赛（等级待核 级）、上经贸大金融模拟投资大赛（C 级）。A/B/C 为学校奖励等级，具体加分/素拓折算以当年学院与团委文件为准。",
+                "citations": [
+                  "competition-list"
+                ]
+              },
+              {
+                "tag": "inference",
+                "text": "准备方式：平台实操与作品集比证书更能体现能力；具体平台与岗位要求需按招聘快照核对。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "与你的画像",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "以「国贸 · 大一」画像为例：写作、数据分析与英语是优势；需要补足的是对应方向的实操经历与一个能展示的成果。正式实现会读取问卷分数。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "行动清单",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "本学期：选一门方向课（如 国际贸易实务），报名一个校内可认定的赛事；30 天：到「去哪查」的官方入口核对课程与竞赛口径，并把核对日期记录下来。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "数据缺口",
+            "paragraphs": [
+              {
+                "tag": "gap",
+                "text": "平台岗位要求来自招聘快照，不代表历史去向；本校同专业案例证据有限；不展示成功率。这些缺口不会用推测填充，页面只展示已有证据。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "学生就业信息网 · 就业质量报告",
+            "url": "https://job.suibe.edu.cn/",
+            "look": "毕业去向落实率、主要就业行业、在沪就业比例",
+            "cadence": "每年 12 月前后发布上一届报告",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "教务处 · 培养方案与教学计划",
+            "url": "https://jwc.suibe.edu.cn/",
+            "look": "课程、学分、开课学期与选课资格",
+            "cadence": "每年 5–7 月更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "党委学工部 · 竞赛奖励清单",
+            "url": "https://www.suibe.edu.cn/xsc/",
+            "look": "《竞赛奖励项目清单》A/B/C 等级与加分口径",
+            "cadence": "每学年更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "团委 · 第二课堂与素拓",
+            "url": "https://www.suibe.edu.cn/tw/",
+            "look": "素拓活动与竞赛认定通知",
+            "cadence": "按学期更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "finance_accounting",
+      "type": "direction",
+      "title": "金融与财会",
+      "sub": "金融 · 财会",
+      "status": "partial",
+      "why": "方向卡来自团队整理；相关课程与竞赛取自本校培养方案与竞赛清单，去向数据只覆盖 2021/2022 届。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "这是什么",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "覆盖银行、证券、保险、审计、企业财务等岗位族；不同细分方向的资格与实习要求差异较大。",
+                "citations": [
+                  "direction-card"
+                ]
+              },
+              {
+                "tag": "inference",
+                "text": "核心能力：会计与财务基础、Excel/数据处理、严谨与合规意识、沟通与书面表达。适用专业：会计、金融、经济、审计等专业；跨专业需要补核心课程与实习经历。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "本校口径",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "2021 届毕业生毕业去向落实率 91.29%（本科口径见报告）；本科在沪就业比例 82.4%。",
+                "citations": [
+                  "employment-2021"
+                ]
+              },
+              {
+                "tag": "evidence",
+                "text": "2022 届毕业去向落实率 91.74%。",
+                "citations": [
+                  "employment-2022"
+                ]
+              },
+              {
+                "tag": "gap",
+                "text": "2023–2025 届就业质量报告尚未收进语料，不能据此推断趋势，也不做跨届相减。",
+                "citations": []
+              },
+              {
+                "tag": "evidence",
+                "text": "BOSS 直聘实习岗位快照（2026-10-17）中「会计 / 审计 / 财管」岗位族有 4 条样本；高频要求：办公软件（2 次）、学习能力（2 次）、审计底稿（2 次）、沟通（1 次）；广告薪资：80-120元/天 / 100-120元/天 / 100-150元/天 / 150-180元/天。该样本为非代表性目的抽样，未提及不等于不需要。",
+                "citations": [
+                  "industry-snapshot"
+                ]
+              }
+            ]
+          },
+          {
+            "heading": "门槛与投入",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "培养方案（2024 级）中与本方向相关的课程：《会计学》（3 学分）、《货币银行学（英）》（3 学分）。",
+                "citations": [
+                  "curriculum-2024"
+                ]
+              },
+              {
+                "tag": "evidence",
+                "text": "校内竞赛奖励清单中与本方向相关的赛事：全国 MIB 商务谈判赛（B 级）、上经贸大金融模拟投资大赛（C 级）、“东方财富杯”全国大学生金融素养提升活动（含金融挑战赛）（等级待核 级）、全国大学生统计建模大赛（A 级）、全国大学生市场调查与分析大赛（A 级）。A/B/C 为学校奖励等级，具体加分/素拓折算以当年学院与团委文件为准。",
+                "citations": [
+                  "competition-list"
+                ]
+              },
+              {
+                "tag": "inference",
+                "text": "准备方式：课程、证书与实习组合因细分方向而异；未取得核验资料前不把证书写成硬资格。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "与你的画像",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "以「国贸 · 大一」画像为例：写作、数据分析与英语是优势；需要补足的是对应方向的实操经历与一个能展示的成果。正式实现会读取问卷分数。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "行动清单",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "本学期：选一门方向课（如 会计学），报名一个校内可认定的赛事；30 天：到「去哪查」的官方入口核对课程与竞赛口径，并把核对日期记录下来。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "数据缺口",
+            "paragraphs": [
+              {
+                "tag": "gap",
+                "text": "证书与实习的硬门槛未核验；本校分方向去向缺口；薪资与通过率不展示。这些缺口不会用推测填充，页面只展示已有证据。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "学生就业信息网 · 就业质量报告",
+            "url": "https://job.suibe.edu.cn/",
+            "look": "毕业去向落实率、主要就业行业、在沪就业比例",
+            "cadence": "每年 12 月前后发布上一届报告",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "教务处 · 培养方案与教学计划",
+            "url": "https://jwc.suibe.edu.cn/",
+            "look": "课程、学分、开课学期与选课资格",
+            "cadence": "每年 5–7 月更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "党委学工部 · 竞赛奖励清单",
+            "url": "https://www.suibe.edu.cn/xsc/",
+            "look": "《竞赛奖励项目清单》A/B/C 等级与加分口径",
+            "cadence": "每学年更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "data_business",
+      "type": "direction",
+      "title": "数据分析与商业分析",
+      "sub": "数据 · 商业分析",
+      "status": "official_lead",
+      "why": "方向卡来自团队整理；相关课程与竞赛取自本校培养方案与竞赛清单，去向数据只覆盖 2021/2022 届。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "这是什么",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "把业务问题转成数据问题，用统计、SQL、可视化与商业理解支持决策；岗位分布在互联网、零售、金融与咨询等。",
+                "citations": [
+                  "direction-card"
+                ]
+              },
+              {
+                "tag": "inference",
+                "text": "核心能力：SQL、统计与概率基础、Excel/可视化、业务理解与表达。适用专业：统计、数学、计算机、经济管理类专业；跨专业需补编程与统计基础。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "本校口径",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "2021 届毕业生毕业去向落实率 91.29%（本科口径见报告）；本科在沪就业比例 82.4%。",
+                "citations": [
+                  "employment-2021"
+                ]
+              },
+              {
+                "tag": "evidence",
+                "text": "2022 届毕业去向落实率 91.74%。",
+                "citations": [
+                  "employment-2022"
+                ]
+              },
+              {
+                "tag": "gap",
+                "text": "2023–2025 届就业质量报告尚未收进语料，不能据此推断趋势，也不做跨届相减。",
+                "citations": []
+              },
+              {
+                "tag": "evidence",
+                "text": "BOSS 直聘实习岗位快照（2026-10-17）中「数据科学 / 数据复合方向」岗位族有 3 条样本；高频要求：Python（1 次）、SQL（1 次）、Excel透视表（1 次）、数理逻辑（1 次）；广告薪资：250-300元/天 / 200-300元/天 / 200-230元/天 / 100-120元/天。该样本为非代表性目的抽样，未提及不等于不需要。",
+                "citations": [
+                  "industry-snapshot"
+                ]
+              }
+            ]
+          },
+          {
+            "heading": "门槛与投入",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "培养方案（2024 级）中与本方向相关的课程：《Python 数据采集与挖掘》（2 学分）、《计量经济学（A）》（3 学分）。",
+                "citations": [
+                  "curriculum-2024"
+                ]
+              },
+              {
+                "tag": "evidence",
+                "text": "校内竞赛奖励清单中与本方向相关的赛事：全国 MIB 商务谈判赛（B 级）、全国大学生电子商务“创新、创意及创业”挑战赛（三创赛）（B 级）、上经贸大金融模拟投资大赛（C 级）、全国大学生统计建模大赛（A 级）、全国大学生市场调查与分析大赛（A 级）。A/B/C 为学校奖励等级，具体加分/素拓折算以当年学院与团委文件为准。",
+                "citations": [
+                  "competition-list"
+                ]
+              },
+              {
+                "tag": "inference",
+                "text": "准备方式：需要项目作品与工具练习；课程之外的实践证据比空泛证书更重要，但具体门槛未核验。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "与你的画像",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "以「国贸 · 大一」画像为例：写作、数据分析与英语是优势；需要补足的是对应方向的实操经历与一个能展示的成果。正式实现会读取问卷分数。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "行动清单",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "本学期：选一门方向课（如 Python 数据采集与挖掘），报名一个校内可认定的赛事；30 天：到「去哪查」的官方入口核对课程与竞赛口径，并把核对日期记录下来。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "数据缺口",
+            "paragraphs": [
+              {
+                "tag": "gap",
+                "text": "岗位技能来自招聘快照汇总；本校同专业去向证据有限；不展示录用率。这些缺口不会用推测填充，页面只展示已有证据。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "学生就业信息网 · 就业质量报告",
+            "url": "https://job.suibe.edu.cn/",
+            "look": "毕业去向落实率、主要就业行业、在沪就业比例",
+            "cadence": "每年 12 月前后发布上一届报告",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "教务处 · 培养方案与教学计划",
+            "url": "https://jwc.suibe.edu.cn/",
+            "look": "课程、学分、开课学期与选课资格",
+            "cadence": "每年 5–7 月更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "党委学工部 · 竞赛奖励清单",
+            "url": "https://www.suibe.edu.cn/xsc/",
+            "look": "《竞赛奖励项目清单》A/B/C 等级与加分口径",
+            "cadence": "每学年更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "public_service",
+      "type": "direction",
+      "title": "公共部门与公共服务",
+      "sub": "公共部门",
+      "status": "pending",
+      "why": "方向卡来自团队整理；相关课程与竞赛取自本校培养方案与竞赛清单，去向数据只覆盖 2021/2022 届。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "这是什么",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "包括公务员、事业单位、基层项目与公共部门相关岗位；招录条件以当年官方公告为准。",
+                "citations": [
+                  "direction-card"
+                ]
+              },
+              {
+                "tag": "inference",
+                "text": "核心能力：政策理解与文字表达、公共事务基础、组织协调、结构化面试能力。适用专业：专业限制因岗位而异，必须以当年公告逐项核对；本资料集不含完整招录目录。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "本校口径",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "2021 届毕业生毕业去向落实率 91.29%（本科口径见报告）；本科在沪就业比例 82.4%。",
+                "citations": [
+                  "employment-2021"
+                ]
+              },
+              {
+                "tag": "evidence",
+                "text": "2022 届毕业去向落实率 91.74%。",
+                "citations": [
+                  "employment-2022"
+                ]
+              },
+              {
+                "tag": "gap",
+                "text": "2023–2025 届就业质量报告尚未收进语料，不能据此推断趋势，也不做跨届相减。",
+                "citations": []
+              },
+              {
+                "tag": "evidence",
+                "text": "BOSS 直聘实习岗位快照（2026-10-17）中「法学」岗位族有 4 条样本；高频要求：合同审核（2 次）、法律检索（2 次）、法律研究（2 次）、风险识别（1 次）；广告薪资：150-200元/天 / 150-180元/天 / 160-180元/天 / 200-250元/天。该样本为非代表性目的抽样，未提及不等于不需要。",
+                "citations": [
+                  "industry-snapshot"
+                ]
+              }
+            ]
+          },
+          {
+            "heading": "门槛与投入",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "培养方案（2024 级）中与本方向相关的课程：《国际贸易政治经济学》（2 学分）、《国际商法》（2 学分）。",
+                "citations": [
+                  "curriculum-2024"
+                ]
+              },
+              {
+                "tag": "evidence",
+                "text": "校内竞赛奖励清单中与本方向相关的赛事：“贸仲杯”国际商事仲裁模拟仲裁庭辩论赛（A 级）、全国大学生模拟法庭竞赛（等级待核 级）。A/B/C 为学校奖励等级，具体加分/素拓折算以当年学院与团委文件为准。",
+                "citations": [
+                  "competition-list"
+                ]
+              },
+              {
+                "tag": "inference",
+                "text": "准备方式：以官方招录公告和考试科目为准；本产品不预测报考资格或竞争比。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "与你的画像",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "以「国贸 · 大一」画像为例：写作、数据分析与英语是优势；需要补足的是对应方向的实操经历与一个能展示的成果。正式实现会读取问卷分数。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "行动清单",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "本学期：选一门方向课（如 国际贸易政治经济学），报名一个校内可认定的赛事；30 天：到「去哪查」的官方入口核对课程与竞赛口径，并把核对日期记录下来。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "数据缺口",
+            "paragraphs": [
+              {
+                "tag": "gap",
+                "text": "招录目录与资格条件未入库；竞争比与通过率不展示；政策口径需按年份核对。这些缺口不会用推测填充，页面只展示已有证据。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "学生就业信息网 · 就业质量报告",
+            "url": "https://job.suibe.edu.cn/",
+            "look": "毕业去向落实率、主要就业行业、在沪就业比例",
+            "cadence": "每年 12 月前后发布上一届报告",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "教务处 · 培养方案与教学计划",
+            "url": "https://jwc.suibe.edu.cn/",
+            "look": "课程、学分、开课学期与选课资格",
+            "cadence": "每年 5–7 月更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "党委学工部 · 竞赛奖励清单",
+            "url": "https://www.suibe.edu.cn/xsc/",
+            "look": "《竞赛奖励项目清单》A/B/C 等级与加分口径",
+            "cadence": "每学年更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "团委 · 第二课堂与素拓",
+            "url": "https://www.suibe.edu.cn/tw/",
+            "look": "素拓活动与竞赛认定通知",
+            "cadence": "按学期更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "further_study",
+      "type": "direction",
+      "title": "升学与研究",
+      "sub": "升学 · 研究",
+      "status": "partial",
+      "why": "方向卡来自团队整理；相关课程与竞赛取自本校培养方案与竞赛清单，去向数据只覆盖 2021/2022 届。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "这是什么",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "包括境内读研、境外升学与研究型路径；关键变量是课程成绩、语言、科研或实习经历与申请时间线。",
+                "citations": [
+                  "direction-card"
+                ]
+              },
+              {
+                "tag": "inference",
+                "text": "核心能力：专业基础、学术阅读与写作、研究或项目经历、时间与材料管理。适用专业：所有专业均可考虑，但方向差异大，需要按目标项目核对先修与语言要求。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "本校口径",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "2021 届毕业生毕业去向落实率 91.29%（本科口径见报告）；本科在沪就业比例 82.4%。",
+                "citations": [
+                  "employment-2021"
+                ]
+              },
+              {
+                "tag": "evidence",
+                "text": "2022 届毕业去向落实率 91.74%。",
+                "citations": [
+                  "employment-2022"
+                ]
+              },
+              {
+                "tag": "gap",
+                "text": "2023–2025 届就业质量报告尚未收进语料，不能据此推断趋势，也不做跨届相减。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "门槛与投入",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "培养方案（2024 级）中与本方向相关的课程：《国际经贸论文写作》（2 学分）。",
+                "citations": [
+                  "curriculum-2024"
+                ]
+              },
+              {
+                "tag": "evidence",
+                "text": "校内竞赛奖励清单中与本方向相关的赛事：。A/B/C 为学校奖励等级，具体加分/素拓折算以当年学院与团委文件为准。",
+                "citations": [
+                  "competition-list"
+                ]
+              },
+              {
+                "tag": "inference",
+                "text": "准备方式：以目标院校当年招生简章为准；本产品不提供录取概率或院校排名。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "与你的画像",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "以「国贸 · 大一」画像为例：写作、数据分析与英语是优势；需要补足的是对应方向的实操经历与一个能展示的成果。正式实现会读取问卷分数。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "行动清单",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "本学期：选一门方向课（如 国际经贸论文写作），报名一个校内可认定的赛事；30 天：到「去哪查」的官方入口核对课程与竞赛口径，并把核对日期记录下来。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "数据缺口",
+            "paragraphs": [
+              {
+                "tag": "gap",
+                "text": "招生简章与语言门槛未入库；本校升学去向未逐格核验；不展示录取率。这些缺口不会用推测填充，页面只展示已有证据。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "学生就业信息网 · 就业质量报告",
+            "url": "https://job.suibe.edu.cn/",
+            "look": "毕业去向落实率、主要就业行业、在沪就业比例",
+            "cadence": "每年 12 月前后发布上一届报告",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "教务处 · 培养方案与教学计划",
+            "url": "https://jwc.suibe.edu.cn/",
+            "look": "课程、学分、开课学期与选课资格",
+            "cadence": "每年 5–7 月更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "党委学工部 · 竞赛奖励清单",
+            "url": "https://www.suibe.edu.cn/xsc/",
+            "look": "《竞赛奖励项目清单》A/B/C 等级与加分口径",
+            "cadence": "每学年更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "program-2024",
+      "type": "program",
+      "title": "国际经济与贸易培养方案（2024 级）",
+      "sub": "56 门课 · 必修 20 门",
+      "status": "official_lead",
+      "why": "课程证据的总入口：所有课程节点都从这份培养方案的教学计划表取数。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "培养方案",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "2024 级国际经济与贸易专业培养方案共 56 门课、其中必修 20 门；学分、开课学期与选课资格以教务处当年方案与选课系统为准。",
+                "citations": [
+                  "curriculum-2024"
+                ]
+              },
+              {
+                "tag": "evidence",
+                "text": "图谱中收录了与本专业 6 个方向相关的 11 门课程：《国际贸易实务》、《国际服务贸易》、《跨境电商实务与模拟》、《国际商务谈判》、《会计学》、《货币银行学（英）》、《Python 数据采集与挖掘》、《计量经济学（A）》、《国际贸易政治经济学》、《国际商法》、《国际经贸论文写作》。",
+                "citations": [
+                  "curriculum-2024"
+                ]
+              },
+              {
+                "tag": "gap",
+                "text": "课程为机器提取，学分、先修与开课学期未逐条人工复核；选课前必须回到教务处方案核对。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "教务处 · 培养方案",
+            "url": "https://jwc.suibe.edu.cn/",
+            "look": "教学计划表：课程、学分、开课学期、先修要求",
+            "cadence": "每年 5–7 月更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "教务处 · 选课通知",
+            "url": "https://jwc.suibe.edu.cn/",
+            "look": "选课时间、容量与资格限制",
+            "cadence": "每学期",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "course-suibe-intl_econ_trade-2024-043",
+      "type": "course",
+      "title": "国际贸易实务",
+      "sub": "3 学分 · 3上 · 必修",
+      "status": "official_lead",
+      "why": "培养方案课程，关联 2 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "课程信息",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "《国际贸易实务》（3 学分，3上，必修）。技能标签：执行。学分与学期为机器提取，最终以教务处当年方案与选课系统为准。",
+                "citations": [
+                  "curriculum-2024"
+                ]
+              }
+            ]
+          },
+          {
+            "heading": "关联方向",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "直接关联：国际贸易与供应链、跨境电商与国际业务。课程覆盖方向所需的部分能力，但课程本身不等于录用资格。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "教务处 · 培养方案",
+            "url": "https://jwc.suibe.edu.cn/",
+            "look": "课程学分、开课学期、先修要求",
+            "cadence": "每年 5–7 月更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "course-suibe-intl_econ_trade-2024-038",
+      "type": "course",
+      "title": "国际服务贸易",
+      "sub": "2 学分 · 3下 · 必修",
+      "status": "official_lead",
+      "why": "培养方案课程，关联 2 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "课程信息",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "《国际服务贸易》（2 学分，3下，必修）。技能标签：执行。学分与学期为机器提取，最终以教务处当年方案与选课系统为准。",
+                "citations": [
+                  "curriculum-2024"
+                ]
+              }
+            ]
+          },
+          {
+            "heading": "关联方向",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "直接关联：国际贸易与供应链、跨境电商与国际业务。课程覆盖方向所需的部分能力，但课程本身不等于录用资格。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "教务处 · 培养方案",
+            "url": "https://jwc.suibe.edu.cn/",
+            "look": "课程学分、开课学期、先修要求",
+            "cadence": "每年 5–7 月更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "course-suibe-intl_econ_trade-2024-051",
+      "type": "course",
+      "title": "跨境电商实务与模拟",
+      "sub": "? 学分 · 学期待核 · 必修",
+      "status": "official_lead",
+      "why": "培养方案课程，关联 2 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "课程信息",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "《跨境电商实务与模拟》（? 学分，学期待核，必修）。技能标签：执行。学分与学期为机器提取，最终以教务处当年方案与选课系统为准。",
+                "citations": [
+                  "curriculum-2024"
+                ]
+              }
+            ]
+          },
+          {
+            "heading": "关联方向",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "直接关联：国际贸易与供应链、跨境电商与国际业务。课程覆盖方向所需的部分能力，但课程本身不等于录用资格。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "教务处 · 培养方案",
+            "url": "https://jwc.suibe.edu.cn/",
+            "look": "课程学分、开课学期、先修要求",
+            "cadence": "每年 5–7 月更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "course-suibe-intl_econ_trade-2024-015",
+      "type": "course",
+      "title": "国际商务谈判",
+      "sub": "2 学分 · 2下 / 3下 · 选修",
+      "status": "official_lead",
+      "why": "培养方案课程，关联 2 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "课程信息",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "《国际商务谈判》（2 学分，2下 / 3下，选修）。技能标签：沟通、执行。学分与学期为机器提取，最终以教务处当年方案与选课系统为准。",
+                "citations": [
+                  "curriculum-2024"
+                ]
+              }
+            ]
+          },
+          {
+            "heading": "关联方向",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "直接关联：国际贸易与供应链、跨境电商与国际业务。课程覆盖方向所需的部分能力，但课程本身不等于录用资格。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "教务处 · 培养方案",
+            "url": "https://jwc.suibe.edu.cn/",
+            "look": "课程学分、开课学期、先修要求",
+            "cadence": "每年 5–7 月更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "course-suibe-intl_econ_trade-2024-047",
+      "type": "course",
+      "title": "会计学",
+      "sub": "3 学分 · 2上 · 必修",
+      "status": "official_lead",
+      "why": "培养方案课程，关联 3 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "课程信息",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "《会计学》（3 学分，2上，必修）。技能标签：执行。学分与学期为机器提取，最终以教务处当年方案与选课系统为准。",
+                "citations": [
+                  "curriculum-2024"
+                ]
+              }
+            ]
+          },
+          {
+            "heading": "关联方向",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "直接关联：国际贸易与供应链、跨境电商与国际业务、金融与财会。课程覆盖方向所需的部分能力，但课程本身不等于录用资格。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "教务处 · 培养方案",
+            "url": "https://jwc.suibe.edu.cn/",
+            "look": "课程学分、开课学期、先修要求",
+            "cadence": "每年 5–7 月更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "course-suibe-intl_econ_trade-2024-048",
+      "type": "course",
+      "title": "货币银行学（英）",
+      "sub": "3 学分 · 2下 · 必修",
+      "status": "official_lead",
+      "why": "培养方案课程，关联 3 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "课程信息",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "《货币银行学（英）》（3 学分，2下，必修）。技能标签：未标注。学分与学期为机器提取，最终以教务处当年方案与选课系统为准。",
+                "citations": [
+                  "curriculum-2024"
+                ]
+              }
+            ]
+          },
+          {
+            "heading": "关联方向",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "直接关联：国际贸易与供应链、跨境电商与国际业务、金融与财会。课程覆盖方向所需的部分能力，但课程本身不等于录用资格。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "教务处 · 培养方案",
+            "url": "https://jwc.suibe.edu.cn/",
+            "look": "课程学分、开课学期、先修要求",
+            "cadence": "每年 5–7 月更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "course-suibe-intl_econ_trade-2024-003",
+      "type": "course",
+      "title": "Python 数据采集与挖掘",
+      "sub": "2 学分 · 3上 · 选修",
+      "status": "official_lead",
+      "why": "培养方案课程，关联 3 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "课程信息",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "《Python 数据采集与挖掘》（2 学分，3上，选修）。技能标签：数据、数字工具。学分与学期为机器提取，最终以教务处当年方案与选课系统为准。",
+                "citations": [
+                  "curriculum-2024"
+                ]
+              }
+            ]
+          },
+          {
+            "heading": "关联方向",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "直接关联：国际贸易与供应链、跨境电商与国际业务、数据分析与商业分析。课程覆盖方向所需的部分能力，但课程本身不等于录用资格。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "教务处 · 培养方案",
+            "url": "https://jwc.suibe.edu.cn/",
+            "look": "课程学分、开课学期、先修要求",
+            "cadence": "每年 5–7 月更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "course-suibe-intl_econ_trade-2024-049",
+      "type": "course",
+      "title": "计量经济学（A）",
+      "sub": "3 学分 · 2下 · 必修",
+      "status": "official_lead",
+      "why": "培养方案课程，关联 3 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "课程信息",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "《计量经济学（A）》（3 学分，2下，必修）。技能标签：研究、数据。学分与学期为机器提取，最终以教务处当年方案与选课系统为准。",
+                "citations": [
+                  "curriculum-2024"
+                ]
+              }
+            ]
+          },
+          {
+            "heading": "关联方向",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "直接关联：国际贸易与供应链、跨境电商与国际业务、数据分析与商业分析。课程覆盖方向所需的部分能力，但课程本身不等于录用资格。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "教务处 · 培养方案",
+            "url": "https://jwc.suibe.edu.cn/",
+            "look": "课程学分、开课学期、先修要求",
+            "cadence": "每年 5–7 月更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "course-suibe-intl_econ_trade-2024-012",
+      "type": "course",
+      "title": "国际贸易政治经济学",
+      "sub": "2 学分 · 4上 · 选修",
+      "status": "official_lead",
+      "why": "培养方案课程，关联 3 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "课程信息",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "《国际贸易政治经济学》（2 学分，4上，选修）。技能标签：研究、执行。学分与学期为机器提取，最终以教务处当年方案与选课系统为准。",
+                "citations": [
+                  "curriculum-2024"
+                ]
+              }
+            ]
+          },
+          {
+            "heading": "关联方向",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "直接关联：国际贸易与供应链、跨境电商与国际业务、公共部门与公共服务。课程覆盖方向所需的部分能力，但课程本身不等于录用资格。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "教务处 · 培养方案",
+            "url": "https://jwc.suibe.edu.cn/",
+            "look": "课程学分、开课学期、先修要求",
+            "cadence": "每年 5–7 月更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "course-suibe-intl_econ_trade-2024-045",
+      "type": "course",
+      "title": "国际商法",
+      "sub": "2 学分 · 3下 · 必修",
+      "status": "official_lead",
+      "why": "培养方案课程，关联 3 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "课程信息",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "《国际商法》（2 学分，3下，必修）。技能标签：未标注。学分与学期为机器提取，最终以教务处当年方案与选课系统为准。",
+                "citations": [
+                  "curriculum-2024"
+                ]
+              }
+            ]
+          },
+          {
+            "heading": "关联方向",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "直接关联：国际贸易与供应链、跨境电商与国际业务、公共部门与公共服务。课程覆盖方向所需的部分能力，但课程本身不等于录用资格。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "教务处 · 培养方案",
+            "url": "https://jwc.suibe.edu.cn/",
+            "look": "课程学分、开课学期、先修要求",
+            "cadence": "每年 5–7 月更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "course-suibe-intl_econ_trade-2024-041",
+      "type": "course",
+      "title": "国际经贸论文写作",
+      "sub": "2 学分 · 3上 · 必修",
+      "status": "official_lead",
+      "why": "培养方案课程，关联 3 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "课程信息",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "《国际经贸论文写作》（2 学分，3上，必修）。技能标签：研究、写作。学分与学期为机器提取，最终以教务处当年方案与选课系统为准。",
+                "citations": [
+                  "curriculum-2024"
+                ]
+              }
+            ]
+          },
+          {
+            "heading": "关联方向",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "直接关联：国际贸易与供应链、跨境电商与国际业务、升学与研究。课程覆盖方向所需的部分能力，但课程本身不等于录用资格。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "教务处 · 培养方案",
+            "url": "https://jwc.suibe.edu.cn/",
+            "look": "课程学分、开课学期、先修要求",
+            "cadence": "每年 5–7 月更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "competition-cn-negotiation",
+      "type": "competition",
+      "title": "全国大学生商务谈判大赛",
+      "sub": "国家级 · 校内 B 级",
+      "status": "official_lead",
+      "why": "校园竞赛目录中的赛事，关联 2 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "赛事信息",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "全国大学生商务谈判大赛，国家级，主办方：未标注。时间：以当年通知为准。",
+                "citations": [
+                  "competition-cn-negotiation"
+                ]
+              },
+              {
+                "tag": "evidence",
+                "text": "校内奖励等级：B 级（《上海对外经贸大学竞赛奖励项目清单》）。具体加分与素拓折算以当年学院、团委文件为准。",
+                "citations": [
+                  "competition-list"
+                ]
+              }
+            ]
+          },
+          {
+            "heading": "关联方向",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "可以支撑：国际贸易与供应链、跨境电商与国际业务。赛事可以作为能力证据，但不是录用保证。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "学校竞赛奖励清单",
+            "url": "https://www.suibe.edu.cn/xsc/",
+            "look": "赛事等级（A/B/C）与加分口径",
+            "cadence": "每学年更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "教务处 · 创新创业栏目",
+            "url": "https://jwc.suibe.edu.cn/18805/list.htm",
+            "look": "校内选拔通知与报名入口",
+            "cadence": "按赛事更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "官方赛事页面",
+            "url": "https://www.negotiationchina.com/mobile/default.aspx",
+            "look": "报名时间、资格与赛制",
+            "cadence": "按赛事更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "competition-suibe-x-154",
+      "type": "competition",
+      "title": "全国 MIB 商务谈判赛",
+      "sub": "国家级 · 校内 B 级",
+      "status": "official_lead",
+      "why": "校园竞赛目录中的赛事，关联 4 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "赛事信息",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "全国 MIB 商务谈判赛，国家级，主办方：未标注。时间：以当年官方通知为准。",
+                "citations": [
+                  "competition-suibe-x-154"
+                ]
+              },
+              {
+                "tag": "evidence",
+                "text": "校内奖励等级：B 级（《上海对外经贸大学竞赛奖励项目清单》）。具体加分与素拓折算以当年学院、团委文件为准。",
+                "citations": [
+                  "competition-list"
+                ]
+              }
+            ]
+          },
+          {
+            "heading": "关联方向",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "可以支撑：国际贸易与供应链、跨境电商与国际业务、金融与财会、数据分析与商业分析。赛事可以作为能力证据，但不是录用保证。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "学校竞赛奖励清单",
+            "url": "https://www.suibe.edu.cn/xsc/",
+            "look": "赛事等级（A/B/C）与加分口径",
+            "cadence": "每学年更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "教务处 · 创新创业栏目",
+            "url": "https://jwc.suibe.edu.cn/18805/list.htm",
+            "look": "校内选拔通知与报名入口",
+            "cadence": "按赛事更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "学校竞赛通知",
+            "url": "https://www.suibe.edu.cn/xsc/",
+            "look": "校内通知与报名方式",
+            "cadence": "按赛事更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "competition-cn-3chuang",
+      "type": "competition",
+      "title": "全国大学生电子商务“创新、创意及创业”挑战赛（三创赛）",
+      "sub": "国家级 · 校内 B 级",
+      "status": "official_lead",
+      "why": "校园竞赛目录中的赛事，关联 3 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "赛事信息",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "全国大学生电子商务“创新、创意及创业”挑战赛（三创赛），国家级，主办方：全国大学生电子商务“创新、创意及创业”挑战赛竞赛组织委员会。时间：第十六届报名 2025-10-20 至 2025-12-31；校赛 2026-03-11 至 04-10（以当年通知为准）。",
+                "citations": [
+                  "competition-cn-3chuang"
+                ]
+              },
+              {
+                "tag": "evidence",
+                "text": "校内奖励等级：B 级（《上海对外经贸大学竞赛奖励项目清单》）。具体加分与素拓折算以当年学院、团委文件为准。",
+                "citations": [
+                  "competition-list"
+                ]
+              }
+            ]
+          },
+          {
+            "heading": "关联方向",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "可以支撑：跨境电商与国际业务、国际贸易与供应链、数据分析与商业分析。赛事可以作为能力证据，但不是录用保证。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "学校竞赛奖励清单",
+            "url": "https://www.suibe.edu.cn/xsc/",
+            "look": "赛事等级（A/B/C）与加分口径",
+            "cadence": "每学年更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "教务处 · 创新创业栏目",
+            "url": "https://jwc.suibe.edu.cn/18805/list.htm",
+            "look": "校内选拔通知与报名入口",
+            "cadence": "按赛事更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "官方赛事页面",
+            "url": "https://www.3chuang.net/",
+            "look": "报名时间、资格与赛制",
+            "cadence": "按赛事更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "competition-cn-ocale",
+      "type": "competition",
+      "title": "OCALE 全国跨境电商创新创业能力大赛",
+      "sub": "国家级 · 校内等级待核",
+      "status": "unverified",
+      "why": "校园竞赛目录中的赛事，关联 2 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "赛事信息",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "OCALE 全国跨境电商创新创业能力大赛，国家级，主办方：中国国际贸易学会。时间：每年春季赛/秋季赛（以当年通知为准）。",
+                "citations": [
+                  "competition-cn-ocale"
+                ]
+              },
+              {
+                "tag": "gap",
+                "text": "校内奖励等级尚未在清单中确认，不能据此判断加分。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "关联方向",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "可以支撑：跨境电商与国际业务、国际贸易与供应链。赛事可以作为能力证据，但不是录用保证。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "学校竞赛奖励清单",
+            "url": "https://www.suibe.edu.cn/xsc/",
+            "look": "赛事等级（A/B/C）与加分口径",
+            "cadence": "每学年更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "教务处 · 创新创业栏目",
+            "url": "https://jwc.suibe.edu.cn/18805/list.htm",
+            "look": "校内选拔通知与报名入口",
+            "cadence": "按赛事更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "官方赛事页面",
+            "url": "https://www.ocale.net/",
+            "look": "报名时间、资格与赛制",
+            "cadence": "按赛事更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "competition-suibe-x-216",
+      "type": "competition",
+      "title": "上经贸大金融模拟投资大赛",
+      "sub": "国家级 · 校内 C 级",
+      "status": "official_lead",
+      "why": "校园竞赛目录中的赛事，关联 4 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "赛事信息",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "上经贸大金融模拟投资大赛，国家级，主办方：未标注。时间：以当年官方通知为准。",
+                "citations": [
+                  "competition-suibe-x-216"
+                ]
+              },
+              {
+                "tag": "evidence",
+                "text": "校内奖励等级：C 级（《上海对外经贸大学竞赛奖励项目清单》）。具体加分与素拓折算以当年学院、团委文件为准。",
+                "citations": [
+                  "competition-list"
+                ]
+              }
+            ]
+          },
+          {
+            "heading": "关联方向",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "可以支撑：国际贸易与供应链、跨境电商与国际业务、金融与财会、数据分析与商业分析。赛事可以作为能力证据，但不是录用保证。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "学校竞赛奖励清单",
+            "url": "https://www.suibe.edu.cn/xsc/",
+            "look": "赛事等级（A/B/C）与加分口径",
+            "cadence": "每学年更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "教务处 · 创新创业栏目",
+            "url": "https://jwc.suibe.edu.cn/18805/list.htm",
+            "look": "校内选拔通知与报名入口",
+            "cadence": "按赛事更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "学校竞赛通知",
+            "url": "https://www.suibe.edu.cn/xsc/",
+            "look": "校内通知与报名方式",
+            "cadence": "按赛事更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "competition-cn-eastmoney-finance",
+      "type": "competition",
+      "title": "“东方财富杯”全国大学生金融素养提升活动（含金融挑战赛）",
+      "sub": "国家级 · 校内等级待核",
+      "status": "unverified",
+      "why": "校园竞赛目录中的赛事，关联 1 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "赛事信息",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "“东方财富杯”全国大学生金融素养提升活动（含金融挑战赛），国家级，主办方：中国青年创业就业基金会、东方财富信息股份有限公司。时间：以当年通知为准（自 2014 年已举办十届）。",
+                "citations": [
+                  "competition-cn-eastmoney-finance"
+                ]
+              },
+              {
+                "tag": "gap",
+                "text": "校内奖励等级尚未在清单中确认，不能据此判断加分。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "关联方向",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "可以支撑：金融与财会。赛事可以作为能力证据，但不是录用保证。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "学校竞赛奖励清单",
+            "url": "https://www.suibe.edu.cn/xsc/",
+            "look": "赛事等级（A/B/C）与加分口径",
+            "cadence": "每学年更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "教务处 · 创新创业栏目",
+            "url": "https://jwc.suibe.edu.cn/18805/list.htm",
+            "look": "校内选拔通知与报名入口",
+            "cadence": "按赛事更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "官方赛事页面",
+            "url": "https://young.eastmoney.com/",
+            "look": "报名时间、资格与赛制",
+            "cadence": "按赛事更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "competition-cn-tjjmds",
+      "type": "competition",
+      "title": "全国大学生统计建模大赛",
+      "sub": "国家级 · 校内 A 级",
+      "status": "official_lead",
+      "why": "校园竞赛目录中的赛事，关联 2 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "赛事信息",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "全国大学生统计建模大赛，国家级，主办方：中国统计教育学会。时间：2026 年 3 月正式启动（以当年通知为准）。",
+                "citations": [
+                  "competition-cn-tjjmds"
+                ]
+              },
+              {
+                "tag": "evidence",
+                "text": "校内奖励等级：A 级（《上海对外经贸大学竞赛奖励项目清单》）。具体加分与素拓折算以当年学院、团委文件为准。",
+                "citations": [
+                  "competition-list"
+                ]
+              }
+            ]
+          },
+          {
+            "heading": "关联方向",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "可以支撑：数据分析与商业分析、金融与财会。赛事可以作为能力证据，但不是录用保证。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "学校竞赛奖励清单",
+            "url": "https://www.suibe.edu.cn/xsc/",
+            "look": "赛事等级（A/B/C）与加分口径",
+            "cadence": "每学年更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "教务处 · 创新创业栏目",
+            "url": "https://jwc.suibe.edu.cn/18805/list.htm",
+            "look": "校内选拔通知与报名入口",
+            "cadence": "按赛事更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "官方赛事页面",
+            "url": "http://tjjmds.ai-learning.net/",
+            "look": "报名时间、资格与赛制",
+            "cadence": "按赛事更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "competition-cn-mkt-survey",
+      "type": "competition",
+      "title": "全国大学生市场调查与分析大赛",
+      "sub": "国家级 · 校内 A 级",
+      "status": "official_lead",
+      "why": "校园竞赛目录中的赛事，关联 3 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "赛事信息",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "全国大学生市场调查与分析大赛，国家级，主办方：中国商业统计学会。时间：2026 年 9 月正式启动；校赛/省赛/国赛时间以当年通知为准。",
+                "citations": [
+                  "competition-cn-mkt-survey"
+                ]
+              },
+              {
+                "tag": "evidence",
+                "text": "校内奖励等级：A 级（《上海对外经贸大学竞赛奖励项目清单》）。具体加分与素拓折算以当年学院、团委文件为准。",
+                "citations": [
+                  "competition-list"
+                ]
+              }
+            ]
+          },
+          {
+            "heading": "关联方向",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "可以支撑：数据分析与商业分析、国际贸易与供应链、金融与财会。赛事可以作为能力证据，但不是录用保证。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "学校竞赛奖励清单",
+            "url": "https://www.suibe.edu.cn/xsc/",
+            "look": "赛事等级（A/B/C）与加分口径",
+            "cadence": "每学年更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "教务处 · 创新创业栏目",
+            "url": "https://jwc.suibe.edu.cn/18805/list.htm",
+            "look": "校内选拔通知与报名入口",
+            "cadence": "按赛事更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "官方赛事页面",
+            "url": "http://www.china-cssc.org/show-304-2179-1.html",
+            "look": "报名时间、资格与赛制",
+            "cadence": "按赛事更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "competition-suibe-x-87",
+      "type": "competition",
+      "title": "“贸仲杯”国际商事仲裁模拟仲裁庭辩论赛",
+      "sub": "国家级 · 校内 A 级",
+      "status": "official_lead",
+      "why": "校园竞赛目录中的赛事，关联 1 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "赛事信息",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "“贸仲杯”国际商事仲裁模拟仲裁庭辩论赛，国家级，主办方：未标注。时间：以当年官方通知为准。",
+                "citations": [
+                  "competition-suibe-x-87"
+                ]
+              },
+              {
+                "tag": "evidence",
+                "text": "校内奖励等级：A 级（《上海对外经贸大学竞赛奖励项目清单》）。具体加分与素拓折算以当年学院、团委文件为准。",
+                "citations": [
+                  "competition-list"
+                ]
+              }
+            ]
+          },
+          {
+            "heading": "关联方向",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "可以支撑：公共部门与公共服务。赛事可以作为能力证据，但不是录用保证。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "学校竞赛奖励清单",
+            "url": "https://www.suibe.edu.cn/xsc/",
+            "look": "赛事等级（A/B/C）与加分口径",
+            "cadence": "每学年更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "教务处 · 创新创业栏目",
+            "url": "https://jwc.suibe.edu.cn/18805/list.htm",
+            "look": "校内选拔通知与报名入口",
+            "cadence": "按赛事更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "学校竞赛通知",
+            "url": "https://www.suibe.edu.cn/xsc/",
+            "look": "校内通知与报名方式",
+            "cadence": "按赛事更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "competition-cn-mootcourt",
+      "type": "competition",
+      "title": "全国大学生模拟法庭竞赛",
+      "sub": "国家级 · 校内等级待核",
+      "status": "unverified",
+      "why": "校园竞赛目录中的赛事，关联 1 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "赛事信息",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "全国大学生模拟法庭竞赛，国家级，主办方：教育部国家级实验教学示范中心法学组联席会。时间：以当年通知为准。",
+                "citations": [
+                  "competition-cn-mootcourt"
+                ]
+              },
+              {
+                "tag": "gap",
+                "text": "校内奖励等级尚未在清单中确认，不能据此判断加分。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "关联方向",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "可以支撑：公共部门与公共服务。赛事可以作为能力证据，但不是录用保证。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "学校竞赛奖励清单",
+            "url": "https://www.suibe.edu.cn/xsc/",
+            "look": "赛事等级（A/B/C）与加分口径",
+            "cadence": "每学年更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "教务处 · 创新创业栏目",
+            "url": "https://jwc.suibe.edu.cn/18805/list.htm",
+            "look": "校内选拔通知与报名入口",
+            "cadence": "按赛事更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "官方赛事页面",
+            "url": "http://www.mootcourt.cn/",
+            "look": "报名时间、资格与赛制",
+            "cadence": "按赛事更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "job-trade_language",
+      "type": "job",
+      "title": "外贸销售（岗位族）",
+      "sub": "招聘快照 4 条 · 非代表性",
+      "status": "external_reference",
+      "why": "来自 BOSS 直聘实习岗位快照，关联 2 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "招聘快照",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "BOSS 直聘实习岗位快照（2026-10-17）中「国贸 / 商务英语」岗位族有 4 条样本；高频要求：英语四级（3 次）、外贸流程（2 次）、商务邮件（2 次）、办公软件（1 次）；广告薪资：10-15K / 12-20K / 12-24K。非代表性目的抽样，未提及不等于不需要。",
+                "citations": [
+                  "industry-snapshot"
+                ]
+              },
+              {
+                "tag": "inference",
+                "text": "把高频要求当成「要补的能力清单」，而不是「录用概率」；样本不能外推到整个行业。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "关联方向",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "对应方向：国际贸易与供应链、跨境电商与国际业务。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "国家大学生就业服务平台",
+            "url": "https://cxcy.ncss.cn/",
+            "look": "同类岗位的完整 JD 与行业分布",
+            "cadence": "持续更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "学生就业信息网",
+            "url": "https://job.suibe.edu.cn/",
+            "look": "校招与实习信息",
+            "cadence": "按学期更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "job-accounting",
+      "type": "job",
+      "title": "外部审计（岗位族）",
+      "sub": "招聘快照 4 条 · 非代表性",
+      "status": "external_reference",
+      "why": "来自 BOSS 直聘实习岗位快照，关联 1 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "招聘快照",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "BOSS 直聘实习岗位快照（2026-10-17）中「会计 / 审计 / 财管」岗位族有 4 条样本；高频要求：办公软件（2 次）、学习能力（2 次）、审计底稿（2 次）、沟通（1 次）；广告薪资：80-120元/天 / 100-120元/天 / 100-150元/天 / 150-180元/天。非代表性目的抽样，未提及不等于不需要。",
+                "citations": [
+                  "industry-snapshot"
+                ]
+              },
+              {
+                "tag": "inference",
+                "text": "把高频要求当成「要补的能力清单」，而不是「录用概率」；样本不能外推到整个行业。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "关联方向",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "对应方向：金融与财会。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "国家大学生就业服务平台",
+            "url": "https://cxcy.ncss.cn/",
+            "look": "同类岗位的完整 JD 与行业分布",
+            "cadence": "持续更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "学生就业信息网",
+            "url": "https://job.suibe.edu.cn/",
+            "look": "校招与实习信息",
+            "cadence": "按学期更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "job-law",
+      "type": "job",
+      "title": "企业法务与合规（岗位族）",
+      "sub": "招聘快照 4 条 · 非代表性",
+      "status": "external_reference",
+      "why": "来自 BOSS 直聘实习岗位快照，关联 1 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "招聘快照",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "BOSS 直聘实习岗位快照（2026-10-17）中「法学」岗位族有 4 条样本；高频要求：合同审核（2 次）、法律检索（2 次）、法律研究（2 次）、风险识别（1 次）；广告薪资：150-200元/天 / 150-180元/天 / 160-180元/天 / 200-250元/天。非代表性目的抽样，未提及不等于不需要。",
+                "citations": [
+                  "industry-snapshot"
+                ]
+              },
+              {
+                "tag": "inference",
+                "text": "把高频要求当成「要补的能力清单」，而不是「录用概率」；样本不能外推到整个行业。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "关联方向",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "对应方向：公共部门与公共服务。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "国家大学生就业服务平台",
+            "url": "https://cxcy.ncss.cn/",
+            "look": "同类岗位的完整 JD 与行业分布",
+            "cadence": "持续更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "学生就业信息网",
+            "url": "https://job.suibe.edu.cn/",
+            "look": "校招与实习信息",
+            "cadence": "按学期更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "job-data",
+      "type": "job",
+      "title": "数据分析（岗位族）",
+      "sub": "招聘快照 3 条 · 非代表性",
+      "status": "external_reference",
+      "why": "来自 BOSS 直聘实习岗位快照，关联 1 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "招聘快照",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "BOSS 直聘实习岗位快照（2026-10-17）中「数据科学 / 数据复合方向」岗位族有 3 条样本；高频要求：Python（1 次）、SQL（1 次）、Excel透视表（1 次）、数理逻辑（1 次）；广告薪资：250-300元/天 / 200-300元/天 / 200-230元/天 / 100-120元/天。非代表性目的抽样，未提及不等于不需要。",
+                "citations": [
+                  "industry-snapshot"
+                ]
+              },
+              {
+                "tag": "inference",
+                "text": "把高频要求当成「要补的能力清单」，而不是「录用概率」；样本不能外推到整个行业。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "关联方向",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "对应方向：数据分析与商业分析。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "国家大学生就业服务平台",
+            "url": "https://cxcy.ncss.cn/",
+            "look": "同类岗位的完整 JD 与行业分布",
+            "cadence": "持续更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "学生就业信息网",
+            "url": "https://job.suibe.edu.cn/",
+            "look": "校招与实习信息",
+            "cadence": "按学期更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "job-further-study",
+      "type": "job",
+      "title": "研究助理 / 研究生（路径）",
+      "sub": "升学不是岗位族，是路径",
+      "status": "partial",
+      "why": "升学路径的关键事实（推免细则、各学院名额）未收进语料。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "路径说明",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "国内考研、出国（境）深造与研究型岗位属于路径而非岗位族；关键门槛是成绩排名、科研/竞赛经历与学院推免细则。",
+                "citations": []
+              },
+              {
+                "tag": "gap",
+                "text": "推免细则各学院不同、C 级竞赛未在计分表中；语料未收录各学院当年文件。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "与你的画像",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "国贸·大一可以先补数学/计量与学术写作，再决定是否走研究路径。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "学校研究生院 / 学院官网",
+            "url": "https://www.suibe.edu.cn/",
+            "look": "推免办法、名额、公示与培养方案",
+            "cadence": "每年更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "图书馆 · 文献检索",
+            "url": "https://lib.suibe.edu.cn/",
+            "look": "文献检索与研究入门",
+            "cadence": "按需",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "resource-suibe-jwc",
+      "type": "resource",
+      "title": "教务处",
+      "sub": "校内官方",
+      "status": "official_lead",
+      "why": "查证入口，共用于 6 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "入口说明",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "教务处：培养方案、课程、学分、选课与创新创业通知",
+                "citations": [
+                  "resource-suibe-jwc"
+                ]
+              },
+              {
+                "tag": "inference",
+                "text": "优先核对与本方向直接相关的栏目与字段（见「去哪查」），并把核对日期记录下来。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "教务处",
+            "url": "https://jwc.suibe.edu.cn/",
+            "look": "培养方案、课程、学分、选课与创新创业通知",
+            "cadence": "以栏目更新为准",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "resource-suibe-job",
+      "type": "resource",
+      "title": "学生就业信息网",
+      "sub": "校内官方",
+      "status": "official_lead",
+      "why": "查证入口，共用于 5 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "入口说明",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "学生就业信息网：就业指导、招聘信息与毕业生就业质量报告发布",
+                "citations": [
+                  "resource-suibe-job"
+                ]
+              },
+              {
+                "tag": "inference",
+                "text": "优先核对与本方向直接相关的栏目与字段（见「去哪查」），并把核对日期记录下来。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "学生就业信息网",
+            "url": "https://job.suibe.edu.cn/",
+            "look": "就业指导、招聘信息与毕业生就业质量报告发布",
+            "cadence": "以栏目更新为准",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "resource-suibe-tw",
+      "type": "resource",
+      "title": "团委",
+      "sub": "校内官方",
+      "status": "official_lead",
+      "why": "查证入口，共用于 2 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "入口说明",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "团委：第二课堂、素拓活动与竞赛认定相关通知",
+                "citations": [
+                  "resource-suibe-tw"
+                ]
+              },
+              {
+                "tag": "inference",
+                "text": "优先核对与本方向直接相关的栏目与字段（见「去哪查」），并把核对日期记录下来。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "团委",
+            "url": "https://www.suibe.edu.cn/tw/",
+            "look": "第二课堂、素拓活动与竞赛认定相关通知",
+            "cadence": "以栏目更新为准",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "resource-suibe-lib",
+      "type": "resource",
+      "title": "图书馆",
+      "sub": "校内官方",
+      "status": "official_lead",
+      "why": "查证入口，共用于 3 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "入口说明",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "图书馆：馆藏、数据库与文献检索服务",
+                "citations": [
+                  "resource-suibe-lib"
+                ]
+              },
+              {
+                "tag": "inference",
+                "text": "优先核对与本方向直接相关的栏目与字段（见「去哪查」），并把核对日期记录下来。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "图书馆",
+            "url": "https://lib.suibe.edu.cn/",
+            "look": "馆藏、数据库与文献检索服务",
+            "cadence": "以栏目更新为准",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "resource-xz-chsi",
+      "type": "resource",
+      "title": "学职平台",
+      "sub": "外部平台",
+      "status": "external_reference",
+      "why": "查证入口，共用于 2 个方向。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "入口说明",
+            "paragraphs": [
+              {
+                "tag": "evidence",
+                "text": "学职平台：学信网旗下学业与职业发展测评平台",
+                "citations": [
+                  "resource-xz-chsi"
+                ]
+              },
+              {
+                "tag": "inference",
+                "text": "优先核对与本方向直接相关的栏目与字段（见「去哪查」），并把核对日期记录下来。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "学职平台",
+            "url": "https://xz.chsi.com.cn/",
+            "look": "学信网旗下学业与职业发展测评平台",
+            "cadence": "以栏目更新为准",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "gap-employment",
+      "type": "gap",
+      "title": "2023–2025 届去向数据",
+      "sub": "数据缺口 · 待查",
+      "status": "pending",
+      "why": "这一步没有可用数据：只提供查证入口，不给结论。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "缺什么",
+            "paragraphs": [
+              {
+                "tag": "gap",
+                "text": "语料里的就业质量报告只覆盖 2021/2022 届；2023–2025 届该专业/该方向的去向、行业与薪资没有收录，不能据此推断趋势。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "为什么不能猜",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "缺口不进入结论：页面上不写没有来源的数字，也不用其它学校/其它届的数据替代。缺口的价值是给你下一步动作，而不是一个看起来完整的答案。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "学生就业信息网 · 就业质量报告栏目",
+            "url": "https://job.suibe.edu.cn/",
+            "look": "报告 PDF 中的分专业/分学院去向、主要就业行业、在沪就业比例",
+            "cadence": "每年 12 月前后发布上一届报告",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "学校信息公开网",
+            "url": "https://www.suibe.edu.cn/",
+            "look": "按年份与栏目核对就业质量年度报告原文",
+            "cadence": "每年更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "gap-certificate",
+      "type": "gap",
+      "title": "证书与实习门槛",
+      "sub": "数据缺口 · 待查",
+      "status": "pending",
+      "why": "这一步没有可用数据：只提供查证入口，不给结论。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "缺什么",
+            "paragraphs": [
+              {
+                "tag": "gap",
+                "text": "金融与财会方向的证书要求（初级会计、CPA、CFA 等）没有进入语料；招聘快照中的金融岗位样本为 0，无法给出录取或门槛判断。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "为什么不能猜",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "缺口不进入结论：页面上不写没有来源的数字，也不用其它学校/其它届的数据替代。缺口的价值是给你下一步动作，而不是一个看起来完整的答案。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "财政部会计资格评价中心",
+            "url": "https://kzp.mof.gov.cn/",
+            "look": "初级/中级会计资格考试报名条件与时间",
+            "cadence": "每年更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "学生就业信息网 · 实习信息",
+            "url": "https://job.suibe.edu.cn/",
+            "look": "本校发布的实习岗位与要求",
+            "cadence": "按学期更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "gap-platform",
+      "type": "gap",
+      "title": "跨境电商平台规则",
+      "sub": "数据缺口 · 待查",
+      "status": "pending",
+      "why": "这一步没有可用数据：只提供查证入口，不给结论。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "缺什么",
+            "paragraphs": [
+              {
+                "tag": "gap",
+                "text": "平台入驻、佣金、合规与账号规则变化快，且语料没有本校在该方向的直接就业样本，不能把平台规则写成固定结论。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "为什么不能猜",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "缺口不进入结论：页面上不写没有来源的数字，也不用其它学校/其它届的数据替代。缺口的价值是给你下一步动作，而不是一个看起来完整的答案。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "跨境电商平台官方规则中心",
+            "url": "https://www.amazon.com/",
+            "look": "以平台官方卖家规则中心为准，按站点分别核对",
+            "cadence": "持续更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "教务处 · 创新创业栏目",
+            "url": "https://jwc.suibe.edu.cn/18805/list.htm",
+            "look": "校内跨境电商相关课程、项目与赛事通知",
+            "cadence": "按学期更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    },
+    {
+      "id": "gap-public-exam",
+      "type": "gap",
+      "title": "招录条件与考试科目",
+      "sub": "数据缺口 · 待查",
+      "status": "pending",
+      "why": "这一步没有可用数据：只提供查证入口，不给结论。",
+      "wiki": {
+        "sections": [
+          {
+            "heading": "缺什么",
+            "paragraphs": [
+              {
+                "tag": "gap",
+                "text": "公务员/事业单位的岗位表、专业限制、基层经历要求与考试科目逐年变化，未进入语料；本页面不展示任何未经核对的招录结论。",
+                "citations": []
+              }
+            ]
+          },
+          {
+            "heading": "为什么不能猜",
+            "paragraphs": [
+              {
+                "tag": "inference",
+                "text": "缺口不进入结论：页面上不写没有来源的数字，也不用其它学校/其它届的数据替代。缺口的价值是给你下一步动作，而不是一个看起来完整的答案。",
+                "citations": []
+              }
+            ]
+          }
+        ],
+        "guides": [
+          {
+            "label": "国家公务员局 · 考试录用专题",
+            "url": "http://www.scs.gov.cn/",
+            "look": "当年岗位表、专业限制、报名条件与考试科目",
+            "cadence": "每年公告发布时更新",
+            "last_checked": "2026-11-04"
+          },
+          {
+            "label": "学校学生就业信息网",
+            "url": "https://job.suibe.edu.cn/",
+            "look": "校内选调、基层项目与就业指导通知",
+            "cadence": "按学期更新",
+            "last_checked": "2026-11-04"
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "me",
+      "target": "trade_supply_chain"
+    },
+    {
+      "source": "program-2024",
+      "target": "trade_supply_chain"
+    },
+    {
+      "source": "me",
+      "target": "cross_border_business"
+    },
+    {
+      "source": "program-2024",
+      "target": "cross_border_business"
+    },
+    {
+      "source": "me",
+      "target": "finance_accounting"
+    },
+    {
+      "source": "program-2024",
+      "target": "finance_accounting"
+    },
+    {
+      "source": "me",
+      "target": "data_business"
+    },
+    {
+      "source": "program-2024",
+      "target": "data_business"
+    },
+    {
+      "source": "me",
+      "target": "public_service"
+    },
+    {
+      "source": "program-2024",
+      "target": "public_service"
+    },
+    {
+      "source": "me",
+      "target": "further_study"
+    },
+    {
+      "source": "program-2024",
+      "target": "further_study"
+    },
+    {
+      "source": "program-2024",
+      "target": "course-suibe-intl_econ_trade-2024-043"
+    },
+    {
+      "source": "trade_supply_chain",
+      "target": "course-suibe-intl_econ_trade-2024-043"
+    },
+    {
+      "source": "cross_border_business",
+      "target": "course-suibe-intl_econ_trade-2024-043"
+    },
+    {
+      "source": "program-2024",
+      "target": "course-suibe-intl_econ_trade-2024-038"
+    },
+    {
+      "source": "trade_supply_chain",
+      "target": "course-suibe-intl_econ_trade-2024-038"
+    },
+    {
+      "source": "cross_border_business",
+      "target": "course-suibe-intl_econ_trade-2024-038"
+    },
+    {
+      "source": "program-2024",
+      "target": "course-suibe-intl_econ_trade-2024-051"
+    },
+    {
+      "source": "trade_supply_chain",
+      "target": "course-suibe-intl_econ_trade-2024-051"
+    },
+    {
+      "source": "cross_border_business",
+      "target": "course-suibe-intl_econ_trade-2024-051"
+    },
+    {
+      "source": "program-2024",
+      "target": "course-suibe-intl_econ_trade-2024-015"
+    },
+    {
+      "source": "trade_supply_chain",
+      "target": "course-suibe-intl_econ_trade-2024-015"
+    },
+    {
+      "source": "cross_border_business",
+      "target": "course-suibe-intl_econ_trade-2024-015"
+    },
+    {
+      "source": "program-2024",
+      "target": "course-suibe-intl_econ_trade-2024-047"
+    },
+    {
+      "source": "trade_supply_chain",
+      "target": "course-suibe-intl_econ_trade-2024-047"
+    },
+    {
+      "source": "cross_border_business",
+      "target": "course-suibe-intl_econ_trade-2024-047"
+    },
+    {
+      "source": "finance_accounting",
+      "target": "course-suibe-intl_econ_trade-2024-047"
+    },
+    {
+      "source": "program-2024",
+      "target": "course-suibe-intl_econ_trade-2024-048"
+    },
+    {
+      "source": "trade_supply_chain",
+      "target": "course-suibe-intl_econ_trade-2024-048"
+    },
+    {
+      "source": "cross_border_business",
+      "target": "course-suibe-intl_econ_trade-2024-048"
+    },
+    {
+      "source": "finance_accounting",
+      "target": "course-suibe-intl_econ_trade-2024-048"
+    },
+    {
+      "source": "program-2024",
+      "target": "course-suibe-intl_econ_trade-2024-003"
+    },
+    {
+      "source": "trade_supply_chain",
+      "target": "course-suibe-intl_econ_trade-2024-003"
+    },
+    {
+      "source": "cross_border_business",
+      "target": "course-suibe-intl_econ_trade-2024-003"
+    },
+    {
+      "source": "data_business",
+      "target": "course-suibe-intl_econ_trade-2024-003"
+    },
+    {
+      "source": "program-2024",
+      "target": "course-suibe-intl_econ_trade-2024-049"
+    },
+    {
+      "source": "trade_supply_chain",
+      "target": "course-suibe-intl_econ_trade-2024-049"
+    },
+    {
+      "source": "cross_border_business",
+      "target": "course-suibe-intl_econ_trade-2024-049"
+    },
+    {
+      "source": "data_business",
+      "target": "course-suibe-intl_econ_trade-2024-049"
+    },
+    {
+      "source": "program-2024",
+      "target": "course-suibe-intl_econ_trade-2024-012"
+    },
+    {
+      "source": "trade_supply_chain",
+      "target": "course-suibe-intl_econ_trade-2024-012"
+    },
+    {
+      "source": "cross_border_business",
+      "target": "course-suibe-intl_econ_trade-2024-012"
+    },
+    {
+      "source": "public_service",
+      "target": "course-suibe-intl_econ_trade-2024-012"
+    },
+    {
+      "source": "program-2024",
+      "target": "course-suibe-intl_econ_trade-2024-045"
+    },
+    {
+      "source": "trade_supply_chain",
+      "target": "course-suibe-intl_econ_trade-2024-045"
+    },
+    {
+      "source": "cross_border_business",
+      "target": "course-suibe-intl_econ_trade-2024-045"
+    },
+    {
+      "source": "public_service",
+      "target": "course-suibe-intl_econ_trade-2024-045"
+    },
+    {
+      "source": "program-2024",
+      "target": "course-suibe-intl_econ_trade-2024-041"
+    },
+    {
+      "source": "trade_supply_chain",
+      "target": "course-suibe-intl_econ_trade-2024-041"
+    },
+    {
+      "source": "cross_border_business",
+      "target": "course-suibe-intl_econ_trade-2024-041"
+    },
+    {
+      "source": "further_study",
+      "target": "course-suibe-intl_econ_trade-2024-041"
+    },
+    {
+      "source": "trade_supply_chain",
+      "target": "competition-cn-negotiation"
+    },
+    {
+      "source": "cross_border_business",
+      "target": "competition-cn-negotiation"
+    },
+    {
+      "source": "trade_supply_chain",
+      "target": "competition-suibe-x-154"
+    },
+    {
+      "source": "cross_border_business",
+      "target": "competition-suibe-x-154"
+    },
+    {
+      "source": "finance_accounting",
+      "target": "competition-suibe-x-154"
+    },
+    {
+      "source": "data_business",
+      "target": "competition-suibe-x-154"
+    },
+    {
+      "source": "cross_border_business",
+      "target": "competition-cn-3chuang"
+    },
+    {
+      "source": "trade_supply_chain",
+      "target": "competition-cn-3chuang"
+    },
+    {
+      "source": "data_business",
+      "target": "competition-cn-3chuang"
+    },
+    {
+      "source": "cross_border_business",
+      "target": "competition-cn-ocale"
+    },
+    {
+      "source": "trade_supply_chain",
+      "target": "competition-cn-ocale"
+    },
+    {
+      "source": "trade_supply_chain",
+      "target": "competition-suibe-x-216"
+    },
+    {
+      "source": "cross_border_business",
+      "target": "competition-suibe-x-216"
+    },
+    {
+      "source": "finance_accounting",
+      "target": "competition-suibe-x-216"
+    },
+    {
+      "source": "data_business",
+      "target": "competition-suibe-x-216"
+    },
+    {
+      "source": "finance_accounting",
+      "target": "competition-cn-eastmoney-finance"
+    },
+    {
+      "source": "data_business",
+      "target": "competition-cn-tjjmds"
+    },
+    {
+      "source": "finance_accounting",
+      "target": "competition-cn-tjjmds"
+    },
+    {
+      "source": "data_business",
+      "target": "competition-cn-mkt-survey"
+    },
+    {
+      "source": "trade_supply_chain",
+      "target": "competition-cn-mkt-survey"
+    },
+    {
+      "source": "finance_accounting",
+      "target": "competition-cn-mkt-survey"
+    },
+    {
+      "source": "public_service",
+      "target": "competition-suibe-x-87"
+    },
+    {
+      "source": "public_service",
+      "target": "competition-cn-mootcourt"
+    },
+    {
+      "source": "trade_supply_chain",
+      "target": "job-trade_language"
+    },
+    {
+      "source": "cross_border_business",
+      "target": "job-trade_language"
+    },
+    {
+      "source": "finance_accounting",
+      "target": "job-accounting"
+    },
+    {
+      "source": "public_service",
+      "target": "job-law"
+    },
+    {
+      "source": "data_business",
+      "target": "job-data"
+    },
+    {
+      "source": "further_study",
+      "target": "job-further-study"
+    },
+    {
+      "source": "trade_supply_chain",
+      "target": "resource-suibe-jwc"
+    },
+    {
+      "source": "cross_border_business",
+      "target": "resource-suibe-jwc"
+    },
+    {
+      "source": "finance_accounting",
+      "target": "resource-suibe-jwc"
+    },
+    {
+      "source": "data_business",
+      "target": "resource-suibe-jwc"
+    },
+    {
+      "source": "public_service",
+      "target": "resource-suibe-jwc"
+    },
+    {
+      "source": "further_study",
+      "target": "resource-suibe-jwc"
+    },
+    {
+      "source": "trade_supply_chain",
+      "target": "resource-suibe-job"
+    },
+    {
+      "source": "finance_accounting",
+      "target": "resource-suibe-job"
+    },
+    {
+      "source": "data_business",
+      "target": "resource-suibe-job"
+    },
+    {
+      "source": "public_service",
+      "target": "resource-suibe-job"
+    },
+    {
+      "source": "further_study",
+      "target": "resource-suibe-job"
+    },
+    {
+      "source": "cross_border_business",
+      "target": "resource-suibe-tw"
+    },
+    {
+      "source": "public_service",
+      "target": "resource-suibe-tw"
+    },
+    {
+      "source": "finance_accounting",
+      "target": "resource-suibe-lib"
+    },
+    {
+      "source": "data_business",
+      "target": "resource-suibe-lib"
+    },
+    {
+      "source": "further_study",
+      "target": "resource-suibe-lib"
+    },
+    {
+      "source": "data_business",
+      "target": "resource-xz-chsi"
+    },
+    {
+      "source": "further_study",
+      "target": "resource-xz-chsi"
+    },
+    {
+      "source": "trade_supply_chain",
+      "target": "gap-employment"
+    },
+    {
+      "source": "data_business",
+      "target": "gap-employment"
+    },
+    {
+      "source": "further_study",
+      "target": "gap-employment"
+    },
+    {
+      "source": "finance_accounting",
+      "target": "gap-certificate"
+    },
+    {
+      "source": "cross_border_business",
+      "target": "gap-platform"
+    },
+    {
+      "source": "public_service",
+      "target": "gap-public-exam"
+    }
+  ],
+  "boundaries": [
+    "方向卡是团队整理；课程来自培养方案机器提取，未逐条人工复核。",
+    "就业事实只覆盖 2021/2022 届，且为 pending；不展示未核验的就业率、薪资或通过率。",
+    "招聘快照为非代表性目的抽样，未提及不等于不需要，不能外推行业。",
+    "图谱只做导航与引用，不替代官方文件；所有数字都应回到来源核对。"
+  ]
+}

@@ -12,6 +12,7 @@ export function SiteFooter() {
             <Link href="/">首页</Link>
             <Link href="/explore">开始探索</Link>
             <Link href="/library">资料库</Link>
+            <Link href="/graph">知识图谱</Link>
             <Link href="/plan">行动方案</Link>
           </nav>
           <span className="footer-copy">
