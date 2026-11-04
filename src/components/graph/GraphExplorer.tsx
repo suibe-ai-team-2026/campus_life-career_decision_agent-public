@@ -22,10 +22,11 @@ const TYPE_ORDER: GraphNode["type"][] = [
   "me"
 ];
 
-function nodeRadius(node: GraphNode, degree: Map<string, number>): number {
-  if (node.type === "me") return 10.5;
+function nodeRadius(node: GraphNode, degree: Map<string, number>, maxDegree: number): number {
+  if (node.type === "me") return 11;
   if (node.type === "gap") return 5;
-  return Math.min(12, 4 + Math.sqrt(degree.get(node.id) ?? 0) * 1.7);
+  const ratio = Math.sqrt(Math.max(degree.get(node.id) ?? 0, 1) / Math.max(maxDegree, 1));
+  return Math.min(13, 4.5 + ratio * 9.5);
 }
 
 function shortLabel(title: string): string {
@@ -42,6 +43,7 @@ export function GraphExplorer({ snapshot }: { snapshot: GraphSnapshot }) {
   const nodeById = useMemo(() => new Map(snapshot.nodes.map((node) => [node.id, node])), [snapshot]);
   const adjacency = useMemo(() => buildAdjacency(snapshot.edges), [snapshot]);
   const degree = useMemo(() => buildDegree(snapshot.edges), [snapshot]);
+  const maxDegree = useMemo(() => Math.max(1, ...snapshot.nodes.map((node) => degree.get(node.id) ?? 0)), [snapshot, degree]);
 
   const [seed, setSeed] = useState(7);
   const baseLayout = useMemo(() => computeGraphLayout(snapshot.nodes, snapshot.edges, seed), [snapshot, seed]);
@@ -84,8 +86,16 @@ export function GraphExplorer({ snapshot }: { snapshot: GraphSnapshot }) {
       if (!visibleIds.has(node.id)) continue;
       const point = positions[node.id];
       if (!point) continue;
+      // 叶子节点默认不显示标签（悬停/选中时再出现），避免 40+ 个标签互相压字
+      const important =
+        node.type === "direction" ||
+        node.type === "program" ||
+        node.type === "me" ||
+        node.type === "gap" ||
+        (degree.get(node.id) ?? 0) >= 2;
+      if (!important && node.id !== focusId) continue;
       const label = shortLabel(node.title);
-      const radius = nodeRadius(node, degree);
+      const radius = nodeRadius(node, degree, maxDegree);
       const right = point.x >= WIDTH / 2;
       const lx = point.x + (right ? radius + 5 : -(radius + 5));
       const width = label.length * 6.2 + 4;
@@ -112,11 +122,11 @@ export function GraphExplorer({ snapshot }: { snapshot: GraphSnapshot }) {
       }
     }
     return visible;
-  }, [snapshot, visibleIds, positions, focusId, degree]);
+  }, [snapshot, visibleIds, positions, focusId, degree, maxDegree]);
 
   const presentTypes = useMemo(() => {
     const present = new Set(snapshot.nodes.map((node) => node.type));
-    return TYPE_ORDER.filter((type) => present.has(type));
+    return TYPE_ORDER.filter((type) => type !== "gap" && present.has(type));
   }, [snapshot]);
 
   function toPoint(clientX: number, clientY: number): GraphPoint {
@@ -260,7 +270,7 @@ export function GraphExplorer({ snapshot }: { snapshot: GraphSnapshot }) {
               if (!visibleIds.has(node.id)) return null;
               const point = positions[node.id];
               if (!point) return null;
-              const radius = nodeRadius(node, degree);
+              const radius = nodeRadius(node, degree, maxDegree);
               const selected = selectedId === node.id;
               const isNeighbour = neighbourIds.has(node.id);
               const matches = !lowerQuery || node.title.toLowerCase().includes(lowerQuery);

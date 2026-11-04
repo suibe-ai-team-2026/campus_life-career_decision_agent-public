@@ -119,16 +119,17 @@ export function computeGraphLayout(nodes: GraphNode[], edges: GraphEdge[], seed 
     minY = Math.min(minY, entry.p.y);
     maxY = Math.max(maxY, entry.p.y);
   }
-  const pad = 52;
-  const scale = Math.min((WIDTH - pad * 2) / Math.max(maxX - minX, 1), (HEIGHT - pad * 2) / Math.max(maxY - minY, 1));
-  const offsetX = pad + (WIDTH - pad * 2 - (maxX - minX) * scale) / 2;
-  const offsetY = pad + (HEIGHT - pad * 2 - (maxY - minY) * scale) / 2;
+  // 横向/纵向分别铺满画布：节点位置可以非等比拉伸，但圆点半径是独立用户单位，
+  // 因此圆仍然是圆，只是整体占满画布、不留下大片空白。
+  const pad = 46;
+  const scaleX = (WIDTH - pad * 2) / Math.max(maxX - minX, 1);
+  const scaleY = (HEIGHT - pad * 2) / Math.max(maxY - minY, 1);
 
   const layout: GraphLayout = {};
   for (const entry of list) {
     layout[entry.id] = {
-      x: Math.round((offsetX + (entry.p.x - minX) * scale) * 10) / 10,
-      y: Math.round((offsetY + (entry.p.y - minY) * scale) * 10) / 10
+      x: Math.round((pad + (entry.p.x - minX) * scaleX) * 10) / 10,
+      y: Math.round((pad + (entry.p.y - minY) * scaleY) * 10) / 10
     };
   }
   return layout;
