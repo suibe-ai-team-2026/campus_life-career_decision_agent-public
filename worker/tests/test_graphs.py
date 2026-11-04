@@ -67,8 +67,14 @@ def _evidence_row(*, chunk_id: str = "88888888-8888-8888-8888-888888888888", tex
     }
 
 
-def _plan_context(provider: FakeProvider, *, search_rows: list[dict] | None = None, emits: list | None = None):
-    config = make_config()
+def _plan_context(
+    provider: FakeProvider,
+    *,
+    search_rows: list[dict] | None = None,
+    emits: list | None = None,
+    config: Config | None = None,
+):
+    config = config or make_config()
     db = FakeDb(config=config)
     db.profiles[PROFILE_ID] = _profile()
     db.directions["trade_supply_chain"] = {"direction_id": "trade_supply_chain", "title": "国际贸易与供应链"}
@@ -196,6 +202,45 @@ def test_plan_graph_keeps_analysis_with_profile_scores_and_evidence_page_numbers
         "chat_plan_analysis",
     ]
     assert db.saved_plans
+
+
+def test_plan_analysis_runs_without_thinking_so_json_content_is_kept():
+    """回归（2026-11-04 线上）：方向分析开启思考时 reasoning 会吃光 max_tokens，
+    provider 返回空 content，分析被丢弃。修复后 analysis 调用不得带 reasoning_effort。
+    """
+
+    config = make_config(PLAN_REASONING_EFFORT="high")
+    provider = FakeProvider(
+        config,
+        chat_responses={
+            "chat_plan_analysis": [
+                json.dumps(
+                    {
+                        "overview": "该方向强调业务规则与沟通协作[1]。",
+                        "match": "你的画像信号与该方向要求基本对应[1]。",
+                        "action_rationale": ["先核对培养方案，再完成一门课程的可展示作业。"],
+                        "evidence_courses": [],
+                        "evidence_competitions": [],
+                        "risks": ["课程学分仍需核验[1]。"],
+                        "next_steps": ["先核对教务处课程属性。", "找岗位描述核对要求。", "向学院确认竞赛资格。"],
+                        "citation_numbers": [1],
+                        "boundary_note": "仅依据当前证据摘录。",
+                    },
+                    ensure_ascii=False,
+                )
+            ]
+        },
+    )
+    ctx, _db, _emits = _plan_context(provider, config=config)
+
+    result = run_plan(ctx)["result"]
+
+    assert result["analysis"] is not None
+    assert "plan_analysis_fallback:validation" not in result["warnings"]
+    analysis_calls = [call for call in provider.chat_kwargs if call["operation"] == "chat_plan_analysis"]
+    assert analysis_calls, "方向分析没有被调用"
+    assert analysis_calls[0]["reasoning_effort"] is None
+    assert analysis_calls[0]["model"] == config.plan_reasoning_model
 
 
 def test_plan_graph_discards_out_of_bounds_explanation_and_keeps_facts():

@@ -372,7 +372,12 @@ def build_plan_graph(ctx: JobContext):
                 max_attempts=2,
                 max_tokens=2800,
                 model=ctx.config.plan_reasoning_model,
-                reasoning_effort=ctx.config.plan_reasoning_effort,
+                # 方向分析必须返回严格 JSON；DeepSeek 思考模式会把 max_tokens(2800)
+                # 全部花在 reasoning 上（2026-11-04 线上复现：reasoning_tokens=2800、
+                # content_len=0、finish_reason=length），provider 抛 ModelOutputInvalid，
+                # 整个方向分析被丢弃并回退规则摘要。这里不传 reasoning_effort，让
+                # provider 的 json_mode 分支显式关闭 thinking（实测 11.5s、finish=stop）。
+                reasoning_effort=None,
             )
             analysis = PlanAnalysis(
                 overview=parsed_analysis.overview,
