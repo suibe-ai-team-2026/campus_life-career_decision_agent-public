@@ -8,6 +8,14 @@ import type { DirectionId } from "@/lib/contracts/common";
 import { PLAN_WINDOW_LABELS, PLAN_WINDOW_ORDER, getDirection } from "@/lib/content";
 import { Badge, Button, Callout, Collapse, EmptyState, Icon, formatDateTime, formatDate } from "@/components/ui/primitives";
 import { CitationFileList, CitationText } from "@/components/ui/CitationCard";
+import {
+  buildRuleFallbackAnalysis,
+  formatPlanWarning,
+  formatPlanWarnings,
+  formatRoadmapFocus,
+  summarizeDataGaps,
+  summarizeEffort
+} from "@/lib/plan-display";
 import { SourceUploadPanel } from "@/components/tools/SourceUploadPanel";
 import { ActionCard, type ActionOverrides } from "./PlanActionCard";
 
@@ -157,6 +165,96 @@ function LeadCards({
   );
 }
 
+function SemesterLeadShortlist({
+  result,
+  onViewAll
+}: {
+  result: PlanResult;
+  onViewAll: () => void;
+}) {
+  const lanes = [
+    {
+      label: "先选 1 门课",
+      hint: "核对开课学期、先修与学分认定",
+      leads: result.course_leads.slice(0, 3),
+      empty: "当前方向暂无课程线索"
+    },
+    {
+      label: "先核对 1 项竞赛",
+      hint: "确认年级资格、报名窗口与加分规则",
+      leads: result.competition_leads.slice(0, 2),
+      empty: "当前没有可用的竞赛线索"
+    },
+    {
+      label: "先关注 2 个入口",
+      hint: "把通知来源固定下来，减少漏信息",
+      leads: result.campus_resources.slice(0, 2),
+      empty: "当前学校暂无校内入口线索"
+    }
+  ];
+  const total = result.course_leads.length + result.competition_leads.length + result.campus_resources.length;
+  if (total === 0) return null;
+
+  return (
+    <section className="semester-shortlist" aria-labelledby="semester-shortlist-title">
+      <div className="semester-shortlist-head">
+        <div>
+          <p className="eyebrow">不用先看完所有资料</p>
+          <h2 id="semester-shortlist-title">这学期先从 {total} 条线索里选 3 步</h2>
+          <p className="micro">
+            下面都是待核对线索，不是已确认可选课程；选定后再回到下方行动里完成核验。
+          </p>
+        </div>
+        <Button variant="secondary" size="sm" onClick={onViewAll}>
+          查看全部线索
+          <Icon name="arrow-right" size={13} />
+        </Button>
+      </div>
+
+      <div className="semester-lead-grid">
+        {lanes.map((lane) => (
+          <article className="semester-lead-lane" key={lane.label}>
+            <header>
+              <div>
+                <h3>{lane.label}</h3>
+                <p>{lane.hint}</p>
+              </div>
+              <Badge tone="muted">{lane.leads.length} 条</Badge>
+            </header>
+            {lane.leads.length === 0 ? (
+              <p className="panel-note">{lane.empty}</p>
+            ) : (
+              <ol className="semester-lead-list">
+                {lane.leads.map((lead, index) => (
+                  <li className="semester-lead-item" key={lead.lead_id}>
+                    <span className="semester-lead-index">{index + 1}</span>
+                    <div>
+                      <h4>{lead.title}</h4>
+                      <p>{lead.why}</p>
+                      <div className="semester-lead-meta">
+                        <Badge tone={VERIFICATION_TONES[lead.verification_status]}>
+                          {VERIFICATION_LABELS[lead.verification_status]}
+                        </Badge>
+                        {lead.source_url ? (
+                          <a href={lead.source_url} target="_blank" rel="noopener noreferrer">
+                            打开来源 <Icon name="external" size={11} />
+                          </a>
+                        ) : (
+                          <span>{lead.source_label}</span>
+                        )}
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function Roadmap({ stages, compact = false }: { stages: PlanResult["roadmap"]; compact?: boolean }) {
   if (stages.length === 0) {
     return <EmptyState compact icon="map" title="路线蓝图未生成" description="当前结果没有返回分阶段行动，请补充画像或重新生成方案。" />;
@@ -168,7 +266,7 @@ function Roadmap({ stages, compact = false }: { stages: PlanResult["roadmap"]; c
           <div className="roadmap-marker">{stageIndex + 1}</div>
           <div className="roadmap-content">
             <p className="roadmap-stage-name">{stage.stage}</p>
-            <h3>{stage.focus}</h3>
+            <h3>{formatRoadmapFocus(stage.focus)}</h3>
             <ul>
               {stage.actions.map((action, actionIndex) => (
                 <li key={`${stage.stage}-${actionIndex}`}>{action}</li>
@@ -189,6 +287,7 @@ export function PlanDetail({
   evidence,
   isCached = false,
   cachedAt = null,
+  decisionReason = "",
   patchingActionId,
   actionErrors,
   onMoveOrder,
@@ -203,6 +302,7 @@ export function PlanDetail({
   evidence: Citation[];
   isCached?: boolean;
   cachedAt?: string | null;
+  decisionReason?: string;
   patchingActionId: string | null;
   actionErrors: Record<string, string>;
   onMoveOrder: (nextOrder: string[]) => void;
@@ -238,6 +338,16 @@ export function PlanDetail({
   })).filter((group) => group.actions.length > 0);
 
   const pendingVerification = result.actions.filter((action) => action.status === "pending_verification");
+  const effort = summarizeEffort(result.actions);
+  const gapSummary = summarizeDataGaps(result.actions);
+  const displayWarnings = formatPlanWarnings(result.warnings);
+  const analysisFallbackWarning = result.warnings.find((warning) =>
+    warning.startsWith("plan_analysis_fallback:")
+  );
+  const displayedAnalysis =
+    result.analysis ?? (direction ? buildRuleFallbackAnalysis(direction, result) : null);
+  const analysisIsFallback = !result.analysis && Boolean(displayedAnalysis);
+  const isDataGapState = result.status === "data_unavailable";
   const topThirty = result.roadmap.find((stage) => stage.stage === "未来 30 天") ?? null;
   const currentStage = result.roadmap.find((stage) => stage.stage !== "未来 30 天") ?? null;
   const priorityItems = topThirty?.actions.slice(0, 3) ?? orderedActions.slice(0, 3).map((action) => action.title);
@@ -291,6 +401,13 @@ export function PlanDetail({
           </div>
         ) : null}
 
+        {decisionReason.trim() ? (
+          <div className="plan-user-reason">
+            <span className="plan-route-label">你写下的判断依据与未知</span>
+            <p>{decisionReason.trim()}</p>
+          </div>
+        ) : null}
+
         <div className="plan-priority-grid">
           <div className="plan-priority-card">
             <div className="plan-priority-head">
@@ -310,7 +427,9 @@ export function PlanDetail({
           <div className="plan-priority-card">
             <div className="plan-priority-head">
               <span>{currentStage?.stage ?? "本学期"}</span>
-              <Badge tone="muted">{currentStage?.focus ?? "形成第一份证据"}</Badge>
+              <Badge tone="muted">
+                {currentStage ? formatRoadmapFocus(currentStage.focus) : "形成第一份证据"}
+              </Badge>
             </div>
             <ul className="plan-priority-list is-bulleted">
               {(currentStage?.actions ?? orderedActions.slice(0, 3).map((action) => action.title)).slice(0, 3).map((item, index) => (
@@ -368,55 +487,65 @@ export function PlanDetail({
             </section>
           ) : null}
 
-          {result.analysis ? (
-            <Collapse summary="AI 方向分析">
+          {analysisIsFallback ? (
+            <Callout tone="warn" title="AI 分析已回退为规则摘要">
+              <p className="small-note">
+                {analysisFallbackWarning
+                  ? formatPlanWarning(analysisFallbackWarning)
+                  : "本次没有取得可校验的 AI 分析，以下内容仅依据方向卡与规则事实生成。"}
+                {" "}不会补写未经核验的画像匹配结论。
+              </p>
+            </Callout>
+          ) : null}
+
+          {displayedAnalysis ? (
+            <Collapse summary={analysisIsFallback ? "方向分析（规则摘要）" : "AI 方向分析"} defaultOpen={analysisIsFallback}>
               <div className="analysis-grid">
                 <article className="analysis-card">
                   <h3><Icon name="compass" size={15} /> 方向概览</h3>
-                  <div className="analysis-body"><CitationText text={result.analysis.overview} citations={evidence} /></div>
+                  <div className="analysis-body"><CitationText text={displayedAnalysis.overview} citations={evidence} /></div>
                 </article>
                 <article className="analysis-card">
                   <h3><Icon name="activity" size={15} /> 画像匹配</h3>
-                  <div className="analysis-body"><CitationText text={result.analysis.match} citations={evidence} /></div>
+                  <div className="analysis-body"><CitationText text={displayedAnalysis.match} citations={evidence} /></div>
                 </article>
               </div>
 
-              {result.analysis.action_rationale.length > 0 ? (
+              {displayedAnalysis.action_rationale.length > 0 ? (
                 <div className="analysis-block">
                   <h3><Icon name="list" size={15} /> 每条行动的依据与做法</h3>
                   <ol className="analysis-list">
-                    {result.analysis.action_rationale.map((line, index) => (
+                    {displayedAnalysis.action_rationale.map((line, index) => (
                       <li key={index}><CitationText text={line} citations={evidence} /></li>
                     ))}
                   </ol>
                 </div>
               ) : null}
 
-              {result.analysis.risks.length > 0 ? (
+              {displayedAnalysis.risks.length > 0 ? (
                 <div className="analysis-block">
                   <h3><Icon name="alert" size={15} /> 风险与未知</h3>
                   <ul className="analysis-list">
-                    {result.analysis.risks.map((line, index) => (
+                    {displayedAnalysis.risks.map((line, index) => (
                       <li key={index}><CitationText text={line} citations={evidence} /></li>
                     ))}
                   </ul>
                 </div>
               ) : null}
 
-              {result.analysis.next_steps.length > 0 ? (
+              {displayedAnalysis.next_steps.length > 0 ? (
                 <div className="analysis-block">
                   <h3><Icon name="arrow-right" size={15} /> 建议的下一步</h3>
                   <ol className="analysis-steps">
-                    {result.analysis.next_steps.map((line, index) => (
+                    {displayedAnalysis.next_steps.map((line, index) => (
                       <li key={index}><span className="analysis-step-no">{index + 1}</span><CitationText text={line} citations={evidence} /></li>
                     ))}
                   </ol>
                 </div>
               ) : null}
+
             </Collapse>
-          ) : (
-            <EmptyState compact icon="sparkles" title="方向分析暂未生成" />
-          )}
+          ) : null}
 
           <Collapse summary="方案说明">
             {result.explanation ? (
@@ -493,10 +622,12 @@ export function PlanDetail({
 
       {activeTab === "semester" ? (
         <div className="plan-detail-panel" id="plan-panel-semester" role="tabpanel" aria-labelledby="plan-tab-semester">
+          <SemesterLeadShortlist result={result} onViewAll={() => setActiveTab("campus")} />
+
           {topThirty ? (
             <section className="semester-focus">
               <div className="section-heading-text">
-                <h2>{topThirty.stage}：{topThirty.focus}</h2>
+                <h2>{topThirty.stage}：{formatRoadmapFocus(topThirty.focus)}</h2>
               </div>
               <Roadmap stages={[topThirty]} compact />
             </section>
@@ -513,7 +644,7 @@ export function PlanDetail({
             {currentStage ? (
               <div className="current-stage-strip">
                 <Badge tone="accent">{currentStage.stage}</Badge>
-                <strong>{currentStage.focus}</strong>
+                <strong>{formatRoadmapFocus(currentStage.focus)}</strong>
                 <span>{currentStage.actions.length} 个关键动作</span>
               </div>
             ) : null}

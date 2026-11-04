@@ -583,6 +583,7 @@ export function ExportStep() {
               evidence={cachedPlan.result.evidence}
               isCached
               cachedAt={cachedPlan.fetched_at}
+              decisionReason={progress?.reason_summary ?? ""}
               patchingActionId={null}
               actionErrors={{}}
               onMoveOrder={() => undefined}

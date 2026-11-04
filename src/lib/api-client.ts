@@ -317,7 +317,7 @@ function normalizeRoadmap(value: unknown): PlanResult["roadmap"] {
 
 export function normalizePlanAnalysis(raw: unknown): PlanResult["analysis"] {
   if (!isRecord(raw)) return null;
-  return {
+  const analysis: NonNullable<PlanResult["analysis"]> = {
     overview: str(raw.overview),
     match: str(raw.match),
     action_rationale: strArray(raw.action_rationale),
@@ -346,6 +346,9 @@ export function normalizePlanAnalysis(raw: unknown): PlanResult["analysis"] {
       : [],
     boundary_note: str(raw.boundary_note)
   };
+  // Legacy/failed worker responses used `{}` here. Treat it as unavailable
+  // instead of rendering a truthy analysis panel with empty fields.
+  return analysis.overview.trim() || analysis.match.trim() ? analysis : null;
 }
 
 function normalizePlanResult(raw: unknown): PlanResult | null {
@@ -1143,6 +1146,7 @@ export function profileFingerprint(input: ProfileInput): string {
     input.preferences.weekly_hours ?? "",
     input.preferences.monthly_budget_cny ?? "",
     input.preferences.notes ?? "",
+    input.preferences.decision_reason ?? "",
     JSON.stringify(input.preferences.pathway)
   ].join("|");
   return fnv1a(payload);

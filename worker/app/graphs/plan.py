@@ -16,6 +16,7 @@ from langgraph.graph import END, START, StateGraph
 from ..errors import (
     BadRequest,
     InvalidProfile,
+    ModelOutputInvalid,
     OutputValidationError,
     ResourceNotFound,
     UnsupportedDirection,
@@ -61,6 +62,27 @@ class PlanState(TypedDict, total=False):
     warnings: list[str]
     web: Any
     payload: dict[str, Any]
+
+
+def _allowed_model_texts(
+    *,
+    profile_facts: dict[str, Any],
+    rule_payload: dict[str, Any],
+    evidence: list[dict[str, Any]],
+) -> list[str]:
+    """Collect every numeric fact that the model was actually shown.
+
+    The validators used to receive only evidence body text and rule JSON. That
+    dropped the profile scores and evidence locators included in the prompt, so
+    a faithful answer such as "自评 4.6/5" or "报告第 12 页" was rejected as an
+    invented number and the entire analysis was discarded.
+    """
+
+    return [
+        prompts.build_evidence_context(evidence),
+        json.dumps(profile_facts, ensure_ascii=False, sort_keys=True),
+        json.dumps(rule_payload, ensure_ascii=False, sort_keys=True),
+    ]
 
 
 def _parse_input(ctx: JobContext) -> PlanInput:
@@ -245,15 +267,18 @@ def build_plan_graph(ctx: JobContext):
             evidence.extend(web.evidence)
             citations.extend(web.citations)
 
+        profile_facts = profile_summary(profile)
         messages = prompts.build_plan_messages(
             direction_id=str(run_input["direction_id"]),
-            profile_summary=profile_summary(profile),
+            profile_summary=profile_facts,
             rule_facts=rule_payload,
             evidence=evidence,
         )
-        allowed_texts = [str(item.get("text") or "") for item in evidence] + [
-            json.dumps(rule_payload, ensure_ascii=False, sort_keys=True)
-        ]
+        allowed_texts = _allowed_model_texts(
+            profile_facts=profile_facts,
+            rule_payload=rule_payload,
+            evidence=evidence,
+        )
         allowed_urls = [str(item.get("canonical_url") or "") for item in evidence if item.get("canonical_url")]
 
         def validator(raw: str):
@@ -328,13 +353,15 @@ def build_plan_graph(ctx: JobContext):
             ctx.trace("agent_note", {"text": "生成方向分析（概览 / 匹配 / 行动依据 / 课程竞赛线索）"})
             analysis_messages = prompts.build_plan_analysis_messages(
                 direction_id=str(run_input["direction_id"]),
-                profile_summary=profile_summary(profile),
+                profile_summary=profile_facts,
                 rule_facts=rule_payload,
                 evidence=evidence,
             )
-            analysis_allowed_texts = [str(item.get("text") or "") + "\n" + str(item.get("context") or "") for item in evidence] + [
-                json.dumps(rule_payload, ensure_ascii=False, sort_keys=True)
-            ]
+            analysis_allowed_texts = _allowed_model_texts(
+                profile_facts=profile_facts,
+                rule_payload=rule_payload,
+                evidence=evidence,
+            )
 
             def analysis_validator(raw: str):
                 parsed_analysis = prompt_validate.parse_plan_analysis(
@@ -355,7 +382,12 @@ def build_plan_graph(ctx: JobContext):
                 max_attempts=2,
                 max_tokens=2800,
                 model=ctx.config.plan_reasoning_model,
-                reasoning_effort=ctx.config.plan_reasoning_effort,
+                # 方向分析必须返回严格 JSON；DeepSeek 思考模式会把 max_tokens(2800)
+                # 全部花在 reasoning 上（2026-11-04 线上复现：reasoning_tokens=2800、
+                # content_len=0、finish_reason=length），provider 抛 ModelOutputInvalid，
+                # 整个方向分析被丢弃并回退规则摘要。这里不传 reasoning_effort，让
+                # provider 的 json_mode 分支显式关闭 thinking（实测 11.5s、finish=stop）。
+                reasoning_effort=None,
             )
             analysis = PlanAnalysis(
                 overview=parsed_analysis.overview,
@@ -368,9 +400,31 @@ def build_plan_graph(ctx: JobContext):
                 citation_numbers=parsed_analysis.citation_numbers,
                 boundary_note=parsed_analysis.boundary_note,
             )
-        except WorkerError as exc:
+        except OutputValidationError as exc:
             warnings.append("plan_analysis_fallback:validation")
-            ctx.logger.error("plan_analysis_invalid type=%s", type(exc).__name__)
+            reasons = [
+                redact(reason)
+                for reason in getattr(exc, "reasons", [])
+                if str(reason).strip()
+            ][:5]
+            ctx.logger.error(
+                "plan_analysis_invalid reasons=%s", "；".join(reasons) or "unknown"
+            )
+        except ModelOutputInvalid as exc:
+            warnings.append("plan_analysis_fallback:validation")
+            ctx.logger.error("plan_analysis_invalid type=%s detail=%s", type(exc).__name__, redact(exc.detail or ""))
+        except WorkerError as exc:
+            reason = getattr(exc, "code", "model_unavailable")
+            warnings.append(f"plan_analysis_fallback:{reason}")
+            ctx.logger.error(
+                "plan_analysis_failed code=%s type=%s detail=%s",
+                reason,
+                type(exc).__name__,
+                redact(getattr(exc, "detail", "") or ""),
+            )
+        except Exception as exc:  # noqa: BLE001 - analysis must never block deterministic publishing
+            warnings.append("plan_analysis_fallback:internal_error")
+            ctx.logger.exception("plan_analysis_failed type=%s", type(exc).__name__)
 
         # 即使联网补充没找到可用来源，也把说明写进资料边界，避免用户误以为走了联网。
         if web_note:

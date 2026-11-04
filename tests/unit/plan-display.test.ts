@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
+  buildRuleFallbackAnalysis,
   formatPlanWarning,
   formatPlanWarnings,
+  formatRoadmapFocus,
   isVerifyDataAction,
   summarizeDataGaps,
   summarizeEffort
@@ -34,6 +36,7 @@ describe("formatPlanWarning", () => {
   it("区分模型不可用与校验失败", () => {
     expect(formatPlanWarning("plan_explanation_fallback:model_unavailable")).toContain("模型暂时不可用");
     expect(formatPlanWarning("plan_explanation_fallback:validation")).toContain("回退为确定性说明");
+    expect(formatPlanWarning("plan_analysis_fallback:validation")).toContain("方向分析未通过");
   });
 
   it("未知回退码保留原码，方便排查", () => {
@@ -77,6 +80,23 @@ describe("formatPlanWarnings", () => {
     ]);
     expect(result).toHaveLength(2);
     expect(result[1]).toBe("规则版本：v1");
+  });
+});
+
+describe("formatRoadmapFocus", () => {
+  it("不把仍不确定写成已经确定的路线兑现方式", () => {
+    expect(formatRoadmapFocus("围绕「仍不确定」完成申请或求职证据链")).toBe(
+      "先比较路线，再准备申请或求职证据"
+    );
+    expect(formatRoadmapFocus("围绕「undetermined」完成申请或求职证据链")).toBe(
+      "先比较路线，再准备申请或求职证据"
+    );
+  });
+
+  it("保留已经明确的路线文案", () => {
+    expect(formatRoadmapFocus("围绕「本科就业」完成申请或求职证据链")).toBe(
+      "围绕「本科就业」完成申请或求职证据链"
+    );
   });
 });
 
@@ -131,5 +151,46 @@ describe("资料缺口行动", () => {
     expect(summary.total).toBe(3);
     expect(summary.verifyCount).toBe(2);
     expect(summary.titles).toEqual(["核对培养方案", "核对竞赛目录"]);
+  });
+});
+
+describe("方向分析规则回退", () => {
+  it("AI 分析缺失时仍给出方向、行动依据、缺口与下一步", () => {
+    const fallback = buildRuleFallbackAnalysis(
+      {
+        title: "国际贸易与供应链",
+        summary: "围绕进出口业务、国际采购、物流与关务的岗位族。",
+        work_content: ["客户与订单跟进", "国际物流协调"],
+        verified_skills: ["国际贸易实务", "英语沟通"],
+        preparation_cost: "以课程与实习为主。",
+        applicability: "经贸相关专业可直接探索。"
+      },
+      {
+        actions: [
+          action({
+            action_id: "a1",
+            title: "核对培养方案",
+            status: "pending_verification",
+            prerequisites: ["教务系统"]
+          })
+        ],
+        gaps: [{ code: "course_catalog_missing", message: "培养方案全文尚未入库。", module: "courses" }],
+        explanation: null,
+        roadmap: [
+          {
+            stage: "未来 30 天",
+            focus: "先核对",
+            actions: ["从教务处确认课程", "记录岗位要求"]
+          }
+        ]
+      }
+    );
+
+    expect(fallback.overview).toContain("国际贸易与供应链");
+    expect(fallback.match).toContain("不补写推断结论");
+    expect(fallback.action_rationale[0]).toContain("核对培养方案");
+    expect(fallback.risks).toContain("培养方案全文尚未入库。");
+    expect(fallback.next_steps).toEqual(["从教务处确认课程", "记录岗位要求"]);
+    expect(fallback.boundary_note).toContain("不是 AI 画像匹配结论");
   });
 });

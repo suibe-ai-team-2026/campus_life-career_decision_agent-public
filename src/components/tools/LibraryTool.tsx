@@ -161,6 +161,11 @@ export function LibraryTool() {
   }, [sources]);
 
   const askTrace = useMemo(() => toTraceEvents(askEvents), [askEvents]);
+  const knowledgeBaseStatus = !cloud
+    ? "本地演示模式"
+    : sourcesState === "error"
+      ? "云端知识库连接异常"
+      : "云端知识库已配置";
 
   async function handleAsk(preset?: string) {
     const text = (preset ?? question).trim();
@@ -483,7 +488,13 @@ export function LibraryTool() {
                 <div className="report-card-head">
                   <h3>{category.label}</h3>
                   <Badge tone={categoryCounts[category.id] > 0 ? "ok" : "muted"}>
-                    {categoryCounts[category.id] > 0 ? `${categoryCounts[category.id]} 条来源` : "待载入"}
+                    {categoryCounts[category.id] > 0
+                      ? `${categoryCounts[category.id]} 条来源`
+                      : sourcesState === "error"
+                        ? "加载失败"
+                        : sourcesState === "ready"
+                          ? "暂无来源"
+                          : "加载中"}
                   </Badge>
                 </div>
                 <p>{category.description}</p>
@@ -510,7 +521,11 @@ export function LibraryTool() {
             icon="database"
             compact
             title={activeFilter ? `「${activeFilter.label}」暂无已载入来源` : "来源目录为空"}
-            description={cloud ? "云端来源目录没有返回条目。" : "本地演示模式不展示来源条目。"}
+            description={
+              cloud
+                ? "知识库已连接，但来源目录暂未返回条目；资料问答仍可使用。"
+                : "本地演示模式不展示来源条目。"
+            }
           />
         ) : null}
       </div>
@@ -523,7 +538,7 @@ export function LibraryTool() {
         <div>
           <h1>资料库</h1>
         </div>
-        <Badge tone={cloud ? "ok" : "warn"}>{cloud ? "云端知识库已启用" : "本地演示模式"}</Badge>
+        <Badge tone={cloud && sourcesState !== "error" ? "ok" : "warn"}>{knowledgeBaseStatus}</Badge>
       </header>
 
       <div className="library-layout">

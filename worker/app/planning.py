@@ -640,7 +640,11 @@ def build_roadmap(
     stages.append(
         PlanRoadmapStage(
             stage="大四 / 路线兑现",
-            focus=f"围绕「{pathway.label}」完成申请或求职证据链",
+            focus=(
+                "先比较路线，再准备申请或求职证据"
+                if pathway.primary == "undetermined"
+                else f"围绕「{pathway.label}」完成申请或求职证据链"
+            ),
             actions=[
                 "按目标岗位、院校或考试公告逐项核对硬性资格，不用上一届经验替代当年规则。",
                 "完成简历、作品集、推荐材料或备考计划的最终版本，并安排至少一次模拟反馈。",

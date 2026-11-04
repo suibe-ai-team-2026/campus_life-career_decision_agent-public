@@ -317,7 +317,8 @@ export function buildTermOptions(enrollmentYear: number | null | undefined): Ter
   for (let year = start; year <= start + 5; year += 1) {
     const grade = gradeLabel(start, year);
     options.push({ value: `${year}-秋`, label: `${year} 秋 · ${grade}上` });
-    options.push({ value: `${year}-春`, label: `${year} 春 · ${grade}下` });
+    // 春季属于上一日历年开启的学年，不能把 2026 春算成 2026 级的大二下。
+    options.push({ value: `${year + 1}-春`, label: `${year + 1} 春 · ${grade}下` });
   }
   return options;
 }
