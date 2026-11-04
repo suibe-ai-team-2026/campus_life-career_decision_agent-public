@@ -23,8 +23,7 @@ import type {
   GraphParagraph,
   GraphSection,
   GraphSnapshot,
-  GraphStatus,
-  GraphNodeType
+  GraphStatus
 } from "../src/lib/graph/types";
 
 const ROOT = process.cwd();
@@ -70,6 +69,9 @@ type Competition = {
   level_label: string;
   timing: string;
   official_url: string;
+  eligible_years: string[];
+  eligible_majors: string[];
+  categories: string[];
   direction_ids: string[];
   skill_tags: string[];
   verification_status: string;
@@ -239,26 +241,6 @@ function guide(label: string, url: string, look: string, cadence: string): Graph
   return { label, url, look, cadence, last_checked: SNAPSHOT_DATE };
 }
 
-function typeLabelOf(type: GraphNodeType): string {
-  switch (type) {
-    case "direction":
-      return "方向";
-    case "program":
-      return "培养方案";
-    case "course":
-      return "课程";
-    case "competition":
-      return "竞赛";
-    case "job":
-      return "岗位族";
-    case "resource":
-      return "查证入口";
-    case "gap":
-      return "数据缺口";
-    default:
-      return "画像";
-  }
-}
 
 /* -------------------------- 课程选择 -------------------------- */
 
