@@ -136,6 +136,68 @@ def test_plan_graph_freezes_rule_facts_and_publishes_real_ids():
     assert all(left[1] < right[1] for left, right in zip(emits, emits[1:]))
 
 
+def test_plan_graph_keeps_analysis_with_profile_scores_and_evidence_page_numbers():
+    config = make_config()
+    provider = FakeProvider(
+        config,
+        chat_responses={
+            "chat_plan_explain": [
+                json.dumps(
+                    {
+                        "explanation": "根据已核验资料，先补强国际贸易实务能力，再按规则安排行动[1]。",
+                        "cited_action_ids": ["req-REQ001"],
+                        "citation_numbers": [1],
+                        "boundary_note": "",
+                    },
+                    ensure_ascii=False,
+                )
+            ],
+            "chat_plan_analysis": [
+                json.dumps(
+                    {
+                        "overview": "国际贸易与供应链需要把业务规则、沟通和数据判断连接起来[1]。",
+                        "match": "你的沟通协作自评达到 4.6/5，和协调业务链条的要求更相关[1]。",
+                        "action_rationale": ["先核对培养方案，再完成一门课程的可展示作业。"],
+                        "evidence_courses": [],
+                        "evidence_competitions": [],
+                        "risks": ["当前证据只展示到报告第 12 页，课程学分仍需核验[1]。"],
+                        "next_steps": [
+                            "先核对教务处课程属性，再完成课程作业，最后用手册与作品复核。",
+                            "找三条岗位描述，提取共同要求，用一次模拟项目验证。",
+                            "向学院确认竞赛资格，再决定是否报名。"
+                        ],
+                        "citation_numbers": [1],
+                        "boundary_note": "仅依据当前报告第 12 页摘录与规则事实。",
+                    },
+                    ensure_ascii=False,
+                )
+            ],
+        },
+    )
+    ctx, db, _emits = _plan_context(provider)
+    db.profiles[PROFILE_ID] = _profile(
+        scores={
+            "interest_r": 0.8,
+            "interest_i": 0.2,
+            "ability_communication": 0.9,
+            "ability_execution": 0.8,
+            "ability_data": 0.25,
+        }
+    )
+
+    payload = run_plan(ctx)
+    result = payload["result"]
+
+    assert result["analysis"] is not None
+    assert "4.6/5" in result["analysis"]["match"]
+    assert "plan_analysis_fallback:validation" not in result["warnings"]
+    assert [operation for operation, _messages in provider.chat_calls] == [
+        "chat_plan_explain",
+        "chat_plan_analysis",
+    ]
+    assert db.saved_plans
+
+
 def test_plan_graph_discards_out_of_bounds_explanation_and_keeps_facts():
     config = make_config()
     provider = FakeProvider(

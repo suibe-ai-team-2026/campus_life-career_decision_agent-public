@@ -46,6 +46,7 @@ export const ProfileInputSchema = z.object({
       weekly_hours: z.number().int().min(1).max(80).optional(),
       monthly_budget_cny: z.number().int().min(0).max(10000).optional(),
       notes: z.string().trim().max(500).optional(),
+      decision_reason: z.string().trim().max(1000).optional(),
       pathway: z
         .object({
           primary: z

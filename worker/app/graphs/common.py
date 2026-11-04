@@ -283,6 +283,10 @@ def profile_summary(profile: Mapping[str, Any] | None) -> dict[str, Any]:
             "experience": experience if isinstance(experience, dict) else None,
         },
     }
+    decision_reason = preferences.get("decision_reason")
+    if isinstance(decision_reason, str) and decision_reason.strip():
+        summary["decision_reason"] = decision_reason.strip()[:1000]
+        summary["profile_signals"]["decision_reason"] = decision_reason.strip()[:1000]
     if preferences:
         summary["preferences"] = {key: preferences[key] for key in sorted(preferences)}
     return summary

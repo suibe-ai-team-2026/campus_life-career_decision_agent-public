@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { COVERAGE_LOCAL_LABEL, DIRECTIONS, directionCoverage } from "@/lib/content";
+import {
+  COVERAGE_LOCAL_LABEL,
+  DIRECTIONS,
+  buildTermOptions,
+  directionCoverage
+} from "@/lib/content";
 
 const direction = DIRECTIONS[0];
 const longBoundary =
@@ -39,5 +44,17 @@ describe("directionCoverage", () => {
     expect(view.pending).toBe(true);
     expect(view.badgeLabel).toBe("待载入");
     expect(view.exactMajorRecords).toBeNull();
+  });
+});
+
+describe("buildTermOptions", () => {
+  it("按入学年与学年起点计算年级，而不是把每个秋季都写成大一", () => {
+    const options = buildTermOptions(2025);
+    const labels = new Map(options.map((option) => [option.value, option.label]));
+
+    expect(labels.get("2025-秋")).toBe("2025 秋 · 大一上");
+    expect(labels.get("2026-春")).toBe("2026 春 · 大一下");
+    expect(labels.get("2026-秋")).toBe("2026 秋 · 大二上");
+    expect(labels.get("2027-春")).toBe("2027 春 · 大二下");
   });
 });
