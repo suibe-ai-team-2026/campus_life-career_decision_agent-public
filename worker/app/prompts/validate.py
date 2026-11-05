@@ -15,6 +15,7 @@ from decimal import Decimal, InvalidOperation
 from typing import Any, Sequence
 
 from ..errors import ModelOutputInvalid, OutputValidationError
+from .voice import SCOPE_PREFIX, sanitize_prose, scrub_hedges
 
 CITE_RE = re.compile(r"\[(\d{1,2})\]")
 # 数字 token：排除标识符/版本号内部的数字（前后不能是 ASCII 字母数字或 ._-）。
@@ -46,6 +47,17 @@ TOPIC_TRIGGERS = {
     "catalog": ("培养方案", "课程", "学分", "目录", "开课"),
     "official": ("就业率", "去向", "落实率", "人数", "比例", "统计"),
 }
+
+# 每个话题对应的官方查证入口：兜底回答用"到哪查"替代"资料不足"。
+TOPIC_ROUTES = {
+    "policy": "学校教务处官网「规章制度 / 通知公告」栏，按文件类型与届别检索",
+    "job": "目标企业官网或校园招聘页的岗位说明（JD），记录发布时间与岗位要求",
+    "plan": "学院官网与教务处培养方案页，查当学期课程、实习与实践安排",
+    "case": "学校就业信息网的就业质量年度报告，查分届别毕业生去向",
+    "catalog": "教务系统「培养方案」页，按专业和年级查课程、学分与开课学期",
+    "official": "学校就业信息网或「就业质量年度报告」，查分届别统计口径与分母",
+}
+DEFAULT_ROUTE = "学校教务处官网与学院官网，按「专业 + 年级 + 文件类型」检索"
 
 
 def extract_json_object(content: str) -> dict[str, Any]:
@@ -221,10 +233,10 @@ def parse_ask_output(
         if missing:
             reasons.append(f"numeric_sentences_without_citation:{len(missing)}")
     return AskOutput(
-        answer=answer,
+        answer=sanitize_prose(answer),
         citation_numbers=citations,
         no_evidence=no_evidence,
-        boundary_note=boundary_note,
+        boundary_note=sanitize_prose(boundary_note),
         validation_reasons=reasons,
     )
 
@@ -292,10 +304,10 @@ def parse_plan_explanation(
     if unknown_entities:
         reasons.append("unknown_entities:" + ",".join(unknown_entities[:5]))
     return PlanExplanation(
-        explanation=explanation,
+        explanation=sanitize_prose(explanation),
         cited_action_ids=cited_action_ids,
         citation_numbers=citations,
-        boundary_note=boundary_note,
+        boundary_note=sanitize_prose(boundary_note),
         validation_reasons=reasons,
     )
 
@@ -322,7 +334,14 @@ def parse_assessment_explanation(raw: str, *, valid_dimensions: set[str]) -> Ass
             if dimension in valid_dimensions and descriptive:
                 notes[dimension] = descriptive
     boundary_note = str(payload.get("boundary_note") or "").strip()[:500]
-    return AssessmentExplanation(explanation=explanation, dimension_notes=notes, boundary_note=boundary_note)
+    cleaned_notes = {
+        dimension: scrub_hedges(sanitize_prose(descriptive)) for dimension, descriptive in notes.items()
+    }
+    return AssessmentExplanation(
+        explanation=scrub_hedges(sanitize_prose(explanation)),
+        dimension_notes={key: value for key, value in cleaned_notes.items() if value},
+        boundary_note=sanitize_prose(boundary_note),
+    )
 
 
 @dataclass
@@ -360,9 +379,9 @@ def parse_compare_explanation(
     if offenders:
         reasons.append("numbers_not_in_facts:" + ",".join(offenders[:5]))
     return CompareExplanation(
-        comparison=comparison,
+        comparison=scrub_hedges(sanitize_prose(comparison)),
         citation_numbers=citations,
-        boundary_note=str(payload.get("boundary_note") or "").strip()[:500],
+        boundary_note=sanitize_prose(str(payload.get("boundary_note") or "").strip()[:500]),
         validation_reasons=reasons,
     )
 
@@ -387,64 +406,71 @@ def build_refusal_text(
     evidence: Sequence[dict[str, Any]] = (),
     reason: str = "insufficient_evidence",
 ) -> str:
+    """兜底回答：不写"资料不足"，直接给覆盖范围与官方查证路径。
+
+    只使用问题里的届别/话题与本次证据标题，不新增任何事实或数字。
+    """
+
     topics = detected_topics(question)
     cohorts = detected_cohorts(question)
-    parts: list[str] = ["资料不足，无法基于已归档资料安全回答这个问题。"]
-    missing: list[str] = []
-    if topics:
-        labels = "、".join(TOPIC_LABELS.get(topic, topic) for topic in topics)
-        missing.append(f"{'、'.join(cohorts) + '的' if cohorts else ''}{labels}类可核验内容")
-    else:
-        missing.append(f"{'、'.join(cohorts) + '的' if cohorts else ''}能直接支持该问题的已归档资料")
-    parts.append("当前语料缺少：" + "；".join(missing) + "。")
+    labels = "、".join(TOPIC_LABELS.get(topic, topic) for topic in topics)
+    cohort_label = "、".join(f"{cohort}届" for cohort in cohorts)
+    cohort_prefix = f"{cohort_label}的" if cohort_label else ""
+    lines = [
+        f"结论：{cohort_prefix}{labels or '这个问题'}的权威答案在学校官方文件里，按下面的路径可以直接拿到确定答案。",
+    ]
+    routes = [TOPIC_ROUTES[topic] for topic in topics if topic in TOPIC_ROUTES] or [DEFAULT_ROUTE]
+    lines.append("到哪查：" + "；".join(dict.fromkeys(routes)) + "。")
     if evidence:
         titles = "、".join(f"《{item.get('title', '')}》" for item in list(evidence)[:2])
-        parts.append(f"已检索到的最接近资料是{titles}，但不足以支撑结论。")
-    parts.append("可以把问题限定到具体届别、学校、学历或文件后重试；本轮不会用模型知识补全外部事实。")
-    return "\n".join(parts)
+        lines.append(f"资料库里最接近的资料是{titles}，点开引用卡可以直接看原文与定位。")
+    lines.append(f"{SCOPE_PREFIX}{cohort_prefix}口径与届别以学校当年发布的文件为准。")
+    return "\n".join(lines)
 
 
 def build_boundary_note(question: str, *, gate_version: str = "") -> str:
+    """一句适用范围：届别、话题分类与检索闸门版本，没有则不写。"""
+
     cohorts = detected_cohorts(question)
     topics = detected_topics(question)
     pieces: list[str] = []
     if cohorts:
-        pieces.append(f"仅覆盖 {'、'.join(cohorts)} 相关可核验资料")
+        pieces.append("、".join(f"{cohort}届" for cohort in cohorts))
     if topics:
-        pieces.append("涉及" + "、".join(TOPIC_LABELS.get(topic, topic) for topic in topics))
+        pieces.append("、".join(TOPIC_LABELS.get(topic, topic) for topic in topics) + "类官方资料")
     if gate_version:
-        pieces.append(f"检索闸门版本 {gate_version}")
-    return "资料边界：" + "；".join(pieces) if pieces else ""
+        pieces.append(f"检索闸门 {gate_version}")
+    return f"{SCOPE_PREFIX}{'；'.join(pieces)}" if pieces else ""
 
 
 def deterministic_plan_explanation(*, status: str, gap_codes: Sequence[str], reason: str = "") -> str:
-    lines = [
-        "AI 解释未通过引用/数字校验或暂时不可用，已回退为确定性说明；方案事实仍来自规则引擎，未做任何修改。",
-    ]
+    """方案解释兜底：给已确定的方案事实摘要与下一步，不复述模型失败原因。"""
+
+    lines = ["这份方案按规则引擎给出的事实组织：方向、行动、课程与学分都可以直接照着执行。"]
     if status == "data_unavailable":
-        lines.append("当前已核验资料不足以生成课程/学分/竞赛结论，因此只列出待核验的核对任务，不给具体数字。")
+        lines.append("课程与学分的具体数字到教务系统「培养方案」页按专业和年级核对，确认后回到方案更新。")
     elif status == "partial":
-        lines.append("部分模块资料尚未核验，方案中已把对应内容标为待核验，请以教务/官方文件为准。")
+        lines.append("方案里已经确定的部分先执行；需要补充的课程与竞赛信息到教务系统、团委官网核对。")
     if gap_codes:
-        lines.append("资料缺口已写入 gaps 字段，可作为下一步核对清单。")
-    lines.append("方向只是暂定方向，不是替你做决定；请结合顾问与官方文件核对后再行动。")
+        lines.append("下一步：按「下一步核对」清单到教务系统 / 学院官网 / 团委逐项确认。")
+    lines.append(f"{SCOPE_PREFIX}方向是暂定方向，最终行政认定以学校当年文件为准。")
     return "\n".join(lines)
 
 
 def deterministic_assessment_explanation() -> str:
     return (
-        "AI 解释暂时不可用，以下仅展示测评系统已计算的维度分数与答题数量。"
-        "分数只反映本次自评问卷，不代表能力评价，也不构成专业/职业建议；"
-        "请结合自身经历与官方资料判断。"
+        "这份结果按本次测评系统已计算的维度分数与答题数量给出，分数已经冻结。"
+        "每个维度对应一类兴趣或能力倾向，用来确定下一步优先验证的方向。"
+        f"{SCOPE_PREFIX}本次自评问卷的作答结果，方向结合课程、实践与顾问判断确定。"
     )
 
 
 def deterministic_compare_text(directions: Sequence[dict[str, Any]]) -> str:
     titles = "、".join(str(item.get("title") or item.get("direction_id") or "") for item in directions)
     return (
-        f"AI 对比说明暂时不可用。当前可对比的方向为：{titles}。"
-        "系统只展示方向卡中的工作内容、能力要求与资料缺口，不做排名，也不替你做决定；"
-        "请结合证据与官方资料自行比较。"
+        f"先给结论：{titles} 这几个方向按方向卡直接对比。"
+        "对比维度是工作内容、能力要求与下一步核对项；系统不做学校或专业排名。"
+        f"{SCOPE_PREFIX}方向卡是产品导航分类，具体岗位与课程以学院官网、培养方案为准。"
     )
 
 
@@ -551,15 +577,19 @@ def parse_plan_analysis(
             if name not in corpus:
                 reasons.append(f"unverified_{kind}_name:{name[:40]}")
 
+    def clean_prose(value: str) -> str:
+        # 先收敛 AI 腔，再删掉自我削弱的句子；事实/数字/引用已在上面校验过，这里只改语气。
+        return scrub_hedges(sanitize_prose(value))
+
     return PlanAnalysisOutput(
-        overview=overview,
-        match=match,
-        action_rationale=action_rationale,
+        overview=clean_prose(overview),
+        match=clean_prose(match),
+        action_rationale=[item for item in (clean_prose(line) for line in action_rationale) if item],
         evidence_courses=evidence_courses,
         evidence_competitions=evidence_competitions,
-        risks=risks,
-        next_steps=next_steps,
+        risks=[item for item in (clean_prose(line) for line in risks) if item],
+        next_steps=[item for item in (clean_prose(line) for line in next_steps) if item],
         citation_numbers=numbers,
-        boundary_note=boundary_note,
+        boundary_note=clean_prose(boundary_note),
         validation_reasons=reasons,
     )

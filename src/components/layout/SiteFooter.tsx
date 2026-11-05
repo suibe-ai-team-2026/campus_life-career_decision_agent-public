@@ -19,7 +19,7 @@ export function SiteFooter() {
             © {new Date().getFullYear()} 知途 · 比赛作品
           </span>
         </div>
-        <p className="footer-note">结果仅供参考，不构成测评、就业或报考结论。</p>
+        <p className="footer-note">知途把已有资料整理成可执行的下一步；最终行政认定以学校当年文件为准。</p>
       </div>
     </footer>
   );

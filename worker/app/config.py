@@ -35,7 +35,7 @@ SPLITTER_VERSION = "career-splitter-2026-10-19.1"
 TOKEN_ESTIMATOR_VERSION = "career-cjk-estimator-v1"
 RULES_VERSION = "career-rules-2026-10-19.1"
 GATE_VERSION = "career-gate-2026-10-19.1"
-PROMPT_VERSION = "career-prompts-2026-10-19.1"
+PROMPT_VERSION = "career-prompts-2026-11-05.1"
 PROVIDER_NAME = "openrouter"
 
 SOURCE_FILES_BUCKET = "career-source-files"

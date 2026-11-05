@@ -42,6 +42,7 @@ import {
   formatDate
 } from "@/components/ui/primitives";
 import { CitationFileList, CitationText, hasCitationMarkers } from "@/components/ui/CitationCard";
+import { formatPlanWarnings } from "@/lib/plan-display";
 import { RestartProgress } from "@/components/layout/RestartProgress";
 import { PlanDetail, pickCurrentVersion } from "./PlanDetail";
 import { StepHeader } from "./StepHeader";
@@ -250,7 +251,7 @@ export function ExportStep() {
   async function resumePendingExport(runId: string, planId: string) {
     setPhase("generating");
     setStage("polling");
-    setNotice("检测到上次未完成的导出任务，正在恢复等待。");
+    setNotice("正在恢复上次的导出任务。");
     const controller = new AbortController();
     abortRef.current = controller;
     try {
@@ -459,11 +460,11 @@ export function ExportStep() {
           ) : null}
         </div>
 
-        <Collapse summary={<>待核验项{pendingActions.length > 0 ? `（${pendingActions.length} 项）` : ""}</>}>
+        <Collapse summary={<>下一步核对{pendingActions.length > 0 ? `（${pendingActions.length} 项）` : ""}</>}>
           {planResult && planResult.gaps.length > 0 ? (
             <div className="export-gaps">
               <p className="panel-title">
-                <Icon name="alert" size={15} /> 数据缺口
+                <Icon name="alert" size={15} /> 核对入口
               </p>
               <ul className="gap-card-list">
                 {planResult.gaps.map((gap, index) => (
@@ -482,17 +483,16 @@ export function ExportStep() {
             <ul className="export-pending-list">
               {pendingActions.map((action) => (
                 <li key={action.action_id}>
-                  <Badge tone="warn">待核验</Badge>
                   <span>{action.title}</span>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="panel-note">本次没有标记为待核验的行动。</p>
+            <p className="panel-note">所有行动都已列入方案，可以直接执行。</p>
           )}
-          {planResult && planResult.warnings.length > 0 ? (
+          {planResult && formatPlanWarnings(planResult.warnings).length > 0 ? (
             <ul className="callout-list">
-              {planResult.warnings.map((warning) => (
+              {formatPlanWarnings(planResult.warnings).map((warning) => (
                 <li key={warning}>{warning}</li>
               ))}
             </ul>
@@ -524,8 +524,8 @@ export function ExportStep() {
     );
     return (
       <div className="plan-state-stack">
-        <Callout tone="warn" title="本地演示模式：导出空态">
-          <p className="small-note">云端未配置，不能生成 PDF；这里只展示本设备已保存的进度。</p>
+        <Callout tone="warn" title="本地演示模式">
+          <p className="small-note">连接云端后即可生成 PDF；这里展示本设备已保存的进度。</p>
         </Callout>
         <section className="panel" aria-labelledby="export-local-title">
           <div className="panel-head">
@@ -543,7 +543,7 @@ export function ExportStep() {
                 </li>
                 <li>
                   <span>行动方案</span>
-                  <strong>{progress.plan_id ? "已生成（云端）" : "尚未生成"}</strong>
+                  <strong>{progress.plan_id ? "已生成（云端）" : "生成后可导出"}</strong>
                 </li>
                 <li>
                   <span>上次导出</span>
@@ -551,7 +551,7 @@ export function ExportStep() {
                 </li>
                 <li>
                   <span>PDF 状态</span>
-                  <strong>云端未启用，无法渲染</strong>
+                  <strong>连接云端后可生成</strong>
                 </li>
               </ul>
             ) : (
@@ -573,7 +573,7 @@ export function ExportStep() {
         {cachedPlan ? (
           <div className="plan-state-stack">
             <Callout tone="plain" title="检测到本设备缓存方案">
-              <p>这是上次成功加载的方案（缓存于 {formatDateTime(cachedPlan.fetched_at)}）。云端未启用时无法重新渲染 PDF，但可以回看内容。</p>
+              <p>这是上次成功加载的方案（缓存于 {formatDateTime(cachedPlan.fetched_at)}）。连接云端后可以重新渲染 PDF，现在也能完整回看内容。</p>
             </Callout>
             <PlanDetail
               plan={null}
@@ -602,12 +602,12 @@ export function ExportStep() {
           <div>
             <h2 id="export-blocked-title">先完成行动方案</h2>
           </div>
-          <Badge tone="warn">缺少方案</Badge>
+          <Badge tone="warn">先完成第 4 步</Badge>
         </div>
         <EmptyState
           icon="download"
           title="还没有可导出的方案"
-          description="需要先在第 4 步生成行动方案。"
+          description="完成第 4 步后即可导出 PDF。"
         />
         <div className="local-actions">
           <Button variant="primary" size="md" onClick={() => router.push("/plan")}>
@@ -652,14 +652,14 @@ export function ExportStep() {
       <section className="panel" aria-labelledby="export-lite-title">
         <div className="panel-head">
           <div>
-            <h2 id="export-lite-title">导出失败，但方案内容仍在</h2>
+            <h2 id="export-lite-title">方案内容已经保留</h2>
           </div>
           <Badge tone="muted">{planResult.actions.length} 项行动</Badge>
         </div>
         <ul className="kv-list">
           <li>
             <span>学分</span>
-            <strong>{planResult.credits === null ? "资料未就绪" : `${planResult.credits} 学分`}</strong>
+            <strong>{planResult.credits === null ? "按培养方案确认" : `${planResult.credits} 学分`}</strong>
           </li>
           <li>
             <span>引用</span>

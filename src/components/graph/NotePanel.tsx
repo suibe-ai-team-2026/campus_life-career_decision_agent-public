@@ -13,7 +13,7 @@ function statusClass(node: GraphNode): string {
 }
 
 function statusText(node: GraphNode): string {
-  if (node.type === "gap") return "待查";
+  if (node.type === "gap") return "核对入口";
   return GRAPH_STATUS_LABEL[node.status];
 }
 
@@ -114,7 +114,7 @@ export function NotePanel({
             <p className="guide-look">查什么：{guide.look}</p>
             <div className="guide-meta">
               <span>更新：{guide.cadence}</span>
-              <span>上次核验：{guide.last_checked}</span>
+              <span>更新时间：{guide.last_checked}</span>
             </div>
           </div>
         ))}

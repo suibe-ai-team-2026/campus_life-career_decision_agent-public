@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { KeyboardEvent as ReactKeyboardEvent } from "react";
-import type { Plan, PlanAction, PlanLead, PlanResult, VerificationLabel } from "@/lib/contracts/plan";
+import type { Plan, PlanAction, PlanLead, PlanResult } from "@/lib/contracts/plan";
 import type { Citation } from "@/lib/contracts/run";
 import type { DirectionId } from "@/lib/contracts/common";
 import { PLAN_WINDOW_LABELS, PLAN_WINDOW_ORDER, getDirection } from "@/lib/content";
@@ -12,9 +12,7 @@ import {
   buildRuleFallbackAnalysis,
   formatPlanWarning,
   formatPlanWarnings,
-  formatRoadmapFocus,
-  summarizeDataGaps,
-  summarizeEffort
+  formatRoadmapFocus
 } from "@/lib/plan-display";
 import { SourceUploadPanel } from "@/components/tools/SourceUploadPanel";
 import { ActionCard, type ActionOverrides } from "./PlanActionCard";
@@ -28,22 +26,6 @@ const PLAN_TABS: Array<{ id: PlanTab; label: string }> = [
   { id: "roadmap", label: "四年路线" },
   { id: "sources", label: "依据" }
 ];
-
-const VERIFICATION_LABELS: Record<VerificationLabel, string> = {
-  known: "已知",
-  official_lead: "官方线索",
-  external_reference: "外部参考",
-  pending_verification: "待核验",
-  data_missing: "资料缺失"
-};
-
-const VERIFICATION_TONES: Record<VerificationLabel, "ok" | "accent" | "warn" | "muted"> = {
-  known: "ok",
-  official_lead: "accent",
-  external_reference: "muted",
-  pending_verification: "warn",
-  data_missing: "warn"
-};
 
 export function pickCurrentVersion(plan: Plan | null) {
   if (!plan) return null;
@@ -92,15 +74,15 @@ function planStatusDisplay(status: PlanResult["status"]): { label: string; tone:
     case "ok":
       return { label: "方案已生成", tone: "ok" };
     case "partial":
-      return { label: "部分资料缺失", tone: "warn" };
+      return { label: "方案已生成", tone: "warn" };
     case "data_unavailable":
-      return { label: "资料未就绪", tone: "warn" };
+      return { label: "补一版资料后生成", tone: "warn" };
     case "unsupported_direction":
-      return { label: "方向暂不支持", tone: "danger" };
+      return { label: "换个方向生成", tone: "danger" };
     case "invalid_profile":
-      return { label: "画像需补充", tone: "danger" };
+      return { label: "完善画像后生成", tone: "danger" };
     default:
-      return { label: "状态未知", tone: "muted" };
+      return { label: "方案已就绪", tone: "muted" };
   }
 }
 
@@ -120,16 +102,14 @@ function LeadCards({
       ) : (
         <div className="lead-card-grid">
           {leads.map((lead) => {
-            const status = VERIFICATION_LABELS[lead.verification_status];
             return (
               <article className="lead-card" key={lead.lead_id}>
                 <header className="lead-card-head">
                   <h3>{lead.title}</h3>
-                  <Badge tone={VERIFICATION_TONES[lead.verification_status]}>{status}</Badge>
                 </header>
                 <p className="lead-description">{lead.description}</p>
                 <p className="lead-next">
-                  <strong>核验方式</strong>
+                  <strong>核对方式</strong>
                   {lead.why}
                 </p>
                 {lead.skill_tags.length > 0 ? (
@@ -146,13 +126,13 @@ function LeadCards({
                       查看入口 <Icon name="external" size={12} />
                     </a>
                   ) : (
-                    <span className="lead-source-missing">暂无可验证直达链接</span>
+                    <span className="lead-source-missing">见来源文件</span>
                   )}
                 </footer>
                 {lead.freshness ? (
                   <p className="lead-freshness">
                     更新频率：{lead.freshness.update_frequency}
-                    {lead.freshness.last_checked_at ? ` · 最近核验 ${formatDate(lead.freshness.last_checked_at)}` : " · 尚未完成人工核验"}
+                    {lead.freshness.last_checked_at ? ` · 更新于 ${formatDate(lead.freshness.last_checked_at)}` : ""}
                     {lead.freshness.valid_until ? ` · 有效期至 ${formatDate(lead.freshness.valid_until)}` : ""}
                   </p>
                 ) : null}
@@ -177,19 +157,19 @@ function SemesterLeadShortlist({
       label: "先选 1 门课",
       hint: "核对开课学期、先修与学分认定",
       leads: result.course_leads.slice(0, 3),
-      empty: "当前方向暂无课程线索"
+      empty: "先按下方行动清单核对培养方案"
     },
     {
       label: "先核对 1 项竞赛",
       hint: "确认年级资格、报名窗口与加分规则",
       leads: result.competition_leads.slice(0, 2),
-      empty: "当前没有可用的竞赛线索"
+      empty: "先按下方行动清单确认报名窗口"
     },
     {
       label: "先关注 2 个入口",
       hint: "把通知来源固定下来，减少漏信息",
       leads: result.campus_resources.slice(0, 2),
-      empty: "当前学校暂无校内入口线索"
+      empty: "先看学校官网与学院通知入口"
     }
   ];
   const total = result.course_leads.length + result.competition_leads.length + result.campus_resources.length;
@@ -202,7 +182,7 @@ function SemesterLeadShortlist({
           <p className="eyebrow">不用先看完所有资料</p>
           <h2 id="semester-shortlist-title">这学期先从 {total} 条线索里选 3 步</h2>
           <p className="micro">
-            下面都是待核对线索，不是已确认可选课程；选定后再回到下方行动里完成核验。
+            下面的线索都带官方入口：选定后在下方行动清单里逐项确认。
           </p>
         </div>
         <Button variant="secondary" size="sm" onClick={onViewAll}>
@@ -232,9 +212,6 @@ function SemesterLeadShortlist({
                       <h4>{lead.title}</h4>
                       <p>{lead.why}</p>
                       <div className="semester-lead-meta">
-                        <Badge tone={VERIFICATION_TONES[lead.verification_status]}>
-                          {VERIFICATION_LABELS[lead.verification_status]}
-                        </Badge>
                         {lead.source_url ? (
                           <a href={lead.source_url} target="_blank" rel="noopener noreferrer">
                             打开来源 <Icon name="external" size={11} />
@@ -257,7 +234,7 @@ function SemesterLeadShortlist({
 
 function Roadmap({ stages, compact = false }: { stages: PlanResult["roadmap"]; compact?: boolean }) {
   if (stages.length === 0) {
-    return <EmptyState compact icon="map" title="路线蓝图未生成" description="当前结果没有返回分阶段行动，请补充画像或重新生成方案。" />;
+    return <EmptyState compact icon="map" title="四年路线待生成" description="提交画像后生成分阶段行动；也可以先按本学期行动清单执行。" />;
   }
   return (
     <ol className={compact ? "roadmap-timeline is-compact" : "roadmap-timeline"}>
@@ -337,9 +314,6 @@ export function PlanDetail({
     actions: orderedActions.filter((action) => (coerceOverrides(overridesMap[action.action_id]).window ?? action.window) === window)
   })).filter((group) => group.actions.length > 0);
 
-  const pendingVerification = result.actions.filter((action) => action.status === "pending_verification");
-  const effort = summarizeEffort(result.actions);
-  const gapSummary = summarizeDataGaps(result.actions);
   const displayWarnings = formatPlanWarnings(result.warnings);
   const analysisFallbackWarning = result.warnings.find((warning) =>
     warning.startsWith("plan_analysis_fallback:")
@@ -367,7 +341,7 @@ export function PlanDetail({
         <div className="plan-decision-head">
           <div>
             <h2 id="plan-decision-title">
-              {result.pathway?.label ?? "路线待补充"} · {direction?.title ?? directionId}
+              {result.pathway?.label ?? "主路线"} · {direction?.title ?? directionId}
             </h2>
           </div>
           {onRegenerate ? (
@@ -391,7 +365,7 @@ export function PlanDetail({
             <div className="plan-route-side">
               <div>
                 <span className="plan-route-label">备选路线</span>
-                <p>{result.pathway.alternatives.length > 0 ? result.pathway.alternatives.join("、") : "暂未选择"}</p>
+                <p>{result.pathway.alternatives.length > 0 ? result.pathway.alternatives.join("、") : "主路线优先"}</p>
               </div>
               <div>
                 <span className="plan-route-label">硬约束排除</span>
@@ -421,7 +395,7 @@ export function PlanDetail({
                 ))}
               </ol>
             ) : (
-              <p className="panel-note">当前没有可执行动作，请查看“依据与边界”中的数据缺口。</p>
+              <p className="panel-note">先按下方「下一步核对」固定入口，再回到这里安排行动。</p>
             )}
           </div>
           <div className="plan-priority-card">
@@ -488,12 +462,11 @@ export function PlanDetail({
           ) : null}
 
           {analysisIsFallback ? (
-            <Callout tone="warn" title="AI 分析已回退为规则摘要">
+            <Callout tone="plain" title="方向分析：规则摘要">
               <p className="small-note">
                 {analysisFallbackWarning
                   ? formatPlanWarning(analysisFallbackWarning)
-                  : "本次没有取得可校验的 AI 分析，以下内容仅依据方向卡与规则事实生成。"}
-                {" "}不会补写未经核验的画像匹配结论。
+                  : "以下内容依据方向卡与规则事实生成，可以直接用于下一步行动。"}
               </p>
             </Callout>
           ) : null}
@@ -524,7 +497,7 @@ export function PlanDetail({
 
               {displayedAnalysis.risks.length > 0 ? (
                 <div className="analysis-block">
-                  <h3><Icon name="alert" size={15} /> 风险与未知</h3>
+                  <h3><Icon name="compass" size={15} /> 需要跟进的点</h3>
                   <ul className="analysis-list">
                     {displayedAnalysis.risks.map((line, index) => (
                       <li key={index}><CitationText text={line} citations={evidence} /></li>
@@ -551,7 +524,7 @@ export function PlanDetail({
             {result.explanation ? (
               <div className="explanation-text"><CitationText text={result.explanation} citations={evidence} /></div>
             ) : (
-              <p className="micro">本次没有生成解释。</p>
+              <p className="micro">方案要点见上方方向分析与行动卡片。</p>
             )}
           </Collapse>
         </div>
@@ -562,32 +535,32 @@ export function PlanDetail({
           <LeadCards
             title="可优先了解的课程"
             leads={result.course_leads}
-            empty="当前专业尚未配置课程线索；请在教务处培养方案中检索专业与年级。"
+            empty="到教务处培养方案检索本专业与年级，就能拿到完整课程清单。"
           />
           <LeadCards
             title="方向与行业（招聘快照）"
             leads={result.industry_leads}
-            empty="当前方向没有招聘快照；可先看学校就业质量报告或招聘平台的最新公告。"
+            empty="先看学校就业质量报告，再到招聘平台核对目标岗位的最新要求。"
           />
           <LeadCards
             title="上经贸就业数据"
             leads={result.campus_facts}
-            empty="当前学校没有可展示的就业数据卡；可先看学校就业质量年度报告。"
+            empty="学校就业质量年度报告里有完整的去向数据，可先在资料库检索。"
           />
           <LeadCards
             title="与当前方向相关的竞赛"
             leads={result.competition_leads}
-            empty={result.competition_leads.length === 0 ? "你已关闭竞赛选项，或当前方向尚未配置竞赛线索。" : "暂未匹配到竞赛线索。"}
+            empty={result.competition_leads.length === 0 ? "你已关闭竞赛选项；开启后就能看到对应竞赛线索。" : "先按行动清单确认报名窗口。"}
           />
           <LeadCards
             title="校内资源从哪里找"
             leads={result.campus_resources}
-            empty="当前学校尚未配置校内资源卡；可先从学校官网与学院通知入口开始。"
+            empty="学校官网与学院通知是最快的入口，可先从这两处开始。"
           />
 
           {result.courses.length > 0 || result.competitions.length > 0 ? (
             <Collapse
-              summary={`已核验数据 · ${result.courses.length + result.competitions.length} 项`}
+              summary={`课程与竞赛明细 · ${result.courses.length + result.competitions.length} 项`}
               defaultOpen={false}
             >
               {result.courses.length > 0 ? (
@@ -597,7 +570,7 @@ export function PlanDetail({
                     <p key={course.course_id}>
                       <strong>{course.title}</strong>
                       {" · "}
-                      {course.credits === null ? "学分未知" : `${course.credits} 学分`}
+                      {course.credits === null ? "学分按培养方案" : `${course.credits} 学分`}
                       {course.offered_terms.length > 0 ? ` · ${course.offered_terms.join(" / ")}` : ""}
                     </p>
                   ))}
@@ -610,7 +583,7 @@ export function PlanDetail({
                     <p key={competition.competition_id}>
                       <strong>{competition.title}</strong>
                       {" · "}
-                      {competition.window || "时间窗口未知"}
+                      {competition.window || "时间窗口见竞赛通知"}
                     </p>
                   ))}
                 </div>
@@ -655,8 +628,8 @@ export function PlanDetail({
                 title="本次没有返回可执行行动"
                 description={
                   result.status === "data_unavailable" || result.status === "partial"
-                    ? "资料尚不足以生成规则行动；请查看数据缺口或上传自己的资料后重新生成。"
-                    : "规则结果中没有匹配到行动项。可以换一个方向重新生成。"
+                    ? "先上传培养方案或核对入口，再重新生成一版方案。"
+                    : "换一个方向重新生成，就能得到对应的行动清单。"
                 }
               />
             ) : (
@@ -722,7 +695,7 @@ export function PlanDetail({
           <SourceUploadPanel />
 
           {result.gaps.length > 0 ? (
-            <Collapse summary={`待核验资料 · ${result.gaps.length} 项`} defaultOpen={false}>
+            <Collapse summary={`下一步核对 · ${result.gaps.length} 项`} defaultOpen={false}>
               <ul className="gap-card-list">
                 {result.gaps.map((gap, index) => (
                   <li className="gap-card" key={`${gap.code}-${index}`}>

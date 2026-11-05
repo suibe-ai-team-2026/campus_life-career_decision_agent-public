@@ -44,7 +44,7 @@ export async function GET() {
           official_records: null,
           job_requirements: requirementCounts.get(card.direction_id) ?? 0,
           label:
-            "仅统计与当前方向明确关联的要求；历史去向与官方记录尚未按方向完成归属，因此不展示全库数字"
+            "统计当前方向明确关联的要求条数；历史去向与官方记录见资料库"
         }
       }));
 

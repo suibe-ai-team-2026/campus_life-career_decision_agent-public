@@ -4,8 +4,8 @@
 
 约定：
 - 所有数字用 ``Decimal`` 计算，最后按契约输出为 number；资料缺失时 ``credits=null``，绝不写 0。
-- 只使用 verified 数据；课程/学分/竞赛/方向要求缺失时返回 ``data_unavailable`` 或
-  ``partial``，并给出 gap code 与待核验行动，不编造课程、学分、开课学期或竞赛加分。
+- 只用规则库里已收录的官方数据；课程/学分/竞赛/方向要求缺失时返回 ``data_unavailable`` 或
+  ``partial``，并给出 gap code 与"下一步到哪核对"的行动，不编造课程、学分、开课学期或竞赛加分。
 - 同输入同版本结果完全确定：输出全部排序，``as_of`` 从 rules_version 的日期推导。
 - 模型永远不能改这些事实；它只能解释 action_id / course_id / competition_id 与引用。
 """
@@ -132,7 +132,7 @@ class RulesEngine:
                 courses=[],
                 competitions=[],
                 credits=None,
-                gaps=[PlanGap(code="invalid_profile", message="画像字段不完整，规则引擎无法计算", module="profile")],
+                gaps=[PlanGap(code="invalid_profile", message="画像字段不完整；补齐学校、专业、入学年份与当前学期后重新生成方案。", module="profile")],
                 evidence=[],
                 explanation=None,
                 warnings=["profile_invalid:" + ",".join(invalid), f"rules_version={version}", f"as_of={as_of.isoformat()}"],
@@ -147,7 +147,7 @@ class RulesEngine:
                 courses=[],
                 competitions=[],
                 credits=None,
-                gaps=[PlanGap(code="unsupported_direction", message="方向不在产品导航分类内", module="profile")],
+                gaps=[PlanGap(code="unsupported_direction", message="方向不在产品导航分类内；从六个方向中重新选择一个。", module="profile")],
                 evidence=[],
                 explanation=None,
                 warnings=[f"unsupported_direction={direction_id}", f"rules_version={version}"],
@@ -182,7 +182,7 @@ class RulesEngine:
             gaps.append(
                 PlanGap(
                     code="prerequisite_incomplete",
-                    message="部分先修课程指向未核验课程：" + "、".join(dangling_prerequisites[:8]),
+                    message="先修关系里有课程不在当前课程清单：" + "、".join(dangling_prerequisites[:8]) + "；到学院教务系统核对开课顺序后更新。",
                     module="courses",
                 )
             )
@@ -196,7 +196,7 @@ class RulesEngine:
             gaps.append(
                 PlanGap(
                     code="credits_unavailable",
-                    message="已核验课程中仍有学分缺失，无法给出可信的学分合计",
+                    message="学分合计到教务系统核对后给出：以下课程需要按培养方案补全学分：" + "、".join(missing_credit_courses[:8]) + "。",
                     module="credits",
                 )
             )
@@ -206,7 +206,7 @@ class RulesEngine:
             gaps.append(
                 PlanGap(
                     code="curriculum_unavailable",
-                    message="尚未取得适用年级的结构化培养方案（课程/学分/开课学期）",
+                    message="下一步：到学院教务或培养方案原文核对本专业的课程、学分与开课学期。",
                     module="courses",
                 )
             )
@@ -214,7 +214,7 @@ class RulesEngine:
             gaps.append(
                 PlanGap(
                     code="credit_rules_unavailable",
-                    message="尚未核验学分认定规则，不给出可认定学分",
+                    message="下一步：到教务处核对学分认定规则，再给出可认定学分。",
                     module="credits",
                 )
             )
@@ -222,7 +222,7 @@ class RulesEngine:
             gaps.append(
                 PlanGap(
                     code="competitions_unavailable",
-                    message="尚未核验适用校级竞赛目录与加分认定规则",
+                    message="下一步：到学校团委 / 教务处官网核对适用竞赛目录与加分认定规则。",
                     module="competitions",
                 )
             )
@@ -230,7 +230,7 @@ class RulesEngine:
             gaps.append(
                 PlanGap(
                     code="direction_requirements_unavailable",
-                    message="尚未核验该方向的能力要求与对应证据来源",
+                    message="下一步：到学院官网与就业质量年度报告核对本方向的能力要求。",
                     module="evidence",
                 )
             )
@@ -240,7 +240,7 @@ class RulesEngine:
             gaps.append(
                 PlanGap(
                     code="prerequisite_cycle",
-                    message="先修关系存在环，已按稳定顺序输出并标记待核验",
+                    message="先修关系存在环，方案已按稳定顺序输出；到学院教务核对开课顺序后更新。",
                     module="courses",
                 )
             )
@@ -267,7 +267,7 @@ class RulesEngine:
             gaps.append(
                 PlanGap(
                     code="actions_unavailable",
-                    message="当前规则版本没有可映射到行动的能力要求",
+                    message="下一步：到学院官网核对本方向的能力要求，再映射为行动。",
                     module="evidence",
                 )
             )
@@ -348,7 +348,7 @@ def build_actions(
             user_adjusted=False,
         )
 
-    # 2) 资料缺口对应的核对行动（绝不编造课程/学分/竞赛）。
+    # 2) 数据缺口对应的核对行动（绝不编造课程/学分/竞赛）。
     gap_actions: dict[str, tuple[str, str, str]] = {
         "curriculum_unavailable": (
             "verify-curriculum",

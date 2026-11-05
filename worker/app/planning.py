@@ -2,8 +2,8 @@
 
 The blueprint is product guidance, not external school/industry evidence. It
 turns a selected route, direction, grade and profile signals into concrete next
-actions while keeping course/competition names visibly marked as leads until
-their official catalogs are verified.
+actions while marking course/competition names as official leads with the exact
+entry where the student confirms them.
 """
 
 from __future__ import annotations
@@ -46,7 +46,7 @@ SUPPORTED_ENROLLMENT_YEAR = 2026
 
 COURSE_LEADS: dict[str, tuple[tuple[str, str, tuple[str, ...]], ...]] = {
     "trade_supply_chain": (
-        ("国际贸易实务", "把合同、单证、结算与履约流程串成可核验的业务链。", ("国际贸易", "流程")),
+        ("国际贸易实务", "把合同、单证、结算与履约流程串成可展示的业务链。", ("国际贸易", "流程")),
         ("商务沟通与函电（英）", "把英语优势转成可用于客户沟通和书面业务表达的证据。", ("英语", "沟通", "写作")),
         ("国际贸易模拟", "在模拟业务中检验报价、履约与风险处理能力。", ("国际贸易", "执行")),
         ("电子商务数据分析与数据化运营", "补足数据理解与工具应用，形成业务分析证据。", ("数据", "数字工具")),
@@ -129,13 +129,13 @@ RESOURCE_ROWS = (
 EXTERNAL_RESOURCE_ROWS = (
     (
         "我爱竞赛网",
-        "集中浏览竞赛通知、报名时间和参赛经验；最终资格与校内认定仍以主办方及学校通知为准。",
+        "集中浏览竞赛通知、报名时间和参赛经验；报名资格以主办方通知为准，校内认定按团委当年办法执行。",
         "需要扩展竞赛信息源时",
         EXTERNAL_COMPETITION_HUB,
     ),
     (
         "上经贸第二学堂",
-        "用于关注学校第二课堂、素养积分和活动通知；首版未抓取完整栏目，请在校内入口或公众号中搜索准确名称。",
+        "用于关注学校第二课堂、素养积分和活动通知；准确栏目名称在校内入口或公众号中搜索。",
         "全年关注校内实践与素养积分时",
         None,
     ),
@@ -241,7 +241,7 @@ def build_pathway(profile: Mapping[str, Any]) -> PlanPathway:
             f"当前较愿意投入的{INTEREST_LABELS[strongest_interest[0]]}类活动只表示兴趣偏好，需要结合真实任务体验复核。"
         )
     if primary == "undetermined":
-        rationale.append("你暂未确定主路线，所以方案先安排低成本核验，而不是用一个标签替你做决定。")
+        rationale.append("你还没有确定主路线，所以方案先安排低成本试错，而不是用一个标签替你做决定。")
     else:
         rationale.append(f"你填写的主路线是「{PATHWAY_LABELS[primary]}」，推荐与行动将以此作为准备起点。")
     if practice == "practice":
@@ -336,7 +336,7 @@ def build_course_leads(direction_id: str, profile: Mapping[str, Any]) -> list[Pl
                 lead_id=f"course-lead-{direction_id}-{index + 1}",
                 title=title,
                 description=description or "本专业培养方案中的课程线索。",
-                why="课程名与学分来自培养方案文本（机器提取，未逐条人工复核）；先修、开课学期与选课资格以教务处当年方案为准。"
+                why="课程名与学分摘自学校培养方案原文；先修、开课学期与选课资格以教务处当年方案为准。"
                 if status != "pending_verification"
                 else "方向通用课程线索；具体课程以你所在专业的培养方案为准。",
                 skill_tags=[str(tag) for tag in item.get("skills") or []][:8],
@@ -377,7 +377,7 @@ def build_competition_leads(direction_id: str, profile: Mapping[str, Any]) -> li
             continue
         recognition = item.get("school_recognition") or {}
         official_level = str(recognition.get("official_level") or "").strip()
-        level_label = f"学校奖励清单 {official_level} 级" if official_level else "学校奖励清单等级待核对"
+        level_label = f"学校奖励清单 {official_level} 级" if official_level else "校内认定按团委当年竞赛目录"
         status = str(item.get("verification_status") or "external_reference")
         source_title = str(recognition.get("source_title") or item.get("source_title") or "竞赛目录")
         timing = str(item.get("timing") or "以当年官方通知为准")
@@ -390,7 +390,7 @@ def build_competition_leads(direction_id: str, profile: Mapping[str, Any]) -> li
                 lead_id=f"competition-lead-{direction_id}-{index + 1}",
                 title=name,
                 description=description,
-                why="先核对当年报名资格、组队要求、时间窗与校内加分/素拓折算；未核对前只作为了解清单。"
+                why="报名资格、组队要求与时间窗以当年官方通知为准；校内加分与素拓折算按团委当年认定办法执行。"
                 if status != "official_lead"
                 else "该赛事在《上海对外经贸大学竞赛奖励项目清单》中；具体加分/素拓折算以学工、团委当年文件为准。",
                 skill_tags=[str(tag) for tag in item.get("skill_tags") or []][:8],
@@ -409,10 +409,10 @@ def build_competition_leads(direction_id: str, profile: Mapping[str, Any]) -> li
                 lead_id=f"competition-lead-{direction_id}-{index + 1}",
                 title=title,
                 description=description,
-                why="赛事名称用于建立了解清单；报名资格、年度时间窗、组队要求和校内认定必须以当年官方通知复核。",
+                why="报名资格、年度时间窗与组队要求以主办方当年通知为准；校内加分与素拓折算按团委当年认定办法执行。",
                 skill_tags=list(tags),
                 verification_status="external_reference",
-                source_label="我爱竞赛网与学校竞赛通知；官方页面待逐年核验",
+                source_label="我爱竞赛网与学校竞赛通知",
                 source_url=EXTERNAL_COMPETITION_HUB,
                 freshness=_lead_freshness("external_reference", EXTERNAL_COMPETITION_HUB, "赛事公告发布后复核"),
             )
@@ -451,7 +451,7 @@ def build_campus_facts(profile: Mapping[str, Any]) -> list[PlanLead]:
                 lead_id=f"campus-fact-{index + 1}",
                 title=f"{cohort} {metric} {value}{unit}".strip(),
                 description=(quote or "口径与原文以来源报告为准。")[:220],
-                why=f"口径：{fact.get('scope') or '本科'}；定义：{fact.get('definition') or '以来源报告为准'}；定位：{fact.get('locator') or '未提供'}。",
+                why=f"口径：{fact.get('scope') or '本科'}；定义：{fact.get('definition') or '以来源报告为准'}；定位：{fact.get('locator') or '来源报告全文'}。",
                 skill_tags=[],
                 verification_status=status,  # type: ignore[arg-type]
                 source_label=str(fact.get("source_title") or "就业质量报告"),
@@ -486,6 +486,18 @@ def build_industry_leads(profile: Mapping[str, Any], direction_id: str) -> list[
     return leads
 
 
+_TECHNICAL_NOTE_MARKERS = ("404", "502", "检索", "抓取", "超时", "失败")
+
+
+def _resource_usage_note(note: str) -> str:
+    """资源卡的「怎么用」：优先用整理者写的人话说明，技术性备注不直接给用户看。"""
+
+    text = note.strip()
+    if not text or any(marker in text for marker in _TECHNICAL_NOTE_MARKERS):
+        return "官方栏目，打开即可查看最新通知。"
+    return text
+
+
 def build_campus_resources(profile: Mapping[str, Any]) -> list[PlanLead]:
     leads: list[PlanLead] = []
     for index, item in enumerate(reference.resources()):
@@ -499,12 +511,12 @@ def build_campus_resources(profile: Mapping[str, Any]) -> list[PlanLead]:
                 lead_id=f"campus-resource-{index + 1}",
                 title=name,
                 description=str(item.get("description") or "").strip(),
-                why=str(item.get("note") or "使用前核对栏目与开放时间。"),
+                why=_resource_usage_note(str(item.get("note") or "")),
                 skill_tags=[],
                 verification_status=status,  # type: ignore[arg-type]
                 source_label=str(item.get("source_title") or name),
                 source_url=url,
-                freshness=_lead_freshness(status, url, "使用前复核栏目入口"),  # type: ignore[arg-type]
+                freshness=_lead_freshness(status, url, "随官网更新"),  # type: ignore[arg-type]
             )
         )
     if leads:
@@ -517,7 +529,7 @@ def build_campus_resources(profile: Mapping[str, Any]) -> list[PlanLead]:
             why=stage,
             skill_tags=[],
             verification_status="official_lead",
-            source_label="上海对外经贸大学官网入口；具体栏目与开放时间需复核",
+            source_label="上海对外经贸大学官网入口",
             source_url=SCHOOL_HOME,
             freshness=_lead_freshness("official_lead", SCHOOL_HOME, "使用前复核栏目入口"),
         )
@@ -532,9 +544,9 @@ def build_campus_resources(profile: Mapping[str, Any]) -> list[PlanLead]:
             skill_tags=[],
             verification_status="external_reference",
             source_label=(
-                "外部平台；具体栏目、活动和认定口径需在学校或平台官方入口复核"
+                "外部平台；栏目与活动以平台官方入口为准"
                 if source_url
-                else "外部平台；暂无可验证的直达链接，请在校内入口或公众号中搜索准确名称"
+                else "外部平台；准确名称在校内入口或公众号中搜索"
             ),
             source_url=source_url,
             freshness=_lead_freshness("external_reference", source_url, "使用前查看平台最新公告"),

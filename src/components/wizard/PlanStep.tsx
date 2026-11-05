@@ -67,7 +67,7 @@ const STAGE_LABELS: Record<Stage, string> = {
   loading: "正在整理依据"
 };
 
-const RESEARCH_TOGGLE_DESCRIPTION = "默认关闭；开启后会检索外部网页，结果未经核验，只作补充线索。";
+const RESEARCH_TOGGLE_DESCRIPTION = "默认关闭；开启后同时检索外部网页，作为资料库的补充线索。";
 
 type PendingPlanRun = { run_id: string; direction_id: DirectionId; started_at: string };
 
@@ -284,7 +284,7 @@ export function PlanStep() {
     const planResult = version?.result ?? fallbackResult;
     if (!planResult) {
       setError({
-        message: "方案版本缺少结果字段，无法展示课程与学分。可以重新生成方案，或到资料库查看引用。"
+        message: "方案版本信息不完整；重新生成方案，或到资料库查看引用。"
       });
       setPhase("error");
       return;
@@ -329,7 +329,7 @@ export function PlanStep() {
     try {
       const current = readLocalProgress();
       if (!current) {
-        setError({ message: "本地还没有可用的画像资料，请先完成自我探索。" });
+        setError({ message: "先完成第 1 步自我探索，再生成方案。" });
         setPhase("error");
         return;
       }
@@ -408,7 +408,7 @@ export function PlanStep() {
       const outcome = parsePlanRunResult(finalRun);
       if (!outcome) {
         setError({
-          message: "任务成功，但结果缺少方案编号，无法加载详情。请重新生成方案；如果问题持续，请把该情况反馈给管理员。"
+          message: "任务已完成，方案详情还在同步；请点「刷新方案」。如果仍无结果，再重新生成。"
         });
         setPhase("error");
         return;
@@ -484,7 +484,7 @@ export function PlanStep() {
       }
       const outcome = parsePlanRunResult(finalRun);
       if (!outcome) {
-        setError({ message: "恢复的任务已完成，但结果缺少方案编号。请重新生成。" });
+        setError({ message: "恢复的任务已完成，方案详情还在同步；请点「刷新方案」。" });
         setPhase("error");
         return;
       }
@@ -549,7 +549,7 @@ export function PlanStep() {
       } catch (caught) {
         const code = errorCodeOf(caught);
         if (cacheMatches && cache) {
-          showCachedPlan("云端暂不可用，已展示本设备缓存。");
+          showCachedPlan("当前展示本设备缓存；连接云端后可刷新。");
           return;
         }
         setError({ message: friendlyErrorMessage(caught), code });
@@ -584,11 +584,11 @@ export function PlanStep() {
     const planId = plan?.plan_id ?? progress?.plan_id;
     const version = pickCurrentVersion(plan);
     if (!cloud) {
-      setActionErrors((current) => ({ ...current, [actionId]: "云端未启用：本地演示模式下无法提交调整。" }));
+      setActionErrors((current) => ({ ...current, [actionId]: "本地演示模式：连接云端后可保存调整。" }));
       return;
     }
     if (!planId || !version) {
-      setActionErrors((current) => ({ ...current, [actionId]: "方案版本尚未加载，请先刷新方案。" }));
+      setActionErrors((current) => ({ ...current, [actionId]: "先刷新方案，再保存调整。" }));
       return;
     }
     const payload: ActionPatchInput["user_overrides"] = {};
@@ -750,7 +750,7 @@ export function PlanStep() {
     return (
       <div className="plan-state-stack">
         <Callout tone="warn" title="本地演示模式：云端生成未启用">
-          <p className="micro">可完成第 1 到 3 步并查看导出空态，不会伪造方案。</p>
+          <p className="micro">可完成第 1 到 3 步；连接云端后生成完整方案。</p>
         </Callout>
         <section className="panel" aria-labelledby="local-plan-title">
           <div className="panel-head">
@@ -863,14 +863,14 @@ export function PlanStep() {
       <section className="panel blocked-panel" aria-labelledby="blocked-title">
         <div className="panel-head">
           <div>
-            <h2 id="blocked-title">先补齐这几项</h2>
+            <h2 id="blocked-title">先完成这几项</h2>
           </div>
-          <Badge tone="warn">{missing.length} 项待补</Badge>
+          <Badge tone="warn">先完成 {missing.length} 项</Badge>
         </div>
         <EmptyState
           compact
           icon="flag"
-          title={missing.length > 0 ? `还缺：${missing.join(" / ")}` : "正在准备…"}
+          title={missing.length > 0 ? `还差：${missing.join(" / ")}` : "正在准备…"}
         />
         <div className="local-actions">
           <Button variant="primary" size="md" onClick={() => router.push("/explore")}>
@@ -892,7 +892,7 @@ export function PlanStep() {
     return (
       <div className="plan-state-stack">
         <Callout tone="danger" title="生成失败" icon="alert">
-          <p>{error?.message ?? "未知错误"}</p>
+          <p>{error?.message ?? "这次没有拿到错误原因，可直接重试。"}</p>
         </Callout>
         {renderFinishedTrace()}
         <div className="local-actions">

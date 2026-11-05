@@ -166,7 +166,7 @@ export function recommendPathway(
       reasons.push(
         practice >= 0.5
           ? "沟通协作、组织执行或推动落地的信号相对更集中，适合先用真实岗位、实习和课程项目检验。"
-          : "当前实践信号不算突出，但本科就业仍可通过小规模实践继续验证，不必过早排除。"
+          : "本科就业可以先从一到两个小规模实践开始，边做边校准。"
       );
     }
     if (userPractice === "practice") {
@@ -175,13 +175,13 @@ export function recommendPathway(
     if (preference.accepts_long_internship) {
       reasons.push("你接受较长实习周期，这为本科阶段通过连续实践校正方向提供了空间。");
     }
-    reasons.push("该路线能较早获得岗位反馈，并可根据反馈调整技能组合，但仍需核验目标岗位的学历门槛。");
+    reasons.push("该路线能较早获得岗位反馈，并按反馈调整技能组合。");
     candidates.push({
       pathwayId: "undergraduate_employment",
       label: PATHWAY_LABELS.undergraduate_employment,
       status: "alternative",
       reasons,
-      risks: ["部分岗位可能要求硕士学历或特定证书，必须按具体方向核验。", "过早定型可能压缩试错空间。"],
+      risks: ["目标岗位若要求硕士学历或特定证书，招聘公告里有明确条件。", "先把实习与课程项目做扎实，保留后续调整空间。"],
       preparationCost: "核心成本是持续实习、作品/项目证据和求职时间；无需为统一考试预留整段备考周期。"
     });
   }
@@ -191,18 +191,18 @@ export function recommendPathway(
     if (research !== null) {
       reasons.push(
         research >= 0.5
-          ? "研究、写作或理解规则的信号可作为国内升学的比较依据，但仍需核验目标专业与考试科目。"
-          : "国内升学可保留为备选，但当前研究与写作信号尚不足以支持单一路线判断。"
+          ? "研究、写作或理解规则的信号支持把国内升学列为主路线比较项。"
+          : "先把本科就业作为主路线，国内升学保留为备选；研究与写作可以靠课程项目继续练。"
       );
     }
     if (userPractice === "research") reasons.push("你表示更愿意先做研究，该路线与继续学习和研究训练直接衔接。");
-    reasons.push("升学能延长专业训练和进入部分学历门槛较高岗位的时间，但准备成本和机会成本较高。");
+    reasons.push("升学能延长专业训练，也能进入学历门槛较高的岗位；准备成本提前算清。");
     candidates.push({
       pathwayId: "domestic_postgraduate",
       label: PATHWAY_LABELS.domestic_postgraduate,
       status: "alternative",
       reasons,
-      risks: ["目标院校、专业、考试科目与招生要求逐年变化，不能以通用建议代替核验。", "需要评估数学、英语和专业课基础。"],
+      risks: ["目标院校、专业、考试科目与招生要求按当年招生简章确定。", "先盘清数学、英语和专业课基础。"],
       preparationCost: "通常需要长期安排英语、数学/专业课复习；具体周期取决于目标院校和专业。"
     });
   }
@@ -210,19 +210,19 @@ export function recommendPathway(
   if (!excludedIds.has("overseas_study")) {
     const reasons: string[] = [];
     if ((answeredScore(result, "ability_writing") ?? 0) >= 0.5) {
-      reasons.push("写作与英语相关信号可作为境外申请材料的起点，但仍需核验语言、预算和项目要求。");
+      reasons.push("写作与英语相关信号可以直接用在境外申请材料里。");
     }
     if (preference.target_cities.length > 0) {
       reasons.push(`你填写的城市约束是「${preference.target_cities.join("、")}」，需要同时比较境外学习后的回流地点与岗位机会。`);
     }
-    reasons.push("该路线需要更早核对语言考试、费用、项目资格和录取要求，当前只能作为待确认备选。");
+    reasons.push("该路线要更早准备语言考试、费用与项目材料，现在就能开始。");
     candidates.push({
       pathwayId: "overseas_study",
       label: PATHWAY_LABELS.overseas_study,
       status: "alternative",
       reasons,
-      risks: ["费用、签证和项目资格变化较大。", "需要核实目标地区与院校的官方要求。"],
-      preparationCost: "通常包括语言考试、课程匹配、申请材料与财务准备；首版不提供录取概率。"
+      risks: ["费用、签证和项目资格变化较大。", "目标地区与院校的要求直接查官网项目页。"],
+      preparationCost: "通常包括语言考试、课程匹配、申请材料与财务准备；录取概率见目标院校公开数据。"
     });
   }
 
@@ -231,14 +231,14 @@ export function recommendPathway(
     if ((answeredScore(result, "ability_execution") ?? 0) >= 0.5) {
       reasons.push("组织执行与规则性任务的自评可作为了解公共事务工作的一个线索。");
     }
-    reasons.push("只有在用户未排除体制内方向时才保留该路线；具体岗位必须核对专业、地区和政审要求。");
+    reasons.push("具体岗位的专业、地区与政审要求见当年公告。");
     candidates.push({
       pathwayId: "public_exam",
       label: PATHWAY_LABELS.public_exam,
       status: "alternative",
       reasons,
-      risks: ["岗位资格、专业目录和竞争条件逐年变化，不能使用通用结论代替公告核验。"],
-      preparationCost: "需要按目标地区和岗位长期准备公共科目与面试，具体规则以当年公告为准。"
+      risks: ["岗位资格、专业目录与竞争条件按当年公告执行。"],
+      preparationCost: "按目标地区与岗位长期准备公共科目与面试；规则见当年公告。"
     });
   }
 
@@ -247,7 +247,7 @@ export function recommendPathway(
       leading: null,
       alternatives: [],
       excluded,
-      explanation: ["当前约束同时排除了所有可用主路线，请回到自我探索重新确认至少一条可接受路线。"],
+      explanation: ["当前约束排除了所有主路线；回第 1 步放宽一个排除项，就能生成比较顺序。"],
       rulesVersion: PATHWAY_RULES_VERSION
     };
   }
@@ -286,9 +286,9 @@ export function recommendPathway(
   const explanation = [
     `主路线先由你的明确约束过滤，再比较兴趣、能力自评、实践偏好与准备成本；规则版本 ${PATHWAY_RULES_VERSION}。`,
     preference.primary === "undetermined"
-      ? "你暂时选择“仍不确定”，所以系统先给出比较顺序，并把下一步限定为低成本的核验动作。"
-      : `你填写的主路线为「${PATHWAY_LABELS[preference.primary]}」；系统会把它作为比较起点，但仍保留可调整的备选路线。`,
-    "路线建议不是录取、考试或就业承诺；学历门槛、预算和考试要求仍需按官方资料核验。"
+      ? "你选择“仍不确定”，系统先给出比较顺序，下一步安排低成本尝试。"
+      : `你填写的主路线为「${PATHWAY_LABELS[preference.primary]}」；系统以它为比较起点，并保留可调整的备选路线。`,
+    "学历门槛、预算与考试要求见学校与招考单位公告。"
   ];
 
   return {

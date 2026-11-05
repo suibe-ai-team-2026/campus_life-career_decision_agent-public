@@ -4,24 +4,8 @@ import { Fragment, useEffect, useId, useRef, useState, type ReactNode } from "re
 import { createPortal } from "react-dom";
 import type { Citation } from "@/lib/contracts/run";
 import { safeExternalUrl } from "@/lib/api-client";
-import { Badge, Icon, type BadgeTone } from "./primitives";
+import { Badge, Icon } from "./primitives";
 import { sourceScopeLabel } from "@/lib/source-labels";
-
-export function verificationDisplay(status: string): { label: string; tone: BadgeTone } {
-  switch (status) {
-    case "verified":
-    case "official":
-      return { label: "已核验", tone: "ok" };
-    case "partial":
-      return { label: "部分核验", tone: "warn" };
-    case "historical":
-      return { label: "历史口径", tone: "muted" };
-    case "excluded":
-      return { label: "已排除", tone: "danger" };
-    default:
-      return { label: "待核验", tone: "warn" };
-  }
-}
 
 const LOCATOR_KEYS: [string, string][] = [
   ["page", "页"],
@@ -39,7 +23,7 @@ const LOCATOR_KEYS: [string, string][] = [
 
 /** Human-readable locator summary. Never renders a URL or token. */
 export function locatorSummary(locator: Record<string, unknown> | null | undefined): string {
-  if (!locator) return "定位信息未提供";
+  if (!locator) return "来源条目";
   const parts: string[] = [];
   for (const [key, label] of LOCATOR_KEYS) {
     const value = locator[key];
@@ -47,7 +31,7 @@ export function locatorSummary(locator: Record<string, unknown> | null | undefin
       parts.push(`${label} ${value}`);
     }
   }
-  return parts.length > 0 ? parts.join(" · ") : "定位信息未提供";
+  return parts.length > 0 ? parts.join(" · ") : "来源条目";
 }
 
 function domainOf(url: string): string {
@@ -61,7 +45,6 @@ function domainOf(url: string): string {
 export function CitationCard({ citation, dense = false }: { citation: Citation; dense?: boolean }) {
   const [expanded, setExpanded] = useState(false);
   const id = useId();
-  const verification = verificationDisplay(citation.verification_status);
   const excerpt = citation.excerpt?.trim() ?? "";
   const longExcerpt = excerpt.length > 160;
   // Only http(s) locator URLs become links; anything else keeps the old
@@ -80,11 +63,10 @@ export function CitationCard({ citation, dense = false }: { citation: Citation; 
             <span>{locatorSummary(citation.locator)}</span>
           </p>
         </div>
-        <Badge tone={verification.tone}>{verification.label}</Badge>
       </header>
       {webUrl ? (
         <div className="citation-web-row">
-          <Badge tone="info">实时网页 · 未核验</Badge>
+          <Badge tone="info">实时网页</Badge>
           <a className="citation-web-link" href={webUrl} target="_blank" rel="noopener noreferrer" title={webUrl}>
             <span className="citation-domain">{domainOf(webUrl)}</span>
             <span>打开网页</span>
@@ -111,7 +93,7 @@ export function CitationCard({ citation, dense = false }: { citation: Citation; 
           ) : null}
         </div>
       ) : (
-        <p className="citation-empty micro">未提供摘录，以来源条目为准。</p>
+        <p className="citation-empty micro">摘录见来源条目。</p>
       )}
     </article>
   );
@@ -167,7 +149,7 @@ function popoverMeta(citation: Citation): string {
   const scope = citation.source_scope ? sourceScopeLabel(citation.source_scope) : null;
   if (scope) parts.push(scope);
   const locator = locatorSummary(citation.locator);
-  if (locator && locator !== "定位信息未提供") parts.push(locator);
+  if (locator && locator !== "来源条目") parts.push(locator);
   return parts.length > 0 ? parts.join(" · ") : "来源条目";
 }
 
@@ -184,7 +166,6 @@ export function CitationRef({ citation }: { citation: Citation }) {
   const wrapRef = useRef<HTMLSpanElement | null>(null);
   const popRef = useRef<HTMLSpanElement | null>(null);
   const popId = useId();
-  const verification = verificationDisplay(citation.verification_status);
   const excerpt = popoverExcerpt(citation.excerpt ?? "");
   const open = pinned || hovered || focused;
 
@@ -284,9 +265,8 @@ export function CitationRef({ citation }: { citation: Citation }) {
               <span className="cite-pop-title">{citation.title}</span>
               <span className="cite-pop-meta">{popoverMeta(citation)}</span>
               <span className="cite-pop-excerpt">
-                {excerpt || "未提供摘录，以来源条目为准。"}
+                {excerpt || "摘录见来源条目。"}
               </span>
-              <span className="cite-pop-ref">出处 · {verification.label}</span>
             </span>,
             document.body
           )

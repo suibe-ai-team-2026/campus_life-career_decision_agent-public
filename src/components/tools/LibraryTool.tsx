@@ -5,7 +5,6 @@ import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import type { Citation } from "@/lib/contracts/run";
 import type { Source } from "@/lib/contracts/source";
 import { toTraceEvents, type TraceEvent } from "@/lib/agent-trace";
-import { extractionStatusLabel, sourceScopeLabel } from "@/lib/source-labels";
 import {
   cloudConfigured,
   createAnonymousSession,
@@ -30,7 +29,7 @@ import {
   RunStatus,
   formatDateTime
 } from "@/components/ui/primitives";
-import { CitationText, verificationDisplay } from "@/components/ui/CitationCard";
+import { CitationText } from "@/components/ui/CitationCard";
 import { AgentTrace } from "@/components/run/AgentTrace";
 import { ResearchToggle } from "@/components/run/ResearchToggle";
 import { useHydrated } from "@/lib/local-progress/store";
@@ -178,8 +177,8 @@ export function LibraryTool() {
   const knowledgeBaseStatus = !cloud
     ? "本地演示模式"
     : sourcesState === "error"
-      ? "云端知识库连接异常"
-      : "云端知识库已配置";
+      ? "云端知识库连接中断"
+      : "云端知识库已连接";
 
   async function handleAsk(preset?: string) {
     const text = (preset ?? question).trim();
@@ -193,7 +192,7 @@ export function LibraryTool() {
       return;
     }
     if (!cloud) {
-      setComposerError("云端知识库未启用：本地演示模式下不能发起资料问答。");
+      setComposerError("本地演示模式：连接云端知识库后即可提问。");
       return;
     }
     const history = messages
@@ -251,7 +250,7 @@ export function LibraryTool() {
           {
             id: messageId(),
             role: "assistant",
-            content: "回答已返回，但格式无法识别。没有生成引用时系统不会把内容当作事实展示，请稍后重试或换一个问法。",
+            content: "这次回答没有附上引用，已按资料库规则不当作事实展示。换个问法再试一次。",
             isError: true,
             trace: finishedTrace,
             traceStatus: run.status
@@ -334,12 +333,12 @@ export function LibraryTool() {
                   ) : message.refused ? (
                     <div className="message-refusal">
                       <p className="message-refusal-title">
-                        <Icon name="shield" size={15} /> 这个问题暂时不能回答
+                        <Icon name="shield" size={15} /> 这个问题可以这样查
                       </p>
                       <p>{message.content}</p>
                       {message.boundaryNote ? <p className="message-boundary">{message.boundaryNote}</p> : null}
                       <p className="message-boundary">
-                        可换成与培养方案、就业报告、竞赛目录、学生手册或招聘要求相关的问题。
+                        培养方案、就业质量报告、竞赛目录、学生手册与招聘要求都在资料库里。
                       </p>
                     </div>
                   ) : (
@@ -395,7 +394,7 @@ export function LibraryTool() {
               placeholder={
                 cloud
                   ? "问一个与生涯资料有关的问题…"
-                  : "云端知识库未启用：本地演示模式不能发起资料问答。"
+                  : "本地演示模式：连接云端知识库后即可提问。"
               }
               onChange={(event) => {
                 setQuestion(event.target.value);
@@ -429,7 +428,6 @@ export function LibraryTool() {
   }
 
   function sourceLine(source: Source) {
-    const verification = verificationDisplay(source.verification_status);
     const officialUrl = safeExternalUrl(source.canonical_url);
     return (
       <li className="source-line" key={source.source_id}>
@@ -442,7 +440,6 @@ export function LibraryTool() {
             source.title
           )}
         </span>
-        <span className="source-line-meta">{verification.label}</span>
       </li>
     );
   }
@@ -474,8 +471,8 @@ export function LibraryTool() {
         </div>
 
         {!cloud ? (
-          <Callout tone="warn" title="云端资料未载入">
-            <p className="micro">本地演示模式没有云端来源目录，下列仅为产品支持的资料类型。</p>
+          <Callout tone="warn" title="本地演示模式">
+            <p className="micro">连接云端后，这里会列出已收录的来源条目；下面是产品支持的资料类型。</p>
           </Callout>
         ) : null}
 
@@ -487,7 +484,7 @@ export function LibraryTool() {
           </div>
         ) : null}
         {cloud && sourcesState === "error" ? (
-          <Callout tone="danger" title="来源目录加载失败">
+          <Callout tone="danger" title="来源目录连接中断">
             <p>{sourcesError ?? "请稍后重试。"}</p>
             <Button variant="secondary" size="sm" onClick={reloadSources}>
               重新加载
@@ -507,7 +504,7 @@ export function LibraryTool() {
                       : sourcesState === "error"
                         ? "加载失败"
                         : sourcesState === "ready"
-                          ? "暂无来源"
+                          ? "来源入口"
                           : "加载中"}
                   </Badge>
                 </div>
@@ -534,11 +531,11 @@ export function LibraryTool() {
           <EmptyState
             icon="database"
             compact
-            title={activeFilter ? `「${activeFilter.label}」暂无已载入来源` : "来源目录为空"}
+            title={activeFilter ? `「${activeFilter.label}」的来源会显示在这里` : "来源目录已就绪"}
             description={
               cloud
-                ? "知识库已连接，但来源目录暂未返回条目；资料问答仍可使用。"
-                : "本地演示模式不展示来源条目。"
+                ? "知识库已连接，可以直接发起资料问答。"
+                : "本地演示模式展示资料类型；连接云端后查看来源条目。"
             }
           />
         ) : null}

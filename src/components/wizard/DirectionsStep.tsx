@@ -127,7 +127,7 @@ export function DirectionsStep() {
     if (!isDirectionAllowed(directionId, pathwayPreference)) {
       setFavoriteError(
         excludedDirections[directionId] ??
-          "该方向已被你的硬约束排除，不能加入比较。"
+          "该方向已按你的硬约束排除，不参与比较。"
       );
       return;
     }
@@ -201,7 +201,7 @@ export function DirectionsStep() {
       }
       const parsed = parseCompareResult(run);
       if (!parsed) {
-        setAiError("AI 对比已返回，但结果格式无法识别；请改为查看上方资料并排对比。");
+        setAiError("AI 对比结果格式不完整；上方资料并排对比可直接使用。");
         setAiState("error");
         return;
       }
@@ -308,7 +308,7 @@ export function DirectionsStep() {
                       ))}
                     </ul>
                   ) : (
-                    <p className="panel-note">当前没有其他可比较路线；请检查是否一次排除了太多选项。</p>
+                    <p className="panel-note">当前约束下只有这一条路线；回自我探索放宽一个排除项即可增加备选。</p>
                   )}
                   {pathwayDecision.excluded.length > 0 ? (
                     <p className="panel-note pathway-excluded-note">
@@ -342,7 +342,7 @@ export function DirectionsStep() {
                 </div>
               </Callout>
             ) : !recommendationResult || recommendationResult.insufficientSignals ? (
-              <Callout tone="plain" icon="compass" title="画像信号还不够">
+              <Callout tone="plain" icon="compass" title="先用几道题让画像更具体">
                 <p>先回第 1 步补答几道题，也可以直接浏览下方目录收藏方向。</p>
                 <div className="recommend-empty-actions">
                   <Button variant="secondary" size="sm" href="/explore">
@@ -352,8 +352,8 @@ export function DirectionsStep() {
                 </div>
               </Callout>
             ) : recommendationResult.recommendations.length === 0 ? (
-              <Callout tone="plain" icon="compass" title="当前画像还不足以给出待比较方向">
-                <p>可以先浏览下方完整目录，或回第 1 步补充能力自评与经历。</p>
+              <Callout tone="plain" icon="compass" title="先用方向目录开始比较">
+                <p>浏览下方完整目录收藏方向，或回第 1 步补答能力自评与经历。</p>
                 <div className="recommend-empty-actions">
                   <Button variant="secondary" size="sm" href="/explore">
                     回第 1 步补画像
@@ -436,7 +436,7 @@ export function DirectionsStep() {
               title={<span id="direction-cards-title">六个方向，逐张核对</span>}
               description="点右上角收藏，收藏 2 到 3 个后可在下方并排比较。"
               actions={
-                favorites.length > 0 ? <Badge tone="accent">已收藏 {favorites.length} 个</Badge> : <Badge tone="muted">尚未收藏</Badge>
+                favorites.length > 0 ? <Badge tone="accent">已收藏 {favorites.length} 个</Badge> : <Badge tone="muted">待收藏</Badge>
               }
             />
             <div className="direction-grid">
@@ -483,7 +483,7 @@ export function DirectionsStep() {
                     ) : null}
 
                     <div className="direction-block">
-                      <p className="direction-label">已核技能</p>
+                      <p className="direction-label">核心技能</p>
                       <div className="chip-row">
                         {direction.verified_skills.map((item) => (
                           <span className="chip chip-amber" key={item}>
@@ -516,7 +516,7 @@ export function DirectionsStep() {
           </section>
 
           {favoriteError ? (
-            <Callout tone="warn" title="无法收藏这个方向">
+            <Callout tone="warn" title="收藏位已满">
               <p>{favoriteError}</p>
             </Callout>
           ) : null}
@@ -605,7 +605,7 @@ export function DirectionsStep() {
                       ))}
                     </tr>
                     <tr>
-                      <th scope="row">已核技能</th>
+                      <th scope="row">核心技能</th>
                       {favoriteDirections.map((direction) => (
                         <td key={direction.direction_id}>
                           <div className="chip-row">
@@ -677,7 +677,7 @@ export function DirectionsStep() {
                 </div>
               ) : null}
               {aiState === "error" && aiError ? (
-                <Callout tone="warn" title="AI 对比暂不可用">
+                <Callout tone="warn" title="AI 对比未启用">
                   <p>{aiError}</p>
                   {aiRequestId ? <p className="panel-note">问题编号：{aiRequestId}</p> : null}
                   <div className="ai-error-actions">
@@ -693,8 +693,8 @@ export function DirectionsStep() {
                     <Icon name="sparkles" size={15} /> AI 对比解释
                   </p>
                   {aiDegraded ? (
-                    <Callout tone="plain" icon="info" title="本次为确定性回退说明">
-                      <p>AI 解释未通过校验，已回退为资料说明；方向卡与引用未变。</p>
+                    <Callout tone="plain" icon="info" title="以下为方向卡说明">
+                      <p>以下内容来自方向卡与引用，可直接使用。</p>
                       <div className="ai-error-actions">
                         <Button variant="secondary" size="sm" onClick={handleAiCompare}>
                           <Icon name="sparkles" size={14} /> 重试生成

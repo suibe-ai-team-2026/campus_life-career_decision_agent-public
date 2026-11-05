@@ -292,7 +292,7 @@ export function ChoiceStep() {
             </span>
             <span className="step-meta-item">
               <Icon name="flag" size={13} />
-              {existingDirectionInfo ? `主方向：${existingDirectionInfo.short_title}` : "尚未暂定主方向"}
+              {existingDirectionInfo ? `主方向：${existingDirectionInfo.short_title}` : "主方向：待确认"}
             </span>
             <span className="step-meta-item">
               <Icon name="list" size={13} />
@@ -452,7 +452,7 @@ export function ChoiceStep() {
               rows={4}
               maxLength={1000}
               value={unknowns}
-              placeholder="例如：不清楚本校培养方案里相关课程安排；不知道实习要求；还没有核验招聘要求。"
+              placeholder="例如：不清楚本校培养方案里相关课程安排；不了解实习要求与招聘条件。"
               onChange={(event) => {
                 setUnknowns(event.target.value);
                 saveDraft(selected, why, event.target.value, revisitOn);
@@ -501,11 +501,11 @@ export function ChoiceStep() {
             <ul className="kv-list">
               <li>
                 <span>主方向</span>
-                <strong>{selectedDirection ? selectedDirection.title : "尚未选择"}</strong>
+                <strong>{selectedDirection ? selectedDirection.title : "待选择"}</strong>
               </li>
               <li>
                 <span>备选方向</span>
-                <strong>{backupDirection ? backupDirection.title : "暂不设备选"}</strong>
+                <strong>{backupDirection ? backupDirection.title : "不设备选"}</strong>
               </li>
               <li>
                 <span>复核时间</span>
@@ -537,12 +537,12 @@ export function ChoiceStep() {
             <p className="panel-subtitle">备选只作复核时的比较对象，不会生成方案。</p>
           </div>
           <Badge tone={backupDirection ? "accent" : "muted"}>
-            {backupDirection ? "已设置备选" : "暂不设备选"}
+            {backupDirection ? "已设置备选" : "不设备选"}
           </Badge>
         </div>
         {favorites.length === 0 ? (
           <p className="panel-note">
-            还没有收藏，暂时无法设置备选；先去
+            收藏 2 个方向后即可设置备选；先去
             <Link href="/directions" className="link-inline"> 方向认知 </Link>
             收藏 2 个以上。
           </p>
@@ -558,7 +558,7 @@ export function ChoiceStep() {
                   onChange={() => handleBackupChange(null)}
                 />
                 <span className="choice-option-main">
-                  <span className="choice-option-title">暂不设备选</span>
+                  <span className="choice-option-title">不设备选</span>
                   <span className="choice-option-desc">只保留一个暂定主方向，等下次复核时再比较。</span>
                 </span>
                 <span className={backup === null ? "choice-option-mark is-on" : "choice-option-mark"} aria-hidden="true">

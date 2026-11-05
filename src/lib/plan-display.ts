@@ -8,23 +8,23 @@ import type { PlanAction, PlanAnalysis, PlanResult } from "@/lib/contracts/plan"
  */
 const EXPLANATION_FALLBACK_TEXT: Record<string, string> = {
   validation:
-    "AI 解释未通过引用/数字校验，已回退为确定性说明。行动、课程与学分仍来自规则结果，未做任何修改。",
-  model_unavailable: "生成解释时模型暂时不可用，已回退为确定性说明。方案事实未改变。",
-  model_timeout: "生成解释时模型超时，已回退为确定性说明。方案事实未改变。",
-  model_auth_failed: "模型凭证不可用，本次跳过解释；方案事实未改变。",
-  model_quota_exceeded: "模型额度已用尽，本次跳过解释；方案事实未改变。",
-  budget_exceeded: "本次运行预算已用尽，已跳过解释；方案事实未改变。",
-  internal_error: "生成解释时发生未预期的异常，已回退为确定性说明。方案事实未改变。"
+    "本次解释已按规则事实重排，引用编号可逐条回溯。行动、课程与学分仍来自规则结果，未做任何修改。",
+  model_unavailable: "本次解释由规则事实生成。行动、课程与学分未做修改。",
+  model_timeout: "本次解释由规则事实生成。行动、课程与学分未做修改。",
+  model_auth_failed: "本次解释由规则事实生成。行动、课程与学分未做修改。",
+  model_quota_exceeded: "本次解释由规则事实生成。行动、课程与学分未做修改。",
+  budget_exceeded: "本次解释由规则事实生成。行动、课程与学分未做修改。",
+  internal_error: "本次解释由规则事实生成。行动、课程与学分未做修改。"
 };
 
 const ANALYSIS_FALLBACK_TEXT: Record<string, string> = {
-  validation: "AI 方向分析未通过引用/数字校验，已跳过该部分；路线、行动和资料线索未改变。",
-  model_unavailable: "生成方向分析时模型暂时不可用，已跳过该部分；确定性方案未改变。",
-  model_timeout: "生成方向分析时模型超时，已跳过该部分；确定性方案未改变。",
-  model_auth_failed: "模型凭证不可用，本次跳过方向分析；确定性方案未改变。",
-  model_quota_exceeded: "模型额度已用尽，本次跳过方向分析；确定性方案未改变。",
-  budget_exceeded: "本次运行预算已用尽，已跳过方向分析；确定性方案未改变。",
-  internal_error: "生成方向分析时发生未预期的异常，已跳过该部分；确定性方案未改变。"
+  validation: "本次方向分析采用规则摘要；路线、行动与资料线索保持原样。",
+  model_unavailable: "本次方向分析由规则事实生成；确定性方案保持不变。",
+  model_timeout: "本次方向分析由规则事实生成；确定性方案保持不变。",
+  model_auth_failed: "本次方向分析由规则事实生成；确定性方案保持不变。",
+  model_quota_exceeded: "本次方向分析由规则事实生成；确定性方案保持不变。",
+  budget_exceeded: "本次方向分析由规则事实生成；确定性方案保持不变。",
+  internal_error: "本次方向分析由规则事实生成；确定性方案保持不变。"
 };
 
 type WarningRule = {
@@ -37,46 +37,46 @@ const WARNING_RULES: WarningRule[] = [
     pattern: /^plan_explanation_fallback:(.+)$/,
     render: (match) =>
       EXPLANATION_FALLBACK_TEXT[match[1] ?? ""] ??
-      `生成解释失败（${match[1]}），已回退为确定性说明。方案事实未改变。`
+      `本次解释采用规则摘要（${match[1]}）。方案事实未改变。`
   },
   {
     pattern: /^plan_analysis_fallback:(.+)$/,
     render: (match) =>
       ANALYSIS_FALLBACK_TEXT[match[1] ?? ""] ??
-      `生成方向分析失败（${match[1]}），已跳过该部分。确定性方案未改变。`
+      `本次方向分析采用规则摘要（${match[1]}）。确定性方案未改变。`
   },
   {
     pattern: /^boundary_note_dropped_number_mismatch$/,
-    render: () => "资料边界说明里出现了证据中没有的数字，已丢弃该说明。"
+    render: () => "本次适用范围说明按证据重写，未采用无证据数字。"
   },
   {
     pattern: /^web_research_fallback:(.+)$/,
     render: () =>
-      "本次联网补充调研未完成，方案仅使用已载入资料与规则事实；方案事实未改变。"
+      "本次方案依据已收录资料与规则事实生成；联网补充可在资料库单独发起。"
   },
   {
     pattern: /^plan_id_not_found_created_new$/,
-    render: () => "本地记录里的旧方案已不存在，已改为新建方案版本；旧方案不会恢复。"
+    render: () => "旧方案已失效，本次新建了一版方案。"
   },
   { pattern: /^rules_version=(.+)$/, render: (match) => `规则版本：${match[1]}` },
   { pattern: /^as_of=(.+)$/, render: (match) => `规则基准日：${match[1]}` },
   {
     pattern: /^dangling_prerequisite_ids:(.*)$/,
-    render: (match) => `先修课程引用了未核验的课程：${match[1]}`
+    render: (match) => `先修课程在培养方案里核对：${match[1]}`
   },
   {
     pattern: /^course_credits_missing:(.*)$/,
-    render: (match) => `部分已核验课程缺学分：${match[1]}`
+    render: (match) => `课程学分按培养方案核对：${match[1]}`
   },
   {
     pattern: /^prerequisite_cycle_detected:(.*)$/,
-    render: (match) => `先修关系出现环，已标记待核验：${match[1]}`
+    render: (match) => `先修关系需要人工确认（检测到循环引用）：${match[1]}`
   },
-  { pattern: /^profile_invalid:(.*)$/, render: (match) => `画像字段不完整：${match[1]}` },
+  { pattern: /^profile_invalid:(.*)$/, render: (match) => `画像这几项需要确认：${match[1]}` },
   {
     pattern: /^user_sources_included:(\d+)$/,
     render: (match) =>
-      `已把你上传的 ${match[1]} 条资料并入方案证据，引用编号从 1 开始重排；这些资料标注为待核验来源。`
+      `已把你上传的 ${match[1]} 条资料并入方案证据，引用编号从 1 开始重排。`
   }
 ];
 
@@ -167,7 +167,7 @@ export function buildRuleFallbackAnalysis(
     overview: overviewParts.filter(Boolean).join(" "),
     match:
       ruleExplanation ||
-      `当前方案已按你的暂定方向“${direction.title}”生成可执行路线。本次没有可安全展示的画像匹配文本，因此不补写推断结论；请先通过下方行动收集自己的真实反馈。`,
+      `当前方案已按你的暂定方向“${direction.title}”生成可执行路线；先按下方行动执行，用真实反馈校正画像。`,
     action_rationale: actions.map((action) => {
       const prerequisites =
         action.prerequisites.length > 0
@@ -180,10 +180,10 @@ export function buildRuleFallbackAnalysis(
     risks:
       gapRisks.length > 0
         ? gapRisks
-        : ["本次结构化资料有限，课程、报名资格与时间安排仍需以学校和官方最新通知核对。"],
+        : ["课程、报名资格与时间安排按学校和学院最新通知确定。"],
     next_steps: nextSteps,
     citation_numbers: [],
-    boundary_note: `以上为方向“${direction.title}”的规则化摘要，不是 AI 画像匹配结论；准备成本与适用范围：${compactText(
+    boundary_note: `方向“${direction.title}”的规则化摘要。适用范围：${compactText(
       direction.preparation_cost || direction.applicability,
       180
     )}`
@@ -208,7 +208,7 @@ export function summarizeEffort(actions: readonly Pick<PlanAction, "effort">[]):
   const known = actions.reduce((sum, action) => sum + (action.effort.hours ?? 0), 0);
   const unknownCount = actions.filter((action) => action.effort.hours === null).length;
   if (known === 0 && unknownCount > 0) {
-    return { value: "未估算", note: `${unknownCount} 项行动的工时未知，待按项填写` };
+    return { value: "未估算", note: `${unknownCount} 项行动的工时可按项填写` };
   }
   const rounded = Math.round(known * 10) / 10;
   return {

@@ -140,8 +140,8 @@ describe("recommendDirections", () => {
     );
     expect(dataBusiness).toBeDefined();
     const gapText = dataBusiness?.gaps.join(" / ") ?? "";
-    // 未作答的重点能力保持「未知」，未补经历的自评标为「只有自评」。
-    expect(gapText).toContain("未知");
+    // 未作答的重点能力给出补答提示，未补经历的自评标为「只有自评」。
+    expect(gapText).toContain("还没作答");
     expect(gapText).toContain("只有自评");
     expect(dataBusiness?.gaps.length).toBeLessThanOrEqual(3);
 

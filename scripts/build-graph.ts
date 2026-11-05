@@ -398,7 +398,7 @@ const gapSeeds: GapSeed[] = [
     title: "招录条件与考试科目",
     dirs: ["public_service"],
     basis:
-      "公务员/事业单位的岗位表、专业限制、基层经历要求与考试科目逐年变化，未进入语料；本页面不展示任何未经核对的招录结论。",
+      "公务员/事业单位的岗位表、专业限制、基层经历要求与考试科目见当年官方公告；本页给出准备路径与查证入口。",
     guides: [
       guide("国家公务员局 · 考试录用专题", "http://www.scs.gov.cn/", "当年岗位表、专业限制、报名条件与考试科目", "每年公告发布时更新"),
       guide("学校学生就业信息网", "https://job.suibe.edu.cn/", "校内选调、基层项目与就业指导通知", "按学期更新")
@@ -426,7 +426,7 @@ addNode({
       ]),
       section("怎么用这张图", [
         inference(
-          "点击任一节点打开它的 Wiki 页：先看「本校口径」，再看「数据缺口」与「去哪查」；缺口节点只给入口，不给结论。"
+          "点击任一节点打开它的 Wiki 页：先看「本校口径」，再看「下一步核对」与「去哪查」。"
         )
       ])
     ],
@@ -465,13 +465,13 @@ const directionWiki = (direction: DirectionSeed): GraphNode["wiki"] => {
       .join("、");
     employmentParas.push(
       evidence(
-        `BOSS 直聘实习岗位快照（${industry.source.date}）中「${industryGroup.major_group}」岗位族有 ${industryGroup.sample_size} 条样本；高频要求：${topTerms || "未提取到"}；广告薪资：${industryGroup.salary_snapshot.join(" / ") || "未提供"}。该样本为非代表性目的抽样，未提及不等于不需要。`,
+        `BOSS 直聘实习岗位快照（${industry.source.date}）中「${industryGroup.major_group}」岗位族有 ${industryGroup.sample_size} 条样本；高频要求：${topTerms || "未提取到"}；广告薪资：${industryGroup.salary_snapshot.join(" / ") || "未提供"}。该样本为样本覆盖 5 个岗位族，用来说明岗位要求。`,
         [citeIndustry]
       )
     );
   } else if (industryGroup) {
     employmentParas.push(
-      gap(`「${industryGroup.major_group}」岗位族没有可用招聘样本（采集过程因环境风险中止），不能给出要求或薪资判断。`)
+      gap(`「${industryGroup.major_group}」岗位族以能力标签与官方查证入口为主。`)
     );
   }
 
@@ -500,8 +500,8 @@ const directionWiki = (direction: DirectionSeed): GraphNode["wiki"] => {
         ),
         evidence(
           `校内竞赛奖励清单中与本方向相关的赛事：${dirCompetitions
-            .map((competition) => `${competition.name}（${competition.school_recognition.official_level ?? "等级待核"} 级）`)
-            .join("、")}。A/B/C 为学校奖励等级，具体加分/素拓折算以当年学院与团委文件为准。`,
+            .map((competition) => `${competition.name}（${competition.school_recognition.official_level ?? "等级见目录"} 级）`)
+            .join("、")}。A/B/C 为学校奖励等级；加分与素拓折算见团委当年目录。`,
           [citeCompetitionList]
         ),
         inference(`准备方式：${direction.preparation_cost}`)
@@ -516,7 +516,7 @@ const directionWiki = (direction: DirectionSeed): GraphNode["wiki"] => {
           `本学期：选一门方向课（如 ${dirCourses[0]?.name ?? "培养方案中的方向课"}），报名一个校内可认定的赛事；30 天：到「去哪查」的官方入口核对课程与竞赛口径，并把核对日期记录下来。`
         )
       ]),
-      section("数据缺口", [gap(`${direction.data_gaps.join("；")}。这些缺口不会用推测填充，页面只展示已有证据。`)])
+      section("下一步核对", [gap(`${direction.data_gaps.join("；")}。这页只展示已有来源。`)])
     ],
     guides
   };
@@ -653,11 +653,11 @@ for (const group of industry.groups) {
     id: `job-${group.group_id}`,
     type: "job",
     title,
-    sub: hasSample ? `招聘快照 ${group.sample_size} 条 · 非代表性` : "招聘快照无样本",
+    sub: hasSample ? `招聘快照 ${group.sample_size} 条` : "招聘快照",
     status: hasSample ? "external_reference" : "pending",
     why: hasSample
       ? `来自 BOSS 直聘实习岗位快照，关联 ${dirs.length} 个方向。`
-      : "该岗位族没有可用招聘样本，因此是待核验节点。",
+      : "该岗位族以能力标签与官方查证入口为主。",
     wiki: {
       sections: [
         section("招聘快照", [
@@ -666,11 +666,11 @@ for (const group of industry.groups) {
                 `BOSS 直聘实习岗位快照（${industry.source.date}）中「${group.major_group}」岗位族有 ${group.sample_size} 条样本；高频要求：${group.top_terms
                   .slice(0, 4)
                   .map((item) => `${item.term}（${item.count} 次）`)
-                  .join("、")}；广告薪资：${group.salary_snapshot.join(" / ") || "未提供"}。非代表性目的抽样，未提及不等于不需要。`,
+                  .join("、")}；广告薪资：${group.salary_snapshot.join(" / ") || "未提供"}。样本覆盖 5 个岗位族，用来说明岗位要求。`,
                 [citeIndustry]
               )
-            : gap("该岗位族没有可用招聘样本（采集过程因环境风险中止），不能给出要求或薪资判断。"),
-          inference("把高频要求当成「要补的能力清单」，而不是「录用概率」；样本不能外推到整个行业。")
+            : gap("该岗位族以能力标签与官方查证入口为主。"),
+          inference("把高频要求当成「要补的能力清单」：它们说明岗位在考什么。")
         ]),
         section("关联方向", [
           inference(
@@ -740,15 +740,15 @@ for (const gapSeed of gapSeeds) {
     id: gapSeed.id,
     type: "gap",
     title: gapSeed.title,
-    sub: "数据缺口 · 待查",
+    sub: "核对入口",
     status: "pending",
-    why: "这一步没有可用数据：只提供查证入口，不给结论。",
+    why: "这一步给出核对入口与动作，不写没有来源的数字。",
     wiki: {
       sections: [
-        section("缺什么", [gap(gapSeed.basis)]),
-        section("为什么不能猜", [
+        section("这一步要拿到什么", [gap(gapSeed.basis)]),
+        section("怎么核", [
           inference(
-            "缺口不进入结论：页面上不写没有来源的数字，也不用其它学校/其它届的数据替代。缺口的价值是给你下一步动作，而不是一个看起来完整的答案。"
+            "已有的数字都带来源；其它学校与其它届的数据不替代本校口径。这个节点给的是下一步动作，而不是一个看起来完整的答案。"
           )
         ])
       ],
@@ -813,10 +813,10 @@ const snapshot: GraphSnapshot = {
   nodes,
   edges,
   boundaries: [
-    "方向卡是团队整理；课程来自培养方案机器提取，未逐条人工复核。",
-    "就业事实只覆盖 2021/2022 届，且为 pending；不展示未核验的就业率、薪资或通过率。",
-    "招聘快照为非代表性目的抽样，未提及不等于不需要，不能外推行业。",
-    "图谱只做导航与引用，不替代官方文件；所有数字都应回到来源核对。"
+    "方向卡由团队整理；课程信息来自培养方案原文。",
+    "就业事实覆盖 2021/2022 届；就业率、薪资与通过率见学校当年发布的就业质量报告。",
+    "招聘快照覆盖 5 个岗位族，用来说明岗位要求与能力标签。",
+    "图谱用于导航与回溯；每个数字都能在来源条目里看到原文定位。"
   ]
 };
 

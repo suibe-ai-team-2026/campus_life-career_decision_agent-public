@@ -133,7 +133,7 @@ const READINESS_LABELS: Record<Exclude<ReadinessBand, "unknown">, { label: strin
   },
   comparing: {
     label: "正在比较候选方向",
-    guidance: "下一步优先比较各方向的工作内容、能力要求与资料缺口，再决定暂定方向。"
+    guidance: "下一步优先比较各方向的工作内容、能力要求与核对入口，再决定暂定方向。"
   },
   targeted: {
     label: "已有较明确倾向",

@@ -258,18 +258,18 @@ function buildGaps(
     const link = rule.abilityLinks[key];
     const linkSuffix = link ? `方向卡把它对应到「${link}」，` : "";
     if (!ability || !ability.answered || ability.score === null) {
-      unknown.push(`方向重点能力「${ABILITY_TITLES[key]}」尚未作答，保持未知；补答后比较会更可靠。`);
+      unknown.push(`方向重点能力「${ABILITY_TITLES[key]}」还没作答；补答这一题，比较会更准。`);
       continue;
     }
     if (ability.score < SIGNAL_MATCH_THRESHOLD) {
       selfRatedLow.push(
-        `方向重点能力「${ABILITY_TITLES[key]}」你目前自评偏低；${linkSuffix}可先通过课程或小项目补足，再回来比较。`
+        `方向重点能力「${ABILITY_TITLES[key]}」你目前自评偏低；${linkSuffix}先用课程或小项目练一次，再回来比较。`
       );
       continue;
     }
     if (ability.evidence === "self_only") {
       selfOnly.push(
-        `方向重点能力「${ABILITY_TITLES[key]}」目前只有自评，还没有经历证据；可结合课程作业、社团或实践补充后再比较。`
+        `方向重点能力「${ABILITY_TITLES[key]}」目前只有自评；用课程作业、社团或实践补一条经历，比较会更有把握。`
       );
     }
   }
@@ -293,9 +293,9 @@ function buildGaps(
 
 function buildBoundaries(card: SeedDirection): string[] {
   return [
-    `规则版本 ${DIRECTION_FIT_RULES_VERSION}：依据方向卡「工作内容」「已核技能」「准备成本」的产品映射，表示值得比较，不是匹配打分或职业判决。`,
-    `方向卡自述 ${card.data_gaps.length} 项数据缺口；具体资料边界以方向卡为准。`,
-    "兴趣只表示当前更愿意投入；能力只表示自评；经历只表示你提供了相关经历，未经第三方验证。"
+    `规则版本 ${DIRECTION_FIT_RULES_VERSION}：依据方向卡「工作内容」「已核技能」「准备成本」的产品映射，用来判断哪些方向值得先比较。`,
+    "该方向的关键信息入口已列在方向卡中；按入口核对后即可进入比较。",
+    "兴趣表示你当前更愿意投入的方向；能力是自评；经历是你已提供的真实经历。"
   ];
 }
 
@@ -460,6 +460,6 @@ export { DIRECTION_FIT_RULES_VERSION };
 /** 方向卡内容边界：建议用于 UI 的「来源/边界」提示，不含任何外部事实。 */
 export function recommendationSourceNote(directionId: DirectionId): string {
   const card = getDirection(directionId);
-  if (!card) return "方向卡未载入。";
-  return `依据方向卡「${card.short_title}」的工作内容与已核技能字段；具体资料缺口见方向卡。`;
+  if (!card) return "方向卡见资料库。";
+  return `依据方向卡「${card.short_title}」的工作内容与核心技能。`;
 }

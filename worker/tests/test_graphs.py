@@ -8,6 +8,7 @@ import pytest
 
 from app.config import Config
 from app.errors import ModelAuthFailed
+from app.prompts import voice as prompt_voice
 from app.graphs.ask import run_ask
 from app.graphs.assessment import run_assessment
 from app.graphs.compare import run_compare
@@ -264,7 +265,9 @@ def test_plan_graph_discards_out_of_bounds_explanation_and_keeps_facts():
     ctx, db, _emits = _plan_context(provider)
     payload = run_plan(ctx)
     result = payload["result"]
-    assert "回退" in (result["explanation"] or "")
+    # 兜底文案改为确定语气（事实摘要 + 下一步），不再向用户解释"回退"。
+    assert "规则引擎" in (result["explanation"] or "")
+    assert prompt_voice.find_hedges(result["explanation"]) == []
     # 越界属于"校验失败"，必须与模型/服务不可用区分开，不能报成 internal_error。
     assert "plan_explanation_fallback:validation" in result["warnings"]
     assert not any("internal_error" in warning for warning in result["warnings"])
@@ -280,7 +283,8 @@ def test_plan_graph_falls_back_when_model_unavailable():
     provider.chat_error = ModelAuthFailed("bad key")
     ctx, db, _emits = _plan_context(provider)
     payload = run_plan(ctx)
-    assert "回退" in (payload["result"]["explanation"] or "")
+    assert "规则引擎" in (payload["result"]["explanation"] or "")
+    assert prompt_voice.find_hedges(payload["result"]["explanation"]) == []
     assert db.saved_plans
 
 
@@ -510,7 +514,7 @@ def test_ask_keeps_answer_when_only_number_format_validation_fails():
     assert payload["refusal"] is False
     assert "99.9%" in payload["answer"]
     assert payload["citations"]
-    assert "校验提示" in (payload["boundary_note"] or "")
+    assert "以引用卡原文为准" in (payload["boundary_note"] or "")
 
 
 def test_ask_model_no_evidence_results_in_refusal():
@@ -533,6 +537,9 @@ def test_ask_model_no_evidence_results_in_refusal():
     payload = run_ask(ctx)
     assert payload["refusal"] is True
     assert payload["refusal_reason"] == "model_no_evidence"
+    # 模型原文里的自我削弱表达不能原样透出，改为"覆盖范围 + 到哪查"。
+    assert prompt_voice.find_hedges(payload["answer"]) == []
+    assert "到哪查" in payload["answer"]
 
 
 def _reference_hit(*, title: str, text: str) -> dict:
@@ -919,8 +926,9 @@ def test_compare_graph_uses_citations_and_deterministic_fallback():
     job2 = make_claim({"profile_id": PROFILE_ID, "direction_ids": ["trade_supply_chain", "finance_accounting"]}, kind="compare", owner_id=OWNER)
     ctx2 = make_context(config=config, db=db, provider=provider, job=job2)
     fallback = run_compare(ctx2)
-    assert "AI 对比说明暂时不可用" in fallback["comparison"]
-    assert "不做排名" in fallback["comparison"]
+    assert "方向卡" in fallback["comparison"]
+    assert "不做学校或专业排名" in fallback["comparison"]
+    assert prompt_voice.find_hedges(fallback["comparison"]) == []
 
 
 def test_ingest_graph_parses_chunks_embeds_and_updates_source_version():
@@ -991,5 +999,6 @@ def test_plan_graph_without_verified_rule_data_returns_data_unavailable():
     assert "competitions_unavailable" not in codes
     assert result["courses"] == [] and result["competitions"] == []
     assert all(action["status"] == "pending_verification" for action in result["actions"])
-    assert "回退" in (result["explanation"] or "")
+    assert prompt_voice.find_hedges(result["explanation"]) == []
+    assert "下一步" in (result["explanation"] or "")
     assert db.saved_plans and db.saved_plans[0]["result"]["credits"] is None

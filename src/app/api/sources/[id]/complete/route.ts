@@ -43,7 +43,7 @@ export async function POST(request: Request, { params }: Params) {
 
   const admin = createAdminSupabase();
   const { data: blob, error: downloadError } = await admin.storage.from("career-source-files").download(objectPath);
-  if (downloadError || !blob) return jsonError("resource_not_found", "上传文件不存在或尚未完成上传");
+  if (downloadError || !blob) return jsonError("resource_not_found", "上传文件不存在或上传未完成");
 
   const bytes = Buffer.from(await blob.arrayBuffer());
   if (bytes.byteLength > MAX_BYTES) return jsonError("upload_too_large", "文件超过 20MB 限制");

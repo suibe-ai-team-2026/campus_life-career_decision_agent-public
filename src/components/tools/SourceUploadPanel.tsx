@@ -25,7 +25,7 @@ import {
  * 用户上传培养方案等资料的可选入口。
  *
  * 上传的资料会进入「你个人知识库」，作为问答与方案生成的检索来源，并排在方案证据前列。
- * 规则库的确定性数字（如学分认定规则）仍以已核验数据为准，不会被上传内容改写。
+ * 规则库的确定性数字（如学分认定规则）仍以已收录数据为准，不会被上传内容改写。
  */
 export function SourceUploadPanel({
   title,
@@ -126,8 +126,8 @@ export function SourceUploadPanel({
           ) : null}
         </div>
       ) : (
-        <Callout tone="warn" title="本地演示模式不能上传">
-          <p className="micro">上传需要配置 Supabase；当前为本地演示模式，只展示入口说明。</p>
+        <Callout tone="warn" title="本地演示模式">
+          <p className="micro">连接云端后即可上传；入口说明如下。</p>
         </Callout>
       )}
 

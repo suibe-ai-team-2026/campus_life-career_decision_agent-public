@@ -10,7 +10,7 @@ export type AuthedUser = { id: string; isAnonymous: boolean; email: string | nul
  */
 export async function requireUser(): Promise<{ user: AuthedUser } | { response: ReturnType<typeof jsonError> }> {
   if (!supabaseConfigured()) {
-    return { response: jsonError("model_unavailable", "云端后端尚未配置，请先使用本地进度") };
+    return { response: jsonError("model_unavailable", "云端后端未配置，请先使用本地进度") };
   }
   const supabase = await createServerSupabase();
   const { data, error } = await supabase.auth.getUser();

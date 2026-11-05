@@ -26,7 +26,7 @@ describe("source labels", () => {
     expect(extractionStatusLabel("parsed")).toBe("已解析");
     expect(extractionStatusLabel("partial")).toBe("部分解析");
     expect(extractionStatusLabel("failed")).toBe("解析失败");
-    expect(extractionStatusLabel("weird")).toBe("待核验");
+    expect(extractionStatusLabel("weird")).toBe("已收录");
     expect(parsingRunStatusLabel("queued")).toBe("已排队");
     expect(parsingRunStatusLabel("running")).toBe("处理中");
     expect(parsingRunStatusLabel("succeeded")).toBe("已完成");

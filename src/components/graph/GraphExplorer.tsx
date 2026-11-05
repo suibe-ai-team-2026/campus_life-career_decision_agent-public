@@ -66,7 +66,14 @@ export function GraphExplorer({ snapshot }: { snapshot: GraphSnapshot }) {
     const ids = new Set<string>();
     for (const node of snapshot.nodes) {
       if (node.type === "gap" && !showGaps) continue;
-      if (onlyVerified && node.status !== "verified" && node.status !== "partial") continue;
+      if (
+        onlyVerified &&
+        node.status !== "verified" &&
+        node.status !== "partial" &&
+        node.status !== "official_lead"
+      ) {
+        continue;
+      }
       ids.add(node.id);
     }
     return ids;
@@ -192,7 +199,7 @@ export function GraphExplorer({ snapshot }: { snapshot: GraphSnapshot }) {
           <h1>知识图谱</h1>
           <p>
             像 Obsidian 一样浏览生涯知识：颜色 = 节点类型，大小 = 连接度；点击节点在右侧读 Wiki 页。
-            数据来自本校培养方案、竞赛清单、就业报告与招聘快照，缺口会明确标出。
+            数据来自本校培养方案、竞赛清单、就业报告与招聘快照，每个节点都能回到来源入口。
           </p>
         </div>
         <span className="graph-version">{snapshot.version}</span>
@@ -211,11 +218,11 @@ export function GraphExplorer({ snapshot }: { snapshot: GraphSnapshot }) {
         </label>
         <label className="graph-chip">
           <input type="checkbox" checked={onlyVerified} onChange={(event) => setOnlyVerified(event.target.checked)} />
-          只看已核验
+          只看官方来源
         </label>
         <label className="graph-chip">
           <input type="checkbox" checked={showGaps} onChange={(event) => setShowGaps(event.target.checked)} />
-          显示缺口
+          显示核对入口
         </label>
         <button
           type="button"
@@ -367,7 +374,7 @@ export function GraphExplorer({ snapshot }: { snapshot: GraphSnapshot }) {
         ))}
         <span className="legend-item">
           <span className="swatch is-gap" aria-hidden="true" />
-          数据缺口（虚线）
+          核对入口（虚线）
         </span>
         <span className="legend-item size-demo" aria-hidden="true">
           <i className="small" />

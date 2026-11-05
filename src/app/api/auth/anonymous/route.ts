@@ -10,7 +10,7 @@ import { jsonError, jsonOk } from "@/lib/http/respond";
  */
 export async function POST() {
   if (!supabaseConfigured()) {
-    return jsonError("model_unavailable", "云端后端尚未配置，当前只能使用本地进度");
+    return jsonError("model_unavailable", "云端后端未配置，当前使用本地进度");
   }
   const supabase = await createServerSupabase();
   const current = await supabase.auth.getUser();

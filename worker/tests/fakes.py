@@ -345,12 +345,14 @@ def make_context(
     job: ClaimedJob,
     rules_data: dict[str, Any] | None = None,
     emits: list[tuple[str, int]] | None = None,
+    traces: list[dict[str, Any]] | None = None,
     budget: BudgetGuard | None = None,
 ):
     from app.graphs.common import JobContext
     import logging
 
     emit_log = emits if emits is not None else []
+    trace_log = traces if traces is not None else []
     retrieval = RetrievalService(config=config, db=db, provider=provider)  # type: ignore[arg-type]
     return JobContext(
         config=config,
@@ -361,6 +363,9 @@ def make_context(
         job=job,
         worker_id="test-worker",
         emit_progress=lambda status, progress: emit_log.append((status, progress)),
+        emit_trace=lambda event_type, payload: trace_log.append(
+            {"type": event_type, "payload": payload}
+        ),
         cancel_check=lambda: None,
         logger=logging.getLogger("test.worker"),
         budget=budget,

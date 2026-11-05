@@ -8,7 +8,7 @@ import {
 
 const direction = DIRECTIONS[0];
 const longBoundary =
-  "官方/市级记录与专业×届别×学历组合为全库计数，不表示某一方向成功率；17 个精确同专业证据格仅覆盖部分组合，其余缺口不代表为零";
+  "官方与市级记录按专业×届别×学历组合统计；17 个精确同专业证据格覆盖明确匹配的组合";
 
 describe("directionCoverage", () => {
   it("没有云端数据时不编造数字，badge 只放短状态", () => {
@@ -42,7 +42,7 @@ describe("directionCoverage", () => {
       label: longBoundary
     });
     expect(view.pending).toBe(true);
-    expect(view.badgeLabel).toBe("待载入");
+    expect(view.badgeLabel).toBe("本地摘要");
     expect(view.exactMajorRecords).toBeNull();
   });
 });

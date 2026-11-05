@@ -37,6 +37,7 @@ from ..models import (
 )
 from ..prompts import career as prompts
 from ..prompts import validate as prompt_validate
+from ..prompts import voice as prompt_voice
 from ..planning import build_planning_blueprint, direction_exclusion_reason
 from ..retrieval.service import merge_user_evidence
 from .common import (
@@ -138,7 +139,7 @@ def build_plan_graph(ctx: JobContext):
             {"step": 1, "tool": "corpus_search", "ok": True, "ms": int((time.monotonic() - started) * 1000),
              "hits": len(outcome.evidence), "titles": [str(item.get("title") or "")[:60] for item in outcome.evidence[:6]]},
         )
-        # 用户自己上传的资料（私有、未核验）不能进规则库，但要参与检索与解释：
+        # 用户自己上传的资料（私有、非规则库）不能进规则库，但要参与检索与解释：
         # 单独召回本人上传的来源版本并并入证据，排在前面便于引用。
         try:
             owner_versions = ctx.db.list_owner_upload_versions(str(ctx.job.owner_id))
@@ -182,7 +183,7 @@ def build_plan_graph(ctx: JobContext):
             raise UnsupportedDirection("规则引擎不支持该方向")
         blueprint = build_planning_blueprint(profile, direction_id)
         # 参考数据已经给出课程/竞赛/资源线索时，不再把「数据未接入」当成缺口；
-        # 改为一条明确的「参考线索待官方核验」说明，避免用户误以为没有资料。
+        # 改为一条明确的「到哪核对」说明，避免用户误以为没有资料。
         gaps = list(result.gaps)
         has_leads = bool(blueprint.course_leads or blueprint.competition_leads or blueprint.campus_resources)
         if blueprint.course_leads:
@@ -195,7 +196,7 @@ def build_plan_graph(ctx: JobContext):
             gaps.append(
                 PlanGap(
                     code="reference_leads_pending_verification",
-                    message="课程、竞赛与校内资源为团队参考线索（培养方案/竞赛清单）；学分、先修、报名资格与加分折算以教务处、团委当年文件为准。",
+                    message="课程、竞赛与校内资源是团队已整理的来源线索，引用编号可回到原文定位。",
                 )
             )
         result = result.model_copy(
@@ -213,7 +214,7 @@ def build_plan_graph(ctx: JobContext):
         payload = plan_result_payload(result)
         ctx.trace(
             "agent_note",
-            {"text": f"规则引擎已冻结事实：行动 {len(result.actions)} 项 · 课程 {len(result.courses)} 门 · 竞赛 {len(result.competitions)} 项 · 缺口 {len(result.gaps)} 项"},
+            {"text": f"规则引擎已冻结事实：行动 {len(result.actions)} 项 · 课程 {len(result.courses)} 门 · 竞赛 {len(result.competitions)} 项 · 下一步核对 {len(result.gaps)} 项"},
         )
         ctx.emit("planning", 52)
         return {"rule_result": result, "rule_payload": payload}
@@ -306,7 +307,7 @@ def build_plan_graph(ctx: JobContext):
             if parsed.boundary_note:
                 note_offenders = prompt_validate.validate_numbers(parsed.boundary_note, allowed_texts)
                 if not note_offenders:
-                    explanation = f"{explanation}\n资料边界：{parsed.boundary_note}"
+                    explanation = prompt_voice.apply_scope_line(explanation, parsed.boundary_note)
                 else:
                     warnings.append("boundary_note_dropped_number_mismatch")
         except WorkerError as exc:
@@ -339,6 +340,20 @@ def build_plan_graph(ctx: JobContext):
             fallback_reason = type(exc).__name__
             warnings.append("plan_explanation_fallback:validation")
             ctx.logger.error("plan_explanation_invalid type=%s", fallback_reason)
+
+        if explanation is not None:
+            # 语气兜底：不因表达问题丢弃整段解释，先删自我削弱句；删空才用确定性文案。
+            if prompt_voice.find_hedges(explanation):
+                cleaned = prompt_voice.scrub_hedges(explanation)
+                ctx.trace(
+                    "voice_repair",
+                    {
+                        "target": "plan_explanation",
+                        "text": "方案解释已按确定语气整理",
+                        "resolved": "scrubbed" if cleaned else "deterministic",
+                    },
+                )
+                explanation = cleaned or None
 
         if explanation is None:
             explanation = prompt_validate.deterministic_plan_explanation(
@@ -426,11 +441,11 @@ def build_plan_graph(ctx: JobContext):
             warnings.append("plan_analysis_fallback:internal_error")
             ctx.logger.exception("plan_analysis_failed type=%s", type(exc).__name__)
 
-        # 即使联网补充没找到可用来源，也把说明写进资料边界，避免用户误以为走了联网。
+        # 即使联网补充没找到可用来源，也把说明写进方案说明，避免用户误以为走了联网。
         if web_note:
-            explanation = f"{explanation}\n资料边界：{web_note}"
+            explanation = f"{explanation}\n说明：{web_note}"
         if web is not None and web.note:
-            explanation = f"{explanation}\n资料边界：{web.note}"
+            explanation = f"{explanation}\n说明：{web.note}"
         ctx.trace("validation", {"ok": True, "citations": len(citations), "web_citations": len(web.citations) if web else 0})
         ctx.emit("planning", 76)
         return {"explanation": explanation, "analysis": analysis, "warnings": warnings, "web": web}

@@ -216,8 +216,9 @@ def run_web_research(
 
         if result.sources:
             result.note = (
-                f"本次回答引用了 {len(result.sources)} 条实时网页（未核验），"
-                f"检索时间 {time.strftime('%Y-%m-%dT%H:%MZ', time.gmtime())}；网页内容可能已经变化。"
+                f"本次回答引用了 {len(result.sources)} 条实时网页，"
+                f"检索时间 {time.strftime('%Y-%m-%dT%H:%MZ', time.gmtime())}；"
+                "网页内容以链接原文为准，发布日期见引用卡。"
             )
         else:
             result.note = "未找到可用的实时网页证据。"

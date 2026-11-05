@@ -21,6 +21,7 @@ from ..errors import BadRequest, ModelOutputInvalid, OutputValidationError, Work
 from ..models import AskInput, AskRunResult, Citation
 from ..prompts import career as prompts
 from ..prompts import validate as prompt_validate
+from ..prompts import voice as prompt_voice
 from .common import JobContext, generate_validated_json, next_citation_no, profile_summary
 from ..agent.research import run_web_research
 from .. import reference
@@ -173,14 +174,14 @@ def build_ask_graph(ctx: JobContext):
                 )
             except WorkerError as exc:
                 ctx.logger.warning("web_research_failed code=%s", exc.code)
-                ctx.trace("agent_note", {"text": "联网补充暂不可用，已降级为仅使用已载入资料"})
+                ctx.trace("agent_note", {"text": "联网补充暂不可用，本次用资料库与参考数据回答"})
                 web = None
-                web_note = "联网补充暂不可用，本次回答仅使用已载入的语料与参考数据"
+                web_note = "联网补充暂不可用，本次回答使用资料库与参考数据"
             if web is not None:
                 evidence.extend(web.evidence)
                 citations.extend(web.citations)
         else:
-            ctx.trace("agent_note", {"text": "未开启联网补充，仅使用已载入资料"})
+            ctx.trace("agent_note", {"text": "未开启联网补充：本次只使用资料库与参考数据"})
 
         def with_web_note(text: str) -> str:
             if web_note and text:
@@ -238,6 +239,51 @@ def build_ask_graph(ctx: JobContext):
                 raise OutputValidationError("模型输出未通过校验", reasons=list(parsed.validation_reasons))
             return parsed, []
 
+        def repair_voice(text: str) -> str:
+            """answer 命中自我削弱表达时先让模型重写；仍命中则做确定性清理。
+
+            绝不因为语气问题丢弃整段有证据的回答：先重写，再删句，最后才用确定性文案。
+            """
+
+            phrases = "、".join(dict.fromkeys(prompt_voice.find_hedges(text)))
+            if not phrases:
+                return text
+            ctx.trace(
+                "voice_repair",
+                {"step": 1, "target": "answer", "text": "回答命中自我削弱表达，按确定语气重写", "phrases": phrases[:120]},
+            )
+            repair_messages = [
+                *messages,
+                {
+                    "role": "user",
+                    "content": prompt_voice.VOICE_REPAIR_INSTRUCTION.format(
+                        phrases=phrases[:120], text=text
+                    ),
+                },
+            ]
+            try:
+                repaired = generate_validated_json(
+                    ctx,
+                    repair_messages,
+                    operation="chat_ask_voice_repair",
+                    validator=validator,
+                    max_attempts=1,
+                )
+                # validator 返回 (AskOutput, reasons) 二元组。
+                repaired_output = repaired[0] if isinstance(repaired, tuple) else repaired
+                repaired_answer = str(getattr(repaired_output, "answer", "") or "")
+                if repaired_answer and not prompt_voice.find_hedges(repaired_answer):
+                    ctx.trace("voice_repair", {"step": 2, "target": "answer", "text": "回答已按确定语气重写", "resolved": "rewritten"})
+                    return repaired_answer
+            except (WorkerError, OutputValidationError, ModelOutputInvalid) as exc:
+                ctx.logger.warning("voice_repair_failed type=%s", type(exc).__name__)
+            cleaned = prompt_voice.scrub_hedges(text)
+            if cleaned and not prompt_voice.find_hedges(cleaned):
+                ctx.trace("voice_repair", {"step": 2, "target": "answer", "text": "已删除自我削弱句，保留事实与引用", "resolved": "scrubbed"})
+                return cleaned
+            ctx.trace("voice_repair", {"step": 2, "target": "answer", "text": "改用确定性说明（覆盖范围 + 到哪查）", "resolved": "deterministic"})
+            return ""
+
         soft_note = ""
         try:
             parsed, _reasons = generate_validated_json(
@@ -257,7 +303,7 @@ def build_ask_graph(ctx: JobContext):
                 ctx.emit("validating", 82)
                 return {"result": _refusal_payload(answer, "explanation_discarded", boundary_note=boundary)}
             parsed = fallback
-            soft_note = "校验提示：个别数字或引用标注未与证据逐字一致，请以引用卡原文为准。"
+            soft_note = "数字与引用以引用卡原文为准。"
         except ModelOutputInvalid:
             answer = prompt_validate.build_refusal_text(question, evidence=evidence, reason="invalid_model_output")
             boundary = with_web_note(
@@ -307,11 +353,19 @@ def build_ask_graph(ctx: JobContext):
                 ]
                 if fallback is not None and not hard_failures and not fallback.no_evidence:
                     parsed = fallback
-                    soft_note = soft_note or (
-                        "校验提示：个别数字或引用标注未与证据逐字一致，请以引用卡原文为准。"
-                    )
+                    soft_note = soft_note or "数字与引用以引用卡原文为准。"
             except ModelOutputInvalid:
                 pass
+
+        repaired_answer = repair_voice(parsed.answer)
+        if repaired_answer:
+            parsed.answer = repaired_answer
+        else:
+            # 语气修复也拿不到可用回答时，改用确定性自信文案（覆盖范围 + 到哪查），不丢弃整段结果语义。
+            parsed.answer = prompt_validate.build_refusal_text(
+                question, evidence=evidence, reason="voice_fallback"
+            )
+            parsed.no_evidence = True
 
         if parsed.no_evidence:
             cited_numbers = {int(match) for match in re.findall(r"\[(\d+)\]", parsed.answer or "")}

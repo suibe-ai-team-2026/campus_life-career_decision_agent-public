@@ -65,24 +65,24 @@ export type ClientErrorCode =
 
 const ERROR_MESSAGES: Record<ClientErrorCode, string> = {
   authentication_required: "登录状态已失效，请刷新页面后重试",
-  resource_not_found: "没有找到对应资源，可能已被清理",
+  resource_not_found: "没有找到对应资源，请刷新后重试",
   version_conflict: "数据版本已变化，请刷新后再修改",
   idempotency_conflict: "重复提交了不同的内容，请重新发起",
   upload_too_large: "文件超过大小限制",
-  invalid_profile: "画像资料不完整或不合法，请回到自我探索补充",
-  unsupported_direction: "该方向暂不支持生成",
+  invalid_profile: "画像还有几项要确认，请回自我探索补全",
+  unsupported_direction: "换一个方向生成方案",
   rate_limited: "操作太频繁，请稍后再试",
   budget_exceeded: "本月 AI 预算已用尽，暂时不能发起新的生成任务",
   model_auth_failed: "模型服务鉴权失败，请联系管理员",
   model_quota_exceeded: "模型额度已用尽，请稍后再试",
   model_timeout: "模型响应超时，请稍后重试",
-  model_unavailable: "云端生成暂不可用，请稍后重试或查看本地已保存内容",
+  model_unavailable: "云端生成正在恢复，可先查看本地已保存内容",
   lease_expired: "任务执行超时或中断，请重新发起",
   bad_request: "请求内容不合法，请检查后重试",
   internal_error: "服务暂时不可用，请稍后重试",
   not_configured: "云端生成未启用：当前为本地演示模式",
   network_error: "网络连接失败，请检查网络后重试",
-  unexpected_response: "服务返回了无法识别的内容，请稍后重试",
+  unexpected_response: "服务响应异常，请稍后重试",
   aborted: "操作已停止",
   timeout: "等待时间过长，请稍后重试"
 };
@@ -229,7 +229,7 @@ function normalizeGaps(value: unknown): PlanResult["gaps"] {
       )
         ? (str(gap.module) as NonNullable<PlanResult["gaps"][number]["module"]>)
         : undefined;
-      return { code: str(gap.code, "data_gap"), message: str(gap.message, "资料缺失"), ...(moduleName ? { module: moduleName } : {}) };
+      return { code: str(gap.code, "data_gap"), message: str(gap.message, "按来源文件核对本项"), ...(moduleName ? { module: moduleName } : {}) };
     });
 }
 
@@ -275,7 +275,7 @@ function normalizeLeads(value: unknown): PlanResult["course_leads"] {
       verification_status: validStatuses.has(str(item.verification_status))
         ? (str(item.verification_status) as PlanResult["course_leads"][number]["verification_status"])
         : "pending_verification",
-      source_label: str(item.source_label, "来源待补充"),
+      source_label: str(item.source_label, "来源文件"),
       source_url: strOrNull(item.source_url),
       freshness: isRecord(item.freshness)
         ? {

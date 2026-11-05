@@ -124,7 +124,7 @@ class PlanAnalysis(ContractModel):
     """模型生成的“方向分析”：只解释规则事实与证据，不新增实体/数字。
 
     课程/竞赛线索是从证据文本中逐字抽取的（validator 校验名字必须出现在证据里），
-    与规则引擎的结构化 courses/competitions 严格分开：前者是资料线索、未核验，
+    与规则引擎的结构化 courses/competitions 严格分开：前者是官方来源线索，
     后者才是确定性事实（缺数据时为 null/空）。
     """
 

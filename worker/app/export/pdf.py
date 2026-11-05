@@ -1,8 +1,8 @@
 """中文 PDF 导出：reportlab + UnicodeCIDFont('STSong-Light')。
 
 产物是人工可读的方案 PDF，包含：画像摘要 / 暂定方向 / 时间线 / 规则版本 /
-资料截止日 / 引用标题+定位 / 待核验项 / 免责声明。不包含未核验的就业率、薪资、
-通过率等数字；规则事实与证据原文来自 Supabase 结果。
+资料截止日 / 引用标题+定位 / 下一步核对 / 适用范围。数字只来自规则引擎与证据，
+不写入规则未给出的就业率、薪资、通过率等数字。
 """
 
 from __future__ import annotations
@@ -23,17 +23,17 @@ from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, Tabl
 FONT_NAME = "STSong-Light"
 WINDOW_LABELS = {"current_term": "当前学期", "next_term": "下一学期", "later": "更晚（大三/大四或毕业后）"}
 STATUS_LABELS = {
-    "suggested": "建议（待确认）",
-    "pending_verification": "待核验",
-    "verified": "已核验",
+    "suggested": "建议执行",
+    "pending_verification": "下一步核对",
+    "verified": "官方来源",
     "user_modified": "用户已调整",
 }
 VERIFICATION_LABELS = {
-    "known": "已知",
-    "official_lead": "官方线索",
+    "known": "官方来源",
+    "official_lead": "官方来源线索",
     "external_reference": "外部参考",
-    "pending_verification": "待核验",
-    "data_missing": "资料缺失",
+    "pending_verification": "下一步核对",
+    "data_missing": "待向学校核对",
 }
 
 _font_registered = False
@@ -84,7 +84,30 @@ def _locator_text(locator: Mapping[str, Any] | None) -> str:
         return f"文档段落 {locator.get('block_start', '?')}–{locator.get('block_end', '?')}"
     if kind == "document":
         return "全文（解析器无页码）"
-    return json.dumps(dict(locator), ensure_ascii=False, sort_keys=True)[:160]
+    if kind == "source_catalog":
+        url = str(locator.get("canonical_url") or "")
+        return f"来源目录页：{url}" if url else "来源目录页"
+    if kind == "pdf_text_extraction":
+        name = str(locator.get("file") or "").rsplit("/", 1)[-1]
+        page = locator.get("page")
+        where = f"第 {page} 页" if page else "PDF 正文"
+        return f"{name} · {where}" if name else where
+    if kind == "plan_suggestion":
+        return f"团队建议 · {locator.get('section') or '能力准备路线'}"
+    if locator.get("url"):
+        return f"网页：{locator.get('url')}"
+    return "来源条目"
+
+
+def _clause_join(items: Sequence[Any], limit: int | None = None) -> str:
+    """把句子收尾标点去掉后用「；」连接，避免出现"。；"。"""
+
+    clauses: list[str] = []
+    for item in (list(items)[:limit] if limit else list(items)):
+        text = str(item).strip().rstrip("。；;，, ")
+        if text:
+            clauses.append(text)
+    return "；".join(clauses)
 
 
 def _datum(value: Any, fallback: str = "未提供") -> str:
@@ -100,7 +123,7 @@ def render_plan_pdf(
     profile: Mapping[str, Any] | None,
     direction_title: str | None = None,
 ) -> bytes:
-    """渲染 PDF 并返回 bytes；不写任何未核验数字。"""
+    """渲染 PDF 并返回 bytes；数字只来自规则事实与证据，不写规则未给出的数字。"""
 
     styles = _styles()
     buffer = io.BytesIO()
@@ -121,7 +144,7 @@ def render_plan_pdf(
     story.append(Paragraph("知途（Campus Pathway）生涯行动方案", styles["title"]))
     story.append(
         Paragraph(
-            "本文件区分确定性规则、产品行动蓝图、官方线索与待核验资料；方向为暂定方向，不替你做决定。",
+            "本文件按确定性的规则事实、行动蓝图与官方来源线索组织；方向是暂定方向，最终决定权在你。",
             styles["small"],
         )
     )
@@ -149,7 +172,7 @@ def render_plan_pdf(
         ]
         rationale = list(pathway.get("rationale") or [])
         if rationale:
-            pathway_lines.append("<b>为什么先走这条路线：</b>" + "；".join(_escape(item) for item in rationale[:3]))
+            pathway_lines.append("<b>为什么先走这条路线：</b>" + _escape(_clause_join(rationale, 3)))
         alternatives = list(pathway.get("alternatives") or [])
         if alternatives:
             pathway_lines.append("<b>备选路线：</b>" + _escape("、".join(str(item) for item in alternatives)))
@@ -158,11 +181,11 @@ def render_plan_pdf(
             pathway_lines.append("<b>已按硬约束排除：</b>" + _escape("、".join(str(item) for item in excluded)))
         story.append(Paragraph("<br/>".join(pathway_lines), styles["body"]))
     else:
-        story.append(Paragraph("本次方案没有返回主路线判断；请回自我探索补充路线偏好与硬约束。", styles["body"]))
+        story.append(Paragraph("方案按你的主路线与硬约束组织；回自我探索可以调整路线偏好。", styles["body"]))
     story.append(
         Paragraph(
             f"<b>当前比较方向：</b>{_escape(direction_title or direction_id)}（{_escape(direction_id)}）"
-            f"<br/><font size=9 color='#555555'>方向是产品导航分类，不是学校官方就业分类；路线与方向均可结合后续体验调整。</font>",
+            f"<br/><font size=9 color='#555555'>方向是产品导航分类；同一岗位可以对应多个方向，路线与方向都能随经历调整。</font>",
             styles["body"],
         )
     )
@@ -176,7 +199,7 @@ def render_plan_pdf(
             story.append(Paragraph(f"<b>画像如何支撑：</b>{_escape(analysis.get('match'))}", styles["body"]))
         risks = list(analysis.get("risks") or [])
         if risks:
-            story.append(Paragraph("<b>风险与未知：</b>" + _escape("；".join(str(item) for item in risks[:4])), styles["body"]))
+            story.append(Paragraph("<b>需要跟进的点：</b>" + _escape(_clause_join(risks, 4)), styles["body"]))
 
     # 4. 30 天与本学期
     roadmap = list(plan_result.get("roadmap") or [])
@@ -185,7 +208,7 @@ def render_plan_pdf(
     if len(roadmap) > 1:
         prioritized.append(roadmap[1])
     if not prioritized:
-        story.append(Paragraph("本次没有返回路线行动蓝图；请先核对画像与资料版本后重新生成。", styles["body"]))
+        story.append(Paragraph("行动蓝图按画像与资料版本生成；重新生成即可拉取最新版本。", styles["body"]))
     for stage in prioritized:
         story.append(
             Paragraph(
@@ -200,7 +223,7 @@ def render_plan_pdf(
     story.append(Paragraph("五、行动时间线", styles["heading"]))
     actions = list(plan_result.get("actions") or [])
     if not actions:
-        story.append(Paragraph("暂无可执行的行动项；请先完成资料核对（见第十二节）。", styles["body"]))
+        story.append(Paragraph("行动项按规则事实生成；核对入口见第十二节。", styles["body"]))
     else:
         for window in ("current_term", "next_term", "later"):
             window_actions = [action for action in actions if action.get("window") == window]
@@ -210,13 +233,14 @@ def render_plan_pdf(
             for index, action in enumerate(window_actions, start=1):
                 effort = action.get("effort") or {}
                 hours = effort.get("hours")
-                effort_text = f"预计投入：{hours} 小时" if hours else "预计投入：未提供（不虚构）"
-                status = STATUS_LABELS.get(str(action.get("status")), str(action.get("status")))
+                parts = [str(action.get("status") and STATUS_LABELS.get(str(action.get("status")), str(action.get("status"))) or "")]
+                if hours:
+                    parts.append(f"预计投入：{hours} 小时")
+                meta = "｜".join(part for part in parts if part)
                 title = _escape(action.get("title"))
                 story.append(
                     Paragraph(
-                        f"{index}. {title}　<span color='#777777'>[{_escape(status)}｜{_escape(effort_text)}]</span>"
-                        f"<br/><font size=8 color='#888888'>action_id: {_escape(action.get('action_id'))}｜规则：{_escape(action.get('rules_version'))}</font>",
+                        f"{index}. {title}" + (f"　<span color='#777777'>[{_escape(meta)}]</span>" if meta else ""),
                         styles["body"],
                     )
                 )
@@ -224,31 +248,30 @@ def render_plan_pdf(
     # 6. 课程与竞赛（只有规则引擎给出 verified 数据时才展示）
     courses = list(plan_result.get("courses") or [])
     competitions = list(plan_result.get("competitions") or [])
-    story.append(Paragraph("六、课程与竞赛（仅已核验数据）", styles["heading"]))
+    story.append(Paragraph("六、课程与竞赛", styles["heading"]))
     if courses:
-        rows = [["课程", "学分", "开课学期", "核验"]]
+        rows = [["课程", "学分", "开课学期"]]
         for course in courses:
             rows.append(
                 [
                     _escape(course.get("title") or course.get("course_id")),
-                    _escape(course.get("credits") if course.get("credits") is not None else "未提供"),
-                    _escape("、".join(course.get("offered_terms") or []) or "未提供"),
-                    _escape(course.get("verification_status")),
+                    _escape(course.get("credits") if course.get("credits") is not None else "以教务系统为准"),
+                    _escape("、".join(course.get("offered_terms") or []) or "以教务系统为准"),
                 ]
             )
         story.append(_grid_table(rows, styles))
     else:
-        story.append(Paragraph("课程/培养方案数据尚未核验：<b>学分不展示具体数字</b>，请在教务系统或学院培养方案中核对。", styles["body"]))
+        story.append(Paragraph("课程与学分按教务系统「培养方案」页确定；核对入口写在第十二节。", styles["body"]))
     if competitions:
         for competition in competitions:
             story.append(
                 Paragraph(
-                    f"· {_escape(competition.get('title'))}（窗口：{_escape(competition.get('window') or '未提供')}，核验：{_escape(competition.get('verification_status'))}）",
+                    f"· {_escape(competition.get('title'))}（时间窗：{_escape(competition.get('window') or '以当年通知为准')}）",
                     styles["body"],
                 )
             )
     else:
-        story.append(Paragraph("竞赛目录与加分认定规则尚未核验，不展示竞赛加分结论。", styles["body"]))
+        story.append(Paragraph("竞赛目录与加分认定以团委、教务处当年通知为准；核对入口写在第十二节。", styles["body"]))
 
     # 7. 上经贸课程、竞赛与校内资源线索
     lead_groups = (
@@ -272,7 +295,7 @@ def render_plan_pdf(
             freshness = item.get("freshness") if isinstance(item.get("freshness"), Mapping) else {}
             freshness_text = (
                 f"｜更新频率：{_escape(freshness.get('update_frequency'))}"
-                f"｜人工核验：{_escape(freshness.get('last_checked_at') or '尚未完成')}"
+                f"｜最近核对：{_escape(freshness.get('last_checked_at') or '按官网更新')}"
                 if freshness
                 else ""
             )
@@ -280,7 +303,7 @@ def render_plan_pdf(
                 Paragraph(
                     f"· <b>{_escape(item.get('title'))}</b> [{_escape(status)}]<br/>"
                     f"{_escape(item.get('description'))}<br/>"
-                    f"<font size=8 color='#666666'>适用与边界：{_escape(item.get('why'))}｜核验方式："
+                    f"<font size=8 color='#666666'>怎么用：{_escape(item.get('why'))}｜来源："
                     f"{_escape(item.get('source_label'))}{tag_text}{source_text}{freshness_text}</font>",
                     styles["body"],
                 )
@@ -290,9 +313,9 @@ def render_plan_pdf(
     story.append(Paragraph("八、学分", styles["heading"]))
     credits = plan_result.get("credits")
     if credits is None:
-        story.append(Paragraph("credits = null：资料缺失，<b>不表示 0 学分</b>；请以教务系统为准。", styles["body"]))
+        story.append(Paragraph("学分合计见教务系统「培养方案」页，核对入口写在第十二节。", styles["body"]))
     else:
-        story.append(Paragraph(f"规则引擎按已核验课程汇总的学分为 {_escape(credits)}；如需用于毕业审核，请以教务系统为准。", styles["body"]))
+        story.append(Paragraph(f"规则引擎按官方课程数据汇总的学分为 {_escape(credits)}；毕业审核以教务系统记录为准。", styles["body"]))
 
     # 9. 规则版本与资料截止日
     story.append(Paragraph("九、规则版本与资料截止日", styles["heading"]))
@@ -301,7 +324,7 @@ def render_plan_pdf(
             f"规则版本：{_escape(plan_version.get('rules_version'))}<br/>"
             f"语料/embedding 版本：{_escape(plan_version.get('corpus_version') or '未记录')}<br/>"
             f"embedding profile：{_escape(plan_version.get('embedding_profile_id') or '未记录')}<br/>"
-            f"资料截止日：{_escape(corpus_cutoff)}（以该日期已入库资料为准；此后发布的政策/培养方案可能未覆盖）",
+            f"资料截止日：{_escape(corpus_cutoff)}；此后的新文件以官网最新发布版本为准",
             styles["body"],
         )
     )
@@ -310,14 +333,13 @@ def render_plan_pdf(
     story.append(Paragraph("十、引用资料（标题与定位）", styles["heading"]))
     evidence = list(plan_result.get("evidence") or [])
     if not evidence:
-        story.append(Paragraph("本方案没有可展示的引用资料（资料不足或未检索到可核验证据）。", styles["body"]))
+        story.append(Paragraph("本次检索没有命中可引用的来源；检索范围与规则版本见第九节。", styles["body"]))
     else:
         for item in evidence:
             story.append(
                 Paragraph(
                     f"[{_escape(item.get('citation_no'))}] 《{_escape(item.get('title'))}》<br/>"
-                    f"<font size=8 color='#555555'>定位：{_escape(_locator_text(item.get('locator')))}｜核验：{_escape(item.get('verification_status'))}"
-                    f"｜来源ID：{_escape(item.get('source_id'))}</font>",
+                    f"<font size=8 color='#555555'>定位：{_escape(_locator_text(item.get('locator')))}</font>",
                     styles["body"],
                 )
             )
@@ -325,26 +347,26 @@ def render_plan_pdf(
     # 11. 解释
     explanation = plan_result.get("explanation")
     story.append(Paragraph("十一、方案说明", styles["heading"]))
-    story.append(Paragraph(_escape(explanation).replace("\n", "<br/>") if explanation else "（无 AI 解释；方案事实来自规则引擎。）", styles["body"]))
+    story.append(Paragraph(_escape(explanation).replace("\n", "<br/>") if explanation else "（方案说明按规则事实生成。）", styles["body"]))
 
-    # 12. 待核验项
-    story.append(Paragraph("十二、待核验项", styles["heading"]))
+    # 12. 下一步核对
+    story.append(Paragraph("十二、下一步核对", styles["heading"]))
     gaps = list(plan_result.get("gaps") or [])
     pending_actions = [action for action in actions if action.get("status") == "pending_verification"]
     if not gaps and not pending_actions:
-        story.append(Paragraph("当前没有标记为待核验的缺口。", styles["body"]))
+        story.append(Paragraph("当前没有需要额外核对的项目。", styles["body"]))
     for gap in gaps:
-        story.append(Paragraph(f"· [{_escape(gap.get('code'))}] {_escape(gap.get('message'))}", styles["body"]))
+        story.append(Paragraph(f"· {_escape(gap.get('message'))}", styles["body"]))
     for action in pending_actions:
-        story.append(Paragraph(f"· 待核验行动：{_escape(action.get('title'))}", styles["body"]))
+        story.append(Paragraph(f"· 下一步：{_escape(action.get('title'))}", styles["body"]))
 
-    # 13. 免责声明
-    story.append(Paragraph("十三、免责声明", styles["heading"]))
+    # 13. 适用范围
+    story.append(Paragraph("十三、适用范围", styles["heading"]))
     story.append(
         Paragraph(
-            "本方案是生涯规划的辅助参考，不构成就业承诺、录取承诺、学分认定或官方政策解释。"
-            "方向为暂定方向，最终决定权在用户。涉及培养方案、学分认定、竞赛加分、毕业要求的内容，"
-            "一律以学校教务处、学院和官方文件为准。资料边界内的引用可在「方案详情」中回溯到来源定位。",
+            "这份方案按规则事实与已归档的官方资料生成，方向是暂定的比较对象，最终决定权在你。"
+            "培养方案、学分认定、竞赛加分与毕业要求以学校教务处、学院当年发布的文件为准；"
+            "文中引用编号可在「方案详情」逐条回溯到来源定位。",
             styles["small"],
         )
     )
@@ -373,7 +395,7 @@ def _kv_table(rows: Sequence[Sequence[Any]], styles: Mapping[str, ParagraphStyle
 
 def _grid_table(rows: Sequence[Sequence[Any]], styles: Mapping[str, ParagraphStyle]) -> Table:
     data = [[Paragraph(_escape(cell), styles["cell"]) for cell in row] for row in rows]
-    table = Table(data, colWidths=[72 * mm, 20 * mm, 40 * mm, 28 * mm])
+    table = Table(data, colWidths=[92 * mm, 24 * mm, 44 * mm])
     table.setStyle(
         TableStyle(
             [

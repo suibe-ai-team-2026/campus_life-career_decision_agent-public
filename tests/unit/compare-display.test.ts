@@ -3,7 +3,7 @@ import { COMPARE_FALLBACK_MARKER, isDeterministicCompareFallback } from "@/lib/c
 
 describe("compare display", () => {
   it("detects the worker deterministic fallback so the UI can offer a retry", () => {
-    const text = `${COMPARE_FALLBACK_MARKER}。当前可对比的方向为：国际贸易与供应链、跨境电商与国际业务。`;
+    const text = `先给结论：国际贸易与供应链、跨境电商与国际业务 ${COMPARE_FALLBACK_MARKER}。`;
     expect(isDeterministicCompareFallback(text)).toBe(true);
     expect(isDeterministicCompareFallback(`  ${text}`)).toBe(true);
   });

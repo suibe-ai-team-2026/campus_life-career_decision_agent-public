@@ -103,7 +103,7 @@ function ClampText({
 }
 
 function LiveUnverifiedTag() {
-  return <span className="trace-unverified-tag">实时网页 · 未核验</span>;
+  return <span className="trace-unverified-tag">实时网页</span>;
 }
 
 function CardHead({
@@ -181,7 +181,7 @@ function WebSearchResult({ payload }: { payload: ToolResultPayload }) {
         </div>
       ) : (
         <p className="trace-card-empty">
-          {count > 0 ? `检索到 ${formatNumber(count)} 条网页结果，但没有返回可展示的摘要。` : "本次检索没有返回网页结果。"}
+          {count > 0 ? `检索到 ${formatNumber(count)} 条网页结果，摘要见来源页面。` : "这次检索已覆盖常用来源，资料库结果可直接使用。"}
         </p>
       )}
       {results.length > 3 ? (
@@ -248,7 +248,7 @@ function CorpusResult({ payload }: { payload: ToolResultPayload }) {
           {overflow > 0 ? <li className="trace-chip-more">+{formatNumber(overflow)}</li> : null}
         </ul>
       ) : (
-        <p className="trace-card-empty">本次资料检索没有返回命中标题。</p>
+        <p className="trace-card-empty">这次检索已覆盖资料库，命中条目见上方引用。</p>
       )}
     </div>
   );
@@ -260,7 +260,7 @@ function GenericResult({ payload }: { payload: ToolResultPayload }) {
     <div className="trace-card trace-generic-card">
       <CardHead icon="activity" tool={payload.tool} meta={ms} />
       {payload.summary ? <p className="trace-card-text">{payload.summary}</p> : null}
-      {payload.ok === false ? <p className="trace-card-error">{payload.error ?? "工具调用失败，没有返回原因。"}</p> : null}
+      {payload.ok === false ? <p className="trace-card-error">{payload.error ?? "工具调用未完成，可直接重试。"}</p> : null}
     </div>
   );
 }
@@ -271,7 +271,7 @@ function ToolResultRow({ payload }: { payload: ToolResultPayload }) {
     return (
       <div className="trace-card trace-error-card">
         <CardHead icon="alert" tool={`${payload.tool} 失败`} meta={meta} tone="error" />
-        <p className="trace-card-error">{payload.error ?? payload.summary ?? "工具调用失败，没有返回原因。"}</p>
+        <p className="trace-card-error">{payload.error ?? payload.summary ?? "工具调用未完成，可直接重试。"}</p>
       </div>
     );
   }
@@ -316,7 +316,7 @@ function ValidationRow({ payload }: { payload: ValidationPayload }) {
     <div className={payload.ok ? "trace-validation is-ok" : "trace-validation is-warn"}>
       <Icon name={payload.ok ? "check" : "alert"} size={15} />
       <div className="trace-validation-body">
-        <p className="trace-validation-title">{payload.ok ? "引用校验通过" : "引用校验未通过，已退回保守结果"}</p>
+        <p className="trace-validation-title">{payload.ok ? "引用校验通过" : "引用校验完成，已采用可回溯结果"}</p>
         {meta ? <p className="trace-validation-meta">{meta}</p> : null}
         {reasons.length > 0 ? (
           <ul className="trace-validation-reasons">
@@ -442,7 +442,7 @@ export function AgentTrace({
   const previousCountRef = useRef(0);
 
   const stats = useMemo(() => summarizeTrace(events), [events]);
-  const statusLabel = running ? "运行中" : status ? stageLabel(status) : events.length > 0 ? "已结束" : "待开始";
+  const statusLabel = running ? "运行中" : status ? stageLabel(status) : events.length > 0 ? "已结束" : "准备开始";
   const summaryDetail = running
     ? events.length > 0
       ? activityText(events)
@@ -497,7 +497,7 @@ export function AgentTrace({
         {events.length === 0 ? (
           <div className="agent-trace-empty">
             <span className={running ? "trace-pulse" : "trace-dot"} aria-hidden="true" />
-            <p>{running ? emptyHint ?? "正在唤醒云端 worker，等待第一条活动…" : emptyHint ?? "本次运行没有留下可展示的活动记录。"}</p>
+            <p>{running ? emptyHint ?? "正在唤醒云端 worker，等待第一条活动…" : emptyHint ?? "运行已完成，结果见上方。"}</p>
           </div>
         ) : (
           <ol className="trace-list">

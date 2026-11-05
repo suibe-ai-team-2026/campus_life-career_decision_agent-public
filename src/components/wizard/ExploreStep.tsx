@@ -434,7 +434,7 @@ export function ExploreStep() {
                       })
                     }
                   >
-                    <option value="undecided">尚未决定，想同时比较</option>
+                    <option value="undecided">想同时比较，两边都看</option>
                     <option value="practice">更偏实践、实习和业务结果</option>
                     <option value="research">更偏研究、阅读和继续学习</option>
                   </select>

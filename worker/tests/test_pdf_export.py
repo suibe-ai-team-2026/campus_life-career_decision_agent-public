@@ -113,7 +113,12 @@ def test_render_plan_pdf_returns_readable_pdf_bytes():
     assert "本科就业" in text
     assert "未来 30 天" in text
     assert "跨境电子商务" in text
-    assert "官方线索" in text
+    assert "官方来源线索" in text
+    assert "六、课程与竞赛" in text
+    assert "十二、下一步核对" in text
+    assert "十三、适用范围" in text
+    assert "待核验" not in text
+    assert "资料不足" not in text
 
 
 def test_export_graph_registers_artifact_and_returns_contract_payload(tmp_path: Path):

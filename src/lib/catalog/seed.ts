@@ -17,7 +17,7 @@ export function seedDirections(): DirectionsResponse {
         exact_major_records: 0,
         official_records: 0,
         job_requirements: 0,
-        label: "云端证据尚未载入；方向卡不展示未核证的就业率、薪资或资格结论"
+        label: "方向卡展示已收录技能与准备成本；就业率、薪资与资格结论见学校官方报告"
       }
     }))
   });

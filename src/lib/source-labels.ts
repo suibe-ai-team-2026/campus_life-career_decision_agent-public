@@ -80,9 +80,9 @@ export function sourceScopeLabel(scope: string | null | undefined): string | nul
 }
 
 export function extractionStatusLabel(status: string | null | undefined): string {
-  if (!status || !status.trim()) return "待核验";
+  if (!status || !status.trim()) return "已收录";
   if (hasCjk(status)) return status;
-  return fromMap(EXTRACTION_STATUS, status) ?? "待核验";
+  return fromMap(EXTRACTION_STATUS, status) ?? "已收录";
 }
 
 export function parsingRunStatusLabel(status: string | null | undefined): string {

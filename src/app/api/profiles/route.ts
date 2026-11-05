@@ -8,7 +8,7 @@ import { loadCurrentAssessment } from "@/lib/catalog/server";
 import { scoreAssessment } from "@/lib/assessment/scoring";
 
 export async function POST(request: Request) {
-  if (!supabaseConfigured()) return jsonError("model_unavailable", "云端后端尚未配置");
+  if (!supabaseConfigured()) return jsonError("model_unavailable", "云端后端未配置");
   const auth = await requireUser();
   if ("response" in auth) return auth.response;
 

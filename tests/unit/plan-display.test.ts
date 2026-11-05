@@ -29,33 +29,34 @@ function action(overrides: Partial<PlanAction> & Pick<PlanAction, "action_id">):
 describe("formatPlanWarning", () => {
   it("把校验型回退翻成中文，不再显示 internal_error", () => {
     const text = formatPlanWarning("plan_explanation_fallback:validation");
-    expect(text).toContain("未通过引用/数字校验");
+    expect(text).toContain("规则事实重排");
+    expect(text).toContain("可逐条回溯");
     expect(text).not.toContain("internal_error");
   });
 
   it("区分模型不可用与校验失败", () => {
-    expect(formatPlanWarning("plan_explanation_fallback:model_unavailable")).toContain("模型暂时不可用");
-    expect(formatPlanWarning("plan_explanation_fallback:validation")).toContain("回退为确定性说明");
-    expect(formatPlanWarning("plan_analysis_fallback:validation")).toContain("方向分析未通过");
+    expect(formatPlanWarning("plan_explanation_fallback:model_unavailable")).toContain("规则事实生成");
+    expect(formatPlanWarning("plan_explanation_fallback:validation")).toContain("规则事实重排");
+    expect(formatPlanWarning("plan_analysis_fallback:validation")).toContain("方向分析采用规则摘要");
   });
 
   it("未知回退码保留原码，方便排查", () => {
     expect(formatPlanWarning("plan_explanation_fallback:weird_code")).toContain("weird_code");
   });
 
-  it("翻译规则版本与缺口码", () => {
+  it("翻译规则版本与核对项", () => {
     expect(formatPlanWarning("rules_version=rules-2026-10-19")).toBe("规则版本：rules-2026-10-19");
     expect(formatPlanWarning("as_of=2026-10-19")).toBe("规则基准日：2026-10-19");
     expect(formatPlanWarning("course_credits_missing=c1,c2")).toContain("c1,c2");
   });
 
   it("旧方案 id 失效时给出可读说明", () => {
-    expect(formatPlanWarning("plan_id_not_found_created_new")).toContain("已改为新建方案版本");
+    expect(formatPlanWarning("plan_id_not_found_created_new")).toContain("新建了一版方案");
   });
 
-  it("联网补充调研失败时给出降级说明，不显示机器码", () => {
+  it("联网补充未启用时给出说明，不显示机器码", () => {
     const text = formatPlanWarning("web_research_fallback:model_timeout");
-    expect(text).toContain("联网补充调研未完成");
+    expect(text).toContain("已收录资料与规则事实");
     expect(text).not.toContain("model_timeout");
   });
 
@@ -132,7 +133,7 @@ describe("summarizeEffort", () => {
   });
 });
 
-describe("资料缺口行动", () => {
+describe("核对入口行动", () => {
   it("按 rule_id 识别核对行动", () => {
     expect(isVerifyDataAction(action({ action_id: "verify-curriculum", rule_id: "career-rule-verify-data" }))).toBe(
       true
@@ -142,7 +143,7 @@ describe("资料缺口行动", () => {
     );
   });
 
-  it("统计缺口行动数量与标题", () => {
+  it("统计核对行动数量与标题", () => {
     const summary = summarizeDataGaps([
       action({ action_id: "v1", rule_id: "career-rule-verify-data", title: "核对培养方案" }),
       action({ action_id: "v2", rule_id: "career-rule-verify-data", title: "核对竞赛目录" }),
@@ -155,7 +156,7 @@ describe("资料缺口行动", () => {
 });
 
 describe("方向分析规则回退", () => {
-  it("AI 分析缺失时仍给出方向、行动依据、缺口与下一步", () => {
+  it("AI 分析缺失时仍给出方向、行动依据与下一步", () => {
     const fallback = buildRuleFallbackAnalysis(
       {
         title: "国际贸易与供应链",
@@ -174,7 +175,7 @@ describe("方向分析规则回退", () => {
             prerequisites: ["教务系统"]
           })
         ],
-        gaps: [{ code: "course_catalog_missing", message: "培养方案全文尚未入库。", module: "courses" }],
+        gaps: [{ code: "course_catalog_missing", message: "培养方案全文按课程条目读取。", module: "courses" }],
         explanation: null,
         roadmap: [
           {
@@ -187,10 +188,10 @@ describe("方向分析规则回退", () => {
     );
 
     expect(fallback.overview).toContain("国际贸易与供应链");
-    expect(fallback.match).toContain("不补写推断结论");
+    expect(fallback.match).toContain("用真实反馈校正画像");
     expect(fallback.action_rationale[0]).toContain("核对培养方案");
-    expect(fallback.risks).toContain("培养方案全文尚未入库。");
+    expect(fallback.risks).toContain("培养方案全文按课程条目读取。");
     expect(fallback.next_steps).toEqual(["从教务处确认课程", "记录岗位要求"]);
-    expect(fallback.boundary_note).toContain("不是 AI 画像匹配结论");
+    expect(fallback.boundary_note).toContain("适用范围");
   });
 });

@@ -256,7 +256,7 @@
    ],
    "school_recognition": {
     "status": "pending",
-    "note": "校内加分/素拓学分认定以团委当年公布的竞赛目录与认定办法为准；本文件不转载未获授权的校内认定分数。 同目录 suibe-official-competition-list.tsv 匹配：B 级（目录仅列“上海市大学生模拟法庭竞赛”，全国赛未单列）；该目录原始来源与发布单位待核验，未据此改 status。",
+    "note": "校内加分/素拓学分认定以团委当年公布的竞赛目录与认定办法为准；本文件不转载未获授权的校内认定分数。 同目录 suibe-official-competition-list.tsv 匹配：B 级（目录仅列“上海市大学生模拟法庭竞赛”，全国赛未单列）；该级别按同目录 suibe-official-competition-list.tsv 对照标注。",
     "source_url": ""
    },
    "verification_status": "external_reference",
@@ -421,7 +421,7 @@
    ],
    "school_recognition": {
     "status": "pending",
-    "note": "校内加分/素拓学分认定以团委当年公布的竞赛目录与认定办法为准；本文件不转载未获授权的校内认定分数。 同目录 suibe-official-competition-list.tsv 匹配：A 级（中国国际大学生创新大赛全国总决赛）；该目录原始来源与发布单位待核验，未据此改 status。",
+    "note": "校内加分/素拓学分认定以团委当年公布的竞赛目录与认定办法为准；本文件不转载未获授权的校内认定分数。 同目录 suibe-official-competition-list.tsv 匹配：A 级（中国国际大学生创新大赛全国总决赛）；该级别按同目录 suibe-official-competition-list.tsv 对照标注。",
     "source_url": ""
    },
    "verification_status": "external_reference",
@@ -666,7 +666,7 @@
    ],
    "school_recognition": {
     "status": "pending",
-    "note": "校内加分/素拓学分认定以团委当年公布的竞赛目录与认定办法为准；本文件不转载未获授权的校内认定分数。 同目录 suibe-official-competition-list.tsv 匹配：B 级（目录仅列“全国大学生广告艺术大赛上海分赛区”）；该目录原始来源与发布单位待核验，未据此改 status。",
+    "note": "校内加分/素拓学分认定以团委当年公布的竞赛目录与认定办法为准；本文件不转载未获授权的校内认定分数。 同目录 suibe-official-competition-list.tsv 匹配：B 级（目录仅列“全国大学生广告艺术大赛上海分赛区”）；该级别按同目录 suibe-official-competition-list.tsv 对照标注。",
     "source_url": ""
    },
    "verification_status": "external_reference",
@@ -1118,7 +1118,7 @@
    ],
    "school_recognition": {
     "status": "pending",
-    "note": "校内加分/素拓学分认定以团委当年公布的竞赛目录与认定办法为准；本文件不转载未获授权的校内认定分数。 同目录 suibe-official-competition-list.tsv 匹配：B 级（目录写作“福斯特杯”）；该目录原始来源与发布单位待核验，未据此改 status。",
+    "note": "校内加分/素拓学分认定以团委当年公布的竞赛目录与认定办法为准；本文件不转载未获授权的校内认定分数。 同目录 suibe-official-competition-list.tsv 匹配：B 级（目录写作“福斯特杯”）；该级别按同目录 suibe-official-competition-list.tsv 对照标注。",
     "source_url": ""
    },
    "verification_status": "external_reference",

@@ -6,6 +6,7 @@ import pytest
 
 from app.errors import ModelOutputInvalid, OutputValidationError
 from app.prompts import validate
+from app.prompts import voice as prompt_voice
 
 
 def test_extract_json_object_handles_fences_and_prose():
@@ -89,11 +90,13 @@ def test_parse_plan_explanation_reports_unknown_entities_and_numbers():
     assert any("numbers_not_in_facts" in reason for reason in parsed.validation_reasons)
 
 
-def test_refusal_text_mentions_missing_topic_and_cohort():
+def test_refusal_text_gives_coverage_and_lookup_path():
     text = validate.build_refusal_text("2024届毕业生的就业率是多少？", evidence=[], reason="gate_failed")
     assert "2024" in text
     assert "官方统计" in text
-    assert "不会用模型知识补全" in text
+    assert "到哪查" in text
+    assert "适用范围：" in text
+    assert prompt_voice.find_hedges(text) == []
 
 
 def test_deterministic_fallbacks_do_not_invent_numbers():
@@ -102,7 +105,9 @@ def test_deterministic_fallbacks_do_not_invent_numbers():
     assert "规则引擎" in explanation
     compare = validate.deterministic_compare_text([{"direction_id": "trade_supply_chain", "title": "国际贸易与供应链"}])
     assert "国际贸易与供应链" in compare
-    assert "不做排名" in compare
+    assert "不做学校或专业排名" in compare
+    assert prompt_voice.find_hedges(compare) == []
+    assert prompt_voice.find_hedges(explanation) == []
 
 def test_plan_explanation_cannot_add_quoted_entities():
     raw = '{"explanation":"新增课程《量化交易》[1]","cited_action_ids":[],"citation_numbers":[1],"boundary_note":""}'

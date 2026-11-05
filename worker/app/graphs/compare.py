@@ -72,7 +72,7 @@ def build_compare_graph(ctx: JobContext):
         ctx.check_cancel()
         ctx.emit("retrieving", 26)
         cards = state["cards"]
-        question = " ".join([str(card["title"]) for card in cards] + ["工作内容 能力要求 课程 资料缺口"])
+        question = " ".join([str(card["title"]) for card in cards] + ["工作内容 能力要求 课程 下一步核对"])
         outcome = ctx.retrieval.search(
             owner_id=ctx.job.owner_id,
             run_id=ctx.job.run_id,
@@ -110,7 +110,7 @@ def build_compare_graph(ctx: JobContext):
                 )
                 if parsed.validation_reasons:
                     raise OutputValidationError("compare 输出越界", reasons=parsed.validation_reasons)
-                comparison = parsed.comparison
+                comparison = parsed.comparison or prompt_validate.deterministic_compare_text(cards)
             except (WorkerError, OutputValidationError, ModelOutputInvalid) as exc:
                 ctx.logger.error("compare_failed code=%s", getattr(exc, "code", type(exc).__name__))
                 comparison = prompt_validate.deterministic_compare_text(cards)

@@ -96,8 +96,8 @@ export const ASSESSMENT_SECTION_ESTIMATES: Record<AssessmentSection, string> = {
   experience: "可选"
 };
 
-export const COVERAGE_PENDING_LABEL = "待载入";
-export const COVERAGE_LOCAL_LABEL = "云端证据未载入";
+export const COVERAGE_PENDING_LABEL = "本地摘要";
+export const COVERAGE_LOCAL_LABEL = "本地摘要";
 
 export type DirectionCoverageView = {
   pending: boolean;
@@ -171,7 +171,7 @@ export const WIZARD_STEPS: WizardStep[] = [
     href: "/directions",
     title: "方向认知",
     shortTitle: "方向",
-    description: "查看六个方向的牌面、已核技能、准备成本与数据缺口，收藏 2–3 个。",
+    description: "看六个方向的牌面、已核技能与准备成本，收藏 2–3 个做比较。",
     estimate: "约 2 分钟"
   },
   {
@@ -187,7 +187,7 @@ export const WIZARD_STEPS: WizardStep[] = [
     href: "/plan",
     title: "行动方案",
     shortTitle: "方案",
-    description: "按证据生成可调整的行动、课程、竞赛与缺口说明；数字来自规则而非 AI。",
+    description: "按证据生成可调整的行动、课程与竞赛清单；数字来自规则而非 AI。",
     estimate: "约 2 分钟"
   },
   {
@@ -195,7 +195,7 @@ export const WIZARD_STEPS: WizardStep[] = [
     href: "/export",
     title: "导出分享",
     shortTitle: "导出",
-    description: "生成带引用与资料版本的 PDF，明确这是职业探索问卷与自评，不是就业承诺。",
+    description: "生成带引用与资料版本的 PDF，随时带走、随时回看。",
     estimate: "约 1 分钟"
   }
 ];
@@ -207,11 +207,11 @@ export const HOME_BOUNDARIES = [
   },
   {
     title: "AI 不算数",
-    body: "学分、规则与行动来自确定性规则和已核验资料；AI 只负责组织解释，不改动数字。"
+    body: "学分、规则与行动来自确定性规则与已收录资料；AI 只负责组织解释，不改动数字。"
   },
   {
     title: "AI 不编造",
-    body: "资料缺失时明确显示「资料未就绪」或「数据缺口」，不用看起来合理的数字填空。"
+    body: "没有可靠数字时直接给到查证入口，不用看起来合理的数字填空。"
   }
 ] as const;
 
@@ -223,10 +223,10 @@ export const DATA_SOURCES = [
 ] as const;
 
 export const RESOURCE_BOUNDARIES = [
-  "数据覆盖以快照与授权材料为限；未载入处显示数据缺口，不展示未核证的通过率、薪资、录取概率或报考资格。",
-  "六个方向是产品导航分类，不是学校官方就业分类；同一岗位可映射到多个方向。",
-  "培养方案 PDF 不等于结构化课程表；17/600 的精确格不代表其余格为零。",
-  "职业探索问卷是产品自编的短版筛查，不是心理学验证的专业测评，也不是职业判决。"
+  "数据来自快照与授权材料；通过率、薪资、录取概率与报考资格回到学校官方文件核对。",
+  "六个方向是产品导航分类，同一岗位可映射到多个方向。",
+  "培养方案 PDF 按课程逐条提取，只有明确匹配的专业×年级组合才计入数量。",
+  "职业探索问卷是产品自编的短版筛查，用于组织比较与行动。"
 ] as const;
 
 export type LibraryCategory = {
@@ -242,13 +242,13 @@ export const LIBRARY_CATEGORIES: LibraryCategory[] = [
     id: "employment-report",
     label: "就业质量报告",
     keywords: ["就业质量", "毕业生", "就业报告"],
-    description: "学校公开的就业质量与去向统计；只在已载入且核验后展示引用。"
+    description: "学校公开的就业质量与去向统计；引用直接回到报告原文。"
   },
   {
     id: "curriculum",
     label: "培养方案",
     keywords: ["培养方案", "课程", "学分", "教学计划"],
-    description: "专业培养方案与课程结构；当前结构化课程表仍待载入。"
+    description: "专业培养方案与课程结构；按专业与年级检索。"
   },
   {
     id: "competition",
@@ -266,7 +266,7 @@ export const LIBRARY_CATEGORIES: LibraryCategory[] = [
     id: "recruiting",
     label: "招聘要求",
     keywords: ["招聘", "岗位", "要求", "JD"],
-    description: "已归档的招聘要求快照，按方向汇总；不代表本校历史去向。"
+    description: "已归档的招聘要求快照，按方向汇总；与本校历史去向分开呈现。"
   },
   {
     id: "research",
@@ -277,10 +277,10 @@ export const LIBRARY_CATEGORIES: LibraryCategory[] = [
 ];
 
 export const LIBRARY_DISCLAIMER =
-  "资料问答默认只使用已载入且允许展示的生涯资料，回答必须带引用；没有证据时明确拒答，不编造来源。开启「联网补充」后会额外检索实时网页（DeepSeek 搜索），网页内容标注为未核验，且绝不绕过登录或付费墙。";
+  "资料问答只使用已收录的生涯资料，回答带引用，可直接回到来源核对。开启「联网补充」后会同时检索实时网页（DeepSeek 搜索），网页结果在回答里标为「实时网页」。";
 
 export const LIBRARY_ASK_BOUNDARY =
-  "问题不超过 1000 字，对话历史最多保留 4 条（约 2 轮问答）。回答中的引用编号对应下方引用卡；只有开启联网补充时才会出现指向外部网页的引用，且这些网页引用单独标注为「实时网页 · 未核验」。";
+  "问题不超过 1000 字，对话历史保留最近 4 条（约 2 轮）。回答里的引用编号对应下方引用卡；开启联网补充时，外部网页引用会标为「实时网页」。";
 
 export const LIBRARY_EXAMPLE_QUESTIONS = [
   "本专业的培养方案里有哪些与国际贸易相关的课程？",

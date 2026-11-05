@@ -13,10 +13,11 @@ const BASIS_LABELS: Record<PlanAction["effort"]["basis"], string> = {
   unknown: "未估计"
 };
 
-const STATUS_LABELS: Record<PlanAction["status"], { label: string; tone: "neutral" | "warn" | "ok" | "accent" }> = {
+const STATUS_LABELS: Partial<
+  Record<PlanAction["status"], { label: string; tone: "neutral" | "warn" | "ok" | "accent" }>
+> = {
   suggested: { label: "建议", tone: "neutral" },
-  pending_verification: { label: "待核验", tone: "warn" },
-  verified: { label: "已核验", tone: "ok" },
+  verified: { label: "已核对", tone: "ok" },
   user_modified: { label: "我已调整", tone: "accent" }
 };
 
@@ -90,7 +91,7 @@ export function ActionCard({
     );
   }, [effective.evidence_ids, evidence]);
 
-  const status = STATUS_LABELS[effective.status] ?? STATUS_LABELS.suggested;
+  const status = STATUS_LABELS[effective.status] ?? { label: "建议", tone: "neutral" as const };
   const baselineLine = `${windowLabel(machine.window)} · ${
     machine.effort.hours === null ? "工时未估计" : `约 ${machine.effort.hours} 小时`
   }（${BASIS_LABELS[machine.effort.basis]}）`;
@@ -148,7 +149,6 @@ export function ActionCard({
             <span className="action-machine-tag">机器建议</span>
             {baselineLine}
             {machine.rule_id ? ` · 规则 ${machine.rule_id}` : ""}
-            {machine.status === "pending_verification" ? " · 待核验" : ""}
           </p>
         </div>
         <div className="action-badges">
