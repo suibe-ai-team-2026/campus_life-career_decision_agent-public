@@ -7,6 +7,8 @@ import { GRAPH_TYPE_META } from "@/lib/graph/palette";
 import { buildAdjacency, buildDegree } from "@/lib/graph/utils";
 import { computeGraphLayout, type GraphPoint } from "@/lib/graph/layout";
 import { NotePanel } from "./NotePanel";
+import { useLocalProgress, readExplorePrefs } from "@/lib/local-progress/store";
+import { withLocalProfile } from "@/lib/graph/local-profile";
 
 const WIDTH = 900;
 const HEIGHT = 680;
@@ -40,6 +42,18 @@ type LabelCandidate = {
 };
 
 export function GraphExplorer({ snapshot }: { snapshot: GraphSnapshot }) {
+  const { progress, hydrated } = useLocalProgress();
+  const activeSnapshot = useMemo(
+    () =>
+      withLocalProfile(snapshot, progress, hydrated, {
+        pathwayPrimary: hydrated ? readExplorePrefs().pathway.primary : null
+      }),
+    [snapshot, progress, hydrated]
+  );
+  return <GraphExplorerView snapshot={activeSnapshot} />;
+}
+
+function GraphExplorerView({ snapshot }: { snapshot: GraphSnapshot }) {
   const nodeById = useMemo(() => new Map(snapshot.nodes.map((node) => [node.id, node])), [snapshot]);
   const adjacency = useMemo(() => buildAdjacency(snapshot.edges), [snapshot]);
   const degree = useMemo(() => buildDegree(snapshot.edges), [snapshot]);

@@ -19,6 +19,7 @@ const EXPLANATION_FALLBACK_TEXT: Record<string, string> = {
 
 const ANALYSIS_FALLBACK_TEXT: Record<string, string> = {
   validation: "本次方向分析采用规则摘要；路线、行动与资料线索保持原样。",
+  model_output_invalid: "本次方向分析由规则事实与画像补全；路线、行动与资料线索保持原样。",
   model_unavailable: "本次方向分析由规则事实生成；确定性方案保持不变。",
   model_timeout: "本次方向分析由规则事实生成；确定性方案保持不变。",
   model_auth_failed: "本次方向分析由规则事实生成；确定性方案保持不变。",

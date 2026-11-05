@@ -33,6 +33,7 @@ import { CitationText } from "@/components/ui/CitationCard";
 import { AgentTrace } from "@/components/run/AgentTrace";
 import { ResearchToggle } from "@/components/run/ResearchToggle";
 import { useHydrated } from "@/lib/local-progress/store";
+import { parsingRunStatusLabel, sourceScopeLabel } from "@/lib/source-labels";
 
 type TabId = "ask" | "sources" | "reports";
 
@@ -89,6 +90,7 @@ export function LibraryTool() {
   const [sourcesState, setSourcesState] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const [sourcesError, setSourcesError] = useState<string | null>(null);
   const [filterId, setFilterId] = useState<string>("all");
+  const [openSourceId, setOpenSourceId] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
   const sourcesRequestRef = useRef<AbortController | null>(null);
   const messageEndRef = useRef<HTMLDivElement | null>(null);
@@ -429,17 +431,59 @@ export function LibraryTool() {
 
   function sourceLine(source: Source) {
     const officialUrl = safeExternalUrl(source.canonical_url);
+    const open = openSourceId === source.source_id;
+    const latestVersion = source.versions[0];
+    const scopeLabel = sourceScopeLabel(source.source_scope) ?? "参考材料";
+    const versionLabel =
+      source.versions.length > 0
+        ? `${source.versions.length} 个版本 · 最近${parsingRunStatusLabel(latestVersion?.extraction_status)}`
+        : "已收录";
     return (
       <li className="source-line" key={source.source_id}>
-        <span className="source-line-title" title={source.title}>
-          {officialUrl ? (
-            <a href={officialUrl} target="_blank" rel="noopener noreferrer">
-              {source.title}
-            </a>
-          ) : (
-            source.title
-          )}
-        </span>
+        <button
+          type="button"
+          className="source-line-toggle"
+          aria-expanded={open}
+          aria-controls={`source-detail-${source.source_id}`}
+          onClick={() => setOpenSourceId(open ? null : source.source_id)}
+        >
+          <span className="source-line-title" title={source.title}>
+            {source.title}
+          </span>
+          <Icon name={open ? "minus" : "plus"} size={13} />
+        </button>
+        {open ? (
+          <div className="source-line-detail" id={`source-detail-${source.source_id}`}>
+            <dl>
+              <div>
+                <dt>资料类型</dt>
+                <dd>{scopeLabel}</dd>
+              </div>
+              <div>
+                <dt>发布方</dt>
+                <dd>{source.publisher || "学校官方来源"}</dd>
+              </div>
+              <div>
+                <dt>版本</dt>
+                <dd>{versionLabel}</dd>
+              </div>
+              {latestVersion?.published_at ? (
+                <div>
+                  <dt>发布时间</dt>
+                  <dd>{formatDateTime(latestVersion.published_at)}</dd>
+                </div>
+              ) : null}
+            </dl>
+            {officialUrl ? (
+              <a className="source-line-link" href={officialUrl} target="_blank" rel="noopener noreferrer">
+                打开原文
+                <Icon name="external" size={12} />
+              </a>
+            ) : (
+              <span className="micro">该来源没有公开链接；引用时按标题与定位对照原文。</span>
+            )}
+          </div>
+        ) : null}
       </li>
     );
   }

@@ -1476,3 +1476,109 @@ body {
   font-size: 13.5px;
   line-height: 1.7;
 }
+
+/* ---- 404 页面 ---------------------------------------------------- */
+.not-found-screen {
+  display: flex;
+  justify-content: center;
+  padding: 56px 20px 88px;
+}
+
+.not-found-panel {
+  width: 100%;
+  max-width: 560px;
+}
+
+.not-found-code {
+  margin: 0 0 10px;
+  font-size: 44px;
+  line-height: 1;
+  color: var(--fg-3);
+  letter-spacing: 0.12em;
+}
+
+.not-found-panel h1 {
+  margin: 0 0 8px;
+  font-size: 22px;
+  color: var(--fg-0);
+}
+
+.not-found-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+/* ---- 资料库来源行详情 -------------------------------------------- */
+.source-line {
+  display: block;
+  padding: 0;
+}
+
+.source-line-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 9px 2px;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--line-soft);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.source-line-toggle:hover .source-line-title,
+.source-line-toggle:focus-visible .source-line-title {
+  color: var(--accent);
+}
+
+.source-line-toggle .icon {
+  flex: none;
+  color: var(--fg-3);
+}
+
+.source-line-detail {
+  padding: 10px 2px 16px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.source-line-detail dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px 24px;
+  margin: 0 0 10px;
+}
+
+.source-line-detail dl > div {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.source-line-detail dt {
+  flex: none;
+  color: var(--fg-3);
+}
+
+.source-line-detail dd {
+  margin: 0;
+  color: var(--fg-1);
+}
+
+.source-line-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.source-line-link:hover {
+  text-decoration: underline;
+}

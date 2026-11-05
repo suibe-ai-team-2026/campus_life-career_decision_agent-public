@@ -426,7 +426,9 @@ def build_plan_graph(ctx: JobContext):
                 "plan_analysis_invalid reasons=%s", "；".join(reasons) or "unknown"
             )
         except ModelOutputInvalid as exc:
-            warnings.append("plan_analysis_fallback:validation")
+            # 模型输出不可解析（空内容/围栏/JSON 截断）与"校验不通过"分开记，
+            # 便于按 warning 码定位到具体失败环节。
+            warnings.append("plan_analysis_fallback:model_output_invalid")
             ctx.logger.error("plan_analysis_invalid type=%s detail=%s", type(exc).__name__, redact(exc.detail or ""))
         except WorkerError as exc:
             reason = getattr(exc, "code", "model_unavailable")
@@ -440,6 +442,19 @@ def build_plan_graph(ctx: JobContext):
         except Exception as exc:  # noqa: BLE001 - analysis must never block deterministic publishing
             warnings.append("plan_analysis_fallback:internal_error")
             ctx.logger.exception("plan_analysis_failed type=%s", type(exc).__name__)
+
+        # 降级时也要给出可用的方向分析：只复用画像与规则事实生成，不让页面
+        # 只剩一条"AI 分析缺失"的提示（D-01 的根因修复）。
+        if analysis is None:
+            try:
+                analysis = PlanAnalysis.model_validate(
+                    prompt_validate.deterministic_plan_analysis(
+                        profile_facts=profile_facts,
+                        rule_facts=rule_payload,
+                    )
+                )
+            except Exception:  # noqa: BLE001 - 兜底失败也不阻塞确定性方案
+                ctx.logger.exception("deterministic_plan_analysis_failed")
 
         # 即使联网补充没找到可用来源，也把说明写进方案说明，避免用户误以为走了联网。
         if web_note:

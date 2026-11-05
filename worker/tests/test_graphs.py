@@ -1002,3 +1002,53 @@ def test_plan_graph_without_verified_rule_data_returns_data_unavailable():
     assert prompt_voice.find_hedges(result["explanation"]) == []
     assert "下一步" in (result["explanation"] or "")
     assert db.saved_plans and db.saved_plans[0]["result"]["credits"] is None
+
+
+def test_plan_analysis_falls_back_to_deterministic_content():
+    """D-01 回归：方向分析模型输出失败时，仍要给出可用的规则化分析。
+
+    修复前降级只把 analysis 置空，页面只剩一条"AI 分析缺失"提示；现在用画像与
+    规则事实生成确定性分析，页面内容完整、理由与下一步可直接执行。
+    """
+
+    config = make_config()
+    provider = FakeProvider(
+        config,
+        chat_responses={
+            "chat_plan_explain": [
+                json.dumps(
+                    {
+                        "explanation": "按规则事实，本学期先做课程与学分核对[1]。",
+                        "cited_action_ids": ["req-REQ001"],
+                        "citation_numbers": [1],
+                        "boundary_note": "",
+                    },
+                    ensure_ascii=False,
+                )
+            ],
+            "chat_plan_analysis": ["不是 JSON", "仍然不是 JSON"],
+        },
+    )
+    ctx, _db, _emits = _plan_context(provider)
+
+    result = run_plan(ctx)["result"]
+
+    assert any(
+        str(warning).startswith("plan_analysis_fallback:") for warning in result["warnings"]
+    )
+    analysis = result["analysis"]
+    assert analysis is not None
+    assert analysis["overview"]
+    assert analysis["match"]
+    assert analysis["action_rationale"]
+    assert analysis["boundary_note"].startswith("方向分析按规则事实与画像生成")
+    combined = "\n".join(
+        [
+            analysis["overview"],
+            analysis["match"],
+            *analysis["action_rationale"],
+            *analysis["risks"],
+            *analysis["next_steps"],
+        ]
+    )
+    assert prompt_voice.find_hedges(combined) == []

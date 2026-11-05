@@ -12,7 +12,7 @@ import json
 import re
 from dataclasses import dataclass, field
 from decimal import Decimal, InvalidOperation
-from typing import Any, Sequence
+from typing import Any, Mapping, Sequence
 
 from ..errors import ModelOutputInvalid, OutputValidationError
 from .voice import SCOPE_PREFIX, sanitize_prose, scrub_hedges
@@ -593,3 +593,98 @@ def parse_plan_analysis(
         boundary_note=clean_prose(boundary_note),
         validation_reasons=reasons,
     )
+
+
+# ---------------------------------------------------------------------------
+# 方向分析确定性兜底（模型失败时也要有可用内容，不只留一条提示）
+# ---------------------------------------------------------------------------
+
+_WINDOW_LABELS = {
+    "current_term": "本学期",
+    "next_term": "下学期",
+    "later": "更晚一些",
+}
+
+
+def deterministic_plan_analysis(
+    *,
+    profile_facts: Mapping[str, Any],
+    rule_facts: Mapping[str, Any],
+) -> dict[str, Any]:
+    """模型方向分析失败时的确定性替代：只复用画像与规则事实，不新增事实。
+
+    返回结构对齐 ``PlanAnalysisOutput`` 的字段，供 plan 图在降级路径发布。
+    """
+
+    signals = profile_facts.get("profile_signals") if isinstance(profile_facts, Mapping) else {}
+    signals = signals if isinstance(signals, Mapping) else {}
+    interests = list(signals.get("interests_ranked") or [])
+    abilities = list(signals.get("abilities_ranked") or [])
+    styles = list(signals.get("work_styles") or [])
+    experience = signals.get("experience") if isinstance(signals.get("experience"), Mapping) else None
+    decision_reason = str(signals.get("decision_reason") or profile_facts.get("decision_reason") or "").strip()
+
+    top_interest = str(interests[0].get("label") or "") if interests else ""
+    top_ability = str(abilities[0].get("label") or "") if abilities else ""
+    style_label = str(styles[0].get("label") or "") if styles else ""
+
+    actions = [action for action in list(rule_facts.get("actions") or []) if isinstance(action, Mapping)]
+    gaps = [gap for gap in list(rule_facts.get("gaps") or []) if isinstance(gap, Mapping)]
+    roadmap = [stage for stage in list(rule_facts.get("roadmap") or []) if isinstance(stage, Mapping)]
+    focus = str(next((stage.get("focus") for stage in roadmap if stage.get("stage") == "未来 30 天"), "") or "")
+
+    overview_parts = [
+        f"按规则事实，这个方向一共有 {len(actions)} 项可执行行动。",
+    ]
+    if focus:
+        overview_parts.append(f"未来 30 天的重点是：{focus}。")
+    choices = [
+        str(item.get("title") or "")
+        for key in ("course_leads", "competition_leads", "industry_leads")
+        for item in list(rule_facts.get(key) or [])
+        if isinstance(item, Mapping)
+    ]
+    if choices:
+        overview_parts.append("课程、竞赛与岗位线索已整理在「方向与行业」页签，可按线索逐项核对。")
+    overview = "".join(overview_parts)
+
+    match_parts = []
+    if top_interest and top_ability:
+        match_parts.append(f"你的自评里「{top_interest}」与「{top_ability}」排在最前，和这个方向的准备成本直接相关。")
+    elif top_ability:
+        match_parts.append(f"你的能力自评里「{top_ability}」排在最前，可以先把它写成一份可展示的成果。")
+    elif top_interest:
+        match_parts.append(f"你的兴趣自评里「{top_interest}」排在最前，适合先从一次真实的实践或课程任务验证。")
+    if style_label:
+        match_parts.append(f"工作方式偏好是「{style_label}」，执行时按这个节奏安排更容易坚持。")
+    if experience and str(experience.get("text") or "").strip():
+        match_parts.append("你写下的经历已经可以作为第一份证据，先把它整理成可展示的样例。")
+    if decision_reason:
+        match_parts.append(f"你写下的暂定理由是「{decision_reason[:80]}」，先用一次小规模实践验证它，再决定是否加码。")
+    if not match_parts:
+        match_parts.append("画像信号已写入方案；先完成一所一课的核对，再按结果调整方向。")
+    match = "".join(match_parts)
+
+    action_rationale = []
+    for action in actions:
+        title = str(action.get("title") or "").strip()
+        if not title:
+            continue
+        window = _WINDOW_LABELS.get(str(action.get("window") or ""), "")
+        prefix = f"{window}完成" if window else "先做"
+        action_rationale.append(f"「{title}」：{prefix}，把核对结果写回方案。")
+
+    risks = [str(gap.get("message") or "").strip() for gap in gaps if str(gap.get("message") or "").strip()][:4]
+    next_steps = [str(action.get("title") or "").strip() for action in actions if str(action.get("title") or "").strip()][:4]
+
+    return {
+        "overview": overview,
+        "match": match,
+        "action_rationale": action_rationale,
+        "evidence_courses": [],
+        "evidence_competitions": [],
+        "risks": risks,
+        "next_steps": next_steps,
+        "citation_numbers": [],
+        "boundary_note": "方向分析按规则事实与画像生成；课程、学分与认定以学校当年文件为准。",
+    }

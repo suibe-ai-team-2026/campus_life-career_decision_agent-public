@@ -315,3 +315,32 @@ def test_sanitize_prose_removes_internal_action_ids_and_field_codes():
     assert "verify-curriculum" not in cleaned
     assert "credit_rules_unavailable" not in cleaned
     assert prompt_voice.find_hedges(cleaned) == []
+
+
+def test_deterministic_plan_analysis_is_confident_and_fact_bound():
+    output = validate.deterministic_plan_analysis(
+        profile_facts={
+            "profile_signals": {
+                "interests_ranked": [{"label": "企业"}],
+                "abilities_ranked": [{"label": "沟通协作"}],
+                "work_styles": [{"label": "先搜集资料再行动"}],
+                "decision_reason": "想先验证真实工作内容",
+            }
+        },
+        rule_facts={
+            "actions": [{"title": "向学院教务核对培养方案", "window": "current_term"}],
+            "gaps": [{"code": "credit_rules_unavailable", "message": "到教务处核对学分认定规则"}],
+            "roadmap": [{"stage": "未来 30 天", "focus": "核对信息 + 做出第一份证据"}],
+        },
+    )
+    texts = [
+        output["overview"],
+        output["match"],
+        *output["action_rationale"],
+        *output["risks"],
+        *output["next_steps"],
+        output["boundary_note"],
+    ]
+    assert prompt_voice.find_hedges("\n".join(texts)) == []
+    assert prompt_voice.find_slop("\n".join(texts)) == []
+    assert output["action_rationale"] and output["next_steps"]

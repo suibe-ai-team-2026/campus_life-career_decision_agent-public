@@ -140,6 +140,7 @@ export function ExportStep() {
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const [expiresIn, setExpiresIn] = useState<number | null>(null);
   const [urlFetchedAt, setUrlFetchedAt] = useState<number | null>(null);
+  const [downloading, setDownloading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [elapsed, setElapsed] = useState(0);
   const [notice, setNotice] = useState<string | null>(null);
@@ -243,9 +244,12 @@ export function ExportStep() {
       }
     }
 
+    // 生成 PDF 会消耗一次 worker 运行：进入导出页只准备内容与摘要，
+    // 等用户确认方案后点「生成 PDF」再提交，避免"进入即消耗"。
     if (autoExportRef.current) return;
     autoExportRef.current = true;
-    await startExport(planId, resolvedVersionId);
+    setPhase("ready");
+    setNotice("确认方案内容后点「生成 PDF」，一次渲染约 5 秒。");
   }
 
   async function resumePendingExport(runId: string, planId: string) {
@@ -355,6 +359,30 @@ export function ExportStep() {
     setPhase("ready");
   }
 
+  async function handleDownload() {
+    if (!downloadUrl || downloading) return;
+    setDownloading(true);
+    try {
+      const response = await fetch(downloadUrl);
+      if (!response.ok) throw new Error("download_failed");
+      const blob = await response.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = objectUrl;
+      anchor.download = "知途-生涯行动方案.pdf";
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      window.setTimeout(() => URL.revokeObjectURL(objectUrl), 4000);
+      setNotice("PDF 已开始下载。");
+    } catch {
+      // 跨域或网络异常时退回浏览器默认打开方式，保证文件仍能拿到。
+      window.open(downloadUrl, "_blank", "noopener,noreferrer");
+    } finally {
+      setDownloading(false);
+    }
+  }
+
   async function refreshDownloadUrl() {
     if (!artifact) return;
     try {
@@ -411,15 +439,10 @@ export function ExportStep() {
             </h2>
             <div className="export-actions">
               {downloadUrl ? (
-                <a
-                  className="btn btn-primary btn-lg"
-                  href={downloadUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <Button variant="primary" size="lg" onClick={handleDownload} disabled={downloading}>
                   <Icon name="download" size={17} />
-                  下载 PDF
-                </a>
+                  {downloading ? "下载中…" : "下载 PDF"}
+                </Button>
               ) : (
                 <Button variant="primary" size="lg" onClick={handleRetry} disabled={!cloud}>
                   <Icon name="download" size={17} />
@@ -441,7 +464,11 @@ export function ExportStep() {
                 <Icon name="clock" size={13} />
                 下载链接短期有效{expiresIn ? `（约 ${expiresIn} 秒）` : ""}，过期请刷新。
               </p>
-            ) : null}
+            ) : (
+              <p className="panel-note">
+                生成会消耗一次 PDF 渲染（约 5 秒）；方案内容可先在上方「方案说明」里确认。
+              </p>
+            )}
           </div>
         </section>
 
