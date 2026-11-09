@@ -4923,6 +4923,9 @@ a.trace-hit-title:hover {
   :root:not([data-theme="dark"]) .site-header {
     background: rgba(251, 247, 240, 0.9);
   }
+  /* Assistant answers are not cards: ui-fixes.css renders them on the page
+     surface with a left rule. Keep them out of this light-theme card fill,
+     otherwise the higher-specificity rule paints a white box on beige. */
   :root:not([data-theme="dark"]) .panel,
   :root:not([data-theme="dark"]) .continue-card,
   :root:not([data-theme="dark"]) .step-card,
@@ -4930,7 +4933,6 @@ a.trace-hit-title:hover {
   :root:not([data-theme="dark"]) .direction-card,
   :root:not([data-theme="dark"]) .plan-summary,
   :root:not([data-theme="dark"]) .action-card,
-  :root:not([data-theme="dark"]) .message-answer,
   :root:not([data-theme="dark"]) .source-card,
   :root:not([data-theme="dark"]) .report-card,
   :root:not([data-theme="dark"]) .empty-state,
@@ -4958,6 +4960,7 @@ a.trace-hit-title:hover {
 :root[data-theme="light"] .site-header {
   background: rgba(251, 247, 240, 0.9);
 }
+/* Assistant answers stay off this card fill for the same reason as above. */
 :root[data-theme="light"] .panel,
 :root[data-theme="light"] .continue-card,
 :root[data-theme="light"] .step-card,
@@ -4965,7 +4968,6 @@ a.trace-hit-title:hover {
 :root[data-theme="light"] .direction-card,
 :root[data-theme="light"] .plan-summary,
 :root[data-theme="light"] .action-card,
-:root[data-theme="light"] .message-answer,
 :root[data-theme="light"] .source-card,
 :root[data-theme="light"] .report-card,
 :root[data-theme="light"] .empty-state,
