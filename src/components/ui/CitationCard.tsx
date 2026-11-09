@@ -6,6 +6,12 @@ import type { Citation } from "@/lib/contracts/run";
 import { safeExternalUrl } from "@/lib/api-client";
 import { Badge, Icon } from "./primitives";
 import { sourceScopeLabel } from "@/lib/source-labels";
+import {
+  parseInlineMarkdown,
+  parseMarkdownBlocks,
+  type InlineToken,
+  type MarkdownBlock
+} from "@/lib/markdown-lite";
 
 const LOCATOR_KEYS: [string, string][] = [
   ["page", "页"],
@@ -304,20 +310,118 @@ function renderCitationMarkers(text: string, byNo: Map<number, Citation>, keyPre
   return nodes;
 }
 
+/** Render parsed inline tokens, resolving known [n] markers to citation bubbles. */
+function renderInlineTokens(
+  tokens: InlineToken[],
+  byNo: Map<number, Citation>,
+  keyPrefix: string
+): ReactNode[] {
+  return tokens.map((token, index) => {
+    const key = `${keyPrefix}-t-${index}`;
+    switch (token.type) {
+      case "text":
+        return token.text;
+      case "code":
+        return <code key={key}>{token.text}</code>;
+      case "strong":
+        return <strong key={key}>{renderInlineTokens(token.tokens, byNo, key)}</strong>;
+      case "link": {
+        const href = safeExternalUrl(token.url);
+        return href ? (
+          <a key={key} href={href} target="_blank" rel="noopener noreferrer">
+            {token.label}
+          </a>
+        ) : (
+          token.label
+        );
+      }
+      case "citation": {
+        if (token.numbers.length === 0 || !token.numbers.every((no) => byNo.has(no))) {
+          return token.raw;
+        }
+        return token.numbers.map((no, citationIndex) => {
+          const citation = byNo.get(no);
+          return citation ? <CitationRef key={`${key}-c-${citationIndex}`} citation={citation} /> : null;
+        });
+      }
+      default:
+        return null;
+    }
+  });
+}
+
+/** Render one block's lines, keeping single line breaks inside a paragraph. */
+function renderBlockLines(lines: string[], byNo: Map<number, Citation>, keyPrefix: string): ReactNode[] {
+  const nodes: ReactNode[] = [];
+  lines.forEach((line, index) => {
+    if (index > 0) nodes.push(<br key={`${keyPrefix}-br-${index}`} />);
+    nodes.push(...renderInlineTokens(parseInlineMarkdown(line), byNo, `${keyPrefix}-l-${index}`));
+  });
+  return nodes;
+}
+
+/** Render the Markdown subset used by ask answers as readable blocks. */
+function renderMarkdownBlocks(blocks: MarkdownBlock[], byNo: Map<number, Citation>): ReactNode[] {
+  return blocks.map((block, index) => {
+    const key = `md-${index}`;
+    switch (block.type) {
+      case "heading": {
+        const Heading = (block.level <= 2 ? "h3" : block.level === 3 ? "h4" : "h5") as "h3" | "h4" | "h5";
+        return <Heading key={key}>{renderInlineTokens(parseInlineMarkdown(block.text), byNo, key)}</Heading>;
+      }
+      case "paragraph":
+        return <p key={key}>{renderBlockLines(block.text.split("\n"), byNo, key)}</p>;
+      case "list": {
+        const items = block.items.map((item, itemIndex) => (
+          <li key={`${key}-i-${itemIndex}`}>
+            {renderBlockLines(item.split("\n"), byNo, `${key}-i-${itemIndex}`)}
+          </li>
+        ));
+        return block.ordered ? (
+          <ol key={key} start={block.start !== 1 ? block.start : undefined}>
+            {items}
+          </ol>
+        ) : (
+          <ul key={key}>{items}</ul>
+        );
+      }
+      case "quote":
+        return <blockquote key={key}>{renderBlockLines(block.text.split("\n"), byNo, key)}</blockquote>;
+      case "code":
+        return (
+          <pre key={key}>
+            <code>{block.text}</code>
+          </pre>
+        );
+      case "divider":
+        return <hr key={key} />;
+      default:
+        return null;
+    }
+  });
+}
+
 /**
  * Render free text with its [n] citation markers replaced by inline bubbles.
- * Paragraph breaks become <p>, single line breaks <br>. Text without any
- * resolvable marker renders unchanged (brackets stay visible).
+ * By default paragraph breaks become <p> and single line breaks <br>.
+ * With `markdown`, the light Markdown subset from chat answers (headings,
+ * bold, lists, quotes, fenced code) renders as real blocks instead of showing
+ * its literal markers; the citation bubbles keep working inside every block.
  */
 export function CitationText({
   text,
-  citations
+  citations,
+  markdown = false
 }: {
   text: string | null | undefined;
   citations?: Citation[] | null;
+  markdown?: boolean;
 }) {
   if (!text || !text.trim()) return null;
   const byNo = citationIndex(citations);
+  if (markdown) {
+    return <>{renderMarkdownBlocks(parseMarkdownBlocks(text), byNo)}</>;
+  }
   const paragraphs = text.split(/\n{2,}/).filter((paragraph) => paragraph.trim().length > 0);
   return (
     <>

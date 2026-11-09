@@ -346,7 +346,7 @@ export function LibraryTool() {
                   ) : (
                     <div className="message-content">
                       <div className="message-answer">
-                        <CitationText text={message.content} citations={message.citations} />
+                        <CitationText text={message.content} citations={message.citations} markdown />
                       </div>
                     </div>
                   )}
